@@ -1,28 +1,40 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <v-app>
+            <v-main class="background">
+                <v-container>
+                    <Navigation> </Navigation>
+                </v-container>
+                <v-container>
+                    <router-view />
+                </v-container>
+                
+            </v-main>
+        </v-app>
+    </div>
 </template>
 
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    import Navigation from '@/components/Navigation.vue'
+
+    export default {
+        name: 'App',
+        components: {
+            Navigation
+        }
+    }
 </script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    .background {
+        background-color: red;
+        background-image: url('~@/assets/background2.jpg'); 
+        width: 100%;
+        height: 90%;
+        position: absolute;
+        background-size: cover
+    }
+
 </style>
+
