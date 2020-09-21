@@ -117,6 +117,8 @@ import vuescroll from 'vuescroll';
             },
             addElement() {
                 alert("Hinzufügen");
+                this.$store.dispatch('items/addItem', { text: "Item"});
+                console.log(this.$store.state.items);
             },
             createElement() {
                 this.showModal = true;

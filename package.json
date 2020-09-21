@@ -12,9 +12,11 @@
     "bootstrap-vue": "^2.17.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.12",
+    "vue-beautiful-chat": "^2.5.0",
     "vue-router": "^3.4.3",
     "vuescroll": "^4.16.1",
-    "vuetify": "^2.3.10"
+    "vuetify": "^2.3.10",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
