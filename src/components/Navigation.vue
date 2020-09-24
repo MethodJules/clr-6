@@ -17,14 +17,25 @@
             <p><b>Agenda </b></p>
         </router-link>
 
-        <div>
-            <beautiful-chat :participants="participants"
+        <div class="search">
+            <beautiful-chat class="chat"
+                            :participants="participants"
                             :isOpen="isChatOpen"
                             :open="openChat"
                             :close="closeChat"
                             :onMessageWasSent="onMessageWasSent"
                             :colors="colors"
-                            :messageList="messageList" />
+                            :messageList="messageList">
+
+                <template v-slot:header class="chat-header">
+                    Helper
+                </template>
+                <template v-slot:user-avatar="{ message, user }">
+                    <div style="margin: 5px;" v-if="message.type === 'text' && user && user.name">
+                        
+                    </div>
+                </template>
+            </beautiful-chat>
         </div>
             <!--      
          :newMessagesCount="newMessagesCount"
@@ -60,8 +71,8 @@
         name: 'App',
         data: function () {
             return {
-                showSearch: false, 
-           
+                showSearch: false,
+
                 participants: [
                     {
                         id: 'user1',
@@ -70,13 +81,12 @@
                     {
                         id: 'user2',
                         name: 'User',
-    
+
                     }
                 ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
-                titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
-                messageList: [
-                    { type: 'text', author: `me`, data: { text: `Say yes!` } },
-                    { type: 'text', author: `user1`, data: { text: `No.` } }
+                  messageList: [
+                    { type: 'text', author: `me`, data: { text: `Ich habe eine Frage...` } },
+                    { type: 'text', author: `user1`, data: { text: `Da helfe ich dir gern!` } }
                 ], // the list of the messages to show, can be paginated and adjusted dynamically
                 newMessagesCount: 0,
                 isChatOpen: false, // to determine whether the chat window should be open or closed
@@ -90,15 +100,15 @@
                         bg: '#c93e37'
                     },
                     messageList: {
-                        bg: '#ffffff'
+                        bg: '#c93e37'
                     },
                     sentMessage: {
-                        bg: '#c93e37',
-                        text: '#ffffff'
+                        bg: '#ffffff',
+                        text: '#222222'
                     },
                     receivedMessage: {
                         bg: '#eaeaea',
-                        text: '#222222'
+                        text: '#c93e37'
                     },
                     userInput: {
                         bg: '#f4f7f9',
@@ -185,7 +195,6 @@
         vertical-align: middle;
     }
     .search {
-        background-color: #c93e37;
         width: 30%;
         margin-left: 30%;
         position: absolute;
@@ -212,5 +221,7 @@
         position: absolute;
         right: 5px;
     }
+    
+
 </style>
 
