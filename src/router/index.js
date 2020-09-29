@@ -26,6 +26,11 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Concept.vue')
     },
     {
+        path: '/newconcept',
+        name: 'NewConcept',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewConcept.vue')
+    },
+    {
         path: '/analysis',
         name: 'Analysis',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Analysis.vue')
