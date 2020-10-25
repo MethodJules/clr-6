@@ -1,5 +1,5 @@
 <template>
-    
+
     <div class="home">
         <h1>
             CONCEPT VERSIONS
@@ -11,60 +11,23 @@
         </div>
         <div v-if="concept" @click="openConcept()" class="conceptMap">
             <div class="showElements">
-                <div class="scrollbar">
-                    <vuescroll :ops="ops">
-                        <div class="listElement" v-for="item in items" :key="item.name">
-                            <div class="listIcon" @click="deleteItem()"> <b-icon icon="trash" aria-hidden="true"></b-icon> </div>
-                            <div class="listName"> {{item.name}} </div>
-                            <div class="listArrow" @click="createElement()"> <b-icon icon="arrow-right" aria-hidden="true"></b-icon>  </div>
-
-                        </div>
-                    </vuescroll>
-                </div>
+                <ConceptList @childToParent="onChildClick($event)" />
                 <div class="newElement">
                     <v-btn class="addButton" @click="addElement()"> + </v-btn>
                 </div>
+                <!--Test-->
+                <div>
+                    <v-btn @click="loadConceptMap()">Load CM</v-btn>
+                </div>
+                <!--TestEnde-->
 
             </div>
             <div class="viewConcept">
-       
-                    <div class="modalView" v-if="showModal">                    
-                        <h2 class="center"> CONNECTION </h2>
-                       
-                        <table>
-                            <tr>
-                                <td class="tableName"> Concept: </td>
-                                <td>
-                                    <select>
-                                        <option>  Rock Cycle </option>
-                                    </select>
-                                </td>
-
-                            </tr>
-
-                            <tr>
-                                <td class="tableName"> Connect to: </td>
-                                <td>
-                                    <select>
-                                        <option>  Earthquakes </option>
-                                        <option>  Rivers </option>
-                                        <option>  Deserts </option>
-                                        <option>  Minerals </option>
-                                    </select>
-                                </td>
-                            <tr>
-                                <td class="tableName"> Label </td>
-                                <td>
-                                    <input type="text" />
-                                </td>
-                            </tr>
-                  
-                        </table>
-                       
-                       
-
+                    <ConceptMap />
+                    <div class="modalView" v-if="showModal">
+                        <CreateConnection @closeModal="closeModal($event)" :source=target />
                     </div>
-         
+
             </div>
         </div>
 
@@ -75,61 +38,61 @@
 
 <script>
 
-import vuescroll from 'vuescroll';
+import ConceptMap from '@/components/ConceptMap'
+import CreateConnection from '@/components/CreateConnection'
+import ConceptList from '@/components/ConceptList'
 
     export default {
         name: 'Home',
         data: function () {
             return {
-                newconcept: true,
-                concept: false,
+                newconcept: false, //TODO: Muss später geändert werden, damit man neue Concept Maps erstellen kann.
+                concept: true,
                 showModal: false,
-                items: [
-                    {name: "Rivers"},
-                    { name: "Desserts" },
-                    {name: "Minerals"}
+                fromChild: '',
+                target: ''
 
-                ],
-                ops: {           
-                    rail: {
-                        background: '#bababa',                      
-                        border: '1px solid #000',
-                        opacity: 0.5, 
-                        size: "10px"                        
-                    },
-                    bar: {
-                        background: 'white',
-                        size: "8px",
-                        keepShow: true,
-                    }
-                }
-                
+
+
+
             }
         },
         components: {
-            vuescroll
+            ConceptMap,
+            CreateConnection,
+            ConceptList
         },
         methods: {
+            closeModal(value) {
+                this.showModal = value
+            },
+            onChildClick(value) {
+                console.log(value)
+                this.showModal = true
+                this.target = value
+            },
+            lcb(link) {
+                link._svgAttrs = {'marker-end': 'url(#m-end)'}
+                return link
+            },
             openConcept() {
                 this.newconcept = false;
                 this.concept = true;
-                
+
             },
             addElement() {
-                alert("Hinzuf�gen");
+                alert("Hinzuf�gen");
                 this.$store.dispatch('items/addItem', { text: "Item"});
                 console.log(this.$store.state.items);
             },
-            createElement() {
-                this.showModal = true;
-            },
-            deleteItem() {
-                alert("Delete");
+            loadConceptMap() {
+                this.$store.dispatch('concept_map/loadConceptMapFromBackend');
             }
         }
 }
 </script>
 <style>
+
     .home {
         width: 70%;
         background-color: white;
@@ -241,15 +204,13 @@ import vuescroll from 'vuescroll';
         width: 100%;
     }
 
-    .tableName {
-        width: 60%;
-    }
+
     input {
         color: #c93e37;
         border-color: #c93e37;
 
     }
         input[type=text]:focus {
-            outline: 2px solid #c93e37; 
+            outline: 2px solid #c93e37;
         }
 </style>
