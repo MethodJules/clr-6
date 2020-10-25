@@ -1,21 +1,21 @@
 <template>
-    
+
     <div class="navigation">
-        <router-link tag="div" to="/scope" class="element">
+       <!--  <router-link tag="div" to="/scope" class="element">
             <p><b>Scope </b></p>
-        </router-link>
+        </router-link> -->
         <router-link tag="div" to="/concept" class="element">
             <p><b>Concept </b></p>
         </router-link>
-        <router-link tag="div" to="/search" class="element">
+       <!--  <router-link tag="div" to="/search" class="element">
             <p><b>Search </b></p>
-        </router-link>
-        <router-link tag="div" to="/analysis" class="element">
+        </router-link> -->
+        <!-- <router-link tag="div" to="/analysis" class="element">
             <p><b>Analysis </b></p>
-        </router-link>
-        <router-link tag="div" to="/agenda" class="element">
+        </router-link> -->
+        <!-- <router-link tag="div" to="/agenda" class="element">
             <p><b>Agenda </b></p>
-        </router-link>
+        </router-link> -->
 
         <div class="search">
             <beautiful-chat class="chat"
@@ -32,12 +32,12 @@
                 </template>
                 <template v-slot:user-avatar="{ message, user }">
                     <div style="margin: 5px;" v-if="message.type === 'text' && user && user.name">
-                        
+
                     </div>
                 </template>
             </beautiful-chat>
         </div>
-            <!--      
+            <!--
          :newMessagesCount="newMessagesCount"
 
          :showEmoji="true"
@@ -171,8 +171,8 @@
         right: 10px;
         position: absolute;
         height: 99%;
-        margin-top: 5px;    
-        
+        margin-top: 5px;
+
     }
     .element {
         background-color: white;
@@ -221,7 +221,7 @@
         position: absolute;
         right: 5px;
     }
-    
+
 
 </style>
 
