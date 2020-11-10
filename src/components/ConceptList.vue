@@ -4,7 +4,7 @@
             <div class="listElement" v-for="concept in concepts" :key="concept.name">
                 <div class="listIcon" @click="deleteItem(concept)"> <b-icon icon="trash" aria-hidden="true"></b-icon> </div>
                 <div class="listName"> {{concept.name}} </div>
-                <div class="listArrow" @click="createElement(concept.name)"> <b-icon icon="arrow-right" aria-hidden="true"></b-icon> </div>
+                <div class="listArrow" @click="createElement(concept)"> <b-icon icon="arrow-right" aria-hidden="true"></b-icon> </div>
             </div>
         </vuescroll>
     </div>

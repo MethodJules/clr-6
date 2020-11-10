@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="viewConceptMap">
     <svg >
         <defs>
             <marker id="m-end" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth" >
@@ -8,7 +8,7 @@
 
         </defs>
     </svg>
-  <d3-network :net-nodes="nodes" :net-links="links" :options="options" :link-cb="lcb"></d3-network>
+  <d3-network :net-nodes="nodes" :net-links="links" :options="options" :link-cb="lcb" @node-click="foo"></d3-network>
 </div>
 </template>
 
@@ -22,9 +22,10 @@ export default {
     data: function() {
         return {
             options: {
-                    force: 3000,
-                    nodeSize: 30,
+                    force: 4000,
+                    nodeSize: 10,
                     nodeLabels: true,
+                    linkLabels: true,
                     linkWidth: 2,
                 },
         }
@@ -38,6 +39,10 @@ export default {
             console.log(this.nodes)
             console.log(this.links)
             //this.$store.dispatch('saveConceptMapToDB')
+        },
+        foo(event, node) {
+            console.log(event);
+            console.log(node)
         }
     },
     computed: {
@@ -52,6 +57,27 @@ export default {
 <style>
 #m-end path, #m-start{
   fill: rgba(18, 120, 98, 0.8);
+}
+.viewConceptMap {
+        height: 75%;
+        width: 70%;
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+.net {
+    /*border: dashed;*/
+    /*border-color: aqua;*/
+    position: relative;
+    height: 75;
+    bottom: 140px;
+}
+
+.link-label{
+  fill: purple;
+  transform: translate(0,.5em);
+  font-size: .8em;
 }
 
 </style>

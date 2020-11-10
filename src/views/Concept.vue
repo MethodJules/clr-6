@@ -2,7 +2,7 @@
 
     <div class="home">
         <h1>
-            CONCEPT VERSIONS
+            CONCEPT MAP
         </h1>
         <div v-if="newconcept" @click="openConcept()" class="newConcept">
             <h1 class="centerText">
@@ -13,21 +13,39 @@
             <div class="showElements">
                 <ConceptList @childToParent="onChildClick($event)" />
                 <div class="newElement">
-                    <v-btn class="addButton" @click="addElement()"> + </v-btn>
+                    <v-btn class="addButton" @click="openCreateConceptModal"> + </v-btn>
                 </div>
-                <!--Test-->
-                <div>
-                    <v-btn @click="loadConceptMap()">Load CM</v-btn>
-                </div>
-                <!--TestEnde-->
 
             </div>
             <div class="viewConcept">
                     <ConceptMap />
-                    <div class="modalView" v-if="showModal">
+                    <!-- <div class="modalView" v-if="showModal">
                         <CreateConnection @closeModal="closeModal($event)" :source=target />
-                    </div>
+                    </div> -->
 
+                    <b-modal id="create_connection_modal" hide-footer>
+                        <div class="d-block text-center">
+                            <h1>Create Connection</h1>
+                            <b-form-select v-model="source_uuid" :options="source_options"></b-form-select>
+
+
+                            <b-form-select v-model="target_uuid" :options="target_options"></b-form-select>
+                            <!-- <div v-for="option in target_options" :key="option.value.id">
+                                <p><b>Connect to:</b> {{option.value.concept}}</p>
+                            </div> -->
+
+                            <b-form-input v-model="relationship_label" placeholder="Bitte geben Sie hier die Bezeichnung ein."></b-form-input>
+                            <b-button class="mt-3" block @click="createNewConncetionToConceptMap">Speichern</b-button>
+                        </div>
+                    </b-modal>
+                    <b-modal id="create_concept_modal" hide-footer>
+                        <div class="d-block text-center">
+                            <h1>Neues Concept erstellen</h1>
+                            <b-form-input v-model="concept_name" placeholder="Bitte geben Sie hier den Concept Namen ein"></b-form-input>
+                        </div>
+                        <b-button class="mt-3" block @click="addElement">Speichern</b-button>
+
+                    </b-modal>
             </div>
         </div>
 
@@ -39,8 +57,10 @@
 <script>
 
 import ConceptMap from '@/components/ConceptMap'
-import CreateConnection from '@/components/CreateConnection'
+//import CreateConnection from '@/components/CreateConnection'
 import ConceptList from '@/components/ConceptList'
+import {mapState} from 'vuex'
+
 
     export default {
         name: 'Home',
@@ -50,16 +70,18 @@ import ConceptList from '@/components/ConceptList'
                 concept: true,
                 showModal: false,
                 fromChild: '',
-                target: ''
-
-
-
-
+                target: '',
+                concept_name: '',
+                source_uuid: null,
+                target_uuid: null,
+                target_options: [],
+                source_options: [],
+                relationship_label: '',
             }
         },
         components: {
             ConceptMap,
-            CreateConnection,
+            //CreateConnection,
             ConceptList
         },
         methods: {
@@ -67,9 +89,12 @@ import ConceptList from '@/components/ConceptList'
                 this.showModal = value
             },
             onChildClick(value) {
-                console.log(value)
-                this.showModal = true
+                //console.log(value)
+                //this.showModal = true
+                this.target_options.push({value: {id: value.nid , uuid: value.id, concept: value.name}, text: value.name});
+                this.openCreateConnectionModal();
                 this.target = value
+
             },
             lcb(link) {
                 link._svgAttrs = {'marker-end': 'url(#m-end)'}
@@ -81,14 +106,44 @@ import ConceptList from '@/components/ConceptList'
 
             },
             addElement() {
-                alert("Hinzuf�gen");
-                this.$store.dispatch('items/addItem', { text: "Item"});
-                console.log(this.$store.state.items);
+                //alert("Hinzuf�gen");
+
+                this.$store.dispatch('concepts/addConcept', this.concept_name);
+                this.$bvModal.hide('create_concept_modal');
+
+                //console.log(this.$store.state.items);
+                //TODO: Concept hinzufuegen
             },
             loadConceptMap() {
-                this.$store.dispatch('concept_map/loadConceptMapFromBackend');
+                this.concepts.forEach(element => {
+                    //console.log(element);
+                    this.source_options.push({value: {id: element.id, uuid: element.uuid, concept: element.name}, text: element.name});
+                });
+                //console.log(this.source_options);
+            },
+            openCreateConceptModal() {
+                this.$bvModal.show('create_concept_modal');
+            },
+            openCreateConnectionModal() {
+                this.loadConceptMap();
+                this.$bvModal.show('create_connection_modal');
+            },
+            createNewConncetionToConceptMap() {
+                //console.log(this.source_uuid);
+                //console.log(this.target_uuid);
+                //Add Concept to Concept Map
+                this.$store.dispatch('concept_map/addConceptToConceptMap', this.target_uuid); //TODO: target_uuid ändern in semantisch korrekte bezeichnung
+                this.$store.dispatch('concept_map/addRelationshipToConceptMap', {source: this.source_uuid, target: this.target_uuid, name: this.relationship_label});
+                this.$bvModal.hide('create_connection_modal');
             }
-        }
+        },
+        mounted() {
+            this.$store.dispatch('concept_map/loadConceptMapFromBackend');
+        },
+        computed: {
+        ...mapState({concepts: state => state.concept_map.nodes})
+        },
+
 }
 </script>
 <style>
@@ -125,6 +180,7 @@ import ConceptList from '@/components/ConceptList'
         position: absolute;
         right: 10px;
     }
+
     .showElements {
         border: dashed;
         border-color: #c93e37;

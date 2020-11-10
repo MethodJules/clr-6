@@ -30,6 +30,10 @@ const actions = {
         commit('ADD_CONCEPT_TO_CONCEPT_MAP', concept)
     },
 
+    addRelationshipToConceptMap({commit}, relationship) {
+        commit('ADD_RELATIONSHIP_TO_CONCEPT_MAP', relationship);
+    },
+
     loadConceptMapFromBackend({commit}) {
         axios.get('http://localhost:8080/jsonapi/node/concept_map')
             .then((response) => {
@@ -48,9 +52,25 @@ const actions = {
 
 const mutations = {
     ADD_CONCEPT_TO_CONCEPT_MAP(state, concept) {
+        console.log(concept);
+        state.nodes.push({
+            id: concept.id,
+            name: concept.concept,
+            uuid: concept.uuid
+        })
+        /*
         state.nodes.push({
             id: 99, //TODO: hier muss eine API Abfrage nach einer ID hin
-            name: concept
+            name: concept.concept
+        })*/
+    },
+    ADD_RELATIONSHIP_TO_CONCEPT_MAP(state, relationship) {
+        console.log(relationship);
+        state.links.push({
+            sid: relationship.source.id,
+            tid: relationship.target.id,
+            name: relationship.name,
+            _color: '#c93e37'
         })
     },
     INITIALIZE_CONCEPT_MAP(state, concept_map) {
@@ -72,7 +92,8 @@ const mutations = {
                         console.log(response);
                         const title = response.data.data.attributes.title;
                         const id = response.data.data.attributes.drupal_internal__nid;
-                        state.nodes.push({id: id, name: title});
+                        const uuid = response.data.data.id;
+                        state.nodes.push({id: id, name: title, uuid: uuid});
                     })
             });
 
@@ -87,7 +108,7 @@ const mutations = {
                         const tid = response.data.data.attributes.field_tid;
 
                         console.log(`Label: ${label}, SID: ${sid}, TID: ${tid}`);
-                        state.links.push({sid: sid, tid: tid, _color: '#c93e37'})
+                        state.links.push({sid: sid, tid: tid, _color: '#c93e37', name: label})
                     })
             })
 
