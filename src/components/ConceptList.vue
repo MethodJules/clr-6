@@ -12,7 +12,7 @@
 
 <script>
 import vuescroll from 'vuescroll';
-import {mapState} from 'vuex'
+import { mapState } from 'vuex';
 
 export default {
     components: {
@@ -20,6 +20,7 @@ export default {
     },
     data: function() {
         return {
+            conceptList: null,
             ops: {
                     rail: {
                         background: '#bababa',
@@ -45,14 +46,71 @@ export default {
             this.$store.dispatch('concepts/deleteConcept', concept)
         }
     },
-    computed: {
-        ...mapState({
-            concepts: state => state.concepts.concepts
+        computed: {
+            ...mapState({
+                concepts: state => state.concepts.concepts
+            })
+           
+          /*  
+        ...mapState({ 
+                concepts(state) {
+                    
+                    console.log(state.concept_map.nodes);
+                    this.conceptList = state.concepts.concepts;
+
+                    for (let concept of state.concepts.concepts) {
+                        for (let map of state.concept_map.nodes) {
+                            if (concept.id == map.id) {
+                                console.log("AAAAAAAAAAAAAAA");
+                                console.log(concept.id);
+                                console.log(map.id);
+                                console.log(this.conceptList.indexOf(concept));
+                                this.conceptList.splice(this.conceptList.indexOf(concept), 1);
+                            }
+                        }
+                        
+                    }
+
+
+                    
+
+                    return this.conceptList
+                }
         })
+        */
     },
-    mounted() {
-        console.log("mounted")
-        this.$store.dispatch('concepts/loadConcepts')
+    async mounted() {
+        console.log("mounted");     
+        await this.$store.dispatch('concepts/loadConcepts');
+        
+        console.log(this.$store.state.concepts.concepts);
+        alert(this.$store.state.concept_map.nodes);
+
+        this.conceptList = this.$store.state.concepts.concepts;
+
+        for (let map of this.$store.state.concept_map.nodes) {
+            console.log(map);
+
+        }
+
+        for (let concept of this.$store.state.concepts.concepts) {
+            console.log(this.$store.state.concept_map.nodes);
+            console.log(concept);
+            /*
+            for (let map of this.$store.state.concept_map.nodes) {
+                console.log(concept.id);
+                console.log(map.uuid);
+
+                if (concept.id == map.uuid) {
+                   
+                    console.log(this.conceptList.indexOf(concept));
+                    this.conceptList.splice(this.conceptList.indexOf(concept), 1);
+                }
+            }
+            */
+        }
+        
+        
     }
 }
 </script>

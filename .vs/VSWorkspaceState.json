@@ -7,6 +7,6 @@
     "\\src\\store\\modules",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\main.js",
+  "SelectedNode": "\\src\\store\\modules\\concept_map.js",
   "PreviewInSolutionExplorer": false
 }

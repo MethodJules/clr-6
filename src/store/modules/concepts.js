@@ -23,7 +23,7 @@ const actions = {
     deleteConcept({commit}, concept) {
         var config = {
             method: 'delete',
-            url: `http://localhost:8080/jsonapi/node/concept/${concept.id}`,
+            url: `http://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -40,15 +40,16 @@ const actions = {
     },
     //TODO: Load Concept
 
-    loadConcepts({rootState,commit}) {
+    async loadConcepts({rootState,commit}) {
         const concept_map_nodes = rootState.concept_map.nodes;
         console.log(concept_map_nodes);
-        axios.get('http://localhost:8080/jsonapi/node/concept')
+        await axios.get('http://clr-backend.x-navi.de/jsonapi/node/concept')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data;
-                let concepts = []
+                let concepts = [];
                 for (var i in data) {
+                    
                     concepts.push({name: data[i].attributes.title, nid: data[i].attributes.drupal_internal__nid, id: data[i].id});
                 }
 
@@ -60,7 +61,7 @@ const actions = {
     //TODO: Load Link
     /*
     loadLinks({commit}) {
-        axios.get('http://localhost:8080/jsonapi/node/relationship')
+        axios.get('http://clr-backend.x-navi.de/jsonapi/node/relationship')
             .then((response) => {
                 const data = response.data.data;
                 let links = []
@@ -86,7 +87,7 @@ const mutations = {
         var data = `{"data":{"type":"node--concept", "attributes": {"title": "${concept}"}}}`;
         var config = {
             method: 'post',
-            url: 'http://localhost:8080/jsonapi/node/concept',
+            url: 'http://clr-backend.x-navi.de/jsonapi/node/concept',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -116,6 +117,8 @@ const mutations = {
         state.concepts = concepts
     }
 }
+
+
 
 export default {
     namespaced: true,

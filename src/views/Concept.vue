@@ -26,15 +26,30 @@
                     <b-modal id="create_connection_modal" hide-footer>
                         <div class="d-block text-center">
                             <h1>Create Connection</h1>
-                            <b-form-select v-model="source_uuid" :options="source_options"></b-form-select>
+                            
+                            <table>
+                                <tr>
+                                    <td> Source: </td>
+                                    <td> <b-form-select v-model="source_uuid" :options="source_options"></b-form-select></td>
+
+                                </tr>
+                                <tr>
+                                    <td> Target: </td>
+                                    <td>{{target.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td> Name: </td>
+                                    <td> <b-form-input v-model="relationship_label" placeholder="Bitte geben Sie hier die Bezeichnung ein."> </b-form-input></td>
+                                </tr>
+                            </table>
+                            
+                            
 
 
-                            <b-form-select v-model="target_uuid" :options="target_options"></b-form-select>
+                            
                             <!-- <div v-for="option in target_options" :key="option.value.id">
                                 <p><b>Connect to:</b> {{option.value.concept}}</p>
                             </div> -->
-
-                            <b-form-input v-model="relationship_label" placeholder="Bitte geben Sie hier die Bezeichnung ein."></b-form-input>
                             <b-button class="mt-3" block @click="createNewConncetionToConceptMap">Speichern</b-button>
                         </div>
                     </b-modal>
@@ -73,7 +88,7 @@ import {mapState} from 'vuex'
                 target: '',
                 concept_name: '',
                 source_uuid: null,
-                target_uuid: null,
+                target_uuid: {},
                 target_options: [],
                 source_options: [],
                 relationship_label: '',
@@ -115,6 +130,7 @@ import {mapState} from 'vuex'
                 //TODO: Concept hinzufuegen
             },
             loadConceptMap() {
+                this.source_options = [];
                 this.concepts.forEach(element => {
                     //console.log(element);
                     this.source_options.push({value: {id: element.id, uuid: element.uuid, concept: element.name}, text: element.name});
@@ -129,16 +145,31 @@ import {mapState} from 'vuex'
                 this.$bvModal.show('create_connection_modal');
             },
             createNewConncetionToConceptMap() {
-                //console.log(this.source_uuid);
-                //console.log(this.target_uuid);
+                console.log(this.source_uuid);
+                console.log(this.target);
+                this.target_uuid.concept = this.target.name;
+                this.target_uuid.id = this.target.nid;
+                this.target_uuid.uuid = this.target.id;
+
+                var isExisting = false;
+
                 //Add Concept to Concept Map
-                this.$store.dispatch('concept_map/addConceptToConceptMap', this.target_uuid); //TODO: target_uuid ändern in semantisch korrekte bezeichnung
-                this.$store.dispatch('concept_map/addRelationshipToConceptMap', {source: this.source_uuid, target: this.target_uuid, name: this.relationship_label});
+                console.log("aaabbbb");
+                for (let map of this.$store.state.concept_map.nodes) {
+                    if (map.uuid == this.target_uuid.uuid) {
+                        isExisting = true; 
+                    }
+                }
+                if (!isExisting) {
+                    this.$store.dispatch('concept_map/addConceptToConceptMap', this.target_uuid); //TODO: target_uuid ändern in semantisch korrekte bezeichnung
+
+                }
+                 this.$store.dispatch('concept_map/addRelationshipToConceptMap', {source: this.source_uuid, target: this.target_uuid, name: this.relationship_label});
                 this.$bvModal.hide('create_connection_modal');
             }
         },
-        mounted() {
-            this.$store.dispatch('concept_map/loadConceptMapFromBackend');
+        async mounted() {
+            await this.$store.dispatch('concept_map/loadConceptMapFromBackend');
         },
         computed: {
         ...mapState({concepts: state => state.concept_map.nodes})
@@ -260,6 +291,9 @@ import {mapState} from 'vuex'
         width: 100%;
     }
 
+    table {
+        width: 100%
+    }
 
     input {
         color: #c93e37;
