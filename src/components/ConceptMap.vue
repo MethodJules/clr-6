@@ -41,6 +41,7 @@ export default {
             //this.$store.dispatch('saveConceptMapToDB')
         },
         foo(event, node) {
+            this.$emit('parentToChild', node);
             console.log(event);
             console.log(node)
         }

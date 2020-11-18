@@ -18,7 +18,7 @@
 
             </div>
             <div class="viewConcept">
-                    <ConceptMap />
+                    <ConceptMap @parentToChild="onParentClick($event)"/>
                     <!-- <div class="modalView" v-if="showModal">
                         <CreateConnection @closeModal="closeModal($event)" :source=target />
                     </div> -->
@@ -53,6 +53,30 @@
                             <b-button class="mt-3" block @click="createNewConncetionToConceptMap">Speichern</b-button>
                         </div>
                     </b-modal>
+
+
+                   <b-modal id="create_connection_modal_net" hide-footer>
+                        <div class="d-block text-center">
+                            <h1>Create Connection Modal</h1>
+                            
+                            <table>
+                                <tr>
+                                    <td> Source: </td>
+                                    <td>{{source.name}}</td>                                    
+                                </tr>
+                                <tr>
+                                    <td> Target: </td>
+                                    <td> <b-form-select v-model="target_uuid2" :options="target_options"></b-form-select></td>
+                                </tr>
+                                <tr>
+                                    <td> Name: </td>
+                                    <td> <b-form-input v-model="relationship_label" placeholder="Bitte geben Sie hier die Bezeichnung ein."> </b-form-input></td>
+                                </tr>
+                            </table>
+                            <b-button class="mt-3" block @click="createNewConncetionToConceptMap2">Speichern</b-button>
+                        </div>
+                    </b-modal>
+
                     <b-modal id="create_concept_modal" hide-footer>
                         <div class="d-block text-center">
                             <h1>Neues Concept erstellen</h1>
@@ -81,13 +105,17 @@ import {mapState} from 'vuex'
         name: 'Home',
         data: function () {
             return {
+                spliceConcepts: [],
                 newconcept: false, //TODO: Muss später geändert werden, damit man neue Concept Maps erstellen kann.
                 concept: true,
                 showModal: false,
                 fromChild: '',
                 target: '',
+                source: '',
                 concept_name: '',
                 source_uuid: null,
+                target_uuid2: null,
+                source_uuid2: {},
                 target_uuid: {},
                 target_options: [],
                 source_options: [],
@@ -106,11 +134,50 @@ import {mapState} from 'vuex'
             onChildClick(value) {
                 //console.log(value)
                 //this.showModal = true
-                this.target_options.push({value: {id: value.nid , uuid: value.id, concept: value.name}, text: value.name});
                 this.openCreateConnectionModal();
                 this.target = value
 
             },
+
+            onParentClick(value) {
+                console.log(value)
+                //this.showModal = true                 
+                this.openCreateConnectionModalNet();
+                this.source = value
+                
+
+            },
+
+            loadTarget() {    
+
+                this.conceptList = this.$store.state.concepts.concepts;
+                this.spliceConcepts = [];
+                this.target_options = [];
+/*
+                this.$store.state.concepts.concepts.forEach(element => {
+                    for (let map of this.$store.state.concept_map.nodes) {
+
+
+                        if (element.id == map.uuid) {
+                            this.spliceConcepts.push(element);
+                        }
+                    }
+                })
+                
+                console.log(this.spliceConcepts);
+                for (let splice of this.spliceConcepts) {
+                    this.conceptList.splice(this.conceptList.indexOf(splice), 1);
+                }
+                */
+                console.log(this.target_options);
+
+                this.conceptList.forEach(element => {
+                    //console.log(element);
+                    this.target_options.push({ value: { id: element.nid, uuid: element.id, concept: element.name }, text: element.name });
+                });
+
+            },
+
             lcb(link) {
                 link._svgAttrs = {'marker-end': 'url(#m-end)'}
                 return link
@@ -144,8 +211,12 @@ import {mapState} from 'vuex'
                 this.loadConceptMap();
                 this.$bvModal.show('create_connection_modal');
             },
+            openCreateConnectionModalNet() {
+                this.loadTarget();
+                this.$bvModal.show('create_connection_modal_net');
+            },
             createNewConncetionToConceptMap() {
-                console.log(this.source_uuid);
+                console.log(this.target_uuid);
                 console.log(this.target);
                 this.target_uuid.concept = this.target.name;
                 this.target_uuid.id = this.target.nid;
@@ -154,7 +225,6 @@ import {mapState} from 'vuex'
                 var isExisting = false;
 
                 //Add Concept to Concept Map
-                console.log("aaabbbb");
                 for (let map of this.$store.state.concept_map.nodes) {
                     if (map.uuid == this.target_uuid.uuid) {
                         isExisting = true; 
@@ -166,7 +236,31 @@ import {mapState} from 'vuex'
                 }
                  this.$store.dispatch('concept_map/addRelationshipToConceptMap', {source: this.source_uuid, target: this.target_uuid, name: this.relationship_label});
                 this.$bvModal.hide('create_connection_modal');
+            },
+
+            createNewConncetionToConceptMap2() {    
+                console.log(this.source);
+                this.source_uuid2.concept = this.source.name;
+                this.source_uuid2.id = this.source.id;
+                this.source_uuid2.uuid = this.source.uuid;
+
+                var isExisting = false;
+
+                for (let map of this.$store.state.concept_map.nodes) {
+
+                    if (map.uuid == this.target_uuid2.uuid) {
+                        isExisting = true;
+                    }
+                }
+                if (!isExisting) {
+                    console.log("Test");
+                    this.$store.dispatch('concept_map/addConceptToConceptMap', this.target_uuid2); //TODO: target_uuid ändern in semantisch korrekte bezeichnung
+
+                }
+                this.$store.dispatch('concept_map/addRelationshipToConceptMap', { source: this.source_uuid2, target: this.target_uuid2, name: this.relationship_label });
+                this.$bvModal.hide('create_connection_modal_net');
             }
+
         },
         async mounted() {
             await this.$store.dispatch('concept_map/loadConceptMapFromBackend');
