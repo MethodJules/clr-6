@@ -7,6 +7,6 @@
     "\\src\\store\\modules",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\components\\ConceptList.vue",
+  "SelectedNode": "\\src\\views\\Concept.vue",
   "PreviewInSolutionExplorer": false
 }

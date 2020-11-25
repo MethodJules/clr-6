@@ -18,73 +18,71 @@
 
             </div>
             <div class="viewConcept">
-                    <ConceptMap @parentToChild="onParentClick($event)"/>
-                    <!-- <div class="modalView" v-if="showModal">
-                        <CreateConnection @closeModal="closeModal($event)" :source=target />
-                    </div> -->
+                <ConceptMap @parentToChild="onParentClick($event)" />
+                <!-- <div class="modalView" v-if="showModal">
+        <CreateConnection @closeModal="closeModal($event)" :source=target />
+    </div> -->
+                <!-- Modal für die Erstellung eines neuen Konzeptes aus der Liste in die Map -->
+                <b-modal id="create_connection_modal" hide-footer>
+                    <div class="d-block text-center">
+                        <h1>Create Connection</h1>
 
-                    <b-modal id="create_connection_modal" hide-footer>
-                        <div class="d-block text-center">
-                            <h1>Create Connection</h1>
-                            
-                            <table>
-                                <tr>
-                                    <td> Source: </td>
-                                    <td> <b-form-select v-model="source_uuid" :options="source_options"></b-form-select></td>
+                        <table>
+                            <tr>
+                                <td> Source: </td>
+                                <td> <b-form-select v-model="source_uuid" :options="source_options"></b-form-select></td>
 
-                                </tr>
-                                <tr>
-                                    <td> Target: </td>
-                                    <td>{{target.name}}</td>
-                                </tr>
-                                <tr>
-                                    <td> Name: </td>
-                                    <td> <b-form-input v-model="relationship_label" placeholder="Bitte geben Sie hier die Bezeichnung ein."> </b-form-input></td>
-                                </tr>
-                            </table>
-                            
-                            
+                            </tr>
+                            <tr>
+                                <td> Target: </td>
+                                <td>{{target.name}}</td>
+                            </tr>
+                            <tr>
+                                <td> Name: </td>
+                                <td> <b-form-input v-model="relationship_label" placeholder="Bitte geben Sie hier die Bezeichnung ein."> </b-form-input></td>
+                            </tr>
+                        </table>
 
 
-                            
-                            <!-- <div v-for="option in target_options" :key="option.value.id">
-                                <p><b>Connect to:</b> {{option.value.concept}}</p>
-                            </div> -->
-                            <b-button class="mt-3" block @click="createNewConncetionToConceptMap">Speichern</b-button>
-                        </div>
-                    </b-modal>
+                        <!-- <div v-for="option in target_options" :key="option.value.id">
+                <p><b>Connect to:</b> {{option.value.concept}}</p>
+            </div> -->
+                        <b-button class="mt-3" block @click="createNewConncetionToConceptMap">Speichern</b-button>
+                    </div>
+                </b-modal>
 
+                <!-- Modal für die Erstellung eines neuen Konzeptes aus der Map in die Map -->
+                <b-modal id="create_connection_modal_net" hide-footer>
+                    <div class="d-block text-center">
+                        <h1>Create Connection </h1>
 
-                   <b-modal id="create_connection_modal_net" hide-footer>
-                        <div class="d-block text-center">
-                            <h1>Create Connection Modal</h1>
-                            
-                            <table>
-                                <tr>
-                                    <td> Source: </td>
-                                    <td>{{source.name}}</td>                                    
-                                </tr>
-                                <tr>
-                                    <td> Target: </td>
-                                    <td> <b-form-select v-model="target_uuid2" :options="target_options"></b-form-select></td>
-                                </tr>
-                                <tr>
-                                    <td> Name: </td>
-                                    <td> <b-form-input v-model="relationship_label" placeholder="Bitte geben Sie hier die Bezeichnung ein."> </b-form-input></td>
-                                </tr>
-                            </table>
-                            <b-button class="mt-3" block @click="createNewConncetionToConceptMap2">Speichern</b-button>
-                        </div>
-                    </b-modal>
+                        <table>
+                            <tr>
+                                <td> Source: </td>
+                                <td>{{source.name}}</td>
+                            </tr>
+                            <tr>
+                                <td> Target: </td>
+                                <td> <b-form-select v-model="target_uuid_map" :options="target_options"></b-form-select></td>
+                            </tr>
+                            <tr>
+                                <td> Name: </td>
+                                <td> <b-form-input v-model="relationship_label" placeholder="Bitte geben Sie hier die Bezeichnung ein."> </b-form-input></td>
+                            </tr>
+                        </table>
+                        <b-button class="mt-3" block @click="createNewConncetionToConceptMapFromMap">Speichern</b-button>
+                    </div>
+                </b-modal>
 
-                    <b-modal id="create_concept_modal" hide-footer>
-                        <div class="d-block text-center">
-                            <h1>Neues Concept erstellen</h1>
-                            <b-form-input v-model="concept_name" placeholder="Bitte geben Sie hier den Concept Namen ein"></b-form-input>
-                        </div>
-                        <b-button class="mt-3" block @click="addElement">Speichern</b-button>
+                <!-- Modal für die Erstellung eines neuen Konzeptes  -->
+                <b-modal id="create_concept_modal" hide-footer>
+                    <div class="d-block text-center">
+                        <h1>Neues Concept erstellen</h1>
+                        <b-form-input v-model="concept_name" placeholder="Bitte geben Sie hier den Concept Namen ein"></b-form-input>
+                    </div>
+                    <b-button class="mt-3" block @click="addElement">Speichern</b-button>
 
-                    </b-modal>
+                </b-modal>
             </div>
         </div>
 
@@ -113,10 +111,13 @@ import {mapState} from 'vuex'
                 target: '',
                 source: '',
                 concept_name: '',
+                // Variablen, um neues Konzept aus der Liste hinzuzufügen
                 source_uuid: null,
-                target_uuid2: null,
-                source_uuid2: {},
                 target_uuid: {},
+                // Variablen, um neues Konzept aus der Map heraus hinzuzufügen
+                target_uuid_map: null,
+                source_uuid_map: {},
+                
                 target_options: [],
                 source_options: [],
                 relationship_label: '',
@@ -131,29 +132,34 @@ import {mapState} from 'vuex'
             closeModal(value) {
                 this.showModal = value
             },
+
+            // aus Liste neues Konzept zu Map hinzufügen
             onChildClick(value) {
                 //console.log(value)
                 //this.showModal = true
-                this.openCreateConnectionModal();
                 this.target = value
+                this.openCreateConnectionModal();
 
             },
 
+            // aus Map neues Konzept hinzufügen
             onParentClick(value) {
                 console.log(value)
-                //this.showModal = true                 
-                this.openCreateConnectionModalNet();
+                //this.showModal = true       
                 this.source = value
+                this.openCreateConnectionModalNet();
+                
                 
 
             },
 
+            // Load targets from database
             loadTarget() {    
 
                 this.conceptList = this.$store.state.concepts.concepts;
                 this.spliceConcepts = [];
                 this.target_options = [];
-/*
+                /*
                 this.$store.state.concepts.concepts.forEach(element => {
                     for (let map of this.$store.state.concept_map.nodes) {
 
@@ -169,11 +175,18 @@ import {mapState} from 'vuex'
                     this.conceptList.splice(this.conceptList.indexOf(splice), 1);
                 }
                 */
-                console.log(this.target_options);
 
                 this.conceptList.forEach(element => {
                     //console.log(element);
                     this.target_options.push({ value: { id: element.nid, uuid: element.id, concept: element.name }, text: element.name });
+                });
+
+
+                this.target_options.forEach(element => {
+                    
+                    if (element.value.uuid == this.source.uuid) {
+                        this.target_options.splice(this.target_options.indexOf(element), 1);
+                    }       
                 });
 
             },
@@ -190,31 +203,47 @@ import {mapState} from 'vuex'
             addElement() {
                 //alert("Hinzuf�gen");
 
-                this.$store.dispatch('concepts/addConcept', this.concept_name);
-                this.$bvModal.hide('create_concept_modal');
+                this.conceptList = this.$store.state.concepts.concepts;
+                var isEqual = false;
+
+                this.conceptList.forEach(element => {
+                    if (element.name === this.concept_name) {
+                        alert("Konzeptname ist gleich");
+                        isEqual = true;
+                    }
+                })
+                if (!isEqual) {
+                    this.$store.dispatch('concepts/addConcept', this.concept_name);
+                    this.$bvModal.hide('create_concept_modal');
+                }
+
+             
 
                 //console.log(this.$store.state.items);
                 //TODO: Concept hinzufuegen
             },
+            // load sources
             loadConceptMap() {
                 this.source_options = [];
                 this.concepts.forEach(element => {
-                    //console.log(element);
                     this.source_options.push({value: {id: element.id, uuid: element.uuid, concept: element.name}, text: element.name});
-                });
-                //console.log(this.source_options);
+                });               
             },
+
             openCreateConceptModal() {
                 this.$bvModal.show('create_concept_modal');
             },
+            // open Connection Modal from list
             openCreateConnectionModal() {
                 this.loadConceptMap();
                 this.$bvModal.show('create_connection_modal');
             },
+            // open Connection Modal from map
             openCreateConnectionModalNet() {
                 this.loadTarget();
                 this.$bvModal.show('create_connection_modal_net');
             },
+
             createNewConncetionToConceptMap() {
                 console.log(this.target_uuid);
                 console.log(this.target);
@@ -238,26 +267,25 @@ import {mapState} from 'vuex'
                 this.$bvModal.hide('create_connection_modal');
             },
 
-            createNewConncetionToConceptMap2() {    
+            createNewConncetionToConceptMapFromMap() {    
                 console.log(this.source);
-                this.source_uuid2.concept = this.source.name;
-                this.source_uuid2.id = this.source.id;
-                this.source_uuid2.uuid = this.source.uuid;
+                this.source_uuid_map.concept = this.source.name;
+                this.source_uuid_map.id = this.source.id;
+                this.source_uuid_map.uuid = this.source.uuid;
 
                 var isExisting = false;
 
                 for (let map of this.$store.state.concept_map.nodes) {
 
-                    if (map.uuid == this.target_uuid2.uuid) {
+                    if (map.uuid == this.target_uuid_map.uuid) {
                         isExisting = true;
                     }
                 }
-                if (!isExisting) {
-                    console.log("Test");
-                    this.$store.dispatch('concept_map/addConceptToConceptMap', this.target_uuid2); //TODO: target_uuid ändern in semantisch korrekte bezeichnung
+                if (!isExisting) {      
+                    this.$store.dispatch('concept_map/addConceptToConceptMap', this.target_uuid_map); //TODO: target_uuid ändern in semantisch korrekte bezeichnung
 
                 }
-                this.$store.dispatch('concept_map/addRelationshipToConceptMap', { source: this.source_uuid2, target: this.target_uuid2, name: this.relationship_label });
+                this.$store.dispatch('concept_map/addRelationshipToConceptMap', { source: this.source_uuid_map, target: this.target_uuid_map, name: this.relationship_label });
                 this.$bvModal.hide('create_connection_modal_net');
             }
 
