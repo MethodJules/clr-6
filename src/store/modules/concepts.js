@@ -19,6 +19,7 @@ const state = () => ({
 const actions = {
     addConcept({commit}, concept) {
         commit('ADD_NEW_CONCEPT', concept);
+       
     },
     deleteConcept({commit}, concept) {
         var config = {

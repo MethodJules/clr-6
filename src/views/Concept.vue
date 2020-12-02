@@ -15,6 +15,9 @@
                 <div class="newElement">
                     <v-btn class="addButton" @click="openCreateConceptModal"> + </v-btn>
                 </div>
+                <div class="recomander">
+                    <v-btn class="addButton" @click="openRecommander"> Recommander </v-btn>
+                </div>
 
             </div>
             <div class="viewConcept">
@@ -83,6 +86,18 @@
                     <b-button class="mt-3" block @click="addElement">Speichern</b-button>
 
                 </b-modal>
+
+                 <b-modal id="create_recommander_modal" hide-footer>
+                    <div class="d-block">
+                        <h1>Recommander</h1>
+                        <b-form-group>
+                            <b-form-checkbox-group size="lg" id="recommander" v-model="selectedRecommanders" :options="recommands" name="recommander" stacked></b-form-checkbox-group>
+                        </b-form-group>
+                                 </div>
+                    <b-button class="mt-3" block @click="createRecommands">erstellen</b-button>
+
+                </b-modal>
+
             </div>
         </div>
 
@@ -121,6 +136,9 @@ import {mapState} from 'vuex'
                 target_options: [],
                 source_options: [],
                 relationship_label: '',
+                // Variable für die ausgewählten Vorschläge
+                selectedRecommanders: [], 
+                recommands: []
             }
         },
         components: {
@@ -244,6 +262,49 @@ import {mapState} from 'vuex'
                 this.$bvModal.show('create_connection_modal_net');
             },
 
+            // opern Recommander Modal 
+            openRecommander() {
+                // recommands austauschen durch variable Liste
+                this.recommands = [
+                    { text: 'Konzept 1', value: 'concept1' },
+                    { text: 'Konzept 2', value: 'concept2' },
+                    { text: 'Konzept 3', value: 'concept3' },
+                    { text: 'Konzept 4', value: 'concept4' },
+                    { text: 'Konzept 5', value: 'concept5' },
+                    { text: 'Konzept 6', value: 'concept6' }
+                ];
+
+                this.$bvModal.show('create_recommander_modal');
+            },
+
+            // Ausgewählte Recommands anlegen
+            createRecommands() {
+                console.log(this.selectedRecommanders);
+                this.conceptList = this.$store.state.concepts.concepts;
+
+               
+
+                this.selectedRecommanders.forEach(concept => {
+                    var isEqual = false;
+
+                    this.conceptList.forEach(element => {
+                        if (element.name === concept) {
+                            alert("Konzept"  + concept + " existiert bereits und wurde nicht erstellt");
+                            isEqual = true;
+                        }
+                    })
+                    if (!isEqual) {
+                        this.$store.dispatch('concepts/addConcept', concept);
+                        
+                    }
+                })
+
+                  this.$bvModal.hide('create_recommander_modal');
+    
+                
+
+            },
+
             createNewConncetionToConceptMap() {
                 console.log(this.target_uuid);
                 console.log(this.target);
@@ -354,6 +415,12 @@ import {mapState} from 'vuex'
     .newElement {
         position: absolute;
         right: 10px;
+        bottom: 10px;
+        color: #c93e37;
+    }
+    .recomander {
+        position: absolute;
+        right: 40px;
         bottom: 10px;
         color: #c93e37;
     }

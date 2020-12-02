@@ -84,7 +84,6 @@ export default {
         await this.$store.dispatch('concepts/loadConcepts');
         
         console.log(this.$store.state.concepts.concepts);
-        alert(this.$store.state.concept_map.nodes);
 
         this.conceptList = this.$store.state.concepts.concepts;
 
