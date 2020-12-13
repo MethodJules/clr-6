@@ -9,6 +9,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Chat from 'vue-beautiful-chat'
 
+import AppDate from '@/components/AppDate'
+Vue.component('AppDate', AppDate)
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)

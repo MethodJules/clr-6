@@ -40,6 +40,35 @@ const routes = [
         name: 'Agenda',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Agenda.vue')
     },
+    {
+        path: '/forum',
+        name: 'Forum',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Forum.vue')
+    },
+    {
+        path: '/category/:id',
+        name: 'Category',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumCategory.vue'),
+        props: true
+    },
+    {
+        path: '/forum/:id',
+        name: 'ForumThreads',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumCategoryThreads.vue'),
+        props: true
+    },
+    {
+        path: '/thread/:id',
+        name: 'ThreadShow',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumThreadShow.vue'),
+        props: true
+    },
+    {
+        path: '/newThread/:id',
+        name: 'NewThread',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewThread.vue'),
+        props: true
+    },
 
 
 ]

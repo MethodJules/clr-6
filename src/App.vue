@@ -27,6 +27,7 @@
     }
 </script>
 <style>
+    @import 'assets/style.css';
     .background {
         background-color: red;
         background-image: url('~@/assets/background2.jpg'); 

@@ -1,21 +1,21 @@
 <template>
 
     <div class="navigation">
-       <!--  <router-link tag="div" to="/scope" class="element">
-            <p><b>Scope </b></p>
-        </router-link> -->
+        <!--  <router-link tag="div" to="/scope" class="element">
+         <p><b>Scope </b></p>
+     </router-link> -->
         <router-link tag="div" to="/concept" class="element">
             <p><b>Concept </b></p>
         </router-link>
-       <!--  <router-link tag="div" to="/search" class="element">
-            <p><b>Search </b></p>
-        </router-link> -->
+        <!--  <router-link tag="div" to="/search" class="element">
+         <p><b>Search </b></p>
+     </router-link> -->
         <!-- <router-link tag="div" to="/analysis" class="element">
-            <p><b>Analysis </b></p>
-        </router-link> -->
+        <p><b>Analysis </b></p>
+    </router-link> -->
         <!-- <router-link tag="div" to="/agenda" class="element">
-            <p><b>Agenda </b></p>
-        </router-link> -->
+        <p><b>Agenda </b></p>
+    </router-link> -->
 
         <div class="search">
             <beautiful-chat class="chat"
@@ -37,7 +37,10 @@
                 </template>
             </beautiful-chat>
         </div>
-            <!--
+        <router-link tag="div" to="/forum" class="forum">
+            <p><b>Forum </b></p>
+        </router-link> -->
+        <!--
          :newMessagesCount="newMessagesCount"
 
          :showEmoji="true"
@@ -53,7 +56,7 @@
          @onType="handleOnType"
          @edit="editMessage"
     -->
-            <!--
+        <!--
             <div class="search" @click="showDiv()">
                 <p><b>&#9993; </b></p>
             </div>
@@ -63,7 +66,7 @@
 
             </div>
     -->
-        </div>
+    </div>
 </template>
 <script>
 
@@ -187,7 +190,7 @@
     }
     .router-link-active {
         background: #c93e37;
-        color: white;
+       
     }
 
     p {
@@ -220,6 +223,32 @@
         background-color: #c93e37;
         position: absolute;
         right: 5px;
+    }
+    .forum {
+        position: absolute;
+        bottom: 0;
+        margin-left: 65%;
+        width: 30%;
+        height: 60px;
+        background-color: #c93e37;
+        text-align: center;
+        margin-bottom: 20px;
+        display: table;
+        cursor: pointer;
+        color: white;
+        border-radius: 50%;
+    }
+
+    .element {
+        background-color: white;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        height: 12%;
+        display: table;
+        margin-top: 25px;
+        cursor: pointer;
     }
 
 
