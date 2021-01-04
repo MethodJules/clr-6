@@ -101,6 +101,12 @@
             </div>
         </div>
 
+        <div class="comments">
+            
+            <CommentForm/>
+
+        </div>
+
     </div>
 </template>
 
@@ -110,7 +116,8 @@
 
 import ConceptMap from '@/components/ConceptMap'
 //import CreateConnection from '@/components/CreateConnection'
-import ConceptList from '@/components/ConceptList'
+    import ConceptList from '@/components/ConceptList'
+    import CommentForm from '@/components/CommentForm'
 import {mapState} from 'vuex'
 
 
@@ -144,7 +151,8 @@ import {mapState} from 'vuex'
         components: {
             ConceptMap,
             //CreateConnection,
-            ConceptList
+            ConceptList,
+            CommentForm
         },
         methods: {
             closeModal(value) {
@@ -492,4 +500,15 @@ import {mapState} from 'vuex'
         input[type=text]:focus {
             outline: 2px solid #c93e37;
         }
+    .conceptMap {
+        width: 100%;
+        height: 90%;
+    }
+
+    .comments {
+        border: solid;
+        background-color: white;
+        border-color: #c93e37;
+    }
+
 </style>
