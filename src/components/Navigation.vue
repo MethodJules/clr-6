@@ -2,14 +2,17 @@
 
     <div class="navigation">
         <!--  <router-link tag="div" to="/scope" class="element">
-         <p><b>Scope </b></p>
-     </router-link> -->
+        <p><b>Scope </b></p>
+    </router-link> -->
         <router-link tag="div" to="/concept" class="element">
             <p><b>Concept </b></p>
         </router-link>
+        <router-link tag="div" to="/review" class="element">
+            <p><b>Review </b></p>
+        </router-link>
         <!--  <router-link tag="div" to="/search" class="element">
-         <p><b>Search </b></p>
-     </router-link> -->
+        <p><b>Search </b></p>
+    </router-link> -->
         <!-- <router-link tag="div" to="/analysis" class="element">
         <p><b>Analysis </b></p>
     </router-link> -->
@@ -189,7 +192,8 @@
         cursor: pointer;
     }
     .router-link-active {
-        background: #c93e37;
+        background: #c93e37 !important;
+        color: white;
        
     }
 

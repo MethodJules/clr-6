@@ -3,8 +3,10 @@
     "",
     "\\src",
     "\\src\\assets",
+    "\\src\\components",
+    "\\src\\router",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\views\\Concept.vue",
+  "SelectedNode": "\\src\\components\\ThreadListItem.vue",
   "PreviewInSolutionExplorer": false
 }

@@ -69,6 +69,11 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewThread.vue'),
         props: true
     },
+    {
+        path: '/review',
+        name: 'Review',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Review.vue')
+    },
 
 
 ]
@@ -76,7 +81,7 @@ const routes = [
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes
+    routes,
 })
 
 export default router
