@@ -74,6 +74,16 @@ const routes = [
         name: 'Review',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Review.vue')
     },
+    {
+        path: '/groupmanagement',
+        name: 'Groupmanagement',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
+    },
+    {
+        path: '/newMember',
+        name: 'NewMember',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
+    }
 
 
 ]

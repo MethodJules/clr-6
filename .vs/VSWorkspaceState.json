@@ -1,12 +1,13 @@
 {
   "ExpandedNodes": [
     "",
+    "\\public",
     "\\src",
     "\\src\\assets",
     "\\src\\components",
-    "\\src\\router",
+    "\\src\\store\\modules",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\components\\ThreadListItem.vue",
+  "SelectedNode": "\\public\\index.html",
   "PreviewInSolutionExplorer": false
 }

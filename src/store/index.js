@@ -4,6 +4,7 @@ import items from './modules/items'
 import concepts from './modules/concepts'
 import concept_map from './modules/concept_map'
 import sourceData from '@/data.json'
+import members from './modules/members'
 
 Vue.use(Vuex)
 Vue.config.devtools = true
@@ -12,7 +13,8 @@ export default new Vuex.Store({
     modules: {
        items,
        concepts,
-       concept_map
+       concept_map,
+       members
     },
 
 //noch in Datei packen
