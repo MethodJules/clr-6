@@ -4,6 +4,7 @@
         <h1>
             CONCEPT MAP
         </h1>
+    
         <div v-if="newconcept" @click="openConcept()" class="newConcept">
             <h1 class="centerText">
                 +
@@ -106,6 +107,11 @@
             <CommentForm/>
 
         </div>
+        <div class = "dailys">
+            <br> 
+            <h1> Daily Scrum </h1>
+            <TabelleDaily msg="Welcome to Your Vue.js App"/>
+        </div>
 
     </div>
 </template>
@@ -115,6 +121,7 @@
 <script>
 
 import ConceptMap from '@/components/ConceptMap'
+import TabelleDaily from '@/components/TabelleDaily'
 //import CreateConnection from '@/components/CreateConnection'
     import ConceptList from '@/components/ConceptList'
     import CommentForm from '@/components/CommentForm'
@@ -152,7 +159,8 @@ import {mapState} from 'vuex'
             ConceptMap,
             //CreateConnection,
             ConceptList,
-            CommentForm
+            CommentForm,
+            TabelleDaily
         },
         methods: {
             closeModal(value) {
