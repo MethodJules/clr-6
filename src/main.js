@@ -10,6 +10,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Chat from 'vue-beautiful-chat'
 import zircle from 'zircle'
 import 'zircle/dist/zircle.css'
+import { Datetime } from 'vue-datetime'
+import 'vue-datetime/dist/vue-datetime.min.css'
 
 import AppDate from '@/components/AppDate'
 Vue.component('AppDate', AppDate)
@@ -19,8 +21,8 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Chat)
 Vue.use(zircle)
-
 Vue.use(Vuex);
+Vue.use(Datetime)
 
 new Vue({
     router,

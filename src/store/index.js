@@ -6,7 +6,9 @@ import concept_map from './modules/concept_map'
 import sourceData from '@/data.json'
 import members from './modules/members'
 
+
 Vue.use(Vuex)
+
 Vue.config.devtools = true
 
 export default new Vuex.Store({

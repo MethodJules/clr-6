@@ -83,8 +83,12 @@ const routes = [
         path: '/newMember',
         name: 'NewMember',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
+    },
+    {
+        path: '/calendar',
+        name: 'Calendar',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Calendar.vue')
     }
-
 
 ]
 

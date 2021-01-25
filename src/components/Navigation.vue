@@ -13,9 +13,9 @@
         <router-link tag="div" to="/groupmanagement" class="element">
         <p><b>Groupmanagement </b></p>
         </router-link> 
-        <!-- <router-link tag="div" to="/analysis" class="element">
-        <p><b>Analysis </b></p>
-    </router-link> -->
+        <router-link tag="div" to="/calendar" class="element">
+        <p><b>Calendar </b></p>
+    </router-link> 
         <!-- <router-link tag="div" to="/agenda" class="element">
         <p><b>Agenda </b></p>
     </router-link> -->

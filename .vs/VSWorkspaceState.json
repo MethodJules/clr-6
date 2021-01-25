@@ -3,11 +3,8 @@
     "",
     "\\public",
     "\\src",
-    "\\src\\assets",
-    "\\src\\components",
-    "\\src\\store\\modules",
     "\\src\\views"
   ],
-  "SelectedNode": "\\public\\index.html",
+  "SelectedNode": "\\src\\views\\Concept.vue",
   "PreviewInSolutionExplorer": false
 }
