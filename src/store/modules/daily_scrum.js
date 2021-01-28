@@ -7,7 +7,7 @@ const state = () => ({
 })
 
 const actions = {
-   
+
 
     async loadDailysFromBackend({commit}) {
         await  axios.get('http://clr-backend.x-navi.de/jsonapi/node/dailyscrum')
@@ -19,35 +19,35 @@ const actions = {
                 //commit('SAVE_DAILYSCRUM_FEATURE', dailyscrum_feature)
             }).catch(error =>{
                 throw new Error(`API ${error}`);
-            });         
-            
+            });
+
     },
 
 }
 
 const mutations = {
 
-    
-    
+
+
     SAVE_DAILYSCRUM_FEATURE(state, dailyscrum_feature) {
-        
+
         dailyscrum_feature.forEach(element => {
             const field_datum = element.attributes.field_datum;
-            console.log(field_datum)
+            //console.log(field_datum)
             const field_gestern = element.attributes.field_gestern;
-            console.log(field_gestern)
+            //console.log(field_gestern)
             const field_heute = element.attributes.field_heute;
-            console.log(field_heute)
+            //console.log(field_heute)
             const field_probleme = element.attributes.field_probleme;
-            console.log(field_probleme)
+            //console.log(field_probleme)
             state.rowData.push( { date: field_datum, doings: field_gestern, todaydoings: field_heute, problems: field_probleme })
             console.log(state)
 
 
 
-            
+
         });
-        
+
         /* dailyscrum_feature.forEach(element => {
             console.log(element);
             const field_datum = element.attributes.field_datum.data;
@@ -55,12 +55,12 @@ const mutations = {
             const field_heute = element.attributes.field_heute.data;
             const field_probleme = element.attributes.field_probleme.data;
             console.log(`Title: ${title}`)
-        
+
 
         }); */
-    }      
-    
-    
+    }
+
+
 
 }
 

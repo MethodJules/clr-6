@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <div id="add-table"> </div>
-    <form target="1">
+    <form target="1">s
 
     <table class="eingabe" >
     <tr>
@@ -11,7 +11,7 @@
      <td> <input v-model="doings" type ="text" placeholder="Geben Sie ein, was sie gemacht haben!"></td>
       <br>
     </tr>
-     <tr> 
+     <tr>
      <td><label for = "heute">Was habe ich heute vor?</label></td>
       <td><input v-model="todaydoings" type ="text" placeholder="Geben Sie ein was Sie heute vor haben!">
       <br></td></tr>
@@ -25,7 +25,7 @@
 
     <div id="button">
     <div id="button_container_1">
-        
+
         <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
         <button type="button" class="btn btn-primary" @click="loadDaily()">Laden</button>
     </div>
@@ -40,13 +40,13 @@
                 <th>Was habe ich heute vor?</th>
                 <th> Welche Probleme hatte ich? </th>
             </tr>
-            
+
             <tr v-for="row in rowData" :key="row.date">
                 <td> {{ row.date}} </td>
                 <td> {{row.doings}} </td>
                 <td>{{row.todaydoings}}</td>
                 <td> {{row.problems}} </td>
-                <td><button @click="deleteRow(id, row)">Lösche</button></td> 
+                <td><button @click="deleteRow(id, row)">Lösche</button></td>
             </tr>
 
         </table>
@@ -56,39 +56,34 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import {mapState} from 'vuex'
-Vue.use(VueAxios, axios)
 export default {
-  
-  
+
+
   name: 'TabelleDaily',
   props: {
     msg: String
   },
   data() {
-  
+
     return {
-      
+
       date: "",
       doings: "",
       todaydoings: "",
       problems: "",
 
       rowData: [
-        
+
         { date: "JJGJ", doings: "fhshdf ", todaydoings: "hfdshf", problems: "hjsdhfj"  },
-        
+
       ]
 
-    };  
+    };
   },
-  
+
   methods: {
     loadDaily() {
-      
+
 
 
     },
@@ -116,14 +111,11 @@ export default {
 
     }
   },
-  computed: {
-    ...mapState({rowData: state => state.daily_scrum.rowData})
-    
-  },
   mounted() {
-    this.$store.dispatch('daily_scrum/loadDailysFromBackend')
+    this.$store.dispatch('daily_scrum/loadDailysFromBackend');
+    this.rowData = this.$store.state.daily_scrum.rowData;
   }
-    
+
 }
 
 </script>
