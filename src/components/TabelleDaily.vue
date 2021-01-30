@@ -56,12 +56,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import {mapState} from 'vuex'
-Vue.use(VueAxios, axios)
+
+
 export default {
+
   
   
   name: 'TabelleDaily',
@@ -79,7 +77,7 @@ export default {
 
       rowData: [
         
-        { date: "JJGJ", doings: "fhshdf ", todaydoings: "hfdshf", problems: "hjsdhfj"  },
+        { date: "JJ", doings: "fhshdf ", todaydoings: "hfdshf", problems: "hjsdhfj"  },
         
       ]
 
@@ -93,13 +91,14 @@ export default {
 
     },
     addItem() {
+            
             var ausgabe = {
                 date: this.date,
                 doings: this.doings,
                 todaydoings: this.todaydoings,
                 problems: this.problems
             };
-
+            this.$store.dispatch('daily_scrum/createDaily', ausgabe)
             this.rowData.push(ausgabe)
 
             this.date = ''
@@ -116,12 +115,12 @@ export default {
 
     }
   },
-  computed: {
-    ...mapState({rowData: state => state.daily_scrum.rowData})
-    
-  },
+  
   mounted() {
     this.$store.dispatch('daily_scrum/loadDailysFromBackend')
+    
+    this.rowData = this.$store.state.daily_scrum.rowData
+    
   }
     
 }

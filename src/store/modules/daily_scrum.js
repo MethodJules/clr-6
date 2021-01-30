@@ -10,6 +10,7 @@ const actions = {
    
 
     async loadDailysFromBackend({commit}) {
+
         await  axios.get('http://clr-backend.x-navi.de/jsonapi/node/dailyscrum')
             .then((response) => {
                 console.log(response);
@@ -23,11 +24,37 @@ const actions = {
             
     },
 
+    createDaily({commit}, dailyEntry) {
+        console.log(dailyEntry.todaydoings)
+        commit('ADD_DAILY_ENTRY', dailyEntry)
+
+    }
 }
 
 const mutations = {
 
-    
+    ADD_DAILY_ENTRY(state, dailyEntry) {
+        console.log(dailyEntry.todaydoings)
+        var data = `{"data": {"type": "node--dailyscrum", "attributes": {"title": "My custom title", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
+        var config = {
+            method: 'post',
+            url: 'http://clr-backend.x-navi.de/jsonapi/node/dailyscrum',
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function(response){
+                console.log(response)
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+    },
     
     SAVE_DAILYSCRUM_FEATURE(state, dailyscrum_feature) {
         
