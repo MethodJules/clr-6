@@ -88,8 +88,12 @@ const routes = [
         path: '/calendar',
         name: 'Calendar',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Calendar.vue')
+    },
+    {
+        path: '/mail',
+        name: 'Mail',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Mail.vue')
     }
-
 ]
 
 const router = new VueRouter({

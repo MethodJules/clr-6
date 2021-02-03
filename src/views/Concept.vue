@@ -16,7 +16,7 @@
                     <v-btn class="addButton" @click="openCreateConceptModal"> + </v-btn>
                 </div>
                 <div class="recomander">
-                    <v-btn class="addButton" @click="openRecommander"> Recommander </v-btn>
+                    <v-btn class="recButton" @click="openRecommander"> Recommander </v-btn>
                 </div>
 
             </div>
@@ -368,6 +368,25 @@ import {mapState} from 'vuex'
 
 }
 </script>
+
+<style scoped>
+    .addButton {
+        position: relative;
+        margin-bottom: 10px;
+        color: white;
+        background-color: #c93e37 !important;
+        width: 50%;
+    }
+    .recButton {
+        position: relative;
+        margin-bottom: 10px;
+        color: white;
+        background-color: #c93e37 !important;
+        padding: 4px !important;
+        font-size: 10px;
+    }
+</style>
+
 <style>
 
     .home {
@@ -411,11 +430,6 @@ import {mapState} from 'vuex'
         position: absolute;
         left: 10px;
     }
-    .addButton {
-        position: relative;
-        margin-bottom: 10px;
-        color: #c93e37;
-    }
     .scrollbar {
         width: 100%;
         height: 80%;
@@ -428,7 +442,7 @@ import {mapState} from 'vuex'
     }
     .recomander {
         position: absolute;
-        right: 40px;
+        left: 10px;
         bottom: 10px;
         color: #c93e37;
     }
