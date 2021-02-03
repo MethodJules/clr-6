@@ -10,7 +10,6 @@ const actions = {
    
 
     async loadDailysFromBackend({commit}) {
-
         await  axios.get('http://clr-backend.x-navi.de/jsonapi/node/dailyscrum')
             .then((response) => {
                 console.log(response);
@@ -28,10 +27,47 @@ const actions = {
         console.log(dailyEntry.todaydoings)
         commit('ADD_DAILY_ENTRY', dailyEntry)
 
-    }
+    },
+
+    deleteDaily({commit}, dailyEntry) {
+
+        commit('DELETE_DAILY_ENTRY', dailyEntry);
+    },
+
+    updateDaily({commit}, dailyEntry) {
+
+        commit('UPDATE_DAILY_ENTRY', dailyEntry);
+    },
+
+   
+
+    
+
 }
 
 const mutations = {
+
+    DELETE_DAILY_ENTRY({commit}, dailyEntry) {
+        var config = {
+            method: 'delete',
+            url: `http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.id}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+            },
+        };
+        axios(config)
+            .then((response) => {
+                console.log(response);
+            }).catch(function(error) {
+                console.log(error);
+            });
+
+        let date = state.rowData.indexOf(dailyEntry);
+        state.rowData.splice(date, 1);
+        commit('DELETE_DAILY_ENTRY', dailyEntry);
+    },
 
     ADD_DAILY_ENTRY(state, dailyEntry) {
         console.log(dailyEntry.todaydoings)
@@ -55,6 +91,30 @@ const mutations = {
                 console.log(error)
             })
     },
+
+    UPDATE_DAILY_ENTRY(state, dailyEntry) {
+        console.log(dailyEntry.todaydoings)
+        var data = `{"data": {"type": "node--dailyscrum", "id": "${dailyEntry.id}", "attributes": {"title": "My updated title", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
+        var config = {
+            method: 'patch',
+            url: 'http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.id}',
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+            },
+            data: data
+        };
+
+        axios(config)
+            .then(function(response){
+                console.log(response)
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+    },
+
     
     SAVE_DAILYSCRUM_FEATURE(state, dailyscrum_feature) {
         

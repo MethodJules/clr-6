@@ -41,12 +41,14 @@
                 <th> Welche Probleme hatte ich? </th>
             </tr>
             
-            <tr v-for="row in rowData" :key="row.date">
+            <tr v-for="row in rowData" :key="row.id">
                 <td> {{ row.date}} </td>
                 <td> {{row.doings}} </td>
                 <td>{{row.todaydoings}}</td>
                 <td> {{row.problems}} </td>
-                <td><button @click="deleteRow(id, row)">Lösche</button></td> 
+                <td><button @click="deleteRow(id, row)">Löschen</button></td> 
+                <td><button @click="updateRow(id, row)">Ändern</button></td> 
+
             </tr>
 
         </table>
@@ -57,9 +59,7 @@
 
 <script>
 
-
 export default {
-
   
   
   name: 'TabelleDaily',
@@ -77,7 +77,7 @@ export default {
 
       rowData: [
         
-        { date: "JJ", doings: "fhshdf ", todaydoings: "hfdshf", problems: "hjsdhfj"  },
+        { date: "JJGJ", doings: "fhshdf ", todaydoings: "hfdshf", problems: "hjsdhfj"  },
         
       ]
 
@@ -86,18 +86,27 @@ export default {
   
   methods: {
     loadDaily() {
+    
       
 
 
     },
+
+    updateRow() {
+
+      this.$store.dispatch('daily_scrum/updateDaily')
+
+    },
+
+
     addItem() {
-            
             var ausgabe = {
                 date: this.date,
                 doings: this.doings,
                 todaydoings: this.todaydoings,
                 problems: this.problems
             };
+
             this.$store.dispatch('daily_scrum/createDaily', ausgabe)
             this.rowData.push(ausgabe)
 
@@ -112,13 +121,13 @@ export default {
       if(indx > -1){
         this.rowData.splice(indx, 1);
       }
+      this.$store.dispatch('daily_scrum/deleteDaily', indx)
 
     }
   },
-  
+ 
   mounted() {
     this.$store.dispatch('daily_scrum/loadDailysFromBackend')
-    
     this.rowData = this.$store.state.daily_scrum.rowData
     
   }
