@@ -40,14 +40,14 @@
                 <th>Was habe ich heute vor?</th>
                 <th> Welche Probleme hatte ich? </th>
             </tr>
-            
+            <!-- row beinhaltet auch ID von Objekt/Content Type Instanz Ding - wird in loaddaily auch runtergeladen -->
             <tr v-for="row in rowData" :key="row.id">
                 <td> {{ row.date}} </td>
                 <td> {{row.doings}} </td>
                 <td>{{row.todaydoings}}</td>
                 <td> {{row.problems}} </td>
-                <td><button @click="deleteRow(id, row)">Löschen</button></td> 
-                <td><button @click="updateRow(id, row)">Ändern</button></td> 
+                <td><button @click="deleteRow(row)">Löschen</button></td> 
+                <td><button @click="updateRow(row)">Ändern</button></td> 
 
             </tr>
 
@@ -92,9 +92,9 @@ export default {
 
     },
 
-    updateRow() {
+    updateRow(row) {
 
-      this.$store.dispatch('daily_scrum/updateDaily')
+      this.$store.dispatch('daily_scrum/updateDaily', row)
 
     },
 
@@ -115,7 +115,15 @@ export default {
             this.todaydoings= ''
             this.problems = ''
         },
-    deleteRow(id, row){
+
+
+        deleteRow(row) {
+            alert("Delete");
+              //console.log(row);
+            this.$store.dispatch('daily_scrum/deleteDaily', row)
+        },
+
+/*     deleteRow(id, row){
       var indx = this.rowData.indexOf(row);
       console.log(indx, row.id) ;
       if(indx > -1){
@@ -123,8 +131,8 @@ export default {
       }
       this.$store.dispatch('daily_scrum/deleteDaily', indx)
 
-    }
-  },
+    } */
+  }, 
  
   mounted() {
     this.$store.dispatch('daily_scrum/loadDailysFromBackend')

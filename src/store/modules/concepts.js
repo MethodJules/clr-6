@@ -22,6 +22,7 @@ const actions = {
        
     },
     deleteConcept({commit}, concept) {
+        console.log(`das hier ist die ID von Concept  http://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`)
         var config = {
             method: 'delete',
             url: `http://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`,

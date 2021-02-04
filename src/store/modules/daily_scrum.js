@@ -29,10 +29,33 @@ const actions = {
 
     },
 
-    deleteDaily({commit}, dailyEntry) {
+/*     deleteDaily({commit}, dailyEntry) {
 
         commit('DELETE_DAILY_ENTRY', dailyEntry);
+    }, */
+
+    deleteDaily({commit}, dailyEntry) {
+        //console.log(`das hier ist die ID von Daily Entry ${dailyEntry.idd}`)
+        var config = {
+            method: 'delete',
+            url: `http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.idd}`,
+           // das hier löscht korrekt einen eintrag -> url: `http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/0765516c-d202-4ceb-ae44-5f86d203a278`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+            },
+        };
+        axios(config)
+            .then((response) => {
+                console.log(response);
+            }).catch(function(error) {
+                console.log(error);
+            });
+        commit('DELETE_DAILY_ENTRY', dailyEntry);
     },
+
+
 
     updateDaily({commit}, dailyEntry) {
 
@@ -46,7 +69,7 @@ const actions = {
 }
 
 const mutations = {
-
+/* 
     DELETE_DAILY_ENTRY({commit}, dailyEntry) {
         var config = {
             method: 'delete',
@@ -68,6 +91,16 @@ const mutations = {
         state.rowData.splice(date, 1);
         commit('DELETE_DAILY_ENTRY', dailyEntry);
     },
+ */
+
+ //der Teil löscht nur die Zeile aus Frontend Tabelle in Vue raus
+DELETE_DAILY_ENTRY(state, dailyEntry) {
+    let index = state.rowData.indexOf(dailyEntry);
+    state.rowData.splice(index, 1);
+},
+
+ 
+
 
     ADD_DAILY_ENTRY(state, dailyEntry) {
         console.log(dailyEntry.todaydoings)
@@ -94,10 +127,10 @@ const mutations = {
 
     UPDATE_DAILY_ENTRY(state, dailyEntry) {
         console.log(dailyEntry.todaydoings)
-        var data = `{"data": {"type": "node--dailyscrum", "id": "${dailyEntry.id}", "attributes": {"title": "My updated title", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
+        var data = `{"data": {"type": "node--dailyscrum", "id": "${dailyEntry.idd}", "attributes": {"title": "My updated title", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
         var config = {
             method: 'patch',
-            url: 'http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.id}',
+            url: `http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -127,7 +160,9 @@ const mutations = {
             console.log(field_heute)
             const field_probleme = element.attributes.field_probleme;
             console.log(field_probleme)
-            state.rowData.push( { date: field_datum, doings: field_gestern, todaydoings: field_heute, problems: field_probleme })
+            const field_id = element.id;
+            console.log(element.id)
+            state.rowData.push( { date: field_datum, doings: field_gestern, todaydoings: field_heute, problems: field_probleme, idd: field_id })
             console.log(state)
 
 
