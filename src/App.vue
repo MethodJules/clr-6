@@ -2,12 +2,61 @@
     <div id="app">
         <v-app>
             <v-main class="background">
-                <v-container>
-                    <Navigation> </Navigation>
+                <!-- <v-container>
+                    
                 </v-container>
                 <v-container>
                     <router-view />
-                </v-container>
+                </v-container> -->
+                <b-container> 
+                <b-row>
+                    <b-col>
+                        <div>
+                            <b-navbar toggleable="sm" type="light" variant="light">
+                            <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
+
+                            <b-navbar-brand>Start</b-navbar-brand>
+
+                            <b-collapse id="nav-text-collapse" is-nav>
+                            <b-navbar-nav>
+                                <b-nav-text>Projektbeschreibung</b-nav-text>
+                                <b-nav-text>Forum</b-nav-text>
+                                <b-nav-text>Gruppenmanagement</b-nav-text>
+                                <b-nav-text>Einstellungen</b-nav-text>
+                            </b-navbar-nav>
+                            </b-collapse>
+                            </b-navbar>
+                        </div>
+                    </b-col>
+
+        
+                </b-row>
+
+                <b-row>
+                    <b-col>
+                        
+                        <b-row>
+                            <b-col>
+                            To-Do Liste
+                            </b-col>
+                        </b-row>
+            
+                        <b-row>
+                            <b-col>
+                            Kalender
+                            </b-col>
+                        </b-row>
+                    </b-col>
+                    <b-col>
+                        Vorgehensmodell
+                    </b-col>
+                    <b-col>
+                        <Navigation> </Navigation>
+                    </b-col>
+                </b-row>
+                
+                </b-container>
+
 
             </v-main>
         </v-app>
