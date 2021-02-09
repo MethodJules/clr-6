@@ -1,28 +1,48 @@
 <template>
     <div id="app">
         <v-app>
-            <v-main class="background">
+            <v-main class="light">
                 <!-- <v-container>
-                    
+                    <Navigation> </Navigation>
                 </v-container>
                 <v-container>
                     <router-view />
                 </v-container> -->
                 <b-container> 
-                <b-row>
+                <b-row class ="obereLeiste">
                     <b-col>
                         <div>
                             <b-navbar toggleable="sm" type="light" variant="light">
                             <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
-
-                            <b-navbar-brand>Start</b-navbar-brand>
-
+                           
+                            <b-navbar-brand>
+                                <router-link tag="div" to="./home" class="element">
+                                    <b-icon-house-fill/>
+                                </router-link>
+                            </b-navbar-brand>
+                            
                             <b-collapse id="nav-text-collapse" is-nav>
                             <b-navbar-nav>
-                                <b-nav-text>Projektbeschreibung</b-nav-text>
-                                <b-nav-text>Forum</b-nav-text>
-                                <b-nav-text>Gruppenmanagement</b-nav-text>
-                                <b-nav-text>Einstellungen</b-nav-text>
+                                <b-col>
+                                    <router-link tag="div" to="./projektbeschreibung" class="element">
+                                        <b-nav-text>Projektbeschreibung</b-nav-text>
+                                    </router-link>
+                                </b-col>
+                                <b-col>
+                                    <router-link tag="div" to="./forum" class="element">
+                                        <b-nav-text>Forum</b-nav-text>
+                                    </router-link>
+                                </b-col>
+                                <b-col>
+                                    <router-link tag="div" to="./groupmanagement" class="element">
+                                        <b-nav-text>Gruppenmanagement</b-nav-text>
+                                    </router-link>
+                                </b-col>
+                                <b-col>
+                                    <router-link tag="div" to="./settings" class="element">
+                                        <b-nav-text>Einstellungen</b-nav-text>
+                                    </router-link>
+                                </b-col>
                             </b-navbar-nav>
                             </b-collapse>
                             </b-navbar>
@@ -31,28 +51,81 @@
 
         
                 </b-row>
-
+                <v-container class="light">
                 <b-row>
-                    <b-col>
+                    <b-col class="linkeSeite">
                         
                         <b-row>
                             <b-col>
-                            To-Do Liste
+                                <b-form-checkbox>Mein To Do 1</b-form-checkbox>
+                                <b-form-checkbox>Mein To Do 2</b-form-checkbox>
+                                <b-form-checkbox>Mein To Do 3</b-form-checkbox>
+                            </b-col>
+                            <b-col>
+                                <b-row>
+                                <b-button size= "sm"><b-icon-trash/></b-button>
+                                </b-row>
+                                <b-row>
+                                <b-button size= "sm"><b-icon-trash/></b-button>
+                                </b-row>
+                                <b-row>
+                                <b-button size= "sm"><b-icon-trash/></b-button>
+                                </b-row>
                             </b-col>
                         </b-row>
-            
                         <b-row>
                             <b-col>
-                            Kalender
+                            </b-col>
+                            <b-col>
+                                <b-button pill size= "lg"><b-icon-plus/></b-button>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            
+                            <b-col>
+                                <b-calendar
+                                    size= "sm"
+                                    id="ex-disabled-readonly"
+                                    :disabled="disabled"
+                                    :readonly="readonly"
+                                ></b-calendar>
                             </b-col>
                         </b-row>
                     </b-col>
-                    <b-col>
-                        Vorgehensmodell
+                    <b-col class="mitte">
+                        <br>
+                        <br>
+                        <b-img class="img" src="https://trello-attachments.s3.amazonaws.com/5b911be0b9386353bc8afef4/5fd341f17b06ee70f853fc5e/c9944c85c96ffc790112e60a72da44b7/Vorgehensmodell_kollab.jpg" fluid alt="Responsive image"></b-img>
                     </b-col>
-                    <b-col>
-                        <Navigation> </Navigation>
+                    <b-col class="rechteSeite">
+                        <br>
+                        <b-button-group vertical size="lg">
+                            <p><b-button href="#link-2" @click="hide" variant="outline-dark">Gruppe bilden</b-button></p>
+                            <p><b-button href="#link-2" @click="hide" variant="outline-dark">Ziel & Umfang</b-button></p>
+                            <router-link tag="div" to="./concept" class="element">
+                                <p><b-button variant="outline-dark">Konzepte & Definitionen </b-button></p>
+                            </router-link>
+                            <p><b-button href="#link-2" @click="hide" variant="outline-dark">Literatur suchen</b-button></p>
+                            <p><b-button href="#link-2" @click="hide" variant="outline-dark">Daten extrahieren</b-button></p>
+                            <p><b-button href="#link-2" @click="hide" variant="outline-dark">Analyse & Synthese</b-button></p>
+                            <p><b-button href="#link-2" @click="hide" variant="outline-dark">Ergebnisse kommunizieren</b-button></p>
+                            <p><b-button href="#link-2" @click="hide" variant="outline-dark">Gruppe auflösen</b-button></p>
+                        </b-button-group>
+                        <b-row>
+                            <b-col>
+                                <b-icon-chat/>
+                                
+                            </b-col>
+                            <b-col>
+                                <b-icon-envelope size="lg"/>
+                            </b-col>
+                           
+                        </b-row>
+                         <br>
                     </b-col>
+                </b-row>
+                </v-container>
+                <b-row class="untereLeiste">
                 </b-row>
                 
                 </b-container>
@@ -66,24 +139,42 @@
 
 <script>
 
-    import Navigation from '@/components/Navigation.vue'
+    //import Navigation from '@/components/Navigation.vue'
 
     export default {
         name: 'App',
         components: {
-            Navigation
+            //Navigation
         }
     }
 </script>
 <style>
     @import 'assets/style.css';
+    .obereLeiste{
+        width: auto;
+        border: 1px solid black;
+    }
+    .linkeSeite{
+        width: auto;
+        border: 1px solid black;
+    }
+    .rechteSeite{
+        width: 60 px;
+        border: 1px solid black;
+    }
+    .untereLeiste{
+        width: auto;
+        height: 100 px;
+        border: 1px solid black;
+    }
     .background {
         background-color: red;
         background-image: url('~@/assets/background2.jpg'); 
         width: 100%;
         height: 90%;
         position: absolute;
-        background-size: cover
+        background-size: cover;
+        
     }
    /**/ 
     .sc-launcher {
@@ -155,6 +246,7 @@
     }
     .sc-user-input--button {
         margin-left: 50px !important;
+       
     }
 
 
