@@ -1,28 +1,25 @@
 <template>
   <div class="hello">
     <div id="add-table"> </div>
-    <form target="1">
 
-    <table class="eingabe" >
-    <tr>
-      <b-form-datepicker id="example-datepicker" v-model="date" class="mb-2"></b-form-datepicker> </tr>
-    <tr>
-    <td><label for = "gestern">Was habe ich gestern gemacht?</label></td>
-     <td> <input v-model="doings" type ="text" placeholder="Geben Sie ein, was sie gemacht haben!"></td>
-      <br>
-    </tr>
-     <tr> 
-     <td><label for = "heute">Was habe ich heute vor?</label></td>
-      <td><input v-model="todaydoings" type ="text" placeholder="Geben Sie ein was Sie heute vor haben!">
-      <br></td></tr>
+     <div>
 
-    <tr>  <td><label for = "probleme">Welche Probleme hatte ich?</label></td>
-      <td><input v-model="problems" type ="text" placeholder="Geben Sie ein, welche Probleme es gab!"></td>
-    </tr>
-    </table>
-    </form>
-    <br>
+ab hier modal
+  <b-button id="show-btn" @click="showAddRow ">Open Modal</b-button>
+    <b-button id="show-btn" @click="showUpdateRow">Open Modal</b-button>
 
+  <b-modal ref="bv-modal-example" size="xl" title="Daily Tabelle" hide-footer>
+    <template #modal-title>
+      Daily Tabelle
+    </template>
+    <div class="d-block text-center">
+           <Formular v-bind:update_add='this.weitergabe'></Formular>
+      <h3>Hello From This Modal!</h3>
+    </div>
+    <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
+  </b-modal>
+</div>
+hier ende modal
     <div id="button">
     <div id="button_container_1">
         
@@ -48,6 +45,7 @@
                 <td> {{row.problems}} </td>
                 <td><button @click="deleteRow(row)">Löschen</button></td> 
                 <td><button @click="updateRow(row)">Ändern</button></td> 
+                <td><button @click="showUpdateRow(row)">Ändern</button></td> 
 
             </tr>
 
@@ -58,18 +56,28 @@
 </template>
 
 <script>
-
+import Formular from '@/components/Formular'
 export default {
   
   
   name: 'TabelleDaily',
   props: {
-    msg: String
+    msg: String,
+    update_add: {
+        required: true,
+        type: String
+      }
+
   },
+
+  components: {
+            Formular
+        },
+
   data() {
   
     return {
-      
+      weitergabe: "",
       date: "",
       doings: "",
       todaydoings: "",
@@ -85,10 +93,39 @@ export default {
   },
   
   methods: {
-    loadDaily() {
-    
-      
 
+      showAddRow() {
+        //$bvModal.show('bv-modal-example')
+        this.$refs['bv-modal-example'].show()
+        //propvalue="add"
+        this.weitergabe="add"
+      },
+      showUpdateRow(row) {
+        this.$refs['bv-modal-example'].show()
+        this.weitergabe="update"
+        // das hier alles als onbjekt prop mit weitergabe an formular geben, wo das dann in das formular eingesetzt wird? die add funktion gibt für die felder nur leere "" ein
+        //oder in komponente formular eine funktion aufrufen, die alle felderr ausfüllt oder alles neulädt?
+        //oder zwei formluare die mit v-if oder else-if geladen werden
+        row.date
+        row.doings
+        row.todaydoings
+        row.problems
+        row.idd
+        
+
+      },
+            hideModal() {
+        this.$refs['bv-modal-example'].hide()
+      },
+
+    loadDaily() {
+    },
+
+        NewInputFormular() {
+
+    },
+
+        UpdateFormular() {
 
     },
 
@@ -97,24 +134,12 @@ export default {
       this.$store.dispatch('daily_scrum/updateDaily', row)
 
     },
-
-
+/* 
+hier mit button drücken methode aus formular aufrufen?
     addItem() {
-            var ausgabe = {
-                date: this.date,
-                doings: this.doings,
-                todaydoings: this.todaydoings,
-                problems: this.problems
-            };
+           this.$store.dispatch('Formular/addItem')
 
-            this.$store.dispatch('daily_scrum/createDaily', ausgabe)
-            this.rowData.push(ausgabe)
-
-            this.date = ''
-            this.doings = ''
-            this.todaydoings= ''
-            this.problems = ''
-        },
+        }, */
 
 
         deleteRow(row) {
