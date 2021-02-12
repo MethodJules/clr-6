@@ -19,6 +19,9 @@
         <router-link tag="div" to="/mail" class="element">
             <p><b>Mail </b></p>
         </router-link>
+        <router-link tag="div" to="/checkList" class="element">
+            <p><b>CheckList </b></p>
+        </router-link>
         <!-- <router-link tag="div" to="/agenda" class="element">
         <p><b>Agenda </b></p>
     </router-link> -->
@@ -45,7 +48,7 @@
         </div>
         <router-link tag="div" to="/forum" class="forum">
             <p><b>Forum </b></p>
-        </router-link> -->
+        </router-link> 
         <!--
          :newMessagesCount="newMessagesCount"
 

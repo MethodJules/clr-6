@@ -93,6 +93,11 @@ const routes = [
         path: '/mail',
         name: 'Mail',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Mail.vue')
+    },
+    {
+        path: '/checkList',
+        name: 'CheckList',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/CheckList.vue')
     }
 ]
 

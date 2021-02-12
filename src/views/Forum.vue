@@ -1,6 +1,8 @@
+<!-- Startseite des Forums, Übersicht-->
 <template>
     <div class="home">
         <h1>Welcome to the Forum</h1>
+        <!-- Zeigt alle Kategorien des Forums, ruft Komponente auf -->
         <CategoryList :categories="categories" />
     </div>
 </template>
