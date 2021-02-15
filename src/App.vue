@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+<<<<<<< HEAD
         
                 <!-- <v-container>
                     <Navigation> </Navigation>
@@ -8,6 +9,17 @@
                     <router-view />
                 </b-container>
                 <b-container fluid> 
+=======
+        <v-app>
+            <v-main class="light">
+                <v-container>
+                    <Navigation> </Navigation>
+                </v-container>
+                <v-container>
+                    <router-view />
+                </v-container>
+                <b-container> 
+>>>>>>> dashboard_page
                 <b-row class ="obereLeiste">
                     <b-col>
                         <div>

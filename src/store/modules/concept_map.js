@@ -35,7 +35,7 @@ const actions = {
     },
 
     async loadConceptMapFromBackend({commit}) {
-        await axios.get('http://clr-backend.x-navi.de/jsonapi/node/concept_map')
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/concept_map')
             .then((response) => {
                 //console.log(response);
                 //let concept_map = [];
@@ -87,7 +87,7 @@ const mutations = {
             console.log(concepts);
             concepts.forEach(element => {
                 console.log(element.id); //TODO: Hole title zur uuid
-                axios.get(`http://clr-backend.x-navi.de/jsonapi/node/concept/${element.id}`)
+                axios.get(`https://clr-backend.x-navi.de/jsonapi/node/concept/${element.id}`)
                     .then((response) => {
                         console.log(response);
                         const title = response.data.data.attributes.title;
@@ -100,7 +100,7 @@ const mutations = {
             //Get relationships of concept map
             relationships.forEach(relationship => {
                 console.log(relationship.id);
-                axios.get(`http://clr-backend.x-navi.de/jsonapi/node/relationship/${relationship.id}`)
+                axios.get(`https://clr-backend.x-navi.de/jsonapi/node/relationship/${relationship.id}`)
                     .then((response) => {
                         console.log(response);
                         const label = response.data.data.attributes.title;

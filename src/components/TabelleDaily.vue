@@ -1,36 +1,28 @@
 <template>
   <div class="hello">
     <div id="add-table"> </div>
-    <form target="1">
 
-    <table class="eingabe" >
-    <tr>
-      <b-form-datepicker id="example-datepicker" v-model="date" class="mb-2"></b-form-datepicker> </tr>
-    <tr>
-    <td><label for = "gestern">Was habe ich gestern gemacht?</label></td>
-     <td> <input v-model="doings" type ="text" placeholder="Geben Sie ein, was sie gemacht haben!"></td>
-      <br>
-    </tr>
-     <tr> 
-     <td><label for = "heute">Was habe ich heute vor?</label></td>
-      <td><input v-model="todaydoings" type ="text" placeholder="Geben Sie ein was Sie heute vor haben!">
-      <br></td></tr>
+     <div>
+  <b-button id="show-btn" @click="showAddRow ">Neuer Eintrag</b-button>
 
-    <tr>  <td><label for = "probleme">Welche Probleme hatte ich?</label></td>
-      <td><input v-model="problems" type ="text" placeholder="Geben Sie ein, welche Probleme es gab!"></td>
-    </tr>
-    </table>
-    </form>
-    <br>
-
-    <div id="button">
-    <div id="button_container_1">
-        
-        <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
-        <button type="button" class="btn btn-primary" @click="loadDaily()">Laden</button>
+  <b-modal ref="bv-modal-example" size="xl" title="Daily Tabelle" hide-footer>
+    <template #modal-title>
+      <h3>Daily Tabelle</h3>
+    </template>
+    <div class="d-block text-center">
+           <Formular :formdata=formdata></Formular>
     </div>
-<br>
+    <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
+  </b-modal>
 </div>
+  <br>
+<!--     <div id="button">
+      <div id="button_container_1">    
+          <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
+          <button type="button" class="btn btn-primary" @click="loadDaily()">Laden</button>
+      </div>
+    <br>
+    </div> -->
     <div id="Einsicht">
         <h3> Einsicht </h3>
         <table>
@@ -47,7 +39,8 @@
                 <td>{{row.todaydoings}}</td>
                 <td> {{row.problems}} </td>
                 <td><button @click="deleteRow(row)">Löschen</button></td> 
-                <td><button @click="updateRow(row)">Ändern</button></td> 
+                <!-- <td><button @click="updateRow(row)">Ändern</button></td>  -->
+                <td><button @click="showUpdateRow(row)">Ändern</button></td> 
 
             </tr>
 
@@ -58,23 +51,31 @@
 </template>
 
 <script>
-
+import Formular from '@/components/Formular'
 export default {
   
   
   name: 'TabelleDaily',
   props: {
-    msg: String
+    msg: String,
   },
+
+  components: {
+            Formular
+        },
+
   data() {
   
     return {
-      
-      date: "",
-      doings: "",
-      todaydoings: "",
-      problems: "",
-
+    formdata: {
+      //updateOrAdd:"", unterscheidung zurzeit nicht benötigt
+      date:"",
+      doings:"",
+      todaydoings:"",
+      problems:"",
+      idd:"",
+      title: ""
+  },
       rowData: [
         
         { date: "JJGJ", doings: "fhshdf ", todaydoings: "hfdshf", problems: "hjsdhfj"  },
@@ -85,36 +86,41 @@ export default {
   },
   
   methods: {
-    loadDaily() {
-    
-      
 
+      showAddRow() {
+        //$bvModal.show('bv-modal-example')
+        this.$refs['bv-modal-example'].show()
+        this.formdata.date=""
+        this.formdata.doings=""
+        this.formdata.todaydoings=""
+        this.formdata.problems=""
+        this.formdata.title=""
+      },
+      showUpdateRow(row) {
+        this.$refs['bv-modal-example'].show()
+        this.formdata.date=row.date
+        this.formdata.doings=row.doings
+        this.formdata.todaydoings=row.todaydoings
+        this.formdata.problems=row.problems
+        this.formdata.idd=row.idd
+        this.formdata.title=row.title
+      },
 
-    },
+      hideModal() {
+        this.$refs['bv-modal-example'].hide()
+      },
 
     updateRow(row) {
 
       this.$store.dispatch('daily_scrum/updateDaily', row)
 
     },
-
-
+/* 
+hier mit button drücken methode aus formular aufrufen?
     addItem() {
-            var ausgabe = {
-                date: this.date,
-                doings: this.doings,
-                todaydoings: this.todaydoings,
-                problems: this.problems
-            };
+           this.$store.dispatch('Formular/addItem')
 
-            this.$store.dispatch('daily_scrum/createDaily', ausgabe)
-            this.rowData.push(ausgabe)
-
-            this.date = ''
-            this.doings = ''
-            this.todaydoings= ''
-            this.problems = ''
-        },
+        }, */
 
 
         deleteRow(row) {
@@ -138,7 +144,7 @@ export default {
     this.$store.dispatch('daily_scrum/loadDailysFromBackend')
     this.rowData = this.$store.state.daily_scrum.rowData
     
-  }
+  },
     
 }
 
