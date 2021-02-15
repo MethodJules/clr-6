@@ -1,7 +1,11 @@
 <template>
   <div class="hello">
+    <Button  :button="{
+    name: 'Concept',
+    link: './concept'
+  }"
+    ></Button>
       <form target="1">
-
       <table class="eingabe" >
       <tr>
         <!-- hier werden die des übergebenen Objekts aus TabelleDaily in den Felder gespeichert -->
@@ -40,15 +44,24 @@
 </template>
 
 <script>
-
+import Button from '@/components/Button'
+//import Button from './Button.vue';
   export default {
         props: {
     formdata: Object
-
     },
+
+      components: {
+            Button,     
+            },
+
  data() {
   
     return {
+/*     button: {
+      buttonlink:"./concept",
+      buttonname:"Concept",
+  }, */
 
     }
   },

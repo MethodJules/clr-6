@@ -9,7 +9,7 @@
           <h3>Daily Tabelle</h3>
         </template>
         <div class="d-block text-center">
-              <Formular :formdata=formdata></Formular>
+              <Form :formdata=formdata></Form>
         </div>
         <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
       </b-modal>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Formular from '@/components/Formular'
+import Form from '@/components/Form'
 export default {
   
   
@@ -53,7 +53,7 @@ export default {
   },
 
   components: {
-            Formular
+            Form,    
         },
 
   data() {
