@@ -1,25 +1,12 @@
 <template>
-    <div id="app">
-<<<<<<< HEAD
-        
-                <!-- <v-container>
+    <div id="app">      
+               <!--  <v-container>
                     <Navigation> </Navigation>
                 </v-container> -->
                 <b-container>
                     <router-view />
                 </b-container>
                 <b-container fluid> 
-=======
-        <v-app>
-            <v-main class="light">
-                <v-container>
-                    <Navigation> </Navigation>
-                </v-container>
-                <v-container>
-                    <router-view />
-                </v-container>
-                <b-container> 
->>>>>>> dashboard_page
                 <b-row class ="obereLeiste">
                     <b-col>
                         <div>
@@ -119,6 +106,9 @@
                             <p><b-button href="#link-2" @click="hide" variant="outline-dark">Analyse & Synthese</b-button></p>
                             <p><b-button href="#link-2" @click="hide" variant="outline-dark">Ergebnisse kommunizieren</b-button></p>
                             <p><b-button href="#link-2" @click="hide" variant="outline-dark">Gruppe auflösen</b-button></p>
+                             <router-link tag="div" to="./dailyscrum" class="element">
+                                <p><b-button variant="outline-dark">Daily </b-button></p>
+                            </router-link>
                         </b-button-group>
                         <b-row>
                             <b-col>

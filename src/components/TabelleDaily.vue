@@ -1,53 +1,45 @@
 <template>
   <div class="hello">
-    <div id="add-table"> </div>
-
-     <div>
-  <b-button id="show-btn" @click="showAddRow ">Neuer Eintrag</b-button>
-
-  <b-modal ref="bv-modal-example" size="xl" title="Daily Tabelle" hide-footer>
-    <template #modal-title>
-      <h3>Daily Tabelle</h3>
-    </template>
-    <div class="d-block text-center">
-           <Formular :formdata=formdata></Formular>
+    <div>
+      <!-- Hier ist der Button, der Modal zum Eintragen eines neuen Daily öffnet. In dem Modal wird die Komponente Formular geöffnet.
+      Dabei wird das/der prop formdata, ein Objekt übergeben, was attribute beinhaltet, die von formdata genutzt werden können -->
+      <b-button id="show-btn" @click="showAddRow ">Neuer Eintrag</b-button>
+      <b-modal ref="bv-modal-example" size="xl" title="Daily Tabelle" hide-footer>
+        <template #modal-title>
+          <h3>Daily Tabelle</h3>
+        </template>
+        <div class="d-block text-center">
+              <Formular :formdata=formdata></Formular>
+        </div>
+        <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
+      </b-modal>
     </div>
-    <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
-  </b-modal>
-</div>
-  <br>
-<!--     <div id="button">
-      <div id="button_container_1">    
-          <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
-          <button type="button" class="btn btn-primary" @click="loadDaily()">Laden</button>
-      </div>
-    <br>
-    </div> -->
-    <div id="Einsicht">
-        <h3> Einsicht </h3>
-        <table>
-            <tr>
-                <th> Datum: </th>
-                <th> Was habe ich gestern gemacht? </th>
-                <th>Was habe ich heute vor?</th>
-                <th> Welche Probleme hatte ich? </th>
-            </tr>
-            <!-- row beinhaltet auch ID von Objekt/Content Type Instanz Ding - wird in loaddaily auch runtergeladen -->
-            <tr v-for="row in rowData" :key="row.id">
-                <td> {{ row.date}} </td>
-                <td> {{row.doings}} </td>
-                <td>{{row.todaydoings}}</td>
-                <td> {{row.problems}} </td>
-                <td><button @click="deleteRow(row)">Löschen</button></td> 
-                <!-- <td><button @click="updateRow(row)">Ändern</button></td>  -->
-                <td><button @click="showUpdateRow(row)">Ändern</button></td> 
+      <br>
+        <div id="Einsicht">
+            <h3> Einsicht </h3>
+            <table>
+                <tr>
+                    <th> Datum: </th>
+                    <th> Was habe ich gestern gemacht? </th>
+                    <th>Was habe ich heute vor?</th>
+                    <th> Welche Probleme hatte ich? </th>
+                </tr>
+                <!-- row beinhaltet auch ID von Objekt/Content Type Instanz Ding - wird in loaddaily auch runtergeladen -->
+                <tr v-for="row in rowData" :key="row.id">
+                    <td> {{ row.date}} </td>
+                    <td> {{row.doings}} </td>
+                    <td>{{row.todaydoings}}</td>
+                    <td> {{row.problems}} </td>
+                    <td><button @click="deleteRow(row)">Löschen</button></td> 
+                    <!-- <td><button @click="updateRow(row)">Ändern</button></td>  -->
+                    <td><button @click="showUpdateRow(row)">Ändern</button></td> 
 
-            </tr>
+                </tr>
 
-        </table>
+            </table>
 
-   </div>
-   </div>
+    </div>
+    </div>
 </template>
 
 <script>
@@ -67,8 +59,9 @@ export default {
   data() {
   
     return {
+      //das objekt formdata wird mit leeren Strings initialisiert, weil das definieren der variablem alleine nicht möglich war
     formdata: {
-      //updateOrAdd:"", unterscheidung zurzeit nicht benötigt
+      updateOrAdd:"",
       date:"",
       doings:"",
       todaydoings:"",
@@ -88,15 +81,19 @@ export default {
   methods: {
 
       showAddRow() {
-        //$bvModal.show('bv-modal-example')
+        /*diese Methode wird aufgerufen, wenn mit dem Formular ein neuer Eintrag gemacht werden soll. this.$refs ist nur dazu da das modal anzuzeigen.
+        danach werden den formdata attributen leere Strings zugewiesen. Das Attribut updateorAdd wird in Formular genutzt um nur den Add Button anzuzeigen */
+       //$bvModal.show('bv-modal-example')
         this.$refs['bv-modal-example'].show()
         this.formdata.date=""
         this.formdata.doings=""
         this.formdata.todaydoings=""
         this.formdata.problems=""
         this.formdata.title=""
+        this.formdata.updateOrAdd="add"
       },
       showUpdateRow(row) {
+        //hier wird die row aus rowdata als parameter übergeben. aus der row werden die daten an das objekt übergeben
         this.$refs['bv-modal-example'].show()
         this.formdata.date=row.date
         this.formdata.doings=row.doings
@@ -104,25 +101,20 @@ export default {
         this.formdata.problems=row.problems
         this.formdata.idd=row.idd
         this.formdata.title=row.title
+        this.formdata.updateOrAdd="update"
       },
 
       hideModal() {
         this.$refs['bv-modal-example'].hide()
       },
 
-    updateRow(row) {
+/*     updateRow(row) {
 
       this.$store.dispatch('daily_scrum/updateDaily', row)
 
-    },
+    }, */
+
 /* 
-hier mit button drücken methode aus formular aufrufen?
-    addItem() {
-           this.$store.dispatch('Formular/addItem')
-
-        }, */
-
-
         deleteRow(row) {
             alert("Delete");
               //console.log(row);

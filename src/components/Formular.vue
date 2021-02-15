@@ -4,6 +4,7 @@
 
       <table class="eingabe" >
       <tr>
+        <!-- hier werden die des übergebenen Objekts aus TabelleDaily in den Felder gespeichert -->
         <b-form-datepicker id="example-datepicker" v-model="formdata.date" class="mb-2"></b-form-datepicker>
         </tr>
       <tr>
@@ -26,8 +27,12 @@
       </tr>
       </table>
       <div style ="margin:10px">
+        <div v-if="formdata.updateOrAdd==='add'">
             <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
+        </div>
+        <div v-else-if="formdata.updateOrAdd==='update'">
             <button type="button" class="btn btn-primary" @click="updateRow(formdata)">Ändern</button>
+        </div>
       </div>
       </form>
       <br>

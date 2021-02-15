@@ -83,7 +83,13 @@ const routes = [
         path: '/newMember',
         name: 'NewMember',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
-    }
+    },
+    {
+        path: '/dailyscrum',
+        name: 'TabelleDaily',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
+    },
+    
 
 
 ]
