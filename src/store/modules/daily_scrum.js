@@ -10,7 +10,7 @@ const actions = {
    
 
     async loadDailysFromBackend({commit}) {
-        await  axios.get('http://clr-backend.x-navi.de/jsonapi/node/dailyscrum')
+        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/dailyscrum')
             .then((response) => {
                 console.log(response);
                 const data = response.data.data;
@@ -38,7 +38,7 @@ const actions = {
         //console.log(`das hier ist die ID von Daily Entry ${dailyEntry.idd}`)
         var config = {
             method: 'delete',
-            url: `http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.idd}`,
            // das hier löscht korrekt einen eintrag -> url: `http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/0765516c-d202-4ceb-ae44-5f86d203a278`,
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -104,10 +104,10 @@ DELETE_DAILY_ENTRY(state, dailyEntry) {
 
     ADD_DAILY_ENTRY(state, dailyEntry) {
         console.log(dailyEntry.todaydoings)
-        var data = `{"data": {"type": "node--dailyscrum", "attributes": {"title": "My custom title", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
+        var data = `{"data": {"type": "node--dailyscrum", "attributes": {"title": "${dailyEntry.title}", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
         var config = {
             method: 'post',
-            url: 'http://clr-backend.x-navi.de/jsonapi/node/dailyscrum',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/dailyscrum',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -126,11 +126,13 @@ DELETE_DAILY_ENTRY(state, dailyEntry) {
     },
 
     UPDATE_DAILY_ENTRY(state, dailyEntry) {
-        console.log(dailyEntry.todaydoings)
-        var data = `{"data": {"type": "node--dailyscrum", "id": "${dailyEntry.idd}", "attributes": {"title": "My updated title", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
+            //let index = state.rowData.indexOf(dailyEntry);
+            //state.rowData[index]=dailyEntry;
+        //console.log(dailyEntry.todaydoings)
+        var data = `{"data": {"type": "node--dailyscrum", "id": "${dailyEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
         var config = {
             method: 'patch',
-            url: `http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -162,7 +164,9 @@ DELETE_DAILY_ENTRY(state, dailyEntry) {
             console.log(field_probleme)
             const field_id = element.id;
             console.log(element.id)
-            state.rowData.push( { date: field_datum, doings: field_gestern, todaydoings: field_heute, problems: field_probleme, idd: field_id })
+            const field_title = element.attributes.title;
+            console.log(element.id)
+            state.rowData.push( { date: field_datum, doings: field_gestern, todaydoings: field_heute, problems: field_probleme, idd: field_id, title: field_title })
             console.log(state)
 
 

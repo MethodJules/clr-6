@@ -2,12 +2,12 @@
     <div id="app">
         <v-app>
             <v-main class="light">
-                <!-- <v-container>
+                <v-container>
                     <Navigation> </Navigation>
                 </v-container>
                 <v-container>
                     <router-view />
-                </v-container> -->
+                </v-container>
                 <b-container> 
                 <b-row class ="obereLeiste">
                     <b-col>

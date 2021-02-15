@@ -3,31 +3,26 @@
     <div id="add-table"> </div>
 
      <div>
-
-ab hier modal
-  <b-button id="show-btn" @click="showAddRow ">Open Modal</b-button>
-    <b-button id="show-btn" @click="showUpdateRow">Open Modal</b-button>
+  <b-button id="show-btn" @click="showAddRow ">Neuer Eintrag</b-button>
 
   <b-modal ref="bv-modal-example" size="xl" title="Daily Tabelle" hide-footer>
     <template #modal-title>
-      Daily Tabelle
+      <h3>Daily Tabelle</h3>
     </template>
     <div class="d-block text-center">
-           <Formular v-bind:update_add='this.weitergabe'></Formular>
-      <h3>Hello From This Modal!</h3>
+           <Formular :formdata=formdata></Formular>
     </div>
     <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
   </b-modal>
 </div>
-hier ende modal
-    <div id="button">
-    <div id="button_container_1">
-        
-        <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
-        <button type="button" class="btn btn-primary" @click="loadDaily()">Laden</button>
-    </div>
-<br>
-</div>
+  <br>
+<!--     <div id="button">
+      <div id="button_container_1">    
+          <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
+          <button type="button" class="btn btn-primary" @click="loadDaily()">Laden</button>
+      </div>
+    <br>
+    </div> -->
     <div id="Einsicht">
         <h3> Einsicht </h3>
         <table>
@@ -44,7 +39,7 @@ hier ende modal
                 <td>{{row.todaydoings}}</td>
                 <td> {{row.problems}} </td>
                 <td><button @click="deleteRow(row)">Löschen</button></td> 
-                <td><button @click="updateRow(row)">Ändern</button></td> 
+                <!-- <td><button @click="updateRow(row)">Ändern</button></td>  -->
                 <td><button @click="showUpdateRow(row)">Ändern</button></td> 
 
             </tr>
@@ -63,11 +58,6 @@ export default {
   name: 'TabelleDaily',
   props: {
     msg: String,
-    update_add: {
-        required: true,
-        type: String
-      }
-
   },
 
   components: {
@@ -77,12 +67,15 @@ export default {
   data() {
   
     return {
-      weitergabe: "",
-      date: "",
-      doings: "",
-      todaydoings: "",
-      problems: "",
-
+    formdata: {
+      //updateOrAdd:"", unterscheidung zurzeit nicht benötigt
+      date:"",
+      doings:"",
+      todaydoings:"",
+      problems:"",
+      idd:"",
+      title: ""
+  },
       rowData: [
         
         { date: "JJGJ", doings: "fhshdf ", todaydoings: "hfdshf", problems: "hjsdhfj"  },
@@ -97,37 +90,25 @@ export default {
       showAddRow() {
         //$bvModal.show('bv-modal-example')
         this.$refs['bv-modal-example'].show()
-        //propvalue="add"
-        this.weitergabe="add"
+        this.formdata.date=""
+        this.formdata.doings=""
+        this.formdata.todaydoings=""
+        this.formdata.problems=""
+        this.formdata.title=""
       },
       showUpdateRow(row) {
         this.$refs['bv-modal-example'].show()
-        this.weitergabe="update"
-        // das hier alles als onbjekt prop mit weitergabe an formular geben, wo das dann in das formular eingesetzt wird? die add funktion gibt für die felder nur leere "" ein
-        //oder in komponente formular eine funktion aufrufen, die alle felderr ausfüllt oder alles neulädt?
-        //oder zwei formluare die mit v-if oder else-if geladen werden
-        row.date
-        row.doings
-        row.todaydoings
-        row.problems
-        row.idd
-        
-
+        this.formdata.date=row.date
+        this.formdata.doings=row.doings
+        this.formdata.todaydoings=row.todaydoings
+        this.formdata.problems=row.problems
+        this.formdata.idd=row.idd
+        this.formdata.title=row.title
       },
-            hideModal() {
+
+      hideModal() {
         this.$refs['bv-modal-example'].hide()
       },
-
-    loadDaily() {
-    },
-
-        NewInputFormular() {
-
-    },
-
-        UpdateFormular() {
-
-    },
 
     updateRow(row) {
 
@@ -163,7 +144,7 @@ hier mit button drücken methode aus formular aufrufen?
     this.$store.dispatch('daily_scrum/loadDailysFromBackend')
     this.rowData = this.$store.state.daily_scrum.rowData
     
-  }
+  },
     
 }
 

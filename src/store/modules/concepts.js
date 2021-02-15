@@ -22,10 +22,10 @@ const actions = {
        
     },
     deleteConcept({commit}, concept) {
-        console.log(`das hier ist die ID von Concept  http://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`)
+        console.log(`das hier ist die ID von Concept  https://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`)
         var config = {
             method: 'delete',
-            url: `http://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -45,7 +45,7 @@ const actions = {
     async loadConcepts({rootState,commit}) {
         const concept_map_nodes = rootState.concept_map.nodes;
         console.log(concept_map_nodes);
-        await axios.get('http://clr-backend.x-navi.de/jsonapi/node/concept')
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/concept')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data;
@@ -89,7 +89,7 @@ const mutations = {
         var data = `{"data":{"type":"node--concept", "attributes": {"title": "${concept}"}}}`;
         var config = {
             method: 'post',
-            url: 'http://clr-backend.x-navi.de/jsonapi/node/concept',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/concept',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

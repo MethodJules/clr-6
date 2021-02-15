@@ -1,56 +1,61 @@
 <template>
   <div class="hello">
-    <div v-if="update_add==='add'">add
-
       <form target="1">
 
       <table class="eingabe" >
       <tr>
-        <b-form-datepicker id="example-datepicker" v-model="date" class="mb-2"></b-form-datepicker> </tr>
+        <b-form-datepicker id="example-datepicker" v-model="formdata.date" class="mb-2"></b-form-datepicker>
+        </tr>
+      <tr>
+      <td><label for = "titel">Titel</label></td>
+      <td> <input v-model="formdata.title" type ="text" placeholder="Geben Sie einen Titel ein!"></td>
+        <br>
+      </tr>
       <tr>
       <td><label for = "gestern">Was habe ich gestern gemacht?</label></td>
-      <td> <input v-model="doings" type ="text" placeholder="Geben Sie ein, was sie gemacht haben!"></td>
+      <td> <input v-model="formdata.doings" type ="text" placeholder="Geben Sie ein, was sie gemacht haben!"></td>
         <br>
       </tr>
       <tr> 
       <td><label for = "heute">Was habe ich heute vor?</label></td>
-        <td><input v-model="todaydoings" type ="text" placeholder="Geben Sie ein was Sie heute vor haben!">
+        <td><input v-model="formdata.todaydoings" type ="text" placeholder="Geben Sie ein was Sie heute vor haben!">
         <br></td></tr>
 
       <tr>  <td><label for = "probleme">Welche Probleme hatte ich? </label></td>
-        <td><input v-model="problems" type ="text" placeholder="Geben Sie ein, welche Probleme es gab!"></td>
+        <td><input v-model="formdata.problems" type ="text" placeholder="Geben Sie ein, welche Probleme es gab!"></td>
       </tr>
       </table>
+      <div style ="margin:10px">
             <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
+            <button type="button" class="btn btn-primary" @click="updateRow(formdata)">Ändern</button>
+      </div>
       </form>
       <br>
     </div>
-    <h3 v-else-if="update_add==='update'">update</h3>
-   </div>
 </template>
 
 <script>
 
   export default {
-    props: {
-      update_add: {
-        required: true,
-        type: String
-      }
+        props: {
+    formdata: Object
+
     },
+ data() {
+  
+    return {
+
+    }
+  },
   
   methods: {
         test() {
           console.log("hallo");
     },
 
-    loadDaily() {
-    },
 
-    updateRow(row) {
-
-      this.$store.dispatch('daily_scrum/updateDaily', row)
-
+    updateRow(formdata) {
+      this.$store.dispatch('daily_scrum/updateDaily', formdata)
     },
 
 
@@ -90,8 +95,7 @@
   }, 
  
   mounted() {
-    this.$store.dispatch('daily_scrum/loadDailysFromBackend')
-    this.rowData = this.$store.state.daily_scrum.rowData
+    console.log(this.formdata)
     
   }
     
