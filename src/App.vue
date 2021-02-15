@@ -1,14 +1,13 @@
 <template>
     <div id="app">
-        <v-app>
-            <v-main class="light">
+        
                 <!-- <v-container>
                     <Navigation> </Navigation>
-                </v-container>
-                <v-container>
-                    <router-view />
                 </v-container> -->
-                <b-container> 
+                <b-container>
+                    <router-view />
+                </b-container>
+                <b-container fluid> 
                 <b-row class ="obereLeiste">
                     <b-col>
                         <div>
@@ -51,38 +50,36 @@
 
         
                 </b-row>
-                <v-container class="light">
+             
                 <b-row>
                     <b-col class="linkeSeite">
                         
                         <b-row>
                             <b-col>
-                                <b-form-checkbox>Mein To Do 1</b-form-checkbox>
-                                <b-form-checkbox>Mein To Do 2</b-form-checkbox>
-                                <b-form-checkbox>Mein To Do 3</b-form-checkbox>
-                            </b-col>
-                            <b-col>
-                                <b-row>
-                                <b-button size= "sm"><b-icon-trash/></b-button>
+                                <TodoList/>
+                                <!-- <b-row><b-col><b-form-checkbox>Mein To Do 1</b-form-checkbox></b-col>
+                                <b-col><b-button size= "sm"><b-icon-trash/></b-button></b-col>
                                 </b-row>
-                                <b-row>
-                                <b-button size= "sm"><b-icon-trash/></b-button>
+                                <b-row><b-col><b-form-checkbox>Mein To Do 2</b-form-checkbox></b-col>
+                                <b-col><b-button size= "sm"><b-icon-trash/></b-button></b-col>
                                 </b-row>
-                                <b-row>
-                                <b-button size= "sm"><b-icon-trash/></b-button>
-                                </b-row>
+                                <b-row><b-col><b-form-checkbox>Mein To Do 3</b-form-checkbox></b-col>
+                                <b-col><b-button size= "sm"><b-icon-trash/></b-button></b-col>
+                                </b-row> -->
                             </b-col>
                         </b-row>
                         <b-row>
                             <b-col>
                             </b-col>
                             <b-col>
-                                <b-button pill size= "lg"><b-icon-plus/></b-button>
+                                <br>
+                                <b-button @click="formularTodo()" pill size= "lg"><b-icon-plus/></b-button>
                             </b-col>
                         </b-row>
                         <b-row>
                             
                             <b-col>
+                                <br>
                                 <b-calendar
                                     size= "sm"
                                     id="ex-disabled-readonly"
@@ -124,15 +121,37 @@
                          <br>
                     </b-col>
                 </b-row>
-                </v-container>
+                
                 <b-row class="untereLeiste">
                 </b-row>
                 
                 </b-container>
+                <b-modal ref="my-todo-modal" id="modal-prevent-closing" hide-footer title="Neue ToDo" @show="resetModal"
+                    @hidden="resetModal" @ok="handleOk">
+                    <div class="d-block text-center">
+                        <form ref="form" @submit.stop.prevent="handleSubmit">
+                            <b-form-datepicker id="example-datepicker" v-model="date" class="mb-2"></b-form-datepicker>
+                            <b-form-group
+                                label="Todo"
+                                label-for="todo-input"
+                                invalid-feedback="Todo is required"
+                                :state="nameState"
+                            >
+                            <b-form-input
+                                id="todo-input"
+                                v-model="todo"
+                                :state="nameState"
+                                required
+                            ></b-form-input>
+                            </b-form-group>
+                        </form>
+
+                    </div>
+                    <b-button class="mt-3" variant="outline-danger" block @click="neueToDo()">Speichern</b-button>
+                </b-modal>
 
 
-            </v-main>
-        </v-app>
+            
     </div>
 </template>
 
@@ -140,17 +159,41 @@
 <script>
 
     //import Navigation from '@/components/Navigation.vue'
-
+    import TodoList from '@/components/TodoList.vue'
     export default {
         name: 'App',
         components: {
             //Navigation
+            TodoList
+        },
+        data(){
+            return{
+                
+                nameState: null
+                
+            }
+        },
+        methods: {
+            formularTodo(){
+                this.$refs['my-todo-modal'].show()
+            },
+            neueToDo(){
+                
+                var ausgabeToDo ={
+                    date: this.date,
+                    todo: this.todo
+                }
+                this.listOfToDos.push(ausgabeToDo)
+                this.date = ''
+                this.todo = ''
+            },
+            
         }
     }
 </script>
 <style>
     @import 'assets/style.css';
-    .obereLeiste{
+    /* .obereLeiste{
         width: auto;
         border: 1px solid black;
     }
@@ -166,7 +209,7 @@
         width: auto;
         height: 100 px;
         border: 1px solid black;
-    }
+    } */
     .background {
         background-color: red;
         background-image: url('~@/assets/background2.jpg'); 
