@@ -144,12 +144,15 @@
                                 v-model="todo"
                                 :state="nameState"
                                 required
-                            ></b-form-input>
+                            >
+                            <!-- <TodoList :eintragTodo=eintragTodo></TodoList> -->
+                            </b-form-input>
                             </b-form-group>
+                            <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
                         </form>
 
                     </div>
-                    <b-button class="mt-3" variant="outline-danger" block @click="neueToDo()">Speichern</b-button>
+                    <!-- <b-button class="mt-3" variant="outline-danger" block @click="formularTodo()">Speichern</b-button> -->
                 </b-modal>
 
 
@@ -171,26 +174,49 @@
         data(){
             return{
                 
-                nameState: null
+                nameState: null,
+                eintragTodo:{
+                    todo: ""
+                },
                 
-            }
+                /* listOfToDos [
+                    {todo:"Mein1", date:"20.02.2021"},
+                ], */ 
+            };
+            
         },
         methods: {
             formularTodo(){
                 this.$refs['my-todo-modal'].show()
+                this.eintragTodo.date=""
+                this.eintragTodo.todo= ""
+                this.eintragTodo.buttonAdd= "add"
+
             },
             neueToDo(){
+                this.$refs['my-todo-modal'].show()
+                /* this.eintragTodo.todo= listOfToDos.todo
+                this.eintragTodo.date= listOfToDos.date
+                this.eintragTodo.buttonAdd= "add" */
                 
-                var ausgabeToDo ={
-                    date: this.date,
-                    todo: this.todo
+                /* var ausgabeToDo ={
+                    date: this.eintragTodo.date,
+                    todo: this.eintragTodo.todo
                 }
                 this.listOfToDos.push(ausgabeToDo)
                 this.date = ''
-                this.todo = ''
+                this.todo = '' */
             },
             
-        }
+            hideModal() {
+                this.$refs['my-todo-modal'].hide()
+            }
+        },
+        mounted() {
+            this.$store.dispatch('todo/loadToDoFromBackend')
+            this.listOfToDos = this.$store.state.todo.listOfToDos
+    
+        },
     }
 </script>
 <style>
