@@ -72,6 +72,7 @@
                             </b-col>
                             <b-col>
                                 <br>
+                                
                                 <b-button @click="formularTodo()" pill size= "lg"><b-icon-plus/></b-button>
                             </b-col>
                         </b-row>
@@ -128,32 +129,7 @@
                 </b-row>
                 
                 </b-container>
-                <b-modal ref="my-todo-modal" id="modal-prevent-closing" hide-footer title="Neue ToDo" @show="resetModal"
-                    @hidden="resetModal" @ok="handleOk">
-                    <div class="d-block text-center">
-                        <form ref="form" @submit.stop.prevent="handleSubmit">
-                            <b-form-datepicker id="example-datepicker" v-model="date" class="mb-2"></b-form-datepicker>
-                            <b-form-group
-                                label="Todo"
-                                label-for="todo-input"
-                                invalid-feedback="Todo is required"
-                                :state="nameState"
-                            >
-                            <b-form-input
-                                id="todo-input"
-                                v-model="todo"
-                                :state="nameState"
-                                required
-                            >
-                            <!-- <TodoList :eintragTodo=eintragTodo></TodoList> -->
-                            </b-form-input>
-                            </b-form-group>
-                            <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
-                        </form>
-
-                    </div>
-                    <!-- <b-button class="mt-3" variant="outline-danger" block @click="formularTodo()">Speichern</b-button> -->
-                </b-modal>
+                
 
 
             

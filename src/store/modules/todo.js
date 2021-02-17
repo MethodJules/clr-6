@@ -56,7 +56,7 @@ const mutations = {
         state.listOfToDos.splice(index, 1);
     },
     ADD_TODO_ENTRY(state, todoEntry) {
-        var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "${todoEntry.title}", "field_aufgabe": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
+        var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "${todoEntry.title}", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/to_dos',
@@ -77,7 +77,7 @@ const mutations = {
             })
     },
     UPDATE_TODO_ENTRY(state, todoEntry) {
-    var data = `{"data": {"type": "node--to_dos", "id": "${todoEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_aufgabe": "${todoEntry.todo}", "field_date": "${todoEntry.date} }}}`;
+    var data = `{"data": {"type": "node--to_dos", "id": "${todoEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date} }}}`;
     var config = {
         method: 'patch',
         url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
@@ -100,8 +100,8 @@ const mutations = {
     SAVE_DAILYSCRUM_FEATURE(state, dailyscrum_feature) {
         
         dailyscrum_feature.forEach(element => {
-            const field_aufgabe = element.attributes.field_aufgabe;
-            console.log(field_aufgabe)
+            const field_aufgaben = element.attributes.field_aufgaben;
+            console.log(field_aufgaben)
             const field_date = element.attributes.field_date;
             console.log(field_date)
             const field_id = element.id;
