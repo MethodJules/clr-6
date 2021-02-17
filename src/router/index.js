@@ -98,6 +98,11 @@ const routes = [
         path: '/checkList',
         name: 'CheckList',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/CheckList.vue')
+    },
+    {
+        path: '/charts',
+        name: 'Charts',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Charts.vue')
     }
 ]
 

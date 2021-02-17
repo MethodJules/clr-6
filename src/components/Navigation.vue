@@ -22,12 +22,16 @@
         <router-link tag="div" to="/checkList" class="element">
             <p><b>CheckList </b></p>
         </router-link>
-        <!-- <router-link tag="div" to="/agenda" class="element">
-        <p><b>Agenda </b></p>
-    </router-link> -->
+        <router-link tag="div" to="/charts" class="element">
+            <p><b>Charts </b></p>
+        </router-link>
 
-        <div class="search">
-            <beautiful-chat class="chat"
+<div class="buttonIcons">
+    
+</div>
+  
+            <beautiful-chat 
+                            class="search"
                             :participants="participants"
                             :isOpen="isChatOpen"
                             :open="openChat"
@@ -45,10 +49,10 @@
                     </div>
                 </template>
             </beautiful-chat>
-        </div>
+
         <router-link tag="div" to="/forum" class="forum">
             <p><b>Forum </b></p>
-        </router-link> 
+        </router-link>
         <!--
          :newMessagesCount="newMessagesCount"
 
@@ -184,7 +188,7 @@
         position: absolute;
         height: 99%;
         margin-top: 5px;
-
+        overflow: scroll;
     }
     .element {
         background-color: white;
@@ -203,20 +207,20 @@
        
     }
 
+
     p {
         display: table-cell;
         vertical-align: middle;
     }
     .search {
-        width: 30%;
-        margin-left: 30%;
-        position: absolute;
-        bottom: 0;
+        width: 100px !important;
+        position: absolute; 
         text-align: center;
         height: 8%;
         display: table;
         margin-top: 20px;
-        color: white
+        color: white;
+        margin-left: 10%;
     }
     .viewSearch {
         background-color: #c93e37;
@@ -236,17 +240,17 @@
     }
     .forum {
         position: absolute;
-        bottom: 0;
-        margin-left: 65%;
         width: 30%;
         height: 60px;
         background-color: #c93e37;
         text-align: center;
         margin-bottom: 20px;
+        margin-top: 20px;
         display: table;
         cursor: pointer;
         color: white;
         border-radius: 50%;
+        margin-left: 60%;
     }
 
     .element {

@@ -6,6 +6,8 @@ import concept_map from './modules/concept_map'
 import sourceData from '@/data.json'
 import members from './modules/members'
 import toDos from './modules/toDos'
+import chartData from './modules/chartData'
+
 
 Vue.use(Vuex)
 
@@ -17,7 +19,8 @@ export default new Vuex.Store({
        concepts,
        concept_map,
        members, 
-       toDos
+        toDos, 
+       chartData
     },
 
 //noch in Datei packen
