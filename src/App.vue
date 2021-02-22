@@ -8,20 +8,20 @@
                 <b-container fluid> 
                 <b-row class ="obereLeiste">
                     <b-col>
-                        <div>
+      
                             
                            
                             <MenueLeiste/>
                                     
                               
-                        </div>
+                       
                     </b-col>
 
         
                 </b-row>
              
                 <b-row>
-                    <b-col class="linkeSeite">
+                    <b-col class="linkeSeite" cols="2">
                         
                         <b-row>
                             <b-col>
@@ -44,27 +44,20 @@
                             </b-col>
                         </b-row>
                     </b-col>
-                    <b-col class="mitte">
+                    <b-col cols="8" class="mitte">
                         <Vorgehensmodell/>
 
                     
                     </b-col>
 
-                    <b-col class="rechteSeite">
+                    <b-col cols="2" class="rechteSeite">
                         
                         <b-row>
                             <b-col>
                                 <SeitenNavigation/>
                             </b-col>
                         </b-row>
-                        <b-row>
-                            <b-col>
-                            </b-col>
-                            <b-col>
-                                <br>
-                                
-                            </b-col>
-                        </b-row>
+                      
                         <b-row class="chat">
                             
                             <b-col>
@@ -214,17 +207,17 @@
         
     }
       .obereLeiste{
-        width: auto;
-        border: 1px solid black;
+/*         width: auto;
+        border: 1px solid black; */
     }
     .linkeSeite{
-        width: auto;
-        border: 1px solid black;
+        /* width: auto;
+        border: 1px solid black; */
         
     }
     .rechteSeite{
-        width: 60 px;
-        border: 1px solid black;
+       /*  width: 60 px;
+        border: 1px solid black; */
     }
     .untereLeiste{
         width: auto;

@@ -2,37 +2,68 @@
 
     <div class="seitennavigation">
 
-        <div class= "buttons"> 
 
-        <b-button-group vertical size="lg">
                            <!--  <p><b-button href="Gruppe bilden" @click="hide" variant="outline-dark" >Gruppe bilden</b-button></p> 
                             <p><b-button href="Ziel" @click="hide" variant="outline-dark">Ziel & Umfang</b-button></p>  -->
                             <!-- <router-link tag="div" to="./concept"> 
                                 <p><b-button variant="outline-dark" >Konzepte & Definitionen </b-button></p>
-                            </router-link> <br> -->
-                            <br>
-                            <p><b-button href="Gruppe bilden" @click="hide" variant="outline-dark">Gruppe bilden</b-button></p> 
-                            <p><b-button href="Ziel" @click="hide" variant="outline-dark" >Ziel & Umfang</b-button></p>
-                            <p><b-button href="Literatur" @click="hide" variant="outline-dark">Literatur suchen</b-button></p> 
-                            <p><b-button href="Daten" @click="hide" variant="outline-dark" >Daten extrahieren</b-button></p>  
-                            <p><b-button href="Analyse" @click="hide" variant="outline-dark" >Analyse & Synthese</b-button></p> 
-                            <p><b-button href="Ergebnisse" @click="hide" variant="outline-dark" >Ergebnisse kommunizieren</b-button></p>    
-                            <p><b-button href="Gruppe auflösen" @click="hide" variant="outline-dark" >Gruppe auflösen</b-button></p>       
-                             
-        </b-button-group>
-        </div>
+                            </router-link> <br> 
+                            
+                            Sinnvoll hier alle Buttons zu befüllen? oder als prop hier reingeben? -> lieber als prop hier reingeben, damit buttons wiederverwendet
+                            werden könnnen in anderen komponenten. in anderer funktion die diese hier aufruft einzeln eingeben? oder wie automatisieren?
+                            -->
+                          <br>
+                                <Button  :button="{
+                                name: 'Concept',
+                                link: './concept'
+                                }"
+                                ></Button>
 
+                                <Button  :button="{
+                                name: 'Gruppe bilden',
+                                link: '#'
+                                }"
+                                ></Button>
 
-    
+                                <Button  :button="{
+                                name: 'Ziel',
+                                link: '#'
+                                }"
+                                ></Button>
 
-        
-        
-       
-               
+                                <Button  :button="{
+                                name: 'Literatur',
+                                link: '#'
+                                }"
+                                ></Button>
+                                <Button  :button="{
+                                name: 'Daten',
+                                link: '#'
+                                }"
+                                ></Button>
+                                <Button  :button="{
+                                name: 'Analyse',
+                                link: '#'
+                                }"
+                                ></Button>
+                                <Button  :button="{
+                                name: 'Ergebnisse',
+                                link: '#'
+                                }"
+                                ></Button>
+                                <Button  :button="{
+                                name: 'Gruppe auflösen',
+                                link: '#'
+                                }"
+                                ></Button>  
+                           
+                        
+          
 
     </div>
 </template>
 <script>
+import Button from '@/components/Button'
 
     export default {
         name: 'App',
@@ -87,6 +118,8 @@
             }
         },
         components: {
+
+            Button,     
         },
         methods: {
             showDiv() {
@@ -132,8 +165,8 @@
     }
 </script>
 <style scoped>
-    .seitennavigation {
-        /* background-color: #362c2b; */
+   /*  .seitennavigation {
+        background-color: #362c2b;
         width: 20%;
         right: 10px;
         position: absolute;
@@ -153,6 +186,7 @@
         cursor: pointer;
         
     } 
+    */
     .router-link-active {
         background: #c93e37 !important;
         color: white;
