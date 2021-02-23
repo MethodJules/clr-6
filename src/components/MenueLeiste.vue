@@ -1,43 +1,29 @@
 <template>
-        
                 <div>
-                <b-container>
-                   <!--  <router-view /> -->
-                </b-container>
-                <b-container fluid> 
                 <b-row class ="obereLeiste">
-                                <b-col>
-                                    <router-link tag="div" to="./home" class="element">
-                                        <b-nav-text>Startseite</b-nav-text>
-                                    </router-link>
-                                </b-col>
-                                <b-col>
-                                    <router-link tag="div" to="./projektbeschreibung" class="element">
-                                        <b-nav-text>Projektbeschreibung</b-nav-text>
-                                    </router-link>
-                                </b-col>
-                                <b-col>
-                                    <router-link tag="div" to="./forum" class="element">
-                                        <b-nav-text>Forum</b-nav-text>
-                                    </router-link>
-                                </b-col>
-                                <b-col>
-                                    <router-link tag="div" to="./groupmanagement" class="element">
-                                        <b-nav-text>Gruppenmanagement</b-nav-text>
-                                    </router-link>
-                                </b-col>
-                                <b-col>
-                                    <router-link tag="div" to="./settings" class="element">
-                                        <b-nav-text>Einstellungen</b-nav-text>
-                                    </router-link>
-                                </b-col>
-                
-
-        
+                    <b-navbar toggleable="sm" variant="info">
+                        <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
+                        <b-navbar-brand>CLR Tool</b-navbar-brand>
+                        <b-collapse id="nav-text-collapse" is-nav>
+                            <b-navbar-nav>
+                                <b-nav-item to="/">Startseite</b-nav-item>
+                            </b-navbar-nav>
+                            <b-navbar-nav>
+                                <b-nav-item to="/project">Projektbeschreibung</b-nav-item>
+                            </b-navbar-nav>
+                            <b-navbar-nav>
+                                <b-nav-item to="/forum">Projektforum</b-nav-item>
+                            </b-navbar-nav>
+                            <b-navbar-nav>
+                                <b-nav-item to="/group">Gruppenmanagement</b-nav-item>
+                            </b-navbar-nav>
+                            <b-navbar-nav>
+                                <b-nav-item to="/settings">Einstellungen</b-nav-item>
+                            </b-navbar-nav>
+                        </b-collapse>
+                    </b-navbar>
                 </b-row>
-                </b-container>
                 </div>
-    
 </template>
 
 
@@ -45,5 +31,5 @@
 
 
 
-       
-   
+
+

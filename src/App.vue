@@ -1,112 +1,60 @@
 <template>
-    <div id="app">      
-                
+    <div id="app">
+        <b-container fluid>
+            <b-row class ="obereLeiste">
+                <b-col class="border border-dark">
+                    <MenueLeiste/>
+                </b-col>
+            </b-row>
 
-                <b-container>
-                    <!-- <router-view /> -->
-                </b-container>
-                <b-container fluid> 
-                <b-row class ="obereLeiste">
-                    <b-col>
-      
-                            
-                           
-                            <MenueLeiste/>
-                                    
-                              
-                       
-                    </b-col>
+            <b-row>
+                <b-col class="linkeSeite" cols="2">
+                    <b-row>
+                        <b-col class="border border-dark">
+                            <TodoList/>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                        </b-col>
+                        <b-col>
+                            <br>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col class="border border-dark">
+                            <Kalender/>
+                        </b-col>
+                    </b-row>
+                </b-col>
 
-        
-                </b-row>
-             
-                <b-row>
-                    <b-col class="linkeSeite" cols="2">
-                        
-                        <b-row>
-                            <b-col>
-                                <TodoList/>
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            <b-col>
-                            </b-col>
-                            <b-col>
-                                <br>
-                                
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            
-                            <b-col>
-                                <Kalender/>
-                        
-                            </b-col>
-                        </b-row>
-                    </b-col>
-                    <b-col cols="8" class="mitte">
-                        <Vorgehensmodell/>
+                <b-col cols="8" class="mitte border border-primary">
+                    <router-view></router-view>
+                </b-col>
 
-                    
-                    </b-col>
+                <b-col cols="2" class="rechteSeite">
+                    <b-row>
+                        <b-col class="border border-dark">
+                            <SeitenNavigation/>
+                        </b-col>
+                    </b-row>
 
-                    <b-col cols="2" class="rechteSeite">
-                        
-                        <b-row>
-                            <b-col>
-                                <SeitenNavigation/>
-                            </b-col>
-                        </b-row>
-                      
-                        <b-row class="chat">
-                            
-                            <b-col>
-                                <Chat/>
-                        
-                            </b-col>
-                        </b-row>
-                        <b-row class="postfach">
+                    <b-row class="chat">
+                        <b-col class="border border-dark">
+                            <Chat/>
+                        </b-col>
+                    </b-row>
+                    <b-row class="postfach">
+                        <b-col class="border border-dark">
+                            <Postfach/>
+                        </b-col>
+                    </b-row>
+                </b-col>
+            </b-row>
 
-                            <b-col>
-                                <Postfach/>
-                            </b-col>
-                        </b-row>
-                    </b-col>
-                   
-                        
-                    
-                       <!--  <b-row>
-                            <b-col>
-                            
-                            </b-col>
-                            <b-col>
-                                
-                                <b-icon-chat/>
-                                
-                            </b-col>
-
-                           
-                            <b-col>
-                                <b-icon-envelope size="lg"/>
-                            </b-col> 
-
-                            
-                           
-                        </b-row> 
-                         <br> -->
-                    
-                </b-row>
-                
-                <b-row class="untereLeiste">
-                </b-row>
-                
-                
-                
-                </b-container>
-                
-
-
-            
+            <b-row class="untereLeiste">
+            </b-row>
+        </b-container>
     </div>
 </template>
 
@@ -116,36 +64,34 @@
     import SeitenNavigation from '@/components/SeitenNavigation.vue'
     import TodoList from '@/components/TodoList.vue'
     import MenueLeiste from '@/components/MenueLeiste.vue'
-    import Vorgehensmodell from '@/components/Vorgehensmodell.vue'
     import Kalender from '@/components/Kalender.vue'
     import Chat from '@/components/Chat.vue'
     import Postfach from '@/components/Postfach.vue'
 
-    
+
     export default {
         name: 'App',
         components: {
             SeitenNavigation,
             TodoList,
             MenueLeiste,
-            Vorgehensmodell,
             Kalender,
             Chat,
             Postfach
         },
         data(){
             return{
-                
+
                 nameState: null,
                 eintragTodo:{
                     todo: ""
                 },
-                
+
                 /* listOfToDos [
                     {todo:"Mein1", date:"20.02.2021"},
-                ], */ 
+                ], */
             };
-            
+
         },
         methods: {
             formularTodo(){
@@ -160,7 +106,7 @@
                 /* this.eintragTodo.todo= listOfToDos.todo
                 this.eintragTodo.date= listOfToDos.date
                 this.eintragTodo.buttonAdd= "add" */
-                
+
                 /* var ausgabeToDo ={
                     date: this.eintragTodo.date,
                     todo: this.eintragTodo.todo
@@ -169,7 +115,7 @@
                 this.date = ''
                 this.todo = '' */
             },
-            
+
             hideModal() {
                 this.$refs['my-todo-modal'].hide()
             }
@@ -177,7 +123,7 @@
         mounted() {
             this.$store.dispatch('todo/loadToDoFromBackend')
             this.listOfToDos = this.$store.state.todo.listOfToDos
-    
+
         },
     }
 </script>
@@ -202,9 +148,9 @@
         height: 10%;
         display: table;
         margin-top: 20px;
-        
-        
-        
+
+
+
     }
       .obereLeiste{
 /*         width: auto;
@@ -213,7 +159,7 @@
     .linkeSeite{
         /* width: auto;
         border: 1px solid black; */
-        
+
     }
     .rechteSeite{
        /*  width: 60 px;
@@ -223,24 +169,24 @@
         width: auto;
         height: 100 px;
         border: 1px solid black;
-    }  
+    }
 
 
     /* .background {
         background-color: red;
-        background-image: url('~@/assets/background2.jpg'); 
+        background-image: url('~@/assets/background2.jpg');
         width: 100%;
         height: 90%;
         position: absolute;
         background-size: cover;
-        
+
     } */
-   /**/ 
+   /*
     .sc-launcher {
         position: unset !important;
         height: 60px !important;
         margin-bottom: 20px !important;
-        
+
     }
 
     .sc-launcher::before {
@@ -251,7 +197,7 @@
 
     .sc-open-icon {
         position: unset !important;
-       
+
     }
 
     .sc-closed-icon {
@@ -305,9 +251,9 @@
     }
     .sc-user-input--button {
         margin-left: 50px !important;
-       
+
     }
 
-
+    */
 </style>
 

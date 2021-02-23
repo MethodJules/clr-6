@@ -3,67 +3,28 @@
     <div class="seitennavigation">
 
 
-                           <!--  <p><b-button href="Gruppe bilden" @click="hide" variant="outline-dark" >Gruppe bilden</b-button></p> 
+                           <!--  <p><b-button href="Gruppe bilden" @click="hide" variant="outline-dark" >Gruppe bilden</b-button></p>
                             <p><b-button href="Ziel" @click="hide" variant="outline-dark">Ziel & Umfang</b-button></p>  -->
-                            <!-- <router-link tag="div" to="./concept"> 
+                            <!-- <router-link tag="div" to="./concept">
                                 <p><b-button variant="outline-dark" >Konzepte & Definitionen </b-button></p>
-                            </router-link> <br> 
-                            
+                            </router-link> <br>
+
                             Sinnvoll hier alle Buttons zu befüllen? oder als prop hier reingeben? -> lieber als prop hier reingeben, damit buttons wiederverwendet
                             werden könnnen in anderen komponenten. in anderer funktion die diese hier aufruft einzeln eingeben? oder wie automatisieren?
                             -->
                           <br>
-                                <Button  :button="{
-                                name: 'Concept',
-                                link: './concept'
-                                }"
-                                ></Button>
-
-                                <Button  :button="{
-                                name: 'Gruppe bilden',
-                                link: '#'
-                                }"
-                                ></Button>
-
-                                <Button  :button="{
-                                name: 'Ziel',
-                                link: '#'
-                                }"
-                                ></Button>
-
-                                <Button  :button="{
-                                name: 'Literatur',
-                                link: '#'
-                                }"
-                                ></Button>
-                                <Button  :button="{
-                                name: 'Daten',
-                                link: '#'
-                                }"
-                                ></Button>
-                                <Button  :button="{
-                                name: 'Analyse',
-                                link: '#'
-                                }"
-                                ></Button>
-                                <Button  :button="{
-                                name: 'Ergebnisse',
-                                link: '#'
-                                }"
-                                ></Button>
-                                <Button  :button="{
-                                name: 'Gruppe auflösen',
-                                link: '#'
-                                }"
-                                ></Button>  
-                           
-                        
-          
-
+                                <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
+                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">sdjdd</b-link>
+                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
+                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Ziel</b-link>
+                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Literatur</b-link>
+                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Daten</b-link>
+                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Analyse</b-link>
+                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse</b-link>
+                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
     </div>
 </template>
 <script>
-import Button from '@/components/Button'
 
     export default {
         name: 'App',
@@ -119,7 +80,6 @@ import Button from '@/components/Button'
         },
         components: {
 
-            Button,     
         },
         methods: {
             showDiv() {
@@ -178,19 +138,19 @@ import Button from '@/components/Button'
         background-color: white;
         width: 100%;
         margin-left: auto;
-        margin-right: auto; 
+        margin-right: auto;
         text-align: center;
-        height: 12%; 
+        height: 12%;
         display: table;
-        margin-top: 25px; 
+        margin-top: 25px;
         cursor: pointer;
-        
-    } 
+
+    }
     */
     .router-link-active {
         background: #c93e37 !important;
         color: white;
-       
+
     }
 
     p {
@@ -249,15 +209,15 @@ import Button from '@/components/Button'
         display: table;
         margin-top: 25px;
         cursor: pointer;
-    } 
+    }
 
 
 </style>
 
 
 
-           
 
- 
+
+
 
 

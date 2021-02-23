@@ -6,7 +6,6 @@
         <ul v-for="todos in listOfToDos" :key="todos.date">
             <b-col><b-form-checkbox><li><TodoListItem :eintragTodo=todos></TodoListItem></li></b-form-checkbox></b-col>
             <b-button size= "sm"><b-icon-trash/></b-button>
-            
         </ul>
 
         <b-col>
