@@ -1,66 +1,27 @@
 <template>
-    <div>
-       
-         
-
-        <ul v-for="todos in listOfToDos" :key="todos.date">
-            <b-col><b-form-checkbox><li><TodoListItem :eintragTodo=todos></TodoListItem></li></b-form-checkbox></b-col>
-            <b-button size= "sm"><b-icon-trash/></b-button>
-        </ul>
-
-        <b-col>
-                    <br>
-                                
-                    <b-button @click="formularTodo()" pill size= "lg"><b-icon-plus/></b-button>
-        </b-col>
-                        
-        
+    <div id="todoList">
+        <div class="card" v-for="todo in listOfToDos" :key="todo.date">
+            <div class="card-body text-center">
+                <b-form-checkbox :id="todo.date" v-model="status" name="checkbox-1" value="checked" unchecked-value="unchecked">{{todo.todo}}<b-button class="btn btn-s">Löschen</b-button></b-form-checkbox>
+            </div>
+        </div>
+        <div>
+            <b-button>Neue Aufgabe</b-button>
+        </div>
     </div>
-    
+
 </template>
 
 
 
 <script>
-import TodoListItem from '@/components/TodoListItem.vue'
 export default {
     components:{
-        TodoListItem
     },
     data(){
             return{
-                
-                todo: "Mein ToDo 1",
                 listOfToDos: [{todo:"todo1", date:"21.02.2021"} , {todo:"todo2", date:"22.02.2021"}, {todo:"todo3", date:"23.02.2021"}]
             }
     },
-    methods:{
-        formularTodo(){
-                this.$refs['my-todo-modal'].show()
-                this.eintragTodo.date=""
-                this.eintragTodo.todo= ""
-                this.eintragTodo.buttonAdd= "add"
-
-        },
-        updateTodo(eintragTodo) {
-            this.$store.dispatch('todo/updateTodo', eintragTodo)
-        },
-        
-        mounted() {
-            console.log(this.eintragTodo)
-    
-        },
-            
-            hideModal() {
-                this.$refs['my-todo-modal'].hide()
-            }
-        /* deleteTodo(date){
-                var indx = this.listOfToDos.indexOf(date);
-                if(indx > -1){
-                this.listOfToDos.splice(indx, 1);
-                }
-            } */
-        
-    }
 }
 </script>
