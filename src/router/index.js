@@ -89,7 +89,17 @@ const routes = [
         name: 'TabelleDaily',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
-    
+    {
+        path: '/projectlist',
+        name: 'ProjectList',
+        component: () => import(/*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
+    },
+    {
+        path: '/documentation',
+        name: 'Documentation',
+        component: () => import(/*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
+    }
+
 
 
 ]
