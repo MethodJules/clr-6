@@ -90,6 +90,11 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
     {
+        path: '/phasetemplate',
+        name: 'PhaseTemplate',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
+    },
+    {
         path: '/projectlist',
         name: 'ProjectList',
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
