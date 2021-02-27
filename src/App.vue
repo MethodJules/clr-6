@@ -30,6 +30,8 @@
 
                 <b-col cols="8" class="mitte border border-primary">
                     <router-view></router-view>
+                     <b-link :to="{name: 'Reflexion'}" class="btn btn-outline-dark btn-block mb-2">Reflexionstemplate</b-link>
+                    
                 </b-col>
 
                 <b-col cols="2" class="rechteSeite">
@@ -67,6 +69,7 @@
     import Kalender from '@/components/Kalender.vue'
     import Chat from '@/components/Chat.vue'
     import Postfach from '@/components/Postfach.vue'
+    
 
 
     export default {
@@ -77,7 +80,8 @@
             MenueLeiste,
             Kalender,
             Chat,
-            Postfach
+            Postfach,
+           
         },
         data(){
             return{

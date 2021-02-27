@@ -7,7 +7,8 @@
                 </b-col>
 
                 <b-col cols="7">
-                    <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Dokumentation bearbeiten</b-link>
+                    <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Dokumentation bearbeiten</b-link>  
+                   
                 </b-col>
 
                 <b-col cols="2">
