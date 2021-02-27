@@ -2,7 +2,7 @@
     <b-col class="border border-dark">
                             
         <b-tabs content-class="mt-3">
-            <b-tab title="Ich" active>
+            <b-tab title="Ich">
                 
                 <b-container fluid>
                     <b-row class="ich-tab">
@@ -99,8 +99,8 @@
 
                 
             </b-tab>
-            <b-tab title="Gruppe & Zusammenarbeit" active> Gruppe & Zusammenarbeit </b-tab>
-            <b-tab title="Fachlicher Kontext (Literaturreview)" active> Fachlicher Kontext </b-tab>
+            <b-tab title="Gruppe & Zusammenarbeit"> Gruppe & Zusammenarbeit </b-tab>
+            <b-tab title="Fachlicher Kontext (Literaturreview)"> Fachlicher Kontext </b-tab>
         </b-tabs>
 
 
