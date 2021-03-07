@@ -11,6 +11,7 @@
                         </b-col>
                         <b-col sm="10">
                         <b-form-textarea
+                            v-model="text1"
                             id="textfeld-1"
                             placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"
                             
@@ -27,6 +28,7 @@
                         </b-col>
                         <b-col sm="10">
                         <b-form-textarea
+                            v-model="text2"
                             id="textfeld-2"
                             placeholder="Setzen Sie den Vorfall bzw. das Problem mit Ihren eigenen Kenntnissen, Fertigkeiten, Erfahrung oder fachlichem Wissen in Verbindung. Ist Ihnen ein ähnlicher Vorfall schon einmal begegnet? Waren die Umstände gleich oder unterschiedlich? Haben Sie die Fähigkeiten und das Wissen, um damit umzugehen? Erläutern Sie."
                             
@@ -40,6 +42,7 @@
                         </b-col>
                         <b-col sm="10">
                         <b-form-textarea
+                            v-model="text3"
                             id="textfeld-3"
                             placeholder="Rekonstruieren Sie zukünftiges Handeln in Bezug auf den Vorfall bzw. das Problem. Wie würden Sie beim nächsten Mal vorgehen? Welche Ansätze könnten funktionieren und wieso? Gibt es verschiedene Optionen, aus denen Sie wählen können? Welches Ergebnis erwarten Sie?"
                             
@@ -55,6 +58,7 @@
                         </b-col>
                         <b-col sm="10">
                         <b-form-textarea
+                            v-model="text4"
                             id="textfeld-4"
                             placeholder="Rekonstruieren Sie zukünftiges Handeln in Bezug auf den Vorfall bzw. das Problem. Wie würden Sie beim nächsten Mal vorgehen? Welche Ansätze könnten funktionieren und wieso? Gibt es verschiedene Optionen, aus denen Sie wählen können? Welches Ergebnis erwarten Sie?"
                             
@@ -73,6 +77,20 @@
                         <br>
                         <br>
                         <br>
+                        <b-col>
+                            <div id="reflexion">
+                            <h3>Reflexion</h3>
+                            <p>{{text1}}</p>
+                            <p>{{text2}}</p>
+                            <p>{{text3}}</p>
+                            <p>{{text4}}</p>
+                            
+
+                            </div>
+                        <!-- <b-modal id="reflexion_speichern_modal" title="Speichern">
+                        <b-form-textarea id="reflexion_speichern_form_textarea" rows="6" v-model="reflexionsText"></b-form-textarea> -->
+                        <!-- </b-modal> -->
+                        </b-col>
 
                         </b-col>
 
@@ -84,7 +102,8 @@
                         <b-col>
                         </b-col>
                         <b-col>
-                        <b-button>Speichern</b-button>
+                        <!-- <b-button v-b-modal.reflexion_speichern_modal>Speichern</b-button> -->
+                        <b-button  @click="saveText">Speichern</b-button>
                         
 
                         </b-col>
@@ -109,3 +128,30 @@
 
     </b-col>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            text1: '',
+            text2: '',
+            text3: '',
+            text4: ''
+        }
+    },
+    methods: {
+        saveText() {
+            
+            this.text1=""
+            this.text2=""
+            this.text3=""
+            this.text4=""
+
+        }
+
+    }
+       
+
+    
+}
+</script>

@@ -30,7 +30,8 @@
 
                 <b-col cols="8" class="mitte border border-primary">
                     <router-view></router-view>
-                     <b-link :to="{name: 'Reflexion'}" class="btn btn-outline-dark btn-block mb-2">Reflexionstemplate</b-link>
+                    <b-link :to="{name: 'Reflexion'}" class="btn btn-outline-dark btn-block mb-2">Zur Reflexion</b-link> 
+                    <b-form-select v-model="selected" :options="options" link :to="{name: 'Reflexion'}" class="btn btn-outline-dark btn-block mb-2"></b-form-select>
                     
                 </b-col>
 
@@ -75,6 +76,7 @@
     export default {
         name: 'App',
         components: {
+
             SeitenNavigation,
             TodoList,
             MenueLeiste,
@@ -85,7 +87,7 @@
         },
         data(){
             return{
-
+  
                 nameState: null,
                 eintragTodo:{
                     todo: ""
@@ -94,7 +96,21 @@
                 /* listOfToDos [
                     {todo:"Mein1", date:"20.02.2021"},
                 ], */
-            };
+
+                selected: null,
+                options: [
+                    { value: null, text: 'Zur Reflexion' },
+                    { value: 'a', text: 'Gruppe bilden' },
+                    { value: 'b', text: 'Ziel & Umfang definieren' },
+                    { value: 'c', text: 'Konzepte & Definitionen' },
+                    { value: 'd', text: 'Literatur suchen' },
+                    { value: 'e', text: 'Daten extrahieren' },
+                    { value: 'f', text: 'Analyse & Synthese' },
+                    { value: 'g', text: 'Ergebnisse kommunizieren' },
+                    { value: 'h', text: 'Gruppe auflösen' },
+                    
+                ],
+            }
 
         },
         methods: {
