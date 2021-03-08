@@ -1,9 +1,10 @@
 <template>
     <div class="home">
         <h1> To Do </h1>
-        <!-- Tabelle für die ToDos -->
+        <!-- table for ToDos -->
         <b-table-simple hover small caption-top responsive>
 
+            <!-- Row names, header of table -->
             <b-thead head-variant="dark">
                 <b-tr>
                     <b-th>Name</b-th>
@@ -14,8 +15,9 @@
 
                 </b-tr>
             </b-thead>
+            <!-- Body of the table -->
             <b-tbody>
-                <!-- Einzelne Tabelleneinträge-->
+                <!-- Table entrys, get data from Todo-Array from store -->
                 <b-tr v-for="(toDo, index) in toDos.toDos" :key="index">
                     <b-th>{{toDo.name}}</b-th>
                     <b-th>{{toDo.exercise}}</b-th>
@@ -24,6 +26,7 @@
                         {{toDo.status}}
                     </b-td>
                     <b-td>
+                        <!-- Edit single toTo, open editTodo-Modal -->
                         <b-button variant="outline-dark" @click="edit(toDo)"> Edit</b-button>
                        
                     </b-td>
@@ -32,8 +35,8 @@
 
         </b-table-simple>
 
-
-
+        
+        <!-- Edit-Modal, to change status of single toTo -->
         <b-modal id="editToDo" hide-footer>
             
             <b-form-group id="toDo"
@@ -59,12 +62,13 @@ export default {
     },
     data() {
         return {
-            // Tabelleneinträge
+            // Status options 
             options: [
                 { value: 'in Progress', text: 'in Progress' },
                 { value: 'done', text: 'done' },
                 { value: 'new', text: 'new' },
             ],
+            // current status of selected Element, changed by change option of select element
             toDoElement: {            
                 status: ''
             }
@@ -72,17 +76,19 @@ export default {
         },
 
     methods: {
-        // Öffnet das Bearbeitungsmodal 
+        // open Edit-Modal
         edit(toDo) {
             this.toDoElement = toDo;
             console.log(toDo);
             this.$bvModal.show('editToDo');
         }, 
+        // hide Edit-Modal 
         changeStatus() {
             this.$bvModal.hide('editToDo');
         }
     }, 
-    computed: {
+        computed: {
+        // Save Data from store, to use in this class
         ...mapState({
             toDos: state => state.toDos,
         })

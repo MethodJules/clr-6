@@ -1,7 +1,7 @@
-
+<!-- Review circle -->
 <template>
     <div class="home">
-
+        <!-- Create canvas area, open ReviewCircle-Component-->
         <z-canvas :views="$options.components">
 
             <ReviewCircle> </ReviewCircle>
@@ -18,6 +18,7 @@
         components: {
             ReviewCircle
         },
+        // define circle theme
         mounted() {
             this.$zircle.config({
                 mode: 'mixed',

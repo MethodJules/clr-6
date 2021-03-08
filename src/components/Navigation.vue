@@ -1,5 +1,7 @@
+<!-- Navigation bar-->
 <template>
 
+    <!-- Routerlinks for navigation bar -->
     <div class="navigation">
         <!--  <router-link tag="div" to="/scope" class="element">
         <p><b>Scope </b></p>
@@ -30,30 +32,18 @@
     
 </div>
   
-            <beautiful-chat 
-                            class="search"
-                            :participants="participants"
-                            :isOpen="isChatOpen"
-                            :open="openChat"
-                            :close="closeChat"
-                            :onMessageWasSent="onMessageWasSent"
-                            :colors="colors"
-                            :messageList="messageList">
+        <!-- chatfunction -->
+<beautiful-chat class="search"
+                :participants="participants"
+                :isOpen="isChatOpen"
+                :open="openChat"
+                :close="closeChat"
+                :onMessageWasSent="onMessageWasSent"
+                :colors="colors"
+                :messageList="messageList">
 
-                <template v-slot:header class="chat-header">
-                    Helper
-                </template>
-                <template v-slot:user-avatar="{ message, user }">
-                    <div style="margin: 5px;" v-if="message.type === 'text' && user && user.name">
 
-                    </div>
-                </template>
-            </beautiful-chat>
-
-        <router-link tag="div" to="/forum" class="forum">
-            <p><b>Forum </b></p>
-        </router-link>
-        <!--
+    <!--
          :newMessagesCount="newMessagesCount"
 
          :showEmoji="true"
@@ -69,6 +59,22 @@
          @onType="handleOnType"
          @edit="editMessage"
     -->
+
+    <!-- Template for chat window-->
+    <template v-slot:header class="chat-header">
+        Helper
+    </template>
+    <template v-slot:user-avatar="{ message, user }">
+        <div style="margin: 5px;" v-if="message.type === 'text' && user && user.name">
+
+        </div>
+    </template>
+</beautiful-chat>
+        <!-- Forum button-->
+        <router-link tag="div" to="/forum" class="forum">
+            <p><b>Forum </b></p>
+        </router-link>
+
         <!--
             <div class="search" @click="showDiv()">
                 <p><b>&#9993; </b></p>
@@ -84,11 +90,10 @@
 <script>
 
     export default {
-        name: 'App',
+        name: 'Navigation',
         data: function () {
             return {
                 showSearch: false,
-
                 participants: [
                     {
                         id: 'user1',
@@ -99,14 +104,18 @@
                         name: 'User',
 
                     }
-                ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
+                ],
+                    // the list of all the participant of the conversation
                   messageList: [
                     { type: 'text', author: `me`, data: { text: `Ich habe eine Frage...` } },
                     { type: 'text', author: `user1`, data: { text: `Da helfe ich dir gern!` } }
-                ], // the list of the messages to show, can be paginated and adjusted dynamically
+                ],
+                // the list of the messages to show, can be paginated and adjusted dynamically
                 newMessagesCount: 0,
                 isChatOpen: false, // to determine whether the chat window should be open or closed
                 showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
+
+                // specifies the color scheme for the component
                 colors: {
                     header: {
                         bg: '#c93e37',
@@ -130,21 +139,24 @@
                         bg: '#f4f7f9',
                         text: '#565867'
                     }
-                }, // specifies the color scheme for the component
-                alwaysScrollToBottom: false, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
-                messageStyling: true // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown)
+                },
+                // alwaysScrollToBottom: false, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
+                // messageStyling: true // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown)
             }
         },
         components: {
         },
         methods: {
+    /* 
             showDiv() {
                 this.showSearch = true;
             },
             closeDiv() {
                 this.showSearch = false;
             },
+    */
 
+    // Functions to send Messages in Chatwindow
             sendMessage(text) {
                 if (text.length > 0) {
                     this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1

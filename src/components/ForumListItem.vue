@@ -1,28 +1,22 @@
 <template>
     <div class="forum-listing">
 
+        <!-- show forumlistelement -->
         <div class="forum-details">
             <router-link class="text-xlarge"
                          :to="{name:'ForumThreads', params: {id: forum['.key']}}">
                 {{forum.name}}
             </router-link>
-
+            <!-- Desciption of the forum-->
             <p>{{forum.description}}</p>
         </div>
 
+        <!-- show number of threads inside the forum-->
         <div class="threads-count">
             <p class="count">{{threadsCound}}</p>
             {{threadsCound === 1 ? 'thread' : 'threads' }}
         </div>
 
-        <div class="last-thread">
-            <!-- TODO -->
-            <!--<img class="avatar" src="https://i.imgur.com/WPSrfGm.jpg" alt="">-->
-            <!--<div class="last-thread-details">-->
-            <!--<a href="thread.html">What is the best animal joke y...</a>-->
-            <!--<p class="text-xsmall">By <a href="profile.html">Blossom</a>, 16 hours ago</p>-->
-            <!--</div>-->
-        </div>
 
     </div>
 </template>
@@ -37,7 +31,8 @@
         type: Object
       }
     },
-    computed: {
+        computed: {
+        // count number of threads
       threadsCound () {
         return countObjectProperties(this.forum.threads)
       }

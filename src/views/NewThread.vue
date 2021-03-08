@@ -1,8 +1,10 @@
+<!-- Create new Thread Component-->
 <template>
     <div class="home">
         <div class="home">
             <h1>Create New Thread</h1>
             <div class="scroll">
+                <!-- New Thread Editor -->
                 <NewThreadEditor @save="newThread"
                                  :forumId="id" />
 
@@ -29,12 +31,11 @@
         },
 
         methods: {
+            // create new Thread
             async newThread({ thread, post }) {
-                console.log(post)
+                // add new Thread to store
                 await this.$store.dispatch('createNewThread', [thread, post])
-
-
-
+                // create new routerlink to created forum
                 this.$router.push({ name: 'ForumThreads', params: { id: this.id } })
             }
         }

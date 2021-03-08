@@ -1,8 +1,10 @@
+<!-- Groupmanagement -->
 <template>
     <div class="home">
         <h1> Gruppenverwaltung </h1>
 
         <div>
+            <!-- create membercard for each member in group with name, role and delete-Button -->
             <b-card class="groupCard" v-for="(member, index) in members.members" :key="index">
                 <h3>{{member.name}}</h3>
                 <b-button @click="deleteMember(member)"> X </b-button>
@@ -11,6 +13,7 @@
                 <h5>{{member.role}}</h5>
             </b-card>
 
+            <!--Card to add new Member, routerlink -->
             <b-card class="groupCard">
                 <router-link to="newMember" tag="div">
                     <div class="w3-container w3-center">
@@ -34,11 +37,13 @@ import { mapState } from 'vuex';
         }
     },
     methods: {
+        // delete Member from group 
         deleteMember: function (member) {
             this.$store.dispatch('members/deleteMembers', member)
 
         }
         },
+        // get members from store 
         computed: {
             ...mapState({
                 members: state => state.members,

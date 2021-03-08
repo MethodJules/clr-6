@@ -1,4 +1,6 @@
+// Member store 
 const state = () => ({
+    // list of members
     members: [
         { name: 'Member 1', role: 'Admin', img: '~@/assets/profilbild.png' },
         { name: 'Member 2', role: 'member', img: '~@/assets/profilbild.png' },
@@ -8,6 +10,7 @@ const state = () => ({
 })
 
 
+// add or delete Members, are called from Components
 const actions = {
     addMember({ commit }, member) {
         commit('addMember', member)
@@ -17,7 +20,7 @@ const actions = {
     }
 }
 
-
+// add or delete members, are called from actions
 const mutations = {
     addMember(state, member) {
 

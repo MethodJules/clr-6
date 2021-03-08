@@ -1,5 +1,7 @@
+<!-- Conceptmap View -->
 <template>
 <div class="viewConceptMap">
+    <!-- Create svg-graphic -->
     <svg >
         <defs>
             <marker id="m-end" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth" >
@@ -8,6 +10,7 @@
 
         </defs>
     </svg>
+    <!-- Create concept map with D3 -->
   <d3-network :net-nodes="nodes" :net-links="links" :options="options" :link-cb="lcb" @node-click="foo"></d3-network>
 </div>
 </template>
@@ -21,6 +24,7 @@ export default {
     },
     data: function() {
         return {
+            // options for concept map
             options: {
                     force: 4000,
                     nodeSize: 10,
@@ -40,13 +44,16 @@ export default {
             console.log(this.links)
             //this.$store.dispatch('saveConceptMapToDB')
         },
+
+        // open modal on click on node (in Concept.vue-Component)
         foo(event, node) {
             this.$emit('parentToChild', node);
             console.log(event);
             console.log(node)
         }
     },
-    computed: {
+        computed: {
+        // get nodes and links from backend
         ...mapState({
             nodes: state => state.concept_map.nodes,
             links: state => state.concept_map.links

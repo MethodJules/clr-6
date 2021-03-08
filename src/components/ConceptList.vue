@@ -1,5 +1,6 @@
 <template>
     <div class="scrollbar">
+        <!-- List of concepts with delete and create (put it into map) icon-->
         <vuescroll :ops="ops">
             <div class="listElement" v-for="concept in concepts" :key="concept.name">
                 <div class="listIcon" @click="deleteItem(concept)"> <b-icon icon="trash" aria-hidden="true"></b-icon> </div>
@@ -20,7 +21,8 @@ export default {
     },
     data: function() {
         return {
-            conceptList: null,
+            conceptList: null, 
+            // options for vuescroll
             ops: {
                     rail: {
                         background: '#bababa',
@@ -36,22 +38,26 @@ export default {
                 }
         }
     },
-    methods: {
+        methods: {
+        // create new Conncetion (method in Concept.vue-Component)
         createElement (value) {
-            alert("Create");
             this.$emit('childToParent', value)
             },
+        // delete Concept
         deleteItem(concept) {
-            alert("Delete");
             this.$store.dispatch('concepts/deleteConcept', concept)
         }
     },
         computed: {
             ...mapState({
+                // get Concepts from state
                 concepts: state => state.concepts.concepts
             })
            
           /*  
+           * erster versuch alle aktuellen Konzepte zu laden 
+           * 
+           *
         ...mapState({ 
                 concepts(state) {
                     
@@ -61,37 +67,31 @@ export default {
                     for (let concept of state.concepts.concepts) {
                         for (let map of state.concept_map.nodes) {
                             if (concept.id == map.id) {
-                                console.log("AAAAAAAAAAAAAAA");
                                 console.log(concept.id);
                                 console.log(map.id);
                                 console.log(this.conceptList.indexOf(concept));
                                 this.conceptList.splice(this.conceptList.indexOf(concept), 1);
                             }
-                        }
-                        
-                    }
-
-
-                    
-
+                        }           
                     return this.conceptList
                 }
         })
         */
-    },
+        },
+    
     async mounted() {
-        console.log("mounted");     
+        // load concepts from store
         await this.$store.dispatch('concepts/loadConcepts');
-        
-        console.log(this.$store.state.concepts.concepts);
-
+       
         this.conceptList = this.$store.state.concepts.concepts;
 
+
+       // versuch Konzpte richtig aus store zu laden 
         for (let map of this.$store.state.concept_map.nodes) {
             console.log(map);
 
         }
-
+        // versuch Konzpte richtig aus store zu laden 
         for (let concept of this.$store.state.concepts.concepts) {
             console.log(this.$store.state.concept_map.nodes);
             console.log(concept);

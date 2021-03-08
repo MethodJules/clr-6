@@ -1,3 +1,4 @@
+<!-- isn't used-->
 <template>
     <div class="home">
         <h1>
@@ -8,12 +9,12 @@
 
 <script>
 
-export default {
-  name: 'Home',
-  components: {
+    export default {
+        name: 'Home',
+        components: {
 
-  }
-}
+        }
+    }
 </script>
 <style>
     .home {

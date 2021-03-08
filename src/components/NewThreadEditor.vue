@@ -1,16 +1,21 @@
+<!-- Create a new thread -->
 <template>
     <form @submit.prevent="save">
+        <!-- Form to create Thread -->
         <div class="form-group">
+        <!-- Threadname -->
             Threadname:
             <input name=""
                    id=""
                    class="form-input"
                    v-model="title" />
+           <!-- Threadslugs-->
             Slugs:
             <input name=""
                    id=""
                    class="form-input"
                    v-model="slug" />
+           <!-- Thread message-->
             Message
             <textarea name=""
                       id=""
@@ -21,6 +26,7 @@
         
         </div>
 
+        <!-- Button to create new Thread-->
         <div class="form-actions">
             <button class="btn-red">Create Thread</button>
         </div>
@@ -41,23 +47,26 @@
           text: ''
       }
     },
-    methods: {
-      save () {
-          const thread = {
-              title: this.title,
-              slug: this.slug,
-              publishedAt: Math.floor(Date.now() / 1000),
-              userId: 'jUjmgCurRRdzayqbRMO7aTG9X1G2',
-              forumId: this.forumId               
-          }
+        methods: {
 
-          const post = {
-              text: this.text,
-              publishedAt: Math.floor(Date.now() / 1000),
-              userId: 'jUjmgCurRRdzayqbRMO7aTG9X1G2'
-          }
-
-          this.$emit('save', { thread, post })
+            // save new Thread  
+            save() {
+                // save Thread with values
+                const thread = {
+                    title: this.title,
+                    slug: this.slug,
+                    publishedAt: Math.floor(Date.now() / 1000),
+                    userId: 'jUjmgCurRRdzayqbRMO7aTG9X1G2',
+                    forumId: this.forumId               
+                }
+                // save first post with values 
+                  const post = {
+                      text: this.text,
+                      publishedAt: Math.floor(Date.now() / 1000),
+                      userId: 'jUjmgCurRRdzayqbRMO7aTG9X1G2'
+                  }
+                // save new Thread and post,put it into store, emit save method from NewThread.vue
+                    this.$emit('save', { thread, post })
       }
     }
   }

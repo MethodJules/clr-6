@@ -1,3 +1,4 @@
+// conceptmap data
 import axios from 'axios';
 
 const state = () => ({
@@ -25,6 +26,7 @@ const state = () => ({
        links: []
 })
 
+
 const actions = {
     addConceptToConceptMap({commit}, concept) {
         commit('ADD_CONCEPT_TO_CONCEPT_MAP', concept)
@@ -34,6 +36,7 @@ const actions = {
         commit('ADD_RELATIONSHIP_TO_CONCEPT_MAP', relationship);
     },
 
+    // load data from clr-backend
     async loadConceptMapFromBackend({commit}) {
         await axios.get('http://clr-backend.x-navi.de/jsonapi/node/concept_map')
             .then((response) => {

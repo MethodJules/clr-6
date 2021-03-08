@@ -1,11 +1,14 @@
-﻿<template>
+﻿<!-- Literature review circle -->
+<template>
     <z-view>
+        <!-- Name of Circle, Text shown in the middle of the circle-->
         <b> Kollaboratives Literarurreview: </b>
         <br>
         <b> Hildesheimer Ansatz </b>
 
 
         <div slot="extension">
+        <!-- generate each node around the circle, steps of an literature review-->
             <z-spot v-for="(el, index) in elements"
                     button
                     size="s"
@@ -16,7 +19,7 @@
                     @click.native="changeStyle(el)"
                     :id="el.type"
                     :class="{'isDone': el.done === true, 'red': el.done !== true}">
-
+                <!-- defines the text for each node -->
                 <div :class="[el.textPos]"> {{el.text}} </div>
                 <div :class="[el.labelPos]"> {{el.label}} </div>
                 <div :class="[el.textPos2]"> {{el.text2}} </div>
@@ -31,6 +34,7 @@
     export default {
         data() {
             return {
+                // Elements / steps of an literature research, data to generate circlesteps 
                 elements: [
                     {
                         type: 'theme', angle: 270, label: 'Gruppe bilden', text: 'Vorbereitung der Zusammenarbeit',
@@ -74,12 +78,14 @@
             }
         },
         methods: {
+            // change Style, when click on step, simulates "step is done"
             changeStyle(el) {
                 var changeColor = true;
 
                 for (let element of this.elements) {
                     console.log(element.label);
                     console.log(el.label);
+                    // check, if previous steps are done (only if step before is done, the chosen step can be done)
                     if (element !== el) {
 
                         if (element.done == false) {

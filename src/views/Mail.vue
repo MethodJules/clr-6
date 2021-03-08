@@ -14,7 +14,7 @@
                                   class="mb-0"
                                   v-slot="{ ariaDescribedby }">
 
-                        <!-- Sortierung -->
+                        <!-- sorting -->
                         <b-input-group size="sm">
 
                             <b-form-select id="sort-by-select"
@@ -41,7 +41,7 @@
 
 
                 <b-col lg="6" class="my-1">
-                    <!--  Filter nach Zeichen -->
+                    <!--  Filter by letters -->
                     <b-form-group label="Filter"
                                   label-for="filter-input"
                                   label-cols-sm="3"
@@ -57,7 +57,7 @@
                             <b-input-group-append>
                                 <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
                             </b-input-group-append>
-                            <!--  ungelesene Nachrichten anzeigen -->
+                            <!--  show unread messages -->
                             <b-form-checkbox id="checkbox-1"
                                              v-model="filter"
                                              name="checkbox-1"
@@ -74,7 +74,7 @@
 
                 <b-col lg="6" class="my-1">
 
-                    <!--  Filter Checkboxen -->
+                    <!--  filter checkbox -->
                     <b-form-group v-model="sortDirection"
                                   label="Filter On"
                                   label-cols-sm="3"
@@ -91,6 +91,7 @@
                     </b-form-group>
                 </b-col>
 
+                <!-- select number of mails per page -->
                 <b-col sm="5" md="6" class="my-1">
                     <b-form-group label="Per page"
                                   label-for="per-page-select"
@@ -110,7 +111,8 @@
                 </b-col>
 
                 <b-col sm="7" md="6" class="my-1">
-                    <!-- Anzahl elemente anzeigen-->
+                    <!-- switch between pages -->
+                    <!-- switch between pages -->
                     <b-pagination v-model="currentPage"
                                   :total-rows="totalRows"
                                   :per-page="perPage"
@@ -120,7 +122,7 @@
                 </b-col>
             </b-row>
 
-            <!-- Haupttabelle -->
+            <!-- maintabel with sorting information, filter clickevent -->
             <b-table :items="items"
                      :fields="fields"
                      :current-page="currentPage"
@@ -135,10 +137,8 @@
                      small
                      @row-clicked="readMail"
                      @filtered="onFiltered">
-                <template #cell(name)="row">
-                    {{ row.value.first }} {{ row.value.last }}
-                </template>
-
+               
+                <!-- format Action-cell -->
                 <template #cell(actions)="row">
                     <b-button size="sm" @click="info(row.item, row.index, $event.target)" class="mr-1">
                         Info modal
@@ -148,6 +148,7 @@
                     </b-button>
                 </template>
 
+                <!-- Template for details (if clicked on show details)-->
                 <template #row-details="row">
                     <b-card>
                         <ul>
@@ -215,7 +216,7 @@
                 { isRead: false, from: "test3@test.de", subject: 'Test', text: "Dies ist eine Nachricht" },
                 { isRead: false, from: "test5@test.de", subject: 'Test', text: "Dies ist eine Nachricht" }
             ],
-            // Felder für die Tabelle
+            // fields for table
             fields: [
                 { key: 'from', label: 'From', sortable: true, sortDirection: 'desc' },
                 { key: 'subject', label: 'Subject', sortable: true},
@@ -231,6 +232,8 @@
                 },
                 { key: 'actions', label: 'Actions' }
             ],
+
+            // variables for creating, sorting and filtering table
             totalRows: 1,
             currentPage: 1,
             perPage: 5,
@@ -257,7 +260,7 @@
 
         }), 
         computed: {
-            // Filteroption 
+            // filter and sort option, return sorted Table 
             sortOptions() {              
                 return this.fields
                     .filter(f => f.sortable)
@@ -271,34 +274,34 @@
             this.totalRows = this.items.length
         },
         methods: {
-            // Infomodal definieren (Action)
+            // define Infomodal (Action)
             info(item, index, button) {
                 this.infoModal.title = `Row index: ${index}`
                 this.infoModal.content = JSON.stringify(item, null, 2)
                 this.$root.$emit('bv::show::modal', this.infoModal.id, button)
             },
-            // Infomodal zurücksetzen
+            // reset infomodal
             resetInfoModal() {
                 this.infoModal.title = ''
                 this.infoModal.content = ''
             },
-            //ausgewählte Mail anzeigen 
+            // show selected mail 
             readMail(record) {
                 this.selectedMail = record;
                 this.$bvModal.show('selectedMailModal');
             },
-            // Filter aktivieren
+            // activate filter
             onFiltered(filteredItems) {
 
-                // Wenn kein Filter gesetzt, setze alle Filter aktiv, damit in allen Kategorien gesucht wird
+                // If no filter is choose, set all filter to active, so table is filtered by all categories 
                 if (this.filterOn.length === 0) {
                     this.filterOn.push("from", "subject")
                 }
-                // Anzahl Elemente ermitteln 
+                // count number of elements 
                 this.totalRows = filteredItems.length
                 this.currentPage = 1
             },
-            // Filter ändern
+            // change Filter
             changeFilter() {
                 if (this.filter !== "false") {
                     this.filterOn.push("isRead");
@@ -310,14 +313,17 @@
                 
             },
 
+            // open write mail modal 
             openWriteEmail() {
                 this.$bvModal.show('writeEmail');
             },
 
+            // close selected mailmodal 
             close() {
                 this.$bvModal.hide('selectedMailModal');
             },
 
+            // close write mail modal 
             closeEmail() {
                 this.$bvModal.hide('writeEmail');
             }

@@ -1,4 +1,7 @@
+<!-- Component to show past time -->
 <template>
+   
+    <!-- show Timestamp-->
     <span :title="timestamp | humanFriendlyDate">
         {{timestamp | diffForHumans}}
     </span>
@@ -13,7 +16,8 @@
         required: true,
         type: Number
       }
-    },
+        },
+    // format time 
     filters: {
       humanFriendlyDate (date) {
         return moment.unix(date).format('MMMM Do YYYY, h:mm:ss a')

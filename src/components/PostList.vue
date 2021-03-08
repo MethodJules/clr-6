@@ -1,5 +1,6 @@
 <template>
     <div class="post-list">
+        <!-- show all Postlist Elements of thread -->
         <PostListItem v-for="post in posts"
                       :post="post"
                       :key="post['.key']" />

@@ -1,6 +1,7 @@
 <template>
     <div class="home">
         <h1>{{ category.name }}</h1>
+        <!-- List of forums of a category-->
         <div class="scroll">
             <CategoryListItem :category="category" />
         </div>
@@ -14,13 +15,15 @@
     components: {
       CategoryListItem
     },
-    props: {
+        props: {
+        // categoryid 
       id: {
         required: true,
         type: String
       }
     },
-    computed: {
+        computed: {
+        // get all forums by category ID
         category() {
             return this.$store.state.categories[this.id]
       }

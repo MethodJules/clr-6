@@ -1,15 +1,15 @@
 
 const state = () => ({
-    // Daten der Diagramme, jeweils in einem Array gespeichert für jeden einzelnen Teil ein Wert 
+    // Data for the charts, each data saved in Array, for each part one entry in array 
     chartData: 
     {
-        // Name 
+        // name
         labels: ["Books", "Magazines", "Newspapers"],
 
-        // Farbe
+        // color
         backgroundColor: ["#0000FF", "#00FF00", "#FF0000"],
 
-        // Daten / Anteil an dem Gesamtelement, bzw. größe des Balkens 
+        // data/ part of the element, (part of piechart, length of barchart)
         data: [30, 20, 10]   
         }
 

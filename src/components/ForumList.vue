@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- Forum List Element, show all forums of one category-->
         <ForumListItem v-for="forum in forums"
                        :forum="forum"
                        :key="forum['.key']" />

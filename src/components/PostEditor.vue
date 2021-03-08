@@ -1,5 +1,7 @@
+<!-- Post Editor -->
 <template>
     <form @submit.prevent="save">
+        <!-- Posttext-->
         <div class="form-group">
             <textarea name=""
                       id=""
@@ -8,7 +10,7 @@
                       class="form-input"
                       v-model="text"></textarea>
         </div>
-
+        <!-- Submit new post-->
         <div class="form-actions">
             <button class="btn-red">Submit post</button>
         </div>
@@ -28,21 +30,19 @@
       }
     },
     methods: {
+        // save and store post 
         save() {
-            alert(this.threadId)
+            // save new post with values
+            const post = {
+                  text: this.text,
+                  publishedAt: Math.floor(Date.now() / 1000),
+                  threadId: this.threadId,
+                  userId: 'jUjmgCurRRdzayqbRMO7aTG9X1G2'
+            }
 
-        const post = {
-          text: this.text,
-          publishedAt: Math.floor(Date.now() / 1000),
-          threadId: this.threadId,
-          userId: 'jUjmgCurRRdzayqbRMO7aTG9X1G2'
-        }
-
-        this.text = ''
-
-        // console.log(post)
-
-        this.$emit('save', {post})
+             this.text = ''
+            // save Post, put it to store (emit save-method from component)
+             this.$emit('save', {post})
       }
     }
   }

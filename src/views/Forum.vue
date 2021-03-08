@@ -2,7 +2,7 @@
 <template>
     <div class="home">
         <h1>Welcome to the Forum</h1>
-        <!-- Zeigt alle Kategorien des Forums, ruft Komponente auf -->
+        <!-- Show all Categories of the forum, import Categorylist-Component -->
         <CategoryList :categories="categories" />
     </div>
 </template>
@@ -16,6 +16,7 @@
             CategoryList
         },
         computed: {
+            // load categries from store
             categories() {
                 return Object.values(this.$store.state.categories)
             }

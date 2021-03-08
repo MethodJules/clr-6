@@ -1,3 +1,4 @@
+<!-- front page-->
 <template>
     <div class="home">
     </div>

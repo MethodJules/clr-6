@@ -1,6 +1,7 @@
 <template>
     <div class="thread-list">
         <h2 class="list-title">Threads</h2>
+        <!-- show Threadlistitems -->
         <ThreadListItem v-for="thread in threads"
                         :thread="thread"
                         :key="thread['.key']" />

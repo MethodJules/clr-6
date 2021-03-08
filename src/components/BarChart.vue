@@ -5,7 +5,7 @@
     export default {
         extends: Bar,
 
-        // Speicherung der Daten aus dem Store, um sie in dieser Klasse zu verwenden
+        // Save Data from store, to use in this class
          computed: {
             ...mapState({
                  chartData: state => state.chartData,
@@ -14,7 +14,7 @@
  
         mounted() {
 
-         // Stabdiagramm mit Farbverlauf 
+         // Barchart with colour gradient
 
    /*
             this.gradient = this.$refs.canvas
@@ -27,17 +27,23 @@
           this.gradient.addColorStop(1, "rgba(255, 0, 0, 0)");
  
  */
+
+            // create bar chart 
             this.renderChart(
                 {
+                    // Labelnames 
                     labels: this.chartData.chartData.labels,
                     datasets: [
-                        // Eine {}Klammer entspricht einer Stabreihe
+                        // {} -> corresponds to one bar row 
                         {
-                            // Name der Daten des Stabdiagramms
-                            label: ["Data"],
-                            // Farben der einzelnen Säulen einer Stabreihe 
+
+                            // bar chart with colour gradient
+                            /* 
+                            backgroundColor: ["#0000FF", this.gradient, "#FF0000"],
+                            */
+                            // colors of each pillar of one bar row
                             backgroundColor: this.chartData.chartData.backgroundColor,
-                            // Daten der einzelnen Säulen einer Stabreihe 
+                            // data of each pillar of one bar row 
                             data: this.chartData.chartData.data, 
                         }
 
@@ -46,18 +52,21 @@
 
               },
 
-
+            // options  
               {
                   responsive: true,
                   maintainAspectRatio: false, 
+
                   scales: {
                       yAxes: [{
                           ticks: {
+                              // start at zero 
                               beginAtZero: true
                           }
                       }]
                   }, 
                   legend: {
+                      // does not show legend
                       display: false
                   }
               }

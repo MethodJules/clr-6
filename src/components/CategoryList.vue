@@ -1,10 +1,12 @@
+<!-- Categorylist-Component-->
 <template>
+   
+    <!-- show List of categories-->
     <div class="category-list">
-
         <h2 class="list-title">
             <a href="#">Categories</a>
         </h2>
-        
+        <!-- Categorylist element -->
         <CategoryListItem v-for="category in categories"
                           :category="category"
                           :key="category['.key']" />

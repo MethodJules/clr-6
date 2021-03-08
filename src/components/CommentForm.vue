@@ -2,6 +2,7 @@
     <div>
        <h2> Comments </h2>
         <ul id="comments">
+            <!-- List of all comments with username and text -->
             <li v-for="comment in comments" :key="comment.id">
                 <div class="comment">
                     <div class="user">
@@ -15,6 +16,7 @@
                     </div>
 
                     <div class="post-date text-faded">
+                        <!-- Posttime, iimport Appdate-Component -->
                         <AppDate :timestamp="comment.time" />
                     </div>
                 </div>
@@ -22,7 +24,7 @@
             </li>
         </ul>
         
-        
+        <!-- Form to create new post  -->
         <form @submit.prevent="save">
             <div class="form-group">
                 <table>
@@ -45,6 +47,7 @@
                 </table>
             </div>
 
+            <!-- Button, to send new comment-->
             <div class="form-actions">
                 <button class="btn-red">Send Comment</button>
             </div>
@@ -61,9 +64,11 @@
     },
     data () {
       return {
+          // variables for new comment 
           text: '',
           name: '',
           id: 2,
+          // List of Comments
           comments: [
               {
                   id: 0,
@@ -82,7 +87,7 @@
     },
     methods: {
         save() {
-
+            // create new post
             const post = {
                 id: this.id,
                 text: this.text,
@@ -92,7 +97,7 @@
 
             this.text = ''
             this.id += 1;
-
+        // push comment to List of comments 
         this.comments.push(post);
       }
     }

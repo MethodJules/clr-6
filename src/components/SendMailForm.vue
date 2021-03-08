@@ -1,6 +1,8 @@
 <template>
-
+<!-- Form for writing an email-->
         <b-form @submit.prevent="onSubmit" @reset="onReset" v-if="show">
+            
+            <!-- Email To -->
             <b-form-group id="emailTo"
                           label="To:"
                           label-for="emailTo">
@@ -11,6 +13,7 @@
                               required></b-form-input>
             </b-form-group>
 
+            <!-- Email subject -->
             <b-form-group id="emailSubject"
                           label="Subject:"
                           label-for="subject">
@@ -20,6 +23,7 @@
                               required></b-form-input>
             </b-form-group>
 
+            <!-- Email Text -->
             <b-form-group id="emailText" label="Text:" label-for="emailText">
                 <b-form-textarea id="emailText"
                                  v-model="form.text"
@@ -27,8 +31,9 @@
             </b-form-group>
 
 
-
+            <!-- Email submit -->
             <b-button type="submit" variant="primary">Submit</b-button>
+            <!-- Email reset -->
             <b-button type="reset" variant="danger">Reset</b-button>
         </b-form>
 
@@ -50,11 +55,13 @@
             }
         },
         methods: {
+            // submit method //TODo: send Email 
             onSubmit() {
                 alert("Email versenden");
                 console.log(this.form);
 
             },
+            // reset form values
             onReset(event) {
                 event.preventDefault()
                 // Reset our form values

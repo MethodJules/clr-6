@@ -1,3 +1,4 @@
+<!-- Component for Analysis, isn't used currently -->
 <template>
     <div class="home">
         <h1>
@@ -8,24 +9,14 @@
 
 <script>
 
-export default {
-  name: 'Home',
-  components: {
+    export default {
+        name: 'Home',
+        components: {
 
-  }
-}
+        }
+    }
 </script>
 <style>
-    .home {
-        width: 70%;
-        background-color: white;
-        height: 85%;
-        position: absolute;
-        top: 10%;
-        left: 5%;
-        padding: 30px
-    }
-
     h1 {
         color: #c93e37;
     }

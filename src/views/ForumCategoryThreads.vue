@@ -6,7 +6,7 @@
                     <h1>{{forum.name}}</h1>
                     <p class="text-lead">{{forum.description}}</p>
                 </div>
-
+                <!-- Create a new thread routerlink-button -->
                 <router-link :to="{name: 'NewThread', params: {id: id}}" class="btn-red btn-small">
                     Start a thread 
                 </router-link>
@@ -15,6 +15,7 @@
         </div>
         <div class="scroll">
             <div class="col-full">
+                <!-- show all threads of a forum -->
                 <ThreadList :threads="threads" />
             </div>
         </div>
@@ -24,26 +25,30 @@
 <script>
   import ThreadList from '@/components/ThreadList'
 
-  export default {
-    props: {
-      id: {
-        required: true,
-        type: String
-      }
-    },
-    components: {
-      ThreadList
-    },
-    computed: {
-      forum () {
-        return this.$store.state.forums[this.id]
-      },
-      threads () {
-        return Object.values(this.$store.state.threads)
-          .filter(thread => thread.forumId === this.id)
-      }
+    export default {
+        props: {
+            // Forum-ID
+            id: {
+                required: true,
+                type: String
+            }
+        },
+        components: {
+            ThreadList
+
+        },
+        computed: {
+            // get all forums  
+            forum() {
+                return this.$store.state.forums[this.id]
+            },
+            // get all Threads by forum 
+            threads() {
+                return Object.values(this.$store.state.threads)
+                    .filter(thread => thread.forumId === this.id)
+            }
+        }
     }
-  }
 </script>
 
 <style scoped>

@@ -5,12 +5,14 @@
                     <h1>{{thread.title}}</h1>
 
                     <p>
-                        By <a href="#" class="link-unstyled">Robin</a>, <AppDate :timestamp="thread.publishedAt" />.
-                        <span style="float:right; margin-top: 2px;" class="hide-mobile text-faded text-small">3 replies by 3 contributors</span>
+                        <!-- show Thread-Creator -->
+                        By <a href="#" class="link-unstyled">Robin</a>, <AppDate :timestamp="thread.publishedAt" />.                       
                     </p>
                     
+                    <!-- show list of posts-->
                     <PostList :posts="posts" />
             
+                    <!-- Post Edior -Component, on save add Post to thread -->
                     <PostEditor @save="addPost"
                                 :threadId="id" />
 
@@ -36,15 +38,15 @@
       }
     },
     data () {
-      return {
-        thread: this.$store.state.threads[this.id],
-        newPostText: ''
+        return {
+            // get all threads by forum 
+            thread: this.$store.state.threads[this.id],
+            newPostText: ''
       }
     },
     computed: {
       posts () {
-        // get the Ids of the posts in this thread
-       
+        // get the Ids of the posts in this thread     
           const postIds = Object.values(this.thread.posts)
 
         // search the posts in the this.$store.state that have .key equal to the ones in this thread
@@ -53,10 +55,11 @@
 
       }
     },
-    methods: {
-      addPost ({post}) {
-        this.$store.dispatch('createPost', post)
-      }
+        methods: {
+        // add post to store
+            addPost ({post}) {
+            this.$store.dispatch('createPost', post)
+        }
     }
   }
 </script>

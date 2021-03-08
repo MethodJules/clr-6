@@ -6,7 +6,7 @@
       extends: Pie,
 
         computed: {
-            // Speicherung der Daten aus dem Store, um sie in dieser Klasse zu verwenden
+            // Save Data from store, to use in this class
             ...mapState({
                 chartData: state => state.chartData,
             })
@@ -14,7 +14,7 @@
 
         mounted() {
 
-            // Kreisdiagramm mit Farbverlauf 
+            // pie chart with colour gradient
 
             /*
             this.gradient = this.$refs.canvas
@@ -28,22 +28,23 @@
 
               */
 
-            // Generiert das Diagramm mit ihren Eigenschaften
-            // Jeweils in einem Array angelegt für jedes einzelene Element
+            /*
+             * generate the pie chart with attributes
+             */
             this.renderChart(
                 {
-                // Namen der einzelnen Teile des Kreidiagramms
+                // Name of each part of the pie chart 
                 labels: this.chartData.chartData.labels, 
 
                 datasets: [
                     {
-                        // Kreisdiagramm mit Farbverlauf 
+                        // pie chart with colour gradient
                        /* 
                         backgroundColor: ["#0000FF", this.gradient, "#FF0000"],
                         */
-                        // Farben der einzelnen Teile des Kreisdiagramms 
+                        // colors of each pillar of one pie row
                         backgroundColor: this.chartData.chartData.backgroundColor, 
-                        // Daten / Zahlen der einzelnen Teile des Kreisdiagramms
+                        // data of each pillar of one pie row 
                         data: this.chartData.chartData.data, 
                     }
                 ]
