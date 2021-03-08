@@ -8,17 +8,34 @@
     </b-row>
     <b-row>
     
-    <b-form-textarea v-model="value" debounce="500" rows="3" max-rows="5"></b-form-textarea>
-    <pre class="mt-2 mb-0">{{ value }}</pre>
+    <!-- <b-form-textarea @paste="onPaste" v-model="documentationText" debounce="500" rows="3" max-rows="5"></b-form-textarea> -->
+    <div class="card-body border border-dark" ><pre class="mt-2 mb-0">{{inDoku.documentationText}}</pre></div>
+    <br>
+    <TemplateButtons :inDoku= inDoku></TemplateButtons>
+    
     </b-row>
     </b-container>
   </div>
 </template>
 <script>
+  import TemplateButtons from '@/components/TemplateButtons'
   export default {
     data() {
       return {
-        value: ''
+        inDoku:{
+          documentationText: " "
+        }
+       
+      }
+    },
+    components:{
+      TemplateButtons
+    },
+    methods:{
+      onPaste(evt){
+        
+        console.log('on paste', evt)
+        return true
       }
     }
   }
