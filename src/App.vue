@@ -30,9 +30,21 @@
 
                 <b-col cols="8" class="mitte border border-primary">
                     <router-view></router-view>
-                    <b-link :to="{name: 'Reflexion'}" class="btn btn-outline-dark btn-block mb-2">Zur Reflexion</b-link> 
-                    <b-form-select v-model="selected" :options="options" link :to="{name: 'Reflexion'}" class="btn btn-outline-dark btn-block mb-2"></b-form-select>
+                   
                     
+
+                    <b-dropdown text="Zur Reflexion" class="m-2">
+                    <b-dropdown-item link :to="{name: 'Reflexion'}">Gruppe bilden</b-dropdown-item>
+                    <b-dropdown-item link :to="{name: 'Reflexion'}">Ziel & Umfang definieren</b-dropdown-item>
+                    <b-dropdown-item link :to="{name: 'Reflexion'}">Konzepte & Definitionen</b-dropdown-item>
+                    <b-dropdown-item link :to="{name: 'Reflexion'}">Literatur suchen</b-dropdown-item>
+                    <b-dropdown-item link :to="{name: 'Reflexion'}">Daten extrahieren</b-dropdown-item>
+                    <b-dropdown-item link :to="{name: 'Reflexion'}">Analyse & Synthese</b-dropdown-item>
+                    <b-dropdown-item link :to="{name: 'Reflexion'}">Ergebnisse kommunizieren</b-dropdown-item>
+                    <b-dropdown-item link :to="{name: 'Reflexion'}">Gruppe auflösen</b-dropdown-item>
+                    
+                    
+                    </b-dropdown>
                 </b-col>
 
                 <b-col cols="2" class="rechteSeite">
@@ -97,7 +109,7 @@
                     {todo:"Mein1", date:"20.02.2021"},
                 ], */
 
-                selected: null,
+                /* selected: null,
                 options: [
                     { value: null, text: 'Zur Reflexion' },
                     { value: 'a', text: 'Gruppe bilden' },
@@ -109,7 +121,7 @@
                     { value: 'g', text: 'Ergebnisse kommunizieren' },
                     { value: 'h', text: 'Gruppe auflösen' },
                     
-                ],
+                ], */
             }
 
         },

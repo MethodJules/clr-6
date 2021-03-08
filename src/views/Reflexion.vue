@@ -80,11 +80,11 @@
                         <b-col>
                             <div id="reflexion">
                             <h3>Reflexion</h3>
-                            <p>{{text1}}</p>
-                            <p>{{text2}}</p>
-                            <p>{{text3}}</p>
-                            <p>{{text4}}</p>
-                            
+                            <p> Berichten / Reagieren: {{text1}}</p>
+                            <p> In Bezug setzen: {{text2}}</p>
+                            <p> Schlussfolgern: {{text3}}</p>
+                            <p> Rekonstruieren: {{text4}}</p>
+                             
 
                             </div>
                         <!-- <b-modal id="reflexion_speichern_modal" title="Speichern">
