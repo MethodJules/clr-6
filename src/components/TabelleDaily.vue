@@ -114,7 +114,6 @@ export default {
 
     }, */
 
-/* 
         deleteRow(row) {
             alert("Delete");
               //console.log(row);
@@ -130,6 +129,7 @@ export default {
       this.$store.dispatch('daily_scrum/deleteDaily', indx)
 
     } */
+
   }, 
  
   mounted() {

@@ -79,19 +79,21 @@ import Button from '@/components/Button'
 
     addItem() {
             var ausgabe = {
-                date: this.date,
-                doings: this.doings,
-                todaydoings: this.todaydoings,
-                problems: this.problems
+                date: this.formdata.date,
+                doings: this.formdata.doings,
+                todaydoings: this.formdata.todaydoings,
+                problems: this.formdata.problems,
+                title: this.formdata.title
             };
 
-            this.$store.dispatch('daily_scrum/createDaily', ausgabe)
+            this.$store.dispatch('daily_scrum/createDaily', this.formdata)
             this.rowData.push(ausgabe)
 
             this.date = ''
             this.doings = ''
             this.todaydoings= ''
             this.problems = ''
+            this.title = ''
         },
 
 

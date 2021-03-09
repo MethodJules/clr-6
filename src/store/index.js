@@ -6,6 +6,7 @@ import concept_map from './modules/concept_map'
 import sourceData from '@/data.json'
 import members from './modules/members'
 import daily_scrum from './modules/daily_scrum'
+import reflexion from './modules/reflexion'
 
 
 Vue.use(Vuex)
@@ -17,7 +18,8 @@ export default new Vuex.Store({
        concepts,
        concept_map,
        members,
-       daily_scrum
+       daily_scrum,
+       reflexion
     },
 
 //noch in Datei packen

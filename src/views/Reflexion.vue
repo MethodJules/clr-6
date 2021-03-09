@@ -11,7 +11,7 @@
                         </b-col>
                         <b-col sm="10">
                         <b-form-textarea
-                            v-model="text1"
+                            v-model="berichten_reagieren"
                             id="textfeld-1"
                             placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"
                             
@@ -28,7 +28,7 @@
                         </b-col>
                         <b-col sm="10">
                         <b-form-textarea
-                            v-model="text2"
+                            v-model="in_bezug_setzen"
                             id="textfeld-2"
                             placeholder="Setzen Sie den Vorfall bzw. das Problem mit Ihren eigenen Kenntnissen, Fertigkeiten, Erfahrung oder fachlichem Wissen in Verbindung. Ist Ihnen ein ähnlicher Vorfall schon einmal begegnet? Waren die Umstände gleich oder unterschiedlich? Haben Sie die Fähigkeiten und das Wissen, um damit umzugehen? Erläutern Sie."
                             
@@ -42,7 +42,7 @@
                         </b-col>
                         <b-col sm="10">
                         <b-form-textarea
-                            v-model="text3"
+                            v-model="schlussfolgern"
                             id="textfeld-3"
                             placeholder="Rekonstruieren Sie zukünftiges Handeln in Bezug auf den Vorfall bzw. das Problem. Wie würden Sie beim nächsten Mal vorgehen? Welche Ansätze könnten funktionieren und wieso? Gibt es verschiedene Optionen, aus denen Sie wählen können? Welches Ergebnis erwarten Sie?"
                             
@@ -58,7 +58,7 @@
                         </b-col>
                         <b-col sm="10">
                         <b-form-textarea
-                            v-model="text4"
+                            v-model="rekonstruieren"
                             id="textfeld-4"
                             placeholder="Rekonstruieren Sie zukünftiges Handeln in Bezug auf den Vorfall bzw. das Problem. Wie würden Sie beim nächsten Mal vorgehen? Welche Ansätze könnten funktionieren und wieso? Gibt es verschiedene Optionen, aus denen Sie wählen können? Welches Ergebnis erwarten Sie?"
                             
@@ -80,10 +80,10 @@
                         <b-col>
                             <div id="reflexion">
                             <h3>Reflexion</h3>
-                            <p> Berichten / Reagieren: {{text1}}</p>
-                            <p> In Bezug setzen: {{text2}}</p>
-                            <p> Schlussfolgern: {{text3}}</p>
-                            <p> Rekonstruieren: {{text4}}</p>
+                            <p> Berichten / Reagieren: {{this.berichten_reagieren}}</p>
+                            <p> In Bezug setzen: {{this.in_bezug_setzen}}</p>
+                            <p> Schlussfolgern: {{this.schlussfolgern}}</p>
+                            <p> Rekonstruieren: {{this.rekonstruieren}}</p>
                              
 
                             </div>
@@ -103,7 +103,7 @@
                         </b-col>
                         <b-col>
                         <!-- <b-button v-b-modal.reflexion_speichern_modal>Speichern</b-button> -->
-                        <b-button  @click="saveText">Speichern</b-button>
+                        <b-button  @click="addItem">Speichern</b-button>
                         
 
                         </b-col>
@@ -133,20 +133,33 @@
 export default {
     data() {
         return {
-            text1: '',
-            text2: '',
-            text3: '',
-            text4: ''
+            berichten_reagieren: '',
+            in_bezug_setzen: '',
+            schlussfolgern: '',
+            rekonstruieren: ''
         }
     },
     methods: {
-        saveText() {
-            
-            this.text1=""
-            this.text2=""
-            this.text3=""
-            this.text4=""
+        addItem() {
 
+
+            var ausgabe = {
+
+            berichten_reagieren: this.berichten_reagieren,
+            in_bezug_setzen:  this.in_bezug_setzen,
+            schlussfolgern: this.schlussfolgern,
+            rekonstruieren: this.rekonstruieren
+
+            };
+
+            this.$store.dispatch('reflexion/createReflexion', ausgabe)
+            console.log(ausgabe.berichten_reagieren)
+
+            this.berichten_reagieren=""
+            this.in_bezug_setzen=""
+            this.schlussfolgern=""
+            this.rekonstruieren=""
+            
         }
 
     }
