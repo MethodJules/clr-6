@@ -6,7 +6,14 @@
             </div>
         </div>
         <div>
-            <b-button>Neue Aufgabe</b-button>
+            <b-modal id="to_do_edit_modal" title="to_do">
+          <label for = "neueTodo">zu erledigende Aufgabe: </label>
+          <input v-model="todoNeu" type ="text" placeholder="hier eingeben">
+          <b-button @click="ok()">
+          OK
+          </b-button>
+        </b-modal>
+        <b-button v-b-modal.to_do_edit_modal>+</b-button>
         </div>
     </div>
 
@@ -23,5 +30,14 @@ export default {
                 listOfToDos: [{todo:"todo1", date:"21.02.2021"} , {todo:"todo2", date:"22.02.2021"}, {todo:"todo3", date:"23.02.2021"}]
             }
     },
+    methods:{
+        ok(){
+            var neueEingabe ={
+                todo: this.todoNeu
+            };
+            this.listOfToDos.push(neueEingabe)
+            this.todoNeu= ''
+        }
+    }
 }
 </script>

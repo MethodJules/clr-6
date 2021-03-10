@@ -13,6 +13,21 @@
         </div>
     
     </b-row>
+    <b-row>
+      <b-col col="6">
+      </b-col>
+      <b-col>
+        <b-modal id="tools_edit_modal" title="tools">
+          <label for = "neueTools">Benutztes Tool: </label>
+          <input v-model="tool" type ="text" placeholder="Tool">
+          <b-button @click="ok()">
+          OK
+          </b-button>
+        </b-modal>
+        <b-button v-b-modal.tools_edit_modal>+</b-button>
+      </b-col>
+    </b-row>
+
     
   </div>
 </template>
@@ -26,6 +41,16 @@
             {usedTool: 'Tool 3'},
             
         ]
+      }
+    },
+    methods:{
+      ok(){
+        var neueEingabe ={
+          usedTool: this.tool
+        };
+        this.listOfTools.push(neueEingabe)
+        this.tool= ''
+        
       }
     }
   }
