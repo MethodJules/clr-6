@@ -9,7 +9,7 @@
                 <b-col cols="7">
                     <b-modal id="documentation_edit_modal" title="Bearbeiten">
                             <b-form-textarea id="documentation_edit_form_textarea" rows="6" v-model="inDoku.documentationText"></b-form-textarea>
-                            <b-button @click="addTheDocu(inDoku.documentationText)">Hinzufügen</b-button>
+                            <b-button @click="addTheDocu()">Hinzufügen</b-button>
                     </b-modal>
                     <b-button v-b-modal.documentation_edit_modal>Dokumentation bearbeiten</b-button>
                     <!-- <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Dokumentation bearbeiten</b-link>   -->
@@ -29,15 +29,26 @@ export default {
         }
     },
     props: {
-        inDoku: String
+        inDoku: Object
     },
     methods:{
-        /* addTheDocu(documentationText) {
+        addTheDocu() {
+            var ausgabe={
+                documentationText: this.inDoku.documentationText,
+               // title: this.inDoku.title
+            }
             
-            documentationText=this.documentationText
-            documentationText= " "
-      }, */
+            this.$store.dispatch('documentation/createDocumentation', ausgabe)
+            //this.documentationText.push(ausgabe)
+            
+            //this.docus.push(ausgabe)
+            this.documentationText= ' '
+      },
       
-    }
+    },
+    mounted() {
+    console.log(this.inDoku)
+    
+  }
 }
 </script>
