@@ -1,11 +1,13 @@
 // Member store 
 const state = () => ({
     // list of members
+    currentUser: localStorage.getItem("userLoggedIn"),
+
     members: [
-        { name: 'Member 1', role: 'Admin', img: '~@/assets/profilbild.png' },
-        { name: 'Member 2', role: 'member', img: '~@/assets/profilbild.png' },
-        { name: 'Member 3', role: 'member', img: '~@/assets/profilbild.png' },
-        { name: 'Member 4', role: 'member', img: '~@/assets/profilbild.png' }
+        { name: 'Member 1', role: 'Admin', img: '~@/assets/profilbild.png', username: "user", password:"password"},
+        { name: 'Member 2', role: 'member', img: '~@/assets/profilbild.png', username: "user2", password: "password2"},
+        { name: 'Member 3', role: 'member', img: '~@/assets/profilbild.png', username: "user3", password: "password3"},
+        { name: 'Member 4', role: 'member', img: '~@/assets/profilbild.png', username: "user4", password: "password4" }
     ]
 })
 
@@ -17,6 +19,18 @@ const actions = {
     },
     deleteMembers({ commit }, member) {
         commit('deleteMembers', member)
+    }, 
+    login({ commit }, user) {
+        commit('login', user)
+    },
+    logout({ commit }) {
+        commit ('logout')
+    }
+}
+
+const getters = {
+    getMemberbyUsername: (state) => (username) => {
+        return state.members.find(member => member.username === username);
     }
 }
 
@@ -31,6 +45,14 @@ const mutations = {
         let index = state.members.indexOf(member);
         state.members.splice(index, 1);
 
+    },
+    login(state, user) {
+        state.currentUser = user;
+
+    }, 
+    logout(state) {
+        state.currentUser = '';
+
     }
 
 }
@@ -39,5 +61,6 @@ export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions, 
+    getters
 }

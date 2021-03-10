@@ -97,12 +97,19 @@ const routes = [
     {
         path: '/checkList',
         name: 'CheckList',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/CheckList.vue')
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/CheckList.vue'),
+        // route requires Login 
+        meta: {requiresAuth: true}
     },
     {
         path: '/charts',
         name: 'Charts',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Charts.vue')
+    },
+    {
+        path: '/loginForm',
+        name: 'Login',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/LoginForm.vue')
     }
 ]
 
@@ -110,6 +117,25 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes,
+})
+
+router.beforeEach((to, from, next) => {
+    // check if route requires Login 
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+
+        // check if user is logged in 
+        if (localStorage.getItem("userLoggedIn") != null) {         
+            next()
+        } else {
+            alert("Login erforderlich")
+            next({name: 'Login'})
+        }
+
+       
+    } else {
+        next();
+    }
+
 })
 
 export default router

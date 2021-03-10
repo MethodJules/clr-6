@@ -4,8 +4,10 @@
     "\\public",
     "\\src",
     "\\src\\components",
+    "\\src\\router",
+    "\\src\\store\\modules",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\views\\Calendar.vue",
+  "SelectedNode": "\\src\\router\\index.js",
   "PreviewInSolutionExplorer": false
 }

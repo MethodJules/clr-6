@@ -20,7 +20,7 @@ export default new Vuex.Store({
        concept_map,
        members, 
         toDos, 
-       chartData
+        chartData, 
     },
 
     state: {

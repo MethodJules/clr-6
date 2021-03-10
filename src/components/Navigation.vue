@@ -1,6 +1,5 @@
 <!-- Navigation bar-->
-<template>
-
+<template>    
     <!-- Routerlinks for navigation bar -->
     <div class="navigation">
         <!--  <router-link tag="div" to="/scope" class="element">
@@ -89,6 +88,7 @@
 </template>
 <script>
 
+    
     export default {
         name: 'Navigation',
         data: function () {
@@ -147,7 +147,7 @@
         components: {
         },
         methods: {
-    /* 
+    /*
             showDiv() {
                 this.showSearch = true;
             },
@@ -199,7 +199,7 @@
         right: 10px;
         position: absolute;
         height: 99%;
-        margin-top: 5px;
+        margin-top: 20px;
         overflow: scroll;
     }
     .element {

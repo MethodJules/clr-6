@@ -1,10 +1,17 @@
+<!-- App-Component -->
 <template>
     <div id="app">
         <v-app>
             <v-main class="background">
+               <!-- Login-->
+                <v-container>
+                    <Login>  </Login>
+                </v-container>
+                <!-- Navigation-->
                 <v-container>
                     <Navigation> </Navigation>
                 </v-container>
+                <!-- Content of Routernavigation-->
                 <v-container>
                     <router-view />
                 </v-container>
@@ -16,14 +23,16 @@
 
 
 <script>
-
+    import Login from '@/components/Login'
     import Navigation from '@/components/Navigation.vue'
 
     export default {
         name: 'App',
         components: {
-            Navigation
-        }
+            Navigation,
+            Login
+        }, 
+
     }
 </script>
 <style>
