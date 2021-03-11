@@ -133,6 +133,7 @@
 export default {
     data() {
         return {
+            reflexionList:[],
             berichten_reagieren: '',
             in_bezug_setzen: '',
             schlussfolgern: '',
@@ -162,7 +163,14 @@ export default {
             
         }
 
-    }
+    },
+
+    mounted() {
+    this.$store.dispatch('reflexion/loadReflexionFromBackend')
+    this.rowData = this.$store.state.documentation.rowData
+    this.reflexionList=this.rowData
+    
+  },
        
 
     

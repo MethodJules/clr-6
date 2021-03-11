@@ -1,26 +1,26 @@
 import axios from 'axios';
 
 const state = () => ({
-    reflexions: [
+    rowData: [
     ]
 })
 
 const actions = {
    
 
-/*     async loadReflexionFromBackend({commit}) {
+     async loadReflexionFromBackend({commit}) {
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate')
             .then((response) => {
                 console.log(response);
                 const data = response.data.data;
                 //let dailys = [];
-                commit('SAVE_DAILYSCRUM_FEATURE', data);
+                commit('SAVE_REFLEXION', data);
                 //commit('SAVE_DAILYSCRUM_FEATURE', dailyscrum_feature)
             }).catch(error =>{
                 throw new Error(`API ${error}`);
             });         
             
-    }, */
+    }, 
 
     createReflexion({commit}, reflexion) {
         console.log("hello")
@@ -128,40 +128,21 @@ const mutations = {
     }, */
 
     
-/*     SAVE_DAILYSCRUM_FEATURE(state, dailyscrum_feature) {
+    SAVE_REFLEXION(state, reflexion) {
         
-        dailyscrum_feature.forEach(element => {
-            const field_datum = element.attributes.field_datum;
-            console.log(field_datum)
-            const field_gestern = element.attributes.field_gestern;
-            console.log(field_gestern)
-            const field_heute = element.attributes.field_heute;
-            console.log(field_heute)
-            const field_probleme = element.attributes.field_probleme;
-            console.log(field_probleme)
+        reflexion.forEach(element => {
+            const field_berichten_reagieren = element.attributes.field_berichten_reagieren;
+            const field_in_bezug_setzen = element.attributes.field_in_bezug_setzen;
+            const field_rekonstruieren = element.attributes.field_rekonstruieren;
+            const field_schlussfolgern = element.attributes.field_schlussfolgern;
             const field_id = element.id;
             console.log(element.id)
             const field_title = element.attributes.title;
             console.log(element.id)
-            state.rowData.push( { date: field_datum, doings: field_gestern, todaydoings: field_heute, problems: field_probleme, idd: field_id, title: field_title })
-            console.log(state)
-
-
-
-            
+            state.rowData.push( { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title })
+            console.log(state)         
         });
-        
-         dailyscrum_feature.forEach(element => {
-            console.log(element);
-            const field_datum = element.attributes.field_datum.data;
-            const field_gestern = element.attributes.field_gestern.data;
-            const field_heute = element.attributes.field_heute.data;
-            const field_probleme = element.attributes.field_probleme.data;
-            console.log(`Title: ${title}`)
-        
-
-        }); 
-    }    */   
+    }      
     
     
 
@@ -173,6 +154,7 @@ export default {
     mutations,
     actions
 }
+
 
 
 
