@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const state = () => ({
-    docus: [
+    rowData: [
       
     ]
 })
@@ -32,7 +32,7 @@ const mutations = {
 
     ADD_DOCUMENTATION(state, docuEntry) {
         console.log(docuEntry.documentationText)
-        var data = `{"data": {"type": "node--documentation, "attributes": {"title": "Titelplatzhalter", "field_documentationtext": "${docuEntry.documentationText}" }}}`;
+        var data = `{"data": {"type": "node--documentation", "attributes": {"title": "Documentation Gruppe + Phase", "field_documentationtext": "${docuEntry.documentationText}" }}}`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/documentation',
@@ -57,8 +57,7 @@ const mutations = {
         
         documentation.forEach(element => {
             const field_documentationtext = element.attributes.field_documentationtext;
-            console.log(field_documentationtext)
-           
+            console.log(field_documentationtext)        
             const field_id = element.id;
             console.log(element.id)
             const field_title = element.attributes.title;
