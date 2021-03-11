@@ -8,6 +8,7 @@ import members from './modules/members'
 import daily_scrum from './modules/daily_scrum'
 import reflexion from './modules/reflexion'
 import documentation from './modules/documentation'
+import tool from './modules/tool'
 
 Vue.use(Vuex)
 Vue.config.devtools = true
@@ -20,7 +21,8 @@ export default new Vuex.Store({
        members,
        daily_scrum,
        reflexion,
-       documentation
+       documentation,
+       tool
     },
 
 //noch in Datei packen

@@ -49,9 +49,15 @@
           usedTool: this.tool
         };
         this.listOfTools.push(neueEingabe)
+        this.$store.dispatch('tool/createTool', neueEingabe)
         this.tool= ''
         
       }
-    }
+    },
+    /* mounted() {
+    this.$store.dispatch('tool/loadToolFromBackend')
+    this.listOfTools = this.$store.state.tool.listOfTools
+    
+  } */
   }
 </script>
