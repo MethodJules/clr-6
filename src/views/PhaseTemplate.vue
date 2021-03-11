@@ -38,9 +38,11 @@
                 </b-col>
             </b-row>
             <br>
-               <TemplateButtons/>
+             
             <b-row>
-
+                <b-col class="border border-dark">
+                        <TemplateButtons/>
+                </b-col>
             </b-row>
         </b-container>
     </div>
