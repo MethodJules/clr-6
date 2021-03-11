@@ -9,6 +9,7 @@ import daily_scrum from './modules/daily_scrum'
 import reflexion from './modules/reflexion'
 import documentation from './modules/documentation'
 import tool from './modules/tool'
+import todo from './modules/todo'
 
 Vue.use(Vuex)
 Vue.config.devtools = true
@@ -22,7 +23,8 @@ export default new Vuex.Store({
        daily_scrum,
        reflexion,
        documentation,
-       tool
+       tool,
+       todo
     },
 
 //noch in Datei packen

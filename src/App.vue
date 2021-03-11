@@ -126,7 +126,7 @@
 
         },
         methods: {
-            formularTodo(){
+            /* formularTodo(){
                 this.$refs['my-todo-modal'].show()
                 this.eintragTodo.date=""
                 this.eintragTodo.todo= ""
@@ -134,7 +134,7 @@
 
             },
             neueToDo(){
-                this.$refs['my-todo-modal'].show()
+                this.$refs['my-todo-modal'].show() */
                 /* this.eintragTodo.todo= listOfToDos.todo
                 this.eintragTodo.date= listOfToDos.date
                 this.eintragTodo.buttonAdd= "add" */
@@ -146,17 +146,17 @@
                 this.listOfToDos.push(ausgabeToDo)
                 this.date = ''
                 this.todo = '' */
-            },
+            // },
 
-            hideModal() {
+            /* hideModal() {
                 this.$refs['my-todo-modal'].hide()
-            }
-        },
+            } */
+        }/* ,
         mounted() {
             this.$store.dispatch('todo/loadToDoFromBackend')
             this.listOfToDos = this.$store.state.todo.listOfToDos
 
-        },
+        }, */
     }
 </script>
 <style>

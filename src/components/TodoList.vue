@@ -9,6 +9,8 @@
             <b-modal id="to_do_edit_modal" title="to_do">
           <label for = "neueTodo">zu erledigende Aufgabe: </label>
           <input v-model="todoNeu" type ="text" placeholder="hier eingeben">
+          <label for="example-datepicker">Frist: </label>
+            <b-form-datepicker id="example-datepicker" v-model="value" class="mb-2"></b-form-datepicker>
           <b-button @click="ok()">
           OK
           </b-button>
@@ -33,11 +35,17 @@ export default {
     methods:{
         ok(){
             var neueEingabe ={
-                todo: this.todoNeu
+                todo: this.todoNeu,
+                date: this.value
             };
             this.listOfToDos.push(neueEingabe)
+            this.$store.dispatch('todo/createToDo', neueEingabe)
             this.todoNeu= ''
         }
+    },
+    mounted(){
+        this.$store.dispatch('todo/loadToDoFromBackend')
+        this.listOfToDos = this.$store.state.todo.listOfToDos
     }
 }
 </script>

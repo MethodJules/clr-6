@@ -26,7 +26,7 @@ const actions = {
         commit('ADD_TODO_ENTRY', todoEntry)
 
     },
-    deleteTodo({commit}, todoEntry) {
+    /* deleteTodo({commit}, todoEntry) {
         var config = {
             method: 'delete',
             url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
@@ -48,15 +48,16 @@ const actions = {
     updateTodo({commit}, todoEntry) {
 
         commit('UPDATE_TODO_ENTRY', todoEntry);
-    },
+    }, */
 }
 const mutations = {
-    DELETE_TODO_ENTRY(state, todoEntry) {
+    /* DELETE_TODO_ENTRY(state, todoEntry) {
         let index = state.listOfToDos.indexOf(todoEntry);
         state.listOfToDos.splice(index, 1);
-    },
+    }, */
     ADD_TODO_ENTRY(state, todoEntry) {
-        var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "${todoEntry.title}", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
+        console.log(todoEntry.todo)
+        var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "Todo Titel", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/to_dos',
@@ -67,7 +68,7 @@ const mutations = {
             },
             data: data
         };
-
+        console.log("te")
         axios(config)
             .then(function(response){
                 console.log(response)
@@ -76,7 +77,7 @@ const mutations = {
                 console.log(error)
             })
     },
-    UPDATE_TODO_ENTRY(state, todoEntry) {
+    /* UPDATE_TODO_ENTRY(state, todoEntry) {
     var data = `{"data": {"type": "node--to_dos", "id": "${todoEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date} }}}`;
     var config = {
         method: 'patch',
@@ -96,10 +97,10 @@ const mutations = {
         .catch(function(error) {
             console.log(error)
         })
-    },
-    SAVE_DAILYSCRUM_FEATURE(state, dailyscrum_feature) {
+    }, */
+    SAVE_TODO(state, todo) {
         
-        dailyscrum_feature.forEach(element => {
+        todo.forEach(element => {
             const field_aufgaben = element.attributes.field_aufgaben;
             console.log(field_aufgaben)
             const field_date = element.attributes.field_date;
@@ -108,7 +109,7 @@ const mutations = {
             console.log(element.id)
             const field_title = element.attributes.title;
             console.log(element.id)
-            state.listOfToDos.push( { date: field_date, todo: field_aufgabe, idd: field_id, title: field_title })
+            state.listOfToDos.push( { date: field_date, todo: field_aufgaben, idd: field_id, title: field_title })
             console.log(state)  
         });
     }

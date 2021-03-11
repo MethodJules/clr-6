@@ -20,7 +20,7 @@ const actions={
             
     },
     createTool({commit}, toolEntry) {
-        
+        console.log(toolEntry.tool)
         commit('ADD_NEW_TOOL', toolEntry)
 
     },
@@ -32,7 +32,7 @@ const mutations={
         var data = `{"data": {"type": "node--tools", "attributes": {"title": "neu eingefügtes tool", "field_tool": "${toolEntry.tool}" }}}`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/documentation',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/tools',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

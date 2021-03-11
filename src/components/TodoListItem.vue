@@ -24,7 +24,7 @@ export default {
         }
 
     },
-    methods:{
+    /* methods:{
         
         addItem(){
             
@@ -41,6 +41,6 @@ export default {
               //console.log(row);
             this.$store.dispatch('todo/deleteTodo', date)
         }
-    }
+    } */
 }
 </script>

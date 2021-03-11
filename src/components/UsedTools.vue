@@ -54,10 +54,10 @@
         
       }
     },
-    /* mounted() {
+    mounted() {
     this.$store.dispatch('tool/loadToolFromBackend')
-    this.listOfTools = this.$store.state.tool.listOfTools
+    this.listOfTools = this.$store.state.usedTool.listOfTools
     
-  } */
+  }
   }
 </script>
