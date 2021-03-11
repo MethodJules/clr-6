@@ -8,7 +8,7 @@
 
                 <b-col cols="7">
                     <b-modal id="documentation_edit_modal" title="Bearbeiten">
-                            <b-form-textarea rows="6" v-model="documentation"></b-form-textarea>
+                            <b-form-textarea id= "documentation_edit_form_textarea" rows="6" v-model="inDoku.documentationText"></b-form-textarea>
                             <b-button @click="addTheDocu()">Hinzufügen</b-button>
                     </b-modal>
                     <b-button v-b-modal.documentation_edit_modal>Dokumentation bearbeiten</b-button>
@@ -34,8 +34,8 @@ export default {
     methods:{
         addTheDocu() {
             var ausgabe={
-                documentationText: this.documentation,
-                //documentationText: this.inDoku.documentationText
+                //documentationText: this.documentation,
+                documentationText: this.inDoku.documentationText
                // title: this.inDoku.title
             }
             
