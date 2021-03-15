@@ -1,7 +1,7 @@
 <template>
     <div>
-    <b-row>
-        <h3><b-badge>Verwendete Tools</b-badge></h3>
+    <b-row class= "title">
+        <h4>Verwendete Tools</h4>
     </b-row>
     <b-row>
         
@@ -61,3 +61,15 @@
   }
   }
 </script>
+<style>
+    
+    .title {
+        width: auto;
+        height: 100 px;
+        background-color: rgb(78, 78, 78);
+        
+    }
+    h4{
+        color: white;
+    }
+</style>
