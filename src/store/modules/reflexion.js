@@ -136,9 +136,7 @@ const mutations = {
             const field_rekonstruieren = element.attributes.field_rekonstruieren;
             const field_schlussfolgern = element.attributes.field_schlussfolgern;
             const field_id = element.id;
-            console.log(element.id)
             const field_title = element.attributes.title;
-            console.log(element.id)
             state.rowData.push( { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title })
             console.log(state)         
         });
