@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const state = () => ({
-    assistents: []
+    assistents: [
+        //{hilfstext: " "},
+    ]
    
 })
 const actions={
@@ -10,7 +12,7 @@ const actions={
             .then((response) => {
                 console.log(response);
                 const data = response.data.data;
-                
+                // let assistent = []
                 commit('SAVE_NEW_ASSISTENT', data);
                
             }).catch(error =>{
@@ -26,13 +28,14 @@ const mutations={
         
         hilfstext.forEach(element => {
             
+
             const field_hilfstext = element.attributes.field_hilfstext;
             console.log(field_hilfstext)        
             const field_id = element.id;
             console.log(element.id)
             const field_title = element.attributes.title;
             console.log(element.id)
-            state.assistens.push( { hilfstext: field_hilfstext, idd: field_id, title: field_title })
+            state.assistents.push( { hilfstext: field_hilfstext, idd: field_id, title: field_title })
             console.log(state)
 
 

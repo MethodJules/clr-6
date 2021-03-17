@@ -1,13 +1,19 @@
 <template>
     <div id="phase">
         <b-container fluid>
-
+            <b-row>
+                <b-col cols="10">
+                </b-col>
+                <b-col cols="2">
+                    <Assistent/>
+                </b-col>
+            </b-row>
             <b-row>
                 
                 <b-col cols="2" class="border border-dark">  <InputDocuments/> </b-col>
                 <b-col cols="6" class="border border-dark"> <DocumentationField/> </b-col>
                 <b-col cols="2" class="border border-dark"> <OutputDocuments/> </b-col>
-                <b-col cols="2"> <Assistent/>  </b-col>
+                
                 
             </b-row>
 

@@ -48,18 +48,14 @@
                 <p class="my-4">Hallo! Ich sehe, du möchtest wissen, was du in dieser Phase machen sollst.</p>
                 <p class="my-4">Diese Phase dient dazu...</p>
                 
+                <div class="card" v-for="assistent in assistents" :key="assistent.date">
+                    {{assistent.hilfstext}}
+                   
+                </div>
+                
 
                 </b-modal>
                 </div>
-
-                   
-               
-
-               
-               
-                    
-                        
-                
             </b-col>
         </b-row>
     </b-container>
@@ -69,23 +65,26 @@
 export default {
     data() {
         return {
-            assistents: []
-            
-            
-            
+            assistents: [
+                {hilfstext: '1'},
+                
+            ]
         }
     },
+    methods:{
+        
 
-    
-
+    },
     mounted() {
-    this.$store.dispatch('assistent/loadAssistentFromBackend')
-    this.assistents = this.$store.state.hilfstext.assistents
+        this.$store.dispatch('assistent/loadAssistentFromBackend')
+        this.assistents = this.$store.state.assistent.assistents
+
     }
 
     
 }
 </script>
+
 
 
 
