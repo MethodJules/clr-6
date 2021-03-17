@@ -92,6 +92,7 @@ const routes = [
     {
         path: '/phasetemplate',
         name: 'PhaseTemplate',
+        props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {
@@ -108,8 +109,9 @@ const routes = [
     {
         path: '/reflexion',
         name: 'Reflexion',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
-    },
+        props: true,
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Reflexion.vue')
+    }
 
    
 

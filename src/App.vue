@@ -1,132 +1,95 @@
 <template>
-    <div id="app">
-        <b-container fluid>
-            <b-row class ="obereLeiste">
-                <b-col class="border border-dark">
-                    <MenueLeiste/>
-                </b-col>
-            </b-row>
+  <div id="app">
+    <b-container fluid>
+      <b-row class="obereLeiste">
+        <b-col class="border border-dark">
+          <MenueLeiste />
+        </b-col>
+      </b-row>
 
-            <b-row>
-                <b-col class="linkeSeite" cols="2">
-                    <b-row>
-                        <b-col class="border border-dark">
-                            <TodoList/>
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                        </b-col>
-                        <b-col>
-                            <br>
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col class="border border-dark">
-                            <Kalender/>
-                        </b-col>
-                    </b-row>
-                </b-col>
+      <b-row>
+        <b-col class="linkeSeite" cols="2">
+          <b-row>
+            <b-col class="border border-dark">
+              <TodoList />
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col> </b-col>
+            <b-col>
+              <br />
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col class="border border-dark">
+              <Kalender />
+            </b-col>
+          </b-row>
+        </b-col>
 
-                <b-col cols="8" class="mitte border border-primary">
+        <b-col cols="8" class="mitte border border-primary">
+          <router-view></router-view>
+        </b-col>
 
-                    
+        <b-col cols="2" class="rechteSeite">
+          <b-row>
+            <b-col class="border border-dark">
+              <SeitenNavigation />
+            </b-col>
+          </b-row>
 
+          <b-row class="chat">
+            <b-col class="border border-dark">
+              <Chat />
+            </b-col>
+          </b-row>
+          <b-row class="postfach">
+            <b-col class="border border-dark">
+              <Postfach />
+            </b-col>
+          </b-row>
+        </b-col>
+      </b-row>
 
-
-                  <router-view></router-view>
-                   
-                    
-
-                    <b-dropdown text="Zur Reflexion" class="m-2">
-                    <b-dropdown-item link :to="{name: 'Reflexion'}">Gruppe bilden</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion'}">Ziel & Umfang definieren</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion'}">Konzepte & Definitionen</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion'}">Literatur suchen</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion'}">Daten extrahieren</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion'}">Analyse & Synthese</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion'}">Ergebnisse kommunizieren</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion'}">Gruppe auflösen</b-dropdown-item>
-                    
-                    
-                    </b-dropdown>
-                     
-
-
-                    
-
-                
-                    
-                </b-col>
-
-                <b-col cols="2" class="rechteSeite">
-                    <b-row>
-                        <b-col class="border border-dark">
-                            <SeitenNavigation/>
-                        </b-col>
-                    </b-row>
-
-                    <b-row class="chat">
-                        <b-col class="border border-dark">
-                            <Chat/>
-                        </b-col>
-                    </b-row>
-                    <b-row class="postfach">
-                        <b-col class="border border-dark">
-                            <Postfach/>
-                        </b-col>
-                    </b-row>
-                </b-col>
-            </b-row>
-           
-
-            <b-row class="untereLeiste">
-            </b-row>
-        </b-container>
-    </div>
+      <b-row class="untereLeiste">
+        
+      </b-row>
+    </b-container>
+  </div>
 </template>
 
 
 <script>
-
-    import SeitenNavigation from '@/components/SeitenNavigation.vue'
-    import TodoList from '@/components/TodoList.vue'
-    import MenueLeiste from '@/components/MenueLeiste.vue'
-    import Kalender from '@/components/Kalender.vue'
-    import Chat from '@/components/Chat.vue'
-    import Postfach from '@/components/Postfach.vue'
-    
-   
-    
+import SeitenNavigation from "@/components/SeitenNavigation.vue";
+import TodoList from "@/components/TodoList.vue";
+import MenueLeiste from "@/components/MenueLeiste.vue";
+import Kalender from "@/components/Kalender.vue";
+import Chat from "@/components/Chat.vue";
+import Postfach from "@/components/Postfach.vue";
 
 
-    export default {
-        name: 'App',
-        components: {
+export default {
+  name: "App",
+  components: {
+    SeitenNavigation,
+    TodoList,
+    MenueLeiste,
+    Kalender,
+    Chat,
+    Postfach,
+  },
+  data() {
+    return {
+      nameState: null,
+      eintragTodo: {
+        todo: "",
+      },
 
-            SeitenNavigation,
-            TodoList,
-            MenueLeiste,
-            Kalender,
-            Chat,
-            Postfach,
-           
-           
-           
-        },
-        data(){
-            return{
-  
-                nameState: null,
-                eintragTodo:{
-                    todo: ""
-                },
-
-                /* listOfToDos [
+      /* listOfToDos [
                     {todo:"Mein1", date:"20.02.2021"},
                 ], */
 
-                /* selected: null,
+      /* selected: null,
                 options: [
                     { value: null, text: 'Zur Reflexion' },
                     { value: 'a', text: 'Gruppe bilden' },
@@ -139,11 +102,10 @@
                     { value: 'h', text: 'Gruppe auflösen' },
                     
                 ], */
-            }
-
-        },
-        methods: {
-            /* formularTodo(){
+    };
+  },
+  methods: {
+    /* formularTodo(){
                 this.$refs['my-todo-modal'].show()
                 this.eintragTodo.date=""
                 this.eintragTodo.todo= ""
@@ -152,76 +114,69 @@
             },
             neueToDo(){
                 this.$refs['my-todo-modal'].show() */
-                /* this.eintragTodo.todo= listOfToDos.todo
+    /* this.eintragTodo.todo= listOfToDos.todo
                 this.eintragTodo.date= listOfToDos.date
                 this.eintragTodo.buttonAdd= "add" */
-
-                /* var ausgabeToDo ={
+    /* var ausgabeToDo ={
                     date: this.eintragTodo.date,
                     todo: this.eintragTodo.todo
                 }
                 this.listOfToDos.push(ausgabeToDo)
                 this.date = ''
                 this.todo = '' */
-            // },
-
-            /* hideModal() {
+    // },
+    /* hideModal() {
                 this.$refs['my-todo-modal'].hide()
             } */
-        }/* ,
+  } /* ,
         mounted() {
             this.$store.dispatch('todo/loadToDoFromBackend')
             this.listOfToDos = this.$store.state.todo.listOfToDos
 
-        }, */
-    }
+        }, */,
+};
 </script>
 <style>
-    @import 'assets/style.css';
+@import "assets/style.css";
 
-    .postfach {
-        width: 100%;
-        text-align: center;
-        position: absolute;
-        bottom: 0;
-        height: 15%;
-        display: table;
-        margin: auto;
-    }
+.postfach {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  height: 15%;
+  display: table;
+  margin: auto;
+}
 
-    .chat {
-        width: 100%;
-        text-align: center;
-        position: absolute;
-        bottom: 0;
-        height: 10%;
-        display: table;
-        margin-top: 20px;
-
-
-
-    }
-      .obereLeiste{
-/*         width: auto;
+.chat {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  height: 10%;
+  display: table;
+  margin-top: 20px;
+}
+.obereLeiste {
+  /*         width: auto;
         border: 1px solid black; */
-    }
-    .linkeSeite{
-        /* width: auto;
+}
+.linkeSeite {
+  /* width: auto;
         border: 1px solid black; */
-
-    }
-    .rechteSeite{
-       /*  width: 60 px;
+}
+.rechteSeite {
+  /*  width: 60 px;
         border: 1px solid black; */
-    }
-    .untereLeiste{
-        width: auto;
-        height: 100 px;
-        border: 1px solid black;
-    }
+}
+.untereLeiste {
+  width: auto;
+  height: 100 px;
+  border: 1px solid black;
+}
 
-
-    /* .background {
+/* .background {
         background-color: red;
         background-image: url('~@/assets/background2.jpg');
         width: 100%;
@@ -230,7 +185,7 @@
         background-size: cover;
 
     } */
-   /*
+/*
     .sc-launcher {
         position: unset !important;
         height: 60px !important;

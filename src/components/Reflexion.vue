@@ -1,9 +1,8 @@
 <template>
-    <b-col class="border border-dark">
-                            
+    <b-col class="border border-dark">   
         <b-tabs content-class="mt-3">
             <b-tab title="Ich">
-                
+                <h2>Reflexion zu Phase: {{reflexionsPhase}}</h2>
                 <b-container fluid>
                     <b-row class="ich-tab">
                         <b-col sm="2">
@@ -13,16 +12,10 @@
                         <b-form-textarea
                             v-model="berichten_reagieren"
                             id="textfeld-1"
-                            placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"
-                            
-                        ></b-form-textarea>
-
-                        
+                            placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"                           
+                        ></b-form-textarea>            
                         <br>
                         </b-col>
-
-                        
-
                         <b-col sm="2">
                             <label for="textfeld-2">In Bezug setzen </label>
                         </b-col>
@@ -104,6 +97,7 @@
                         <b-col>
                         <!-- <b-button v-b-modal.reflexion_speichern_modal>Speichern</b-button> -->
                         <b-button  @click="addItem">Speichern</b-button>
+                        <b-button  @click="loadReflexion">Reflexion laden</b-button>
                         
 
                         </b-col>
@@ -130,7 +124,11 @@
 </template>
 
 <script>
+//TO DO: mehr felder hinzufügen für die anderen tabs gruppe & zusammenarbeit und fachlicher kontext
 export default {
+            props: {
+    reflexionsPhase: String
+    },
     data() {
         return {
             reflexionList:[],
@@ -142,8 +140,9 @@ export default {
     },
     methods: {
         addItem() {
-
-
+            /* To Do: überprüfen ob schon eine reflexion zu dieser phase von dieser person angefertigt wurde 
+            -> kein neuer Eintrag, alte Reflexion kann überschrieben oder aktualisiert werden
+            */
             var ausgabe = {
 
             berichten_reagieren: this.berichten_reagieren,
@@ -161,14 +160,27 @@ export default {
             this.schlussfolgern=""
             this.rekonstruieren=""
             
-        }
-
+        },
+        loadReflexion(){
+            //To Do: dynamisch machen - oder wie bei tabelledaily etc unten während der mount phase in die felder laden
+            this.berichten_reagieren=this.reflexionList[1].berichten_reagieren
+            this.in_bezug_setzen=this.reflexionList[1].in_bezug_setzen
+            this.schlussfolgern=this.reflexionList[1].schlussfolgern
+            this.rekonstruieren=this.reflexionList[1].rekonstruieren
+            console.log(this.test)        
+        },
+        updateReflexion(){
+            //to do
+        },
     },
 
     mounted() {
     this.$store.dispatch('reflexion/loadReflexionFromBackend')
-    this.rowData = this.$store.state.documentation.rowData
+    this.rowData = this.$store.state.reflexion.rowData
     this.reflexionList=this.rowData
+    // TO DO: nur die Daten laden die der Phase und der Nutzer ID entsprechen
+    //console.log(this.reflexionList)
+    //console.log(typeof(this.reflexionList))
     
   },
        

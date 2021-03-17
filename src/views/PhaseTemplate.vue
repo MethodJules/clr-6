@@ -1,6 +1,7 @@
 <template>
     <div id="phase">
         <b-container fluid>
+            <h2>Phase: {{this.phase}}</h2>
             <b-row>
                 <b-col cols="10">
                 </b-col>
@@ -52,6 +53,11 @@ import Assistent from '@/components/Assistent.vue'
 
 
 export default {
+
+    props: {
+        phase: String
+    },
+
 
     data() {
         return {

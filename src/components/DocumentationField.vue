@@ -28,6 +28,9 @@ import TemplateButtons from './TemplateButtons.vue'
     },
     data() {
       return {
+                inDoku:{
+          documentationText: " "
+        },
         documentationList:[]
       }
     },
@@ -43,6 +46,8 @@ import TemplateButtons from './TemplateButtons.vue'
     this.$store.dispatch('documentation/loadDocusFromBackend')
     this.rowData = this.$store.state.documentation.rowData
     this.documentationList=this.rowData
+    console.log(this.documentationList)
+    console.log(typeof(this.documentationList))
     
   },
   }
