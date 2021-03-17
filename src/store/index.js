@@ -10,6 +10,8 @@ import reflexion from './modules/reflexion'
 import documentation from './modules/documentation'
 import tool from './modules/tool'
 import todo from './modules/todo'
+import assistent from './modules/assistent'
+
 
 Vue.use(Vuex)
 Vue.config.devtools = true
@@ -24,7 +26,8 @@ export default new Vuex.Store({
        reflexion,
        documentation,
        tool,
-       todo
+       todo,
+       assistent
     },
 
 //noch in Datei packen

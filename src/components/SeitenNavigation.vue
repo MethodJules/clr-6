@@ -16,12 +16,12 @@
                                 <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
                                 <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">sdjdd</b-link>
                                 <b-link :to="{name: 'PhaseTemplate'}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
-                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Ziel</b-link>
-                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Literatur</b-link>
-                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Daten</b-link>
-                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Analyse</b-link>
-                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse</b-link>
-                                <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
+                                <b-link :to="{name: 'Ziel'}" class="btn btn-outline-dark btn-block mb-2">Ziel</b-link>
+                                <b-link :to="{name: 'Literatur'}" class="btn btn-outline-dark btn-block mb-2">Literatur</b-link>
+                                <b-link :to="{name: 'Daten'}" class="btn btn-outline-dark btn-block mb-2">Daten</b-link>
+                                <b-link :to="{name: 'Analyse'}" class="btn btn-outline-dark btn-block mb-2">Analyse</b-link>
+                                <b-link :to="{name: 'Ergebnisse'}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse</b-link>
+                                <b-link :to="{name: 'GruppeAuflösung'}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
     </div>
 </template>
 <script>

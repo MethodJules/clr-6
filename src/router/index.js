@@ -108,7 +108,44 @@ const routes = [
     {
         path: '/reflexion',
         name: 'Reflexion',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Reflexion.vue')
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
+    },
+
+    {
+        path: '/ziel',
+        name: 'Ziel',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Ziel.vue')
+    },
+
+    {
+        path: '/literatur',
+        name: 'Literatur',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Literatur.vue')
+    },
+
+    {
+        path: '/daten',
+        name: 'Daten',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Daten.vue')
+    },
+
+    {
+        path: '/analyse',
+        name: 'Analyse',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Analyse.vue')
+    },
+
+
+    {
+        path: '/ergebnisse',
+        name: 'Ergebnisse',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Ergebnisse.vue')
+    },
+
+    {
+        path: '/gruppeAuflösung',
+        name: 'GruppeAuflösung',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/GruppeAuflösung.vue')
     }
 
 

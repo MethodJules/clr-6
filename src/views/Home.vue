@@ -4,16 +4,36 @@
 
             <ReviewCircle> </ReviewCircle>
 
-        </z-canvas>
+      </z-canvas>
+
+      
+                    
+
+                    
+                     
+                     
+
+      
+            
+          
+        
     </div>
+    
+    
 </template>
 
 <script>
 import ReviewCircle from '@/components/ReviewCircle.vue'
+
+
+
+
 export default {
   name: 'Home',
   components: {
-    ReviewCircle
+    ReviewCircle,
+    
+    
   },
   mounted() {
             this.$zircle.config({

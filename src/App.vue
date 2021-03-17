@@ -29,7 +29,12 @@
                 </b-col>
 
                 <b-col cols="8" class="mitte border border-primary">
-                    <router-view></router-view>
+
+                    
+
+
+
+                  <router-view></router-view>
                    
                     
 
@@ -45,6 +50,13 @@
                     
                     
                     </b-dropdown>
+                     
+
+
+                    
+
+                
+                    
                 </b-col>
 
                 <b-col cols="2" class="rechteSeite">
@@ -66,6 +78,7 @@
                     </b-row>
                 </b-col>
             </b-row>
+           
 
             <b-row class="untereLeiste">
             </b-row>
@@ -83,6 +96,8 @@
     import Chat from '@/components/Chat.vue'
     import Postfach from '@/components/Postfach.vue'
     
+   
+    
 
 
     export default {
@@ -95,6 +110,8 @@
             Kalender,
             Chat,
             Postfach,
+           
+           
            
         },
         data(){
