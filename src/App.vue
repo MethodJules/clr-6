@@ -28,6 +28,8 @@
                     </b-row>
                 </b-col>
 
+                <ReflexionAuswahl/>
+
                 <b-col cols="8" class="mitte border border-primary">
                     <router-view></router-view>
 
@@ -74,6 +76,7 @@
     import Kalender from '@/components/Kalender.vue'
     import Chat from '@/components/Chat.vue'
     import Postfach from '@/components/Postfach.vue'
+    import ReflexionAuswahl from '@/components/ReflexionAuswahl.vue'
     
 
 
@@ -87,7 +90,7 @@
             Kalender,
             Chat,
             Postfach,
-           
+           ReflexionAuswahl
         },
         data(){
             return{

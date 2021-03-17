@@ -1,15 +1,16 @@
 <template>
     <div>
         <b-row>
-            <b-card v-for="project in projectList" :key="project.projectId" :title="project.projectName" class="m-2">
+            <b-card v-for="project in projectList" :key="project.projectId" :title="project.projectName+project.projectId" class="m-2">
                 <b-row>
+                    
                     <b-col>
-                        <b-link class="btn btn-outline-dark btn-block mb-2">Dashboard</b-link>
+                        <b-link to="/" class="btn btn-outline-dark btn-block mb-2">Dashboard</b-link>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-link class="btn btn-outline-dark btn-block mb-2">Reflexion</b-link>
+                        <ReflexionAuswahl/>
                     </b-col>
                 </b-row>
             </b-card>
@@ -17,7 +18,9 @@
             <b-card title="" class="m-2">
                 <b-row>
                    <b-col>
-                       <b-link class=" btn btn-outline-dark mt-5">Neues Projekt</b-link>
+                       <p>Neues Projekt</p>
+                       <b-button @click= "newProject()">+</b-button>
+                       <!-- <b-link class=" btn btn-outline-dark mt-5">Neues Projekt</b-link> -->
                    </b-col>
                 </b-row>
             </b-card>
@@ -26,14 +29,27 @@
 </template>
 
 <script>
+import ReflexionAuswahl from '@/components/ReflexionAuswahl.vue'
 export default {
+    components:{
+        ReflexionAuswahl
+    },
     data() {
         return {
             projectList: [
-                {projectName: 'Project 1', projectId: 1},
-                {projectName: 'Project 2', projectId: 2},
-                {projectName: 'Project 1', projectId: 3}
+                {projectName: 'Project ', projectId: 1},
+                {projectName: 'Project ', projectId: 2},
+                {projectName: 'Project ', projectId: 3}
             ]
+        }
+    },
+    methods:{
+        newProject(){
+            var addProj={
+                projectName: "Project ",
+                projectId: this.projectList.length + 1
+            }
+            this.projectList.push(addProj);
         }
     }
 }
