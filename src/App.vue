@@ -3,6 +3,15 @@
     <div id="app">
         <v-app>
             <v-main class="background">
+             <!-- Suggestionsearch-->
+                <v-container>
+                    <div class="suggestionContainer">
+                        <div class="labelSearch">
+                            Suche:
+                        </div>
+                        <Suggestions :items="items" class="suggestionWidth">  </Suggestions>
+                    </div>
+                </v-container>
                <!-- Login-->
                 <v-container>
                     <Login>  </Login>
@@ -25,14 +34,36 @@
 <script>
     import Login from '@/components/Login'
     import Navigation from '@/components/Navigation.vue'
+    import Suggestions from '@/components/Suggestions.vue'
 
     export default {
         name: 'App',
         components: {
             Navigation,
-            Login
+            Login, 
+            Suggestions
         }, 
+        data() {
+            return {
+                // possible Suggestions
+                items: [
+                    'Literaturrecherche',
+                    'Umweltprojekt',
+                    'Elektrotechnik',
+                    'Forschungsprojekt',
+                    'Erneuerbare Energie', 
+                    'Wasserstofffahrzeuge', 
+                    'Business Model Canvas',
+                    'Dienstleistungsengineering',
+                    'neue Forschungsmethoden',
+                    'Prokektmanagement',
+                    'Prozessmanagement',
 
+
+                ]
+            }
+
+        }, 
     }
 </script>
 <style>
@@ -117,6 +148,24 @@
         margin-left: 50px !important;
     }
 
+    .suggestionContainer {
+        background-color: white;
+        position: absolute;
+        width: 60%;      
+        padding: 20px;
+        top: 0;
+        left: 10%;
+        right: 0;
+    }
+
+    .suggestionWidth {
+        width: 80%;
+        float: left;
+    }
+    .labelSearch {
+        width: 15%;
+        float: left;
+    }
 
 </style>
 

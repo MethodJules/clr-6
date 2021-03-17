@@ -4,10 +4,9 @@
     "\\public",
     "\\src",
     "\\src\\components",
-    "\\src\\router",
     "\\src\\store\\modules",
     "\\src\\views"
   ],
-  "SelectedNode": "\\src\\router\\index.js",
+  "SelectedNode": "\\src\\views\\Forum.vue",
   "PreviewInSolutionExplorer": false
 }
