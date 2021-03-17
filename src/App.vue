@@ -30,23 +30,13 @@
 
                 <b-col cols="8" class="mitte border border-primary">
                     <router-view></router-view>
+
+                    <b-link :to="{name: 'PhaseTemplate'}" class="btn btn-outline-dark btn-block mb-2">Phasen</b-link>
                    
                     
                     <!-- weitere params einfügen: Param das die richtige userseite und param das die richtige phase aufruft (richtige 
                     param wird hierfür unten schon weitergegeben und muss nurnoch für routing genutzt werden in url) was kommt zuerst
                     userID oder Phase? wahrscheinlich ist userID/Phase sinnvoller -->
-                    <b-dropdown text="Zur Reflexion" class="m-2">
-                    <b-dropdown-item link :to="{name: 'Reflexion', params: { reflexionsPhase: 'Gruppe bilden'}}">Gruppe bilden</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion', params: { reflexionsPhase: 'Ziel & Umfang definieren'}}">Ziel & Umfang definieren</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion', params: { reflexionsPhase: 'Konzepte & Definitionen'}}">Konzepte & Definitionen</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion', params: { reflexionsPhase: 'Literatur suchen'}}">Literatur suchen</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion', params: { reflexionsPhase: 'Daten extrahieren'}}">Daten extrahieren</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion', params: { reflexionsPhase: 'Analyse & Synthese'}}">Analyse & Synthese</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion', params: { reflexionsPhase: 'Ergebnisse kommunizieren'}}">Ergebnisse kommunizieren</b-dropdown-item>
-                    <b-dropdown-item link :to="{name: 'Reflexion', params: { reflexionsPhase: 'Gruppe auflösen'}}">Gruppe auflösen</b-dropdown-item>
-                    
-                    
-                    </b-dropdown>
                 </b-col>
 
                 <b-col cols="2" class="rechteSeite">

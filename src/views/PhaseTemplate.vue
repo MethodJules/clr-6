@@ -1,6 +1,7 @@
 <template>
     <div id="phase">
         <b-container fluid>
+            <h2>Phase: {{this.phase}}</h2>
             <b-row>
 
             </b-row>
@@ -54,6 +55,11 @@ import UsedTools from '@/components/UsedTools.vue'
 import OutputDocuments from '@/components/OutputDocuments.vue'
 import TemplateButtons from '@/components/TemplateButtons.vue'
 export default {
+
+    props: {
+        phase: String
+    },
+
     components:{
         InputDocuments,
         DocumentationField,

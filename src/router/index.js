@@ -92,6 +92,7 @@ const routes = [
     {
         path: '/phasetemplate',
         name: 'PhaseTemplate',
+        props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {

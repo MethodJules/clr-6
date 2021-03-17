@@ -115,12 +115,15 @@
     .isDone {
         background-color: green !important;
     }
+        .red {
+        background-color: red !important;
+    }
 
 </style>
 
 <style>
     .done {
-        background-color: green;
+        background-color: red;
     }
 
     .right1 {

@@ -2,7 +2,7 @@
     <b-col class="border border-dark">   
         <b-tabs content-class="mt-3">
             <b-tab title="Ich">
-                <h2>{{reflexionsPhase}}</h2>
+                <h2>Reflexion zu Phase: {{reflexionsPhase}}</h2>
                 <b-container fluid>
                     <b-row class="ich-tab">
                         <b-col sm="2">
@@ -12,16 +12,10 @@
                         <b-form-textarea
                             v-model="berichten_reagieren"
                             id="textfeld-1"
-                            placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"
-                            
-                        ></b-form-textarea>
-
-                        
+                            placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"                           
+                        ></b-form-textarea>            
                         <br>
                         </b-col>
-
-                        
-
                         <b-col sm="2">
                             <label for="textfeld-2">In Bezug setzen </label>
                         </b-col>
