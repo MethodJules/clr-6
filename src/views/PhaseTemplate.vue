@@ -65,9 +65,9 @@ export default {
         }
     },
 
-    props: {
+/*     props: {
         inDoku: Object
-    },
+    }, */
     components:{
         InputDocuments,
         DocumentationField,
