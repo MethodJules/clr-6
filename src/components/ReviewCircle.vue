@@ -34,7 +34,7 @@
                 elements: [
                     {
                         type: 'theme', angle: 270, label: 'Gruppe bilden', text: 'Vorbereitung der Zusammenarbeit',
-                        textPos: 'rightText', labelPos: 'right1', done: false, image: 'test.png',
+                        textPos: 'rightText', labelPos: 'right1', done: false,
                         text2: 'Abschluss der Zusammenarbeit', textPos2: 'leftText4', label2: 'Gruppe auflösen',
                         labelPos2: 'left4'
 
@@ -53,7 +53,7 @@
                     },
                     {
                         type: 'theme', angle: 115.68, label: 'Daten extrahieren', labelPos: 'left1',
-                        text: 'Codingschema und Volltextanalyse', textPos: 'leftText1', done: false, image: 'test.png'
+                        text: 'Codingschema und Volltextanalyse', textPos: 'leftText1', done: false
                     },
                     {
                         type: 'theme', angle: 167.1, label: 'Literatur analysieren & synthetisieren', labelPos: 'left2',
