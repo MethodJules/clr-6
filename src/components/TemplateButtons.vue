@@ -2,7 +2,7 @@
     <b-row>
                 <b-col cols="2">
                     
-                    <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
+                    <b-link :to="{name: 'Home'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
                     
                 </b-col>
 
@@ -17,12 +17,28 @@
                 </b-col>
 
                 <b-col cols="2">
-                    <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Phase abschließen</b-link>
+                    
+
+                    <b-button v-b-modal.modal-phase class="mb-phase"> Phase abschließen
+                    
+                    </b-button>
+                   
+                    <b-modal id="modal-phase" title="Bist du dir Sicher?">
+                    <p class="my-phase">Hast du Checkliste gemacht? </p>
+                    </b-modal>
+                
+               
                 </b-col>
     </b-row>
 </template>
 <script>
+
+
 export default {
+    components: {
+        
+
+    },
     data() {
         return {
             

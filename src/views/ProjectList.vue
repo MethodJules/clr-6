@@ -1,5 +1,6 @@
 <template>
     <div>
+        
         <b-row>
             <b-card v-for="project in projectList" :key="project.projectId" :title="project.projectName+project.projectId" class="m-2">
                 <b-row>
@@ -31,6 +32,7 @@
 <script>
 import ReflexionAuswahl from '@/components/ReflexionAuswahl.vue'
 export default {
+    name: "ProjectList",
     components:{
         ReflexionAuswahl
     },
