@@ -3,7 +3,7 @@
         <b-row>
             <b-card v-for="project in projectList" :key="project.projectId" :title="project.projectName+project.projectId" class="m-2">
                 <b-row>
-                    
+                    <h4>{{projectName}}</h4>
                     <b-col>
                         <b-link to="/" class="btn btn-outline-dark btn-block mb-2">Dashboard</b-link>
                     </b-col>

@@ -2,7 +2,9 @@
     <div id="todoList">
         <div class="card" v-for="todo in listOfToDos" :key="todo.date">
             <div class="card-body text-center">
-                <b-form-checkbox :id="todo.date" v-model="status" name="checkbox-1" value="checked" unchecked-value="unchecked">{{todo.todo}}<b-button class="btn btn-s">Löschen</b-button></b-form-checkbox>
+                <b-form-checkbox :id="todo.date" v-model="status" name="checkbox-1" value="checked" unchecked-value="unchecked">
+                    {{todo.todo}}
+                    <b-button @click="deleteTodo(todo)" class="btn btn-s">Löschen</b-button></b-form-checkbox>
             </div>
         </div>
         <div>
@@ -41,6 +43,11 @@ export default {
             this.listOfToDos.push(neueEingabe)
             this.$store.dispatch('todo/createToDo', neueEingabe)
             this.todoNeu= ''
+        },
+        deleteTodo(todo){
+            
+                this.listOfToDos.splice(this.listOfToDos.indexOf(todo), 1)
+            
         }
     },
     mounted(){
