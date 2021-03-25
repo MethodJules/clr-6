@@ -1,6 +1,8 @@
 <template>
     <div>
+        <App v-bind:showRightMenu="false" ></App>
         <b-row>
+            
             <b-card v-for="project in projectList" :key="project.projectId" :title="project.projectName+project.projectId" class="m-2">
                 <b-row>
                     <h4>{{projectName}}</h4>
@@ -36,6 +38,7 @@ export default {
     },
     data() {
         return {
+            
             projectList: [
                 {projectName: 'Project ', projectId: 1},
                 {projectName: 'Project ', projectId: 2},

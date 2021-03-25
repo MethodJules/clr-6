@@ -40,7 +40,8 @@
             
                 <!-- <div v-for="assistent in assistents" :key="assistent.hilfstext"> -->
 
-                   
+                 <!-- modal des Assistenten mit Angabe von Text und der Angabe der gespeicherten 
+                 Informationen in der Datenbank -->   
                 <b-button v-b-modal.modal-1 size="lg" variant="primary" class="mb-2"> 
                 <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
                 </b-button>
@@ -75,6 +76,7 @@ export default {
         
 
     },
+    //Die in der Datenbank gespeicherten Hilfstexte werden hiermit angegeben
     mounted() {
         this.$store.dispatch('assistent/loadAssistentFromBackend')
         this.assistents = this.$store.state.assistent.assistents
