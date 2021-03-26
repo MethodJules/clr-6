@@ -1,18 +1,20 @@
 <template>
     <div id="phase">
         <b-container fluid>
+            <!-- gibt an in welcher Phase man sich befindet -->
             <h2>Phase: {{this.phase}}</h2>
             <b-row>
                 <b-col cols="10">
                 </b-col>
                 <b-col cols="2">
+                    <!-- Greift auf die Assistent Komponente -->
                     <Assistent/>
                 </b-col>
             </b-row>
             <b-row>
-                
+                <!-- Greift auf die Input felder, die Dokumentation und die Outputfelder -->
                 <b-col cols="2" class="border border-dark">  <InputDocuments/> </b-col>
-                <b-col cols="6" class="border border-dark"> <DocumentationField/> </b-col>
+                <b-col cols="8"> <DocumentationField/> </b-col>
                 <b-col cols="2" class="border border-dark"> <OutputDocuments/> </b-col>
                 
                 
@@ -26,6 +28,7 @@
                
                 
                 <b-col cols="2" class="border border-dark">
+                    <!-- Geht auf die Komponente Verwendete Tools -->
                 <UsedTools/>
                 </b-col>
                 
@@ -34,11 +37,7 @@
             <br>
                 
             <b-row>
-                <TemplateButtons/>
-                   
-
-                    
-                
+                <TemplateButtons/> 
             </b-row>
         </b-container>
     </div>

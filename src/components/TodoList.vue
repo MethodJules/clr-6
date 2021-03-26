@@ -1,11 +1,16 @@
 <template>
     <div id="todoList">
+        <!-- Liste zum Erstellen der Todos  -->
         <div class="card" v-for="todo in listOfToDos" :key="todo.date">
             <div class="card-body text-center">
-                <b-form-checkbox :id="todo.date" v-model="status" name="checkbox-1" value="checked" unchecked-value="unchecked">{{todo.todo}}<b-button class="btn btn-s">Löschen</b-button></b-form-checkbox>
+                <b-form-checkbox :id="todo.date" v-model="status" name="checkbox-1" value="checked" unchecked-value="unchecked">
+                    {{todo.todo}}
+                    <b-button @click="deleteTodo(todo)" class="btn btn-s">Löschen</b-button></b-form-checkbox>
             </div>
         </div>
         <div>
+            <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist. 
+            Es wird nur die zu erledigende Aufgabe angezeigt -->
             <b-modal id="to_do_edit_modal" title="to_do">
           <label for = "neueTodo">zu erledigende Aufgabe: </label>
           <input v-model="todoNeu" type ="text" placeholder="hier eingeben">
@@ -15,6 +20,7 @@
           OK
           </b-button>
         </b-modal>
+        <!-- Zum öffnen des Modals -->
         <b-button v-b-modal.to_do_edit_modal>+</b-button>
         </div>
     </div>
@@ -38,11 +44,19 @@ export default {
                 todo: this.todoNeu,
                 date: this.value
             };
+            // Benutzereingabe wird in die Liste gespeichert
             this.listOfToDos.push(neueEingabe)
+            //Anbindung an die API
             this.$store.dispatch('todo/createToDo', neueEingabe)
             this.todoNeu= ''
+        },
+        deleteTodo(todo){
+                //Löschen eines Todos
+                this.listOfToDos.splice(this.listOfToDos.indexOf(todo), 1)
+            
         }
     },
+    //Die in der Datenbank gespeicherten Todos werden hiermit aufgelistet
     mounted(){
         this.$store.dispatch('todo/loadToDoFromBackend')
         this.listOfToDos = this.$store.state.todo.listOfToDos

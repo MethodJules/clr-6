@@ -115,10 +115,16 @@
 
             voted(){
                 return this.votes + +this.status
-            }
+            },
+            
         },
-
+        /* watch:{
+            $route(to="/projectlist"){
+                this.showRightMenu = false;
+            }
+        } */
     }
+    
 </script>
 <style scoped>
    /*  .seitennavigation {

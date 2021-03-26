@@ -20,7 +20,7 @@ const actions={
             
     },
     createTool({commit}, toolEntry) {
-        console.log(toolEntry.tool)
+        console.log(toolEntry.usedTool)
         commit('ADD_NEW_TOOL', toolEntry)
 
     },
@@ -29,7 +29,7 @@ const actions={
 const mutations={
     ADD_NEW_TOOL(state, toolEntry) {
         
-        var data = `{"data": {"type": "node--tools", "attributes": {"title": "neu eingefügtes tool", "field_tool": "${toolEntry.tool}" }}}`;
+        var data = `{"data": {"type": "node--tools", "attributes": {"title": "neu eingefügtes tool", "field_tool": "${toolEntry.usedTool}" }}}`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/tools',
@@ -50,21 +50,17 @@ const mutations={
                 console.log(error)
             })
     },
-    SAVE_NEW_TOOL(state, tool) {
+    SAVE_NEW_TOOL(state, usedTool) {
         
-        tool.forEach(element => {
+        usedTool.forEach(element => {
             const field_tool = element.attributes.field_tool;
             console.log(field_tool)        
             const field_id = element.id;
             console.log(element.id)
             const field_title = element.attributes.title;
             console.log(element.id)
-            state.listOfTools.push( { tool: field_tool, idd: field_id, title: field_title })
+            state.listOfTools.push( { usedTool: field_tool, idd: field_id, title: field_title })
             console.log(state)
-
-
-
-            
         });
     }
 

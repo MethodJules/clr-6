@@ -28,15 +28,19 @@
         </b-col>
 
         <b-col cols="8" class="mitte border border-primary">
+          
           <router-view></router-view>
+          
         </b-col>
-
-        <b-col cols="2" class="rechteSeite">
+        <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
+        die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
+        <b-col v-if="!isChanged" cols="2" class="rechteSeite">
           <b-row>
             <b-col class="border border-dark">
               <SeitenNavigation />
             </b-col>
           </b-row>
+        
 
           <b-row class="chat">
             <b-col class="border border-dark">
@@ -48,6 +52,8 @@
               <Postfach />
             </b-col>
           </b-row>
+        </b-col>
+        <b-col v-else>
         </b-col>
       </b-row>
 
@@ -66,12 +72,16 @@ import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
 import Chat from "@/components/Chat.vue";
 import Postfach from "@/components/Postfach.vue";
-
+//import ProjectList from "@/views/ProjectList.vue"
 
 export default {
+  props:{
+    showRightMenu: Boolean
+  },
   name: "App",
   components: {
     SeitenNavigation,
+    //ProjectList,
     TodoList,
     MenueLeiste,
     Kalender,
@@ -81,9 +91,12 @@ export default {
   data() {
     return {
       nameState: null,
+      showMenu: true,
       eintragTodo: {
         todo: "",
+        
       },
+      
 
       /* listOfToDos [
                     {todo:"Mein1", date:"20.02.2021"},
@@ -105,6 +118,9 @@ export default {
     };
   },
   methods: {
+     closeMenu(){
+      this.showMenu = false;
+    } 
     /* formularTodo(){
                 this.$refs['my-todo-modal'].show()
                 this.eintragTodo.date=""
@@ -128,6 +144,11 @@ export default {
     /* hideModal() {
                 this.$refs['my-todo-modal'].hide()
             } */
+  },
+  computed:{
+    isChanged(){
+      return this.$route.name === 'ProjectList'
+    }
   } /* ,
         mounted() {
             this.$store.dispatch('todo/loadToDoFromBackend')

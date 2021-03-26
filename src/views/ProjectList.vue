@@ -1,5 +1,6 @@
 <template>
-  <div>
+    <div>
+        <App v-bind:showRightMenu="false" ></App>
     <b-row>
       <b-card class="m-2"
         v-for="project in projectList"
