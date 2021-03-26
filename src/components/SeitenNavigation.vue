@@ -35,7 +35,7 @@
 
                 <b-button v-b-modal.modal-1 size="lg"  class="mb-2"> 
                 </b-button>
-                <b-modal id="modal-1" title="Phase abschließen">
+                <b-modal id="modal-2" title="Phase abschließen">
                 <p>Der Beendigung von Phase: "Gruppe bilden" haben {{voted}}, von n Gruppenmitgliedern zugestimmt</p>
                 <b-form-checkbox :id="Gruppe" v-model="status" name="checkbox-1" value=1 unchecked-value=0>Gib deeine Stimme ab: Soll diese Phase abgeschlossen werden?</b-form-checkbox>
                 {{status}}
@@ -80,7 +80,7 @@
         },
 
         phaseWiederOeffnen(phase) {
-            /* to do: 
+            /*TODO: 
             */
             console.log(phase)
            if(/*phase==aktuellephase-1*/phase==1){
@@ -95,13 +95,18 @@
         },
             
         phaseAbschließen(phase) {
-            /* to do: phase wird abgeschlossen wenn mehr als n/2 Gruppenmitglieder abgestimmt haben 
+            /*TODO: phase wird abgeschlossen wenn mehr als n/2 Gruppenmitglieder abgestimmt haben 
             -> diese methode hier wird dann bei jeder änderung aufrufen (welche änderungen?) -> jedes mal wenn ein mitglied abstimmt
             wo wird die Anzahl der Gruppenmitglieder gespeichert? -> immer updaten und hier abrufen für berechnung
             */
             console.log(phase)
-           
-            this.isDisabled[phase]=true
+           if(this.isDisabled[phase]==false){
+               this.isDisabled.splice(phase, 1, true)
+           }
+           else if(this.isDisabled[phase]==true){
+               this.isDisabled.splice(phase, 1, false)
+           }
+            
             
         }
 
