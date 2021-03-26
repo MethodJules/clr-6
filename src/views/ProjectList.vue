@@ -118,6 +118,7 @@
 <script>
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 export default {
+    name: "ProjectList",
   components: {
     ReflexionAuswahl,
   },

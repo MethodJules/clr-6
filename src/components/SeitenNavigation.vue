@@ -35,7 +35,7 @@
 
                 <b-button v-b-modal.modal-1 size="lg"  class="mb-2"> 
                 </b-button>
-                <b-modal id="modal-2" title="Phase abschließen">
+                <b-modal id="modal-seitennavi" title="Phase abschließen">
                 <p>Der Beendigung von Phase: "Gruppe bilden" haben {{voted}}, von n Gruppenmitgliedern zugestimmt</p>
                 <b-form-checkbox :id="Gruppe" v-model="status" name="checkbox-1" value=1 unchecked-value=0>Gib deeine Stimme ab: Soll diese Phase abgeschlossen werden?</b-form-checkbox>
                 {{status}}

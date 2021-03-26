@@ -111,7 +111,9 @@ const routes = [
         name: 'Reflexion',
         props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
-    }
+    },
+
+    
 
    
 
