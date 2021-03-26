@@ -67,7 +67,7 @@
         },
 
         methods: {
-
+        /**Abstimmung über die Beendigung einer Phase wird gestartet */
         abstimmungPhaseAbschließen(phase) {
             //to do: Nachricht an alle Gruppenmitglieder (in Postfach) dort Feld zur Abstimmung von abschluss oder eine checkbox für jedes mitglied
             // checkbox oder mail zählt votes hoch und speichert in backend - weitere funktion gibt boolean aus ob abgeschlossen ist und speichert in backend
@@ -78,7 +78,7 @@
           
             
         },
-
+        /**Phase wird hier wieder geöffnet, wenn erfolgreich über die Reaktivierung abgestimmt wurde */
         phaseWiederOeffnen(phase) {
             /*TODO: 
             */
@@ -93,7 +93,9 @@
            
             
         },
-            
+        /**parameter: Int
+         * Ein Button der eine Phase verlinkt wird hier deaktiviert. Ist der Button bereits aktiviert, wird die Phase reaktiviert.
+         */
         phaseAbschließen(phase) {
             /*TODO: phase wird abgeschlossen wenn mehr als n/2 Gruppenmitglieder abgestimmt haben 
             -> diese methode hier wird dann bei jeder änderung aufrufen (welche änderungen?) -> jedes mal wenn ein mitglied abstimmt
@@ -112,7 +114,7 @@
 
         },
                 computed:{
-
+            /** Gibt einen Int zurück, der aussagt wieviele Gruppenmitglieder schon abgestimmt haben ob eine Phase beendet werden soll */ 
             voted(){
                 return this.votes + +this.status
             },

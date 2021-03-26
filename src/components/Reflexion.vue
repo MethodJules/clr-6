@@ -382,7 +382,7 @@ export default {
     },
     methods: {
 
-
+        /** Reflexion wird in das Backend geladen */
         addItem() {
             /* To Do: überprüfen ob schon eine reflexion zu dieser phase von dieser person angefertigt wurde 
             -> kein neuer Eintrag, alte Reflexion kann überschrieben oder aktualisiert werden
@@ -405,6 +405,7 @@ export default {
             this.rekonstruieren=""
             
         },
+        /**Reflexion wird manuell aus dem Backend geladen */
         loadReflexion(){
             //To Do: dynamisch machen - oder wie bei tabelledaily etc unten während der mount phase in die felder laden
             this.berichten_reagieren=this.reflexionList[1].berichten_reagieren
@@ -417,7 +418,7 @@ export default {
             //to do
         },
     },
-
+    /** lädt alle Reflexionen aus dem Backend */
     mounted() {
     this.$store.dispatch('reflexion/loadReflexionFromBackend')
     this.rowData = this.$store.state.reflexion.rowData
