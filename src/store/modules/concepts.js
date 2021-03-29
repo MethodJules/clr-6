@@ -19,7 +19,7 @@ const state = () => ({
 const actions = {
     addConcept({commit}, concept) {
         commit('ADD_NEW_CONCEPT', concept);
-       
+
     },
     deleteConcept({commit}, concept) {
         console.log(`das hier ist die ID von Concept  https://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`)
@@ -47,11 +47,11 @@ const actions = {
         console.log(concept_map_nodes);
         await axios.get('https://clr-backend.x-navi.de/jsonapi/node/concept')
             .then((response) => {
-                //console.log(response);
+                console.log(response);
                 const data = response.data.data;
                 let concepts = [];
                 for (var i in data) {
-                    
+
                     concepts.push({name: data[i].attributes.title, nid: data[i].attributes.drupal_internal__nid, id: data[i].id});
                 }
 

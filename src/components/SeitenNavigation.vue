@@ -13,16 +13,16 @@
 
                                 <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
                                 <b-link :disabled=isDisabled[0] :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe bilden'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
-                                <b-link :disabled=isDisabled[1]  :to="{name: 'PhaseTemplate', params: { phase: 'Ziel'}}" class="btn btn-outline-dark btn-block mb-2">Ziel</b-link>
+                                <b-link :disabled=isDisabled[1]  :to="{name: 'Documentation', params: { phase: 'Ziel'}}" class="btn btn-outline-dark btn-block mb-2">Ziel</b-link>
                                 <b-link :disabled=isDisabled[2]  :to="{name: 'PhaseTemplate', params: { phase: 'Literatur'}}" class="btn btn-outline-dark btn-block mb-2">Literatur</b-link>
-                                <b-link :disabled=isDisabled[3]  :to="{name: 'PhaseTemplate', params: { phase: 'Daten'}}" class="btn btn-outline-dark btn-block mb-2">Daten</b-link>                         
+                                <b-link :disabled=isDisabled[3]  :to="{name: 'PhaseTemplate', params: { phase: 'Daten'}}" class="btn btn-outline-dark btn-block mb-2">Daten</b-link>
                                 <b-link :disabled=isDisabled[4]  :to="{name: 'PhaseTemplate', params: { phase: 'Analyse'}}" class="btn btn-outline-dark btn-block mb-2">Analyse</b-link>
                                 <b-link :disabled=isDisabled[5]  :to="{name: 'PhaseTemplate', params: { phase: 'Ergebnisse'}}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse</b-link>
                                 <b-link :disabled=isDisabled[6]  :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe auflösen'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
                                 <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
 
-   
-  
+
+
         <b-dropdown text="Phasen abschließen" class="m-2">
                 <b-dropdown-item v-on:click="phaseAbschließen(0)">"Gruppe bilden" abschließen</b-dropdown-item>
                 <b-dropdown-item v-on:click="phaseAbschließen(1)">"Ziel" abschließen</b-dropdown-item>
@@ -33,7 +33,7 @@
                 <b-dropdown-item v-on:click="phaseAbschließen(6)">"Gruppe auflösen" abschließen</b-dropdown-item>
         </b-dropdown>
 
-                <b-button v-b-modal.modal-1 size="lg"  class="mb-2"> 
+                <b-button v-b-modal.modal-1 size="lg"  class="mb-2">
                 </b-button>
                 <b-modal id="modal-1" title="Phase abschließen">
                 <p>Der Beendigung von Phase: "Gruppe bilden" haben {{voted}}, von n Gruppenmitgliedern zugestimmt</p>
@@ -42,9 +42,9 @@
                 <p></p>
 
 
-                
-                
-                
+
+
+
 
                 </b-modal>
 
@@ -74,13 +74,13 @@
             // in welchem content type speichern? phasetemplate oder Gruppenbereich?
             // hier checken ob phase abgeschlossen werden kann ->  eine phase kann nur abgeschlossen werden wenn die vorherige abgeschlossen wurde
             console.log(phase)
-           
-          
-            
+
+
+
         },
 
         phaseWiederOeffnen(phase) {
-            /* to do: 
+            /* to do:
             */
             console.log(phase)
            if(/*phase==aktuellephase-1*/phase==1){
@@ -90,19 +90,21 @@
                var ausgabe = "Bitte erst die letzte abgeschlossene Phase wieder öffnen"
                console.log(ausgabe)
            }
-           
-            
+
+
         },
-            
+
         phaseAbschließen(phase) {
-            /* to do: phase wird abgeschlossen wenn mehr als n/2 Gruppenmitglieder abgestimmt haben 
+            /* to do: phase wird abgeschlossen wenn mehr als n/2 Gruppenmitglieder abgestimmt haben
             -> diese methode hier wird dann bei jeder änderung aufrufen (welche änderungen?) -> jedes mal wenn ein mitglied abstimmt
             wo wird die Anzahl der Gruppenmitglieder gespeichert? -> immer updaten und hier abrufen für berechnung
             */
             console.log(phase)
-           
-            this.isDisabled[phase]=true
-            
+
+            //this.isDisabled[phase]=true
+
+            this.isDisabled.splice(phase, 1, true)
+
         }
 
         },

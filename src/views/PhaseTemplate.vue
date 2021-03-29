@@ -10,35 +10,35 @@
                 </b-col>
             </b-row>
             <b-row>
-                
+
                 <b-col cols="2" class="border border-dark">  <InputDocuments/> </b-col>
                 <b-col cols="6" class="border border-dark"> <DocumentationField/> </b-col>
                 <b-col cols="2" class="border border-dark"> <OutputDocuments/> </b-col>
-                
-                
+
+
             </b-row>
 
             <br>
             <br>
-            
+
             <b-row>
-                
-               
-                
+
+
+
                 <b-col cols="2" class="border border-dark">
                 <UsedTools/>
                 </b-col>
-                
+
             </b-row>
 
             <br>
-                
+
             <b-row>
                 <TemplateButtons/>
-                   
 
-                    
-                
+
+
+
             </b-row>
         </b-container>
     </div>
@@ -48,7 +48,7 @@ import InputDocuments from '@/components/InputDocuments.vue'
 import DocumentationField from '@/components/DocumentationField.vue'
 import UsedTools from '@/components/UsedTools.vue'
 import OutputDocuments from '@/components/OutputDocuments.vue'
-import TemplateButtons from '@/components/TemplateButtons.vue' 
+import TemplateButtons from '@/components/TemplateButtons.vue'
 import Assistent from '@/components/Assistent.vue'
 
 
@@ -61,7 +61,7 @@ export default {
 
     data() {
         return {
-            
+
         }
     },
 
@@ -73,11 +73,17 @@ export default {
         DocumentationField,
         UsedTools,
         OutputDocuments,
-        TemplateButtons, 
+        TemplateButtons,
         Assistent
-        
+
     },
 
-   
+    computed: {
+        routing_name() {
+            return this.phase;
+        }
+    }
+
+
 }
 </script>
