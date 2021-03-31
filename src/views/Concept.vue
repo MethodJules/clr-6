@@ -1,10 +1,10 @@
 <template>
-    <div class="home">
+    <div class="positionComponents">
         <!-- Concept Map Header-->
         <h1>
             CONCEPT MAP
         </h1>
-  
+
         <!-- Create new Conceptmap -->
         <div v-if="newconcept" @click="openConcept()" class="newConcept">
             <h1 class="centerText">
@@ -15,7 +15,7 @@
         <!-- Toolbar for current Conceptmap -->
         <div v-if="concept" @click="openConcept()" class="conceptMap">
             <div class="showElements">
-                
+
                 <!-- List of all Concepts, imports Conceptlist-Component -->
                 <ConceptList @childToParent="onChildClick($event)" />
                 <div class="newElement">
@@ -34,7 +34,6 @@
                 <!-- <div class="modalView" v-if="showModal">
                     <CreateConnection @closeModal="closeModal($event)" :source=target />
                 </div> -->
-                
                 <!-- Modal to create a new Concept from List into the map -->
                 <b-modal id="create_connection_modal" hide-footer>
                     <div class="d-block text-center">
@@ -106,13 +105,13 @@
                 </b-modal>
 
                 <!-- Mpdal to create Concepts from Recommands -->
-                 <b-modal id="create_recommander_modal" hide-footer>
+                <b-modal id="create_recommander_modal" hide-footer>
                     <div class="d-block">
                         <h1>Recommander</h1>
                         <b-form-group>
                             <b-form-checkbox-group size="lg" id="recommander" v-model="selectedRecommanders" :options="recommands" name="recommander" stacked></b-form-checkbox-group>
                         </b-form-group>
-                                 </div>
+                    </div>
                     <b-button class="mt-3" block @click="createRecommands">erstellen</b-button>
 
                 </b-modal>
@@ -122,7 +121,7 @@
 
         <div class="comments">
             <!-- Comments, imports Comment-Component -->
-            <CommentForm/>
+            <CommentForm />
 
         </div>
 
@@ -133,11 +132,11 @@
 
 <script>
 
-import ConceptMap from '@/components/ConceptMap'
-//import CreateConnection from '@/components/CreateConnection'
+    import ConceptMap from '@/components/ConceptMap'
+    //import CreateConnection from '@/components/CreateConnection'
     import ConceptList from '@/components/ConceptList'
     import CommentForm from '@/components/CommentForm'
-import {mapState} from 'vuex'
+    import { mapState } from 'vuex'
 
 
     export default {
@@ -158,12 +157,12 @@ import {mapState} from 'vuex'
                 // Variablen, um neues Konzept aus der Map heraus hinzuzufügen
                 target_uuid_map: null,
                 source_uuid_map: {},
-                
+
                 target_options: [],
                 source_options: [],
                 relationship_label: '',
                 // Variable für die ausgewählten Vorschläge
-                selectedRecommanders: [], 
+                selectedRecommanders: [],
                 recommands: []
             }
         },
@@ -178,7 +177,7 @@ import {mapState} from 'vuex'
                 this.showModal = value
             },
 
-            // input new concept into map from list, open modal  
+            // input new concept into map from list, open modal
             onChildClick(value) {
                 //this.showModal = true
                 this.target = value
@@ -186,22 +185,22 @@ import {mapState} from 'vuex'
 
             },
 
-            // input new concept into map from map, open modal 
+            // input new concept into map from map, open modal
             onParentClick(value) {
                 console.log(value)
-                //this.showModal = true       
+                //this.showModal = true
                 this.source = value
                 this.openCreateConnectionModalNet();
-               
+
             },
 
             // Load targets from database
-            loadTarget() {    
+            loadTarget() {
                 this.conceptList = this.$store.state.concepts.concepts;
                 this.spliceConcepts = [];
                 this.target_options = [];
 
-                // old version / try  
+                // old version / try
                 /*
                 this.$store.state.concepts.concepts.forEach(element => {
                     for (let map of this.$store.state.concept_map.nodes) {
@@ -209,14 +208,14 @@ import {mapState} from 'vuex'
                             this.spliceConcepts.push(element);
                         }
                     }
-                })               
+                })
                 console.log(this.spliceConcepts);
                 for (let splice of this.spliceConcepts) {
                     this.conceptList.splice(this.conceptList.indexOf(splice), 1);
                 }
                 */
 
-                // push all options from list into target_options array 
+                // push all options from list into target_options array
                 this.conceptList.forEach(element => {
                     this.target_options.push({ value: { id: element.nid, uuid: element.id, concept: element.name }, text: element.name });
                 });
@@ -225,14 +224,14 @@ import {mapState} from 'vuex'
                 this.target_options.forEach(element => {
                     if (element.value.uuid == this.source.uuid) {
                         this.target_options.splice(this.target_options.indexOf(element), 1);
-                    }       
+                    }
                 });
 
             },
 
             // not used
             lcb(link) {
-                link._svgAttrs = {'marker-end': 'url(#m-end)'}
+                link._svgAttrs = { 'marker-end': 'url(#m-end)' }
                 return link
             },
 
@@ -242,12 +241,12 @@ import {mapState} from 'vuex'
 
             },
 
-            /* 
-             * Add new Concept to Conceptlist 
-             * Checks, if Conceptname is already in use 
+            /*
+             * Add new Concept to Conceptlist
+             * Checks, if Conceptname is already in use
             */
             addElement() {
-               this.conceptList = this.$store.state.concepts.concepts;
+                this.conceptList = this.$store.state.concepts.concepts;
                 var isEqual = false;
 
                 this.conceptList.forEach(element => {
@@ -259,7 +258,7 @@ import {mapState} from 'vuex'
                 if (!isEqual) {
                     this.$store.dispatch('concepts/addConcept', this.concept_name);
                     this.$bvModal.hide('create_concept_modal');
-                }         
+                }
                 //TODO: Concept hinzufuegen
             },
 
@@ -267,10 +266,10 @@ import {mapState} from 'vuex'
             loadConceptMap() {
                 this.source_options = [];
                 this.concepts.forEach(element => {
-                    this.source_options.push({value: {id: element.id, uuid: element.uuid, concept: element.name}, text: element.name});
-                });               
+                    this.source_options.push({ value: { id: element.id, uuid: element.uuid, concept: element.name }, text: element.name });
+                });
             },
-            // open CreateConcept Modal 
+            // open CreateConcept Modal
             openCreateConceptModal() {
                 this.$bvModal.show('create_concept_modal');
             },
@@ -285,7 +284,7 @@ import {mapState} from 'vuex'
                 this.$bvModal.show('create_connection_modal_net');
             },
 
-            // open Recommander Modal 
+            // open Recommander Modal
             openRecommander() {
                 // TODO: change recommands to variable list
                 this.recommands = [
@@ -296,45 +295,45 @@ import {mapState} from 'vuex'
                     { text: 'Konzept 5', value: 'concept5' },
                     { text: 'Konzept 6', value: 'concept6' }
                 ];
+                console.log("Test1234343545");
 
                 this.$bvModal.show('create_recommander_modal');
             },
 
-            /* 
+            /*
              * create selected Recommands
              * only create Elements, which are not already created
              */
             createRecommands() {
-                console.log(this.selectedRecommanders);
                 this.conceptList = this.$store.state.concepts.concepts;
-             
+
                 this.selectedRecommanders.forEach(concept => {
                     var isEqual = false;
 
                     this.conceptList.forEach(element => {
                         if (element.name === concept) {
-                            alert("Konzept"  + concept + " existiert bereits und wurde nicht erstellt");
+                            alert("Konzept" + concept + " existiert bereits und wurde nicht erstellt");
                             isEqual = true;
                         }
                     })
                     if (!isEqual) {
                         this.$store.dispatch('concepts/addConcept', concept);
-                        
+
                     }
                 })
 
-                  this.$bvModal.hide('create_recommander_modal');
-    
-                
+                this.$bvModal.hide('create_recommander_modal');
+
+
 
             },
 
             /*
-             * Create new connection to conceptmap 
+             * Create new connection to conceptmap
              */
             createNewConncetionToConceptMap() {
 
-                // set attributes of target, to create connection 
+                // set attributes of target, to create connection
                 this.target_uuid.concept = this.target.name;
                 this.target_uuid.id = this.target.nid;
                 this.target_uuid.uuid = this.target.id;
@@ -344,25 +343,25 @@ import {mapState} from 'vuex'
                 //Add Concept to Concept Map
                 for (let map of this.$store.state.concept_map.nodes) {
                     if (map.uuid == this.target_uuid.uuid) {
-                        isExisting = true; 
+                        isExisting = true;
                     }
                 }
-                // push conncept to concept map, add conncept to store, if new concept is imported 
+                // push conncept to concept map, add conncept to store, if new concept is imported
                 if (!isExisting) {
                     this.$store.dispatch('concept_map/addConceptToConceptMap', this.target_uuid); //TODO: target_uuid ändern in semantisch korrekte bezeichnung
 
                 }
-                // add relationchip to store 
-                 this.$store.dispatch('concept_map/addRelationshipToConceptMap', {source: this.source_uuid, target: this.target_uuid, name: this.relationship_label});
-                // hide modal 
+                // add relationchip to store
+                this.$store.dispatch('concept_map/addRelationshipToConceptMap', { source: this.source_uuid, target: this.target_uuid, name: this.relationship_label });
+                // hide modal
                 this.$bvModal.hide('create_connection_modal');
             },
 
-                  /*
-             * Create new connection to conceptmap from map 
-             */
-            createNewConncetionToConceptMapFromMap() {    
-                // set attributes of source to create connection 
+            /*
+       * Create new connection to conceptmap from map
+       */
+            createNewConncetionToConceptMapFromMap() {
+                // set attributes of source to create connection
                 this.source_uuid_map.concept = this.source.name;
                 this.source_uuid_map.id = this.source.id;
                 this.source_uuid_map.uuid = this.source.uuid;
@@ -375,27 +374,27 @@ import {mapState} from 'vuex'
                         isExisting = true;
                     }
                 }
-                // push concept to concept map, add concept to store, if new concept is imported 
-                if (!isExisting) {      
+                // push concept to concept map, add concept to store, if new concept is imported
+                if (!isExisting) {
                     this.$store.dispatch('concept_map/addConceptToConceptMap', this.target_uuid_map); //TODO: target_uuid ändern in semantisch korrekte bezeichnung
 
                 }
-                // add relationship to store 
+                // add relationship to store
                 this.$store.dispatch('concept_map/addRelationshipToConceptMap', { source: this.source_uuid_map, target: this.target_uuid_map, name: this.relationship_label });
-                // hide modal 
+                // hide modal
                 this.$bvModal.hide('create_connection_modal_net');
             }
 
         },
         async mounted() {
-            // load Conceptmap from backend store 
+            // load Conceptmap from backend store
             await this.$store.dispatch('concept_map/loadConceptMapFromBackend');
         },
         computed: {
-        ...mapState({concepts: state => state.concept_map.nodes})
+            ...mapState({ concepts: state => state.concept_map.nodes })
         },
 
-}
+    }
 </script>
 
 <style scoped>
@@ -406,6 +405,7 @@ import {mapState} from 'vuex'
         background-color: #c93e37 !important;
         width: 100%;
     }
+
     .recButton {
         position: relative;
         margin-bottom: 10px;
@@ -421,52 +421,60 @@ import {mapState} from 'vuex'
     h1 {
         color: #c93e37;
     }
+
     .newConcept {
         border: dashed;
         border-color: #c93e37;
         height: 30%;
         width: 25%;
-
     }
+
     .centerText {
         margin-top: 30%;
         margin-left: 40%;
     }
+
     .viewConcept {
         border: dashed;
         border-color: #c93e37;
-        height: 75%;
+        height: 55vh;
         width: 70%;
-        position: absolute;
-        right: 10px;
+        position: relative;
+        left: 29%;
     }
 
     .showElements {
         border: dashed;
         border-color: #c93e37;
-        height: 75%;
+        height: 55vh;
         width: 25%;
-        position: absolute;
+        position: relative;
         left: 10px;
+        float: left;
     }
+
     .scrollbar {
         width: 100%;
         height: 80%;
     }
+
     .newElement {
         position: absolute;
         right: 10px;
-        bottom: 10px;
+        bottom: 0;
         color: #c93e37;
         width: 40%;
+        float:right;
     }
+
     .recomander {
         position: absolute;
         left: 10px;
-        bottom: 10px;
+        bottom: 0;
         color: #c93e37;
         width: 40%;
     }
+
     .listElement {
         border: dashed;
         width: 90%;
@@ -475,6 +483,7 @@ import {mapState} from 'vuex'
         text-align: center;
         color: white
     }
+
     .listIcon {
         background-color: #c93e37;
         float: left;
@@ -482,12 +491,14 @@ import {mapState} from 'vuex'
         width: 10%;
         cursor: pointer;
     }
+
     .listName {
         background-color: #c93e37;
         width: 75%;
         margin-right: 3px;
         float: left;
     }
+
     .listArrow {
         background-color: #c93e37;
         width: 10%;
@@ -512,6 +523,7 @@ import {mapState} from 'vuex'
         box-shadow: 3px 7px #888888;
         color: #c93e37;
     }
+
     .center {
         text-align: center;
         color: #c93e37;
@@ -530,11 +542,12 @@ import {mapState} from 'vuex'
     input {
         color: #c93e37;
         border-color: #c93e37;
-
     }
+
         input[type=text]:focus {
             outline: 2px solid #c93e37;
         }
+
     .conceptMap {
         width: 100%;
         height: 90%;
@@ -544,6 +557,14 @@ import {mapState} from 'vuex'
         border: solid;
         background-color: white;
         border-color: #c93e37;
+        width: 90%;
+        position: relative;
     }
 
+    .positionComponents {
+        position: relative;
+        overflow: scroll;
+        width: 100%;
+        height: 100%
+    }
 </style>

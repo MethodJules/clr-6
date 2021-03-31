@@ -1,6 +1,6 @@
 <!-- Create new Member-->
 <template>
-    <div class="home">
+    <div>
         <h1>Create New Member</h1>
         <!-- Form to create new Member-->
         <form @submit.prevent="save">

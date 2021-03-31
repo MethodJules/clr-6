@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div>
         <h1> To Do </h1>
         <!-- table for ToDos -->
         <b-table-simple hover small caption-top responsive>

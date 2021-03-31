@@ -1,6 +1,6 @@
 <!-- Review circle -->
 <template>
-    <div class="home">
+    <div class="scroller">
         <!-- Create canvas area, open ReviewCircle-Component-->
         <z-canvas :views="$options.components">
 
@@ -37,6 +37,7 @@
     .z-canvas{
         position: relative !important;
         overflow: visible;
+        background-color: unset !important;
 
     }
 

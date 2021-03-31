@@ -1,6 +1,6 @@
 <!-- Component for Agenda, isn't used currently -->
 <template>
-    <div class="home">
+    <div>
         <h1>
             Agenda
         </h1>

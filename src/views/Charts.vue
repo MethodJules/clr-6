@@ -1,5 +1,5 @@
  <template>
-    <div class="home">
+    <div>
         
         <!-- Switch between different Charts-->
         <b-form-select v-model="showPieChart" :options="options"></b-form-select>

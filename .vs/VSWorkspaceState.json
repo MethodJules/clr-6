@@ -1,12 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\public",
     "\\src",
-    "\\src\\components",
-    "\\src\\store\\modules",
-    "\\src\\views"
+    "\\src\\store",
+    "\\src\\store\\modules"
   ],
-  "SelectedNode": "\\src\\views\\Forum.vue",
+  "SelectedNode": "\\src\\store\\modules\\concept_map.js",
   "PreviewInSolutionExplorer": false
 }

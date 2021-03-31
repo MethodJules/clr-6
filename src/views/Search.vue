@@ -1,6 +1,6 @@
 <!-- isn't used-->
 <template>
-    <div class="home">
+    <div>
         <h1>
             Search
         </h1>
@@ -17,17 +17,4 @@
     }
 </script>
 <style>
-    .home {
-        width: 70%;
-        background-color: white;
-        height: 85%;
-        position: absolute;
-        top: 10%;
-        left: 5%;
-        padding: 30px
-    }
-
-    h1 {
-        color: #c93e37;
-    }
 </style>

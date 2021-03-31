@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="scroller">
         <h1>{{ category.name }}</h1>
         <!-- List of forums of a category-->
         <div class="scroll">

@@ -1,5 +1,5 @@
 <template>
-        <div class="home">
+        <div class="scroller">
             <div class="col-large push-top">
                 <div class="scroll">
                     <h1>{{thread.title}}</h1>

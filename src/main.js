@@ -13,6 +13,8 @@ import 'zircle/dist/zircle.css'
 import { Datetime } from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.min.css'
 
+import VueApexCharts from 'vue-apexcharts'
+
 import AppDate from '@/components/AppDate'
 Vue.component('AppDate', AppDate)
 
@@ -23,6 +25,8 @@ Vue.use(Chat)
 Vue.use(zircle)
 Vue.use(Vuex);
 Vue.use(Datetime)
+
+Vue.component('apexchart', VueApexCharts)
 
 new Vue({
     router,

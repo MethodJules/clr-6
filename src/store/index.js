@@ -7,7 +7,7 @@ import sourceData from '@/data.json'
 import members from './modules/members'
 import toDos from './modules/toDos'
 import chartData from './modules/chartData'
-
+import controlValue from './modules/controlValue'
 Vue.use(Vuex)
 
 Vue.config.devtools = true
@@ -21,6 +21,7 @@ export default new Vuex.Store({
        members, 
         toDos, 
         chartData, 
+        controlValue
     },
 
     state: {

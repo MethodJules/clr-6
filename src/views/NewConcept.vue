@@ -1,7 +1,7 @@
 <!-- isn't used -->
 <template>
 
-    <div class="home">
+    <div>
         <h1>
             CONCEPT VERSIONS
         </h1>
@@ -113,11 +113,11 @@ export default {
 </script>
 
 <style scoped>
-.home {
+    .home {
         width: 70%;
         background-color: white;
         height: 85%;
-        position: absolute;
+        /*  position: absolute; */
         top: 10%;
         left: 5%;
         padding: 30px

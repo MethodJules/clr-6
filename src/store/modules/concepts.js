@@ -24,7 +24,7 @@ const actions = {
     deleteConcept({commit}, concept) {
         var config = {
             method: 'delete',
-            url: `http://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/concept/${concept.id}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

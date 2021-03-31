@@ -1,6 +1,6 @@
 <!-- Login-Form-->
 <template>
-    <div class="home">
+    <div>
         <b-form @submit.prevent="login">
             <b-form-group id="formGroupName" label="Username">
                 <b-form-input id="name"

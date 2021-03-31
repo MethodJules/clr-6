@@ -1,6 +1,6 @@
 <!--  Component for the calendar -->
 <template>
-    <div class="home">
+    <div class="formatView">
         <v-row class="fill-height">
             <v-col>
                 <!-- Toolbar-->
@@ -645,6 +645,12 @@
     }
     h3 {
         color: #c93e37;
+    }
+    .formatView {
+        height: 100%;
+        overflow: scroll;
+        width: 100%;
+        padding: 10px;
     }
 
 </style>

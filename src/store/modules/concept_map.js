@@ -38,7 +38,7 @@ const actions = {
 
     // load data from clr-backend
     async loadConceptMapFromBackend({commit}) {
-        await axios.get('http://clr-backend.x-navi.de/jsonapi/node/concept_map')
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/concept_map')
             .then((response) => {
                 //console.log(response);
                 //let concept_map = [];

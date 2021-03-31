@@ -1,6 +1,6 @@
 <!-- Groupmanagement -->
 <template>
-    <div class="home">
+    <div>
         <h1> Gruppenverwaltung </h1>
 
         <div>
@@ -9,7 +9,8 @@
                 <h3>{{member.name}}</h3>
                 <b-button @click="deleteMember(member)"> X </b-button>
                 <br />
-                <img src="~@/assets/profilbild.png" alt="Avatar">
+                <img src="~@/assets/profilbild.png" alt="Avatar"> 
+  
                 <h5>{{member.role}}</h5>
             </b-card>
 

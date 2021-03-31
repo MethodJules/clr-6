@@ -1,6 +1,6 @@
 <!-- Component for Analysis, isn't used currently -->
 <template>
-    <div class="home">
+    <div>
         <h1>
             Analysis
         </h1>

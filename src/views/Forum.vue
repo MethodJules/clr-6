@@ -1,6 +1,6 @@
 <!-- Startseite des Forums, Übersicht-->
 <template>
-    <div class="home">
+    <div class="scroller">
         <h1>Welcome to the Forum</h1>
         <!-- Show all Categories of the forum, import Categorylist-Component -->
         <CategoryList :categories="categories" />
@@ -27,4 +27,5 @@
     h1 {
         color: #c93e37;
     }
+
 </style>

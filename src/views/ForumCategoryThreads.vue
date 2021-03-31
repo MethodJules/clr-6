@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="scroller">
         <div class="col-full push-top">
             <div class="forum-header">
                 <div class="forum-details">

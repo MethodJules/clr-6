@@ -5,8 +5,6 @@
         <b> Kollaboratives Literarurreview: </b>
         <br>
         <b> Hildesheimer Ansatz </b>
-
-
         <div slot="extension">
         <!-- generate each node around the circle, steps of an literature review-->
             <z-spot v-for="(el, index) in elements"

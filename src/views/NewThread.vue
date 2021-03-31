@@ -1,7 +1,7 @@
 <!-- Create new Thread Component-->
 <template>
-    <div class="home">
-        <div class="home">
+
+        <div>
             <h1>Create New Thread</h1>
             <div class="scroll">
                 <!-- New Thread Editor -->
@@ -11,7 +11,6 @@
             </div>
         </div>
 
-    </div>
 </template>
 
 <script>

@@ -1,5 +1,6 @@
+<!--Mail Component-->
 <template>
-    <div class="home">
+    <div class="scroller">
         <v-btn class="addButton" @click="openWriteEmail"> Write Email </v-btn>
 
         <b-container fluid class="formatView">
@@ -336,8 +337,6 @@
 
 
 <style scoped> 
-    .home {
-    }
     .hoverdItem:hover{
         background: lightgrey;
     }
