@@ -45,8 +45,8 @@ import TemplateButtons from './TemplateButtons.vue'
     async mounted() {
       await this.$store.dispatch('documentation/loadDocusFromBackend')
       const doc = this.$store.state.documentation.documentations
-      console.log(doc)
-      console.log(typeof(doc))
+      //console.log(doc)
+      //console.log(typeof(doc))
       this.documentationList = doc
   },
   }

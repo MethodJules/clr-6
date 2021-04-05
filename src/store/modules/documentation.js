@@ -13,11 +13,11 @@ const actions = {
                 //console.log(data)
                 let documentations = [];
                 for (var i in data) {
-                    console.log(i)
+                    //console.log(i)
                     documentations.push({idd: data[i].attributes.id, title: data[i].attributes.field_title, documentation: data[i].attributes.field_documentationtext})
                 }
 
-                console.log(documentations)
+                //console.log(documentations)
                 commit('SAVE_DOCUMENTATION', documentations);
                 //commit('SAVE_DOCUMENTATION', documentation)
             }).catch(error =>{
@@ -71,7 +71,7 @@ const mutations = {
             //console.log(state)
         });
         */
-        console.log(documentations)
+        //console.log(documentations)
         state.documentations = documentations
     }
 }
