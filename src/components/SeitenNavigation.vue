@@ -12,9 +12,9 @@
                           <br>
 
                                 <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
-                                <b-link :disabled=isDisabled[0] :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe bilden'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
+                                <b-link :disabled=isDisabled[0] :to="{name: 'PhaseTemplate', params: { phase_id: 1}}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
                                 <b-link :disabled=isDisabled[1]  :to="{name: 'Documentation', params: { phase: 'Ziel'}}" class="btn btn-outline-dark btn-block mb-2">Ziel</b-link>
-                                <b-link :disabled=isDisabled[2]  :to="{name: 'PhaseTemplate', params: { phase: 'Literatur'}}" class="btn btn-outline-dark btn-block mb-2">Literatur</b-link>
+                                <b-link :disabled=isDisabled[2]  :to="{name: 'PhaseTemplate', params: { phase_id: 2}}" class="btn btn-outline-dark btn-block mb-2">Literatur</b-link>
                                 <b-link :disabled=isDisabled[3]  :to="{name: 'PhaseTemplate', params: { phase: 'Daten'}}" class="btn btn-outline-dark btn-block mb-2">Daten</b-link>
                                 <b-link :disabled=isDisabled[4]  :to="{name: 'PhaseTemplate', params: { phase: 'Analyse'}}" class="btn btn-outline-dark btn-block mb-2">Analyse</b-link>
                                 <b-link :disabled=isDisabled[5]  :to="{name: 'PhaseTemplate', params: { phase: 'Ergebnisse'}}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse</b-link>

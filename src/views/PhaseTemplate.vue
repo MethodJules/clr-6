@@ -1,7 +1,8 @@
 <template>
     <div id="phase">
         <b-container fluid>
-            <h2>Phase: {{this.phase}}</h2>
+            <h2>{{phaseId}}</h2>
+            <h2>Phase: {{xphase.phase_name}}</h2>
             <b-row>
                 <b-col cols="10">
                 </b-col>
@@ -54,14 +55,14 @@ import Assistent from '@/components/Assistent.vue'
 
 export default {
 
-    props: {
-        phase: String
-    },
+    //props: {
+    //    phase: String
+    //},
 
 
     data() {
         return {
-
+            phaseId: this.$route.params.phase_id
         }
     },
 
@@ -78,11 +79,19 @@ export default {
 
     },
 
-    computed: {
-        routing_name() {
-            return this.phase;
+    mounted() {
+        console.log(this.$store.state.phases)
+    },
+
+    computed: { 
+        xphase() {
+            return this.$store.state.phases.phases.find(
+                phase => phase.phase_id === this.$route.params.phase_id
+            );
         }
-    }
+    },
+
+   
 
 
 }

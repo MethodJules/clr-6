@@ -28,7 +28,7 @@
         </b-col>
 
         <b-col cols="8" class="mitte border border-primary">
-          <router-view></router-view>
+          <router-view :key="$route.path"></router-view>
         </b-col>
 
         <b-col cols="2" class="rechteSeite">
