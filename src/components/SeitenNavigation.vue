@@ -13,12 +13,13 @@
 
                                 <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
                                 <b-link :disabled=isDisabled[0] :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe bilden'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
-                                <b-link :disabled=isDisabled[1]  :to="{name: 'PhaseTemplate', params: { phase: 'Ziel'}}" class="btn btn-outline-dark btn-block mb-2">Ziel</b-link>
-                                <b-link :disabled=isDisabled[2]  :to="{name: 'PhaseTemplate', params: { phase: 'Literatur'}}" class="btn btn-outline-dark btn-block mb-2">Literatur</b-link>
-                                <b-link :disabled=isDisabled[3]  :to="{name: 'PhaseTemplate', params: { phase: 'Daten'}}" class="btn btn-outline-dark btn-block mb-2">Daten</b-link>                         
-                                <b-link :disabled=isDisabled[4]  :to="{name: 'PhaseTemplate', params: { phase: 'Analyse'}}" class="btn btn-outline-dark btn-block mb-2">Analyse</b-link>
-                                <b-link :disabled=isDisabled[5]  :to="{name: 'PhaseTemplate', params: { phase: 'Ergebnisse'}}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse</b-link>
-                                <b-link :disabled=isDisabled[6]  :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe auflösen'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
+                                <b-link :disabled=isDisabled[1]  :to="{name: 'PhaseTemplate', params: { phase: 'Ziel'}}" class="btn btn-outline-dark btn-block mb-2">Ziel &amp; Umfang definieren</b-link>
+                                <b-link :disabled=isDisabled[2]  :to="{name: 'PhaseTemplate', params: { phase: 'Konzepte'}}" class="btn btn-outline-dark btn-block mb-2">Konzepte &amp; Definitionen identifizieren</b-link>
+                                <b-link :disabled=isDisabled[3]  :to="{name: 'PhaseTemplate', params: { phase: 'Literatur'}}" class="btn btn-outline-dark btn-block mb-2">Literatur suchen</b-link>
+                                <b-link :disabled=isDisabled[4]  :to="{name: 'PhaseTemplate', params: { phase: 'Daten'}}" class="btn btn-outline-dark btn-block mb-2">Daten extrahieren</b-link>                         
+                                <b-link :disabled=isDisabled[5]  :to="{name: 'PhaseTemplate', params: { phase: 'Analyse'}}" class="btn btn-outline-dark btn-block mb-2">Literatur analysieren &amp; synthetisieren</b-link>
+                                <b-link :disabled=isDisabled[6]  :to="{name: 'PhaseTemplate', params: { phase: 'Ergebnisse'}}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse kommunizieren</b-link>
+                                <b-link :disabled=isDisabled[7]  :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe auflösen'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
                                 <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
 
    
@@ -26,14 +27,15 @@
         <b-dropdown text="Phasen abschließen" class="m-2">
                 <b-dropdown-item v-on:click="phaseAbschließen(0)">"Gruppe bilden" abschließen</b-dropdown-item>
                 <b-dropdown-item v-on:click="phaseAbschließen(1)">"Ziel" abschließen</b-dropdown-item>
-                <b-dropdown-item v-on:click="phaseAbschließen(2)">"Literatur" abschließen</b-dropdown-item>
-                <b-dropdown-item v-on:click="phaseAbschließen(3)">"Daten" abschließen</b-dropdown-item>
-                <b-dropdown-item v-on:click="phaseAbschließen(4)">"Analyse" abschließen</b-dropdown-item>
-                <b-dropdown-item v-on:click="phaseAbschließen(5)">"Ergebnisse" abschließen</b-dropdown-item>
-                <b-dropdown-item v-on:click="phaseAbschließen(6)">"Gruppe auflösen" abschließen</b-dropdown-item>
+                <b-dropdown-item v-on:click="phaseAbschließen(2)">"Konzepte" abschließen</b-dropdown-item>
+                <b-dropdown-item v-on:click="phaseAbschließen(3)">"Literatur" abschließen</b-dropdown-item>
+                <b-dropdown-item v-on:click="phaseAbschließen(4)">"Daten" abschließen</b-dropdown-item>
+                <b-dropdown-item v-on:click="phaseAbschließen(5)">"Analyse" abschließen</b-dropdown-item>
+                <b-dropdown-item v-on:click="phaseAbschließen(6)">"Ergebnisse" abschließen</b-dropdown-item>
+                <b-dropdown-item v-on:click="phaseAbschließen(7)">"Gruppe auflösen" abschließen</b-dropdown-item>
         </b-dropdown>
 
-                <b-button v-b-modal.modal-1 size="lg"  class="mb-2"> 
+                <b-button v-b-modal.modal-seitennavi size="lg"  class="mb-2"> 
                 </b-button>
                 <b-modal id="modal-seitennavi" title="Phase abschließen">
                 <p>Der Beendigung von Phase: "Gruppe bilden" haben {{voted}}, von n Gruppenmitgliedern zugestimmt</p>

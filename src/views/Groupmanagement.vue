@@ -1,24 +1,69 @@
 <template>
     <div class="home">
-        <h1> Gruppenverwaltung </h1>
+        <b-container>
+        <b-row>
+        <h2> Projektgruppe {{projectGroup.title}}</h2>
+        </b-row>
+        <br>
+        <h4>Gruppenadministrator:</h4>
+        <p>{{projectGroup.admin}}</p>
+        
+        <h4>Gruppenmitglieder</h4>
+       
+        <div class=" border border-dark" v-for="member in projectGroup.member" :key="member.index">
+           
+            <b-row>
+                <b-col>
+                    <p>{{member}}</p>
+                </b-col>
+                <b-col> 
+                    <p>{{member.role}} Admin</p>
+                </b-col>               
+                <b-col> 
+                    <b-button @click="deleteMember(member)"> X </b-button>
+  
+                </b-col>
+                
+            </b-row>
 
-        <div>
-            <b-card class="groupCard" v-for="(member, index) in members.members" :key="index">
-                <h3>{{member.name}}</h3>
-                <b-button @click="deleteMember(member)"> X </b-button>
-                <br />
-                <img src="~@/assets/profilbild.png" alt="Avatar">
-                <h5>{{member.role}}</h5>
-            </b-card>
-
-            <b-card class="groupCard">
-                <router-link to="newMember" tag="div">
-                    <div class="w3-container w3-center">
-                        <h3>Neues Mitglied hinzuf&uuml;gen</h3>
-                    </div>
-                </router-link>
-            </b-card>
         </div>
+        <br>
+            <h4>Betreuer</h4>
+            <p>{{projectGroup.betreuer}}</p>
+
+        
+
+        <br>
+
+        <b-button id="show-btn" @click="$bvModal.show('bv-modal-example')"> Neues Mitglied Hinzufügen </b-button>
+
+
+             
+                
+        <b-modal id="bv-modal-example" hide-footer>
+                <template #modal-title>
+                   Gruppenmitglieder hinzufügen
+                </template>     
+                <label for="selected">Benutzer/in suchen </label>
+                        <div container>
+                            <b-form-select v-model="selected" :options="newMemberList"></b-form-select>
+                        
+                        <input v-model="newMember" type ="text" placeholder="Geben Sie den Namen manuell ein!">
+
+                        </div>
+                        
+
+                        
+                        <b-button @click="$bvModal.hide('bv-modal-example')">Abbrechen</b-button>
+                        <b-button @click="speichern()">
+                        Speichern
+                        </b-button>
+                   
+                    
+                   
+                
+        </b-modal>
+        </b-container>
     </div>
 </template>
 
@@ -26,29 +71,66 @@
 
 import { mapState } from 'vuex';
 
+
     export default {
     name: 'Home',
     components: {},
     data() {
         return {
+            selected: null,
+            projectGroup: {
+                title: 'Platzhalter',
+                //liste aus personenobjekten {name, rolle}
+                member: ['Max', 'Person', 'Schuh'],
+                admin: 'Max',
+                betreuer: 'Max', 
+            },
+            //aus backend holen - liste mit objekten
+            newMemberList: ['person1', 'person2', 'person3'],
+            newMember: ""
+            
+            
         }
+        
     },
     methods: {
         deleteMember: function (member) {
             this.$store.dispatch('members/deleteMembers', member)
 
-        }
         },
+     speichern () {
+
+            if(this.selected!=null){
+                 this.projectGroup.member.push(this.selected)
+            }
+            
+
+           console.log(this.projectGroup)
+
+
+            //this.$store.dispatch('members/addMember', member)
+
+           // this.$router.push({ name: 'Groupmanagement'})
+
+            
+        }
+    },
+
         computed: {
             ...mapState({
                 members: state => state.members,
             })
-        }
+        },
+
+   
 
 }
 </script>
 
 <style scoped>
+* {
+    color: black;
+}
 
     h1 {
         text-align: center;
@@ -65,14 +147,14 @@ import { mapState } from 'vuex';
     }
 
     button {
-        background-color: #c93e37 !important;
-        border-color: #c93e37 !important;
+        
+       
         float: right;
     }
 
     .groupCard {
-        background-color: #c93e37;
-        color: white;
+       
+        
         margin: 5px;
         width: 30%;
         text-align: center;
@@ -82,8 +164,6 @@ import { mapState } from 'vuex';
         display: inline-block;
     }
 
-    img {
-        width: 60%;
-    }
+    
 
 </style>

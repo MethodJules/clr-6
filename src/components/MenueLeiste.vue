@@ -15,7 +15,7 @@
                                 <b-nav-item to="/forum">Projektforum</b-nav-item>
                             </b-navbar-nav>
                             <b-navbar-nav>
-                                <b-nav-item to="/group">Gruppenmanagement</b-nav-item>
+                                <b-nav-item to="/groupmanagement">Gruppenmanagement</b-nav-item>
                             </b-navbar-nav>
                             <b-navbar-nav>
                                 <b-nav-item to="/settings">Einstellungen</b-nav-item>
