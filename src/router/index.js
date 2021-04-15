@@ -105,7 +105,11 @@ const routes = [
         name: 'Documentation',
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
     },
-
+    {
+        path: '/project',
+        name: 'Projektbeschreibung',
+        component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
+    },
     {
         path: '/reflexion',
         name: 'Reflexion',
