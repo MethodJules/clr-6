@@ -105,12 +105,23 @@ const routes = [
         name: 'Documentation',
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
     },
-
+    {
+        path: '/project',
+        name: 'Projektbeschreibung',
+        component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
+    },
     {
         path: '/reflexion',
         name: 'Reflexion',
         props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
+    },
+
+    {
+        path: '/group',
+        name: 'Groupmanagement',
+        props: true,
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
 
     

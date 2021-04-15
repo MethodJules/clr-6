@@ -64,6 +64,68 @@
                 
         </b-modal>
         </b-container>
+        <br>
+
+        
+        <b-row>
+                <b-col col="2">
+                </b-col>
+                <b-col col="3">
+                <b-button id="show-btn" @click="$bvModal.show('bv-modal-example')"> Neues Mitglied Hinzufügen </b-button>
+                </b-col>
+                <b-col col="3">
+                     <b-button>Admin-Rechte entfernen</b-button>
+                </b-col>
+                <b-col col="3">
+                     <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>
+                </b-col>
+                <b-col col="2">
+                </b-col>
+                
+            </b-row>
+            <b-modal id="leave_group" title="Bist du dir sicher?">
+                <b-row>
+                    <p>Du kannst nicht mehr auf das Projekt zugreifen, wenn du die Gruppe verlaesst.</p>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <b-button>Nein</b-button>
+                    </b-col>
+                    <b-col>
+                        <b-button>Ja</b-button>
+                    </b-col>
+
+                </b-row>
+            </b-modal>
+        
+
+        
+                
+        <b-modal id="bv-modal-example" hide-footer>
+                <template #modal-title>
+                   Gruppenmitglieder hinzufügen
+                </template>
+
+                
+                    
+                <label for="input-with-list">Benutzer/in suchen </label>
+                        <div container>
+                        <b-form-input list="input-list" v-model = "newMember" id="input-with-list"> </b-form-input>
+                        
+                        <b-form-datalist id="input-list" :options="options"></b-form-datalist>
+                        </div>
+
+                        
+                        <b-button @click="$bvModal.hide('bv-modal-example')">Abbrechen</b-button>
+                        <b-button @click="speichern()">
+                        Speichern
+                        </b-button>
+                   
+                    
+                   
+                
+        </b-modal>
+        </b-container>
     </div>
 </template>
 

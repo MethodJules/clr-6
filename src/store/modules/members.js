@@ -1,9 +1,9 @@
 const state = () => ({
     members: [
-        { name: 'Member 1', role: 'Admin', img: '~@/assets/profilbild.png' },
-        { name: 'Member 2', role: 'member', img: '~@/assets/profilbild.png' },
-        { name: 'Member 3', role: 'member', img: '~@/assets/profilbild.png' },
-        { name: 'Member 4', role: 'member', img: '~@/assets/profilbild.png' }
+        { name: 'Gruppenadministrator', role: 'Admin'},
+        { name: 'Gruppenmitglieder', role: 'member'},
+        { name: 'Betreuer/in', role: 'member'}, 
+        
     ]
 })
 

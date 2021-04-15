@@ -1,28 +1,22 @@
 <template>
     <div class="home">
-        <h1>Create New Member</h1>
+        <h5>Gruppenmitglied hinzufügen</h5>
         <form @submit.prevent="save">
             <div class="form-group">
-                Member:
+                Benutzer/in:
                 <input name=""
                        id=""
                        class="form-input"
                        v-model="member" />
-                Role:
-                <input name=""
-                       id=""
-                       class="form-input"
-                       v-model="role" />
-                Image:
-                <input name=""
-                       id=""
-                       class="form-input"
-                       v-model="img" />
+                
+               
+
+                
 
             </div>
 
             <div class="form-actions">
-                <button class="btn-red">Add Member</button>
+                <button class>Add Member</button>
             </div>
         </form>
     </div>

@@ -30,46 +30,25 @@
                 <table>
                   <tr>
                     <td>
-                      <label for="titel">Titel: </label>
+                      <label for="titel">Projekttitel: </label>
                     </td>
+                  </tr>
+                  <tr>
                     <td>
                       <input
                         id="titel"
                         v-model="project.titel"
                         type="text"
                         placeholder="hier eingeben"
-                      />
+                      >
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <label for="kurzbeschreibung">Kurzbeschreibung: </label>
-                    </td>
-                    <td>
-                      <input
-                        id="kurzbeschreibung"
-                        v-model="project.kurzbeschreibung"
-                        type="text"
-                        placeholder="hier eingeben"
-                      />
+                      <label for="titel">Betreuer: </label>
                     </td>
                   </tr>
                   <tr>
-                    <td>
-                      <label for="titel">Name des Anlegenden: </label>
-                    </td>
-                    <td>
-                      <input
-                        v-model="project.nameDesAnlegenden"
-                        type="text"
-                        placeholder="hier eingeben"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label for="titel">Betreuender Dozent: </label>
-                    </td>
                     <td>
                       <input
                         v-model="project.bedreuenderDozent"
@@ -80,8 +59,10 @@
                   </tr>
                   <tr>
                     <td>
-                      <label for="titel">Externe Mitwirkende: </label>
+                      <label for="titel">Externe Partner*innen(bitte mit Komma trennen) </label>
                     </td>
+                  </tr>
+                  <tr>
                     <td>
                       <input
                         v-model="project.externeMitwirkende"
@@ -92,8 +73,10 @@
                   </tr>
                   <tr>
                     <td>
-                      <label for="titel">Schlagwörter: </label>
+                      <label for="titel">Schlagwörter(bitte mit Komma trennen) </label>
                     </td>
+                  </tr>
+                  <tr>
                     <td>
                       <input
                         v-model="project.schlagwörter"
@@ -102,8 +85,23 @@
                       />
                     </td>
                   </tr>
+                  <tr>
+                    <td>
+                      <label for="kurzbeschreibung">Projektbeschreibung: </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <input
+                        id="kurzbeschreibung"
+                        v-model="project.kurzbeschreibung"
+                        type="text"
+                        placeholder="hier eingeben"
+                      />
+                    </td>
+                  </tr>
                 </table>
-                <b-button @click="newProject()">Speichern</b-button>
+                <b-button @click="newProject()">Projekt anlegen</b-button>
               </b-modal>
 
               <b-button size="lg" v-b-modal.create_project>+</b-button>
@@ -120,6 +118,10 @@
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 export default {
     name: "ProjectList",
+    props:{
+      bedreuenderDozent: String
+    },
+    
   components: {
     ReflexionAuswahl,
   },
@@ -128,20 +130,18 @@ export default {
       project: {
         titel: "",
         kurzbeschreibung: "",
-        nameDesAnlegenden: "",
         bedreuenderDozent: "",
         externeMitwirkende: "",
         schlagwoerter: "",
         projectId: 0,
-        //TODO: array in backend dafür machen schlagwörter: [],
-        //TODO: array in backend dafür machen betreuenderDozent: [],
-        //TODO: array in backend dafür machen externeMitwirkende: [],
+        /* TODO: array in backend dafür machen schlagwörter: [],
+        TODO: array in backend dafür machen betreuenderDozent: [],
+        TODO: array in backend dafür machen externeMitwirkende: [], */
       },
 
       projectList: [{
                   titel: "Testtitel",
         kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
-        nameDesAnlegenden: "Marcel",
         bedreuenderDozent: "Julien, Maren",
         externeMitwirkende: "Nithusha, Aylin",
         schlagwoerter: "test, projektliste, projekte",
@@ -156,7 +156,6 @@ export default {
       var addProj={
             titel: "",
             kurzbeschreibung: "",
-            nameDesAnlegenden: "",
             bedreuenderDozent: "",
             externeMitwirkende: "",
             schlagwoerter: "",
@@ -164,7 +163,6 @@ export default {
       }
       addProj.titel=this.project.titel
       addProj.kurzbeschreibung=this.project.kurzbeschreibung
-      addProj.nameDesAnlegenden=this.project.nameDesAnlegenden
       addProj.bedreuenderDozent=this.project.bedreuenderDozent
       addProj.externeMitwirkende=this.project.externeMitwirkende
       addProj.schlagwoerter=this.project.schlagwoerter

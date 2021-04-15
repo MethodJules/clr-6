@@ -21,7 +21,6 @@ Vue.use(Chat)
 Vue.use(zircle)
 
 Vue.use(Vuex);
-
 new Vue({
     router,
     vuetify,
