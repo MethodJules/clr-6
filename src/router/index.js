@@ -90,9 +90,9 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
     {
-        path: '/phasetemplate',
+        path: '/phasetemplate/:phase_id',
         name: 'PhaseTemplate',
-        props: true,
+        //props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {
@@ -126,12 +126,12 @@ const routes = [
 
     
 
-   
 
 
-    
 
-    
+
+
+
 
 
 

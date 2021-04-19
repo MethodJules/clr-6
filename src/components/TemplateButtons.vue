@@ -1,9 +1,15 @@
 <template>
     <b-row>
                 <b-col cols="2">
+<<<<<<< HEAD
                     
                     <b-link :to="{name: 'Home'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
                     
+=======
+
+                    <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
+
+>>>>>>> debu_error_api
                 </b-col>
 
                 <b-col cols="7">
@@ -69,6 +75,7 @@ export default {
     },
     data() {
         return {
+<<<<<<< HEAD
             lastEntry_id: 2,
             newTodo: "",
             TodoList: "",
@@ -95,6 +102,9 @@ export default {
         // Anzahl der nicht erledigten Todos werden ausgegeben
         übrig() {
             return this.todos.filter(todo => !todo.erledigt).length;
+=======
+
+>>>>>>> debu_error_api
         }
     },
 
@@ -108,12 +118,13 @@ export default {
                 documentationText: this.inDoku.documentationText
                // title: this.inDoku.title
             }
-            
+
             this.$store.dispatch('documentation/createDocumentation', ausgabe)
             //this.documentationText.push(ausgabe)
-            
+
             //this.docus.push(ausgabe)
             this.documentationText= ' '
+<<<<<<< HEAD
         },
 
         /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
@@ -129,10 +140,14 @@ export default {
         },
 
       
+=======
+      },
+
+>>>>>>> debu_error_api
     },
     mounted() {
-    console.log(this.inDoku)
-    
+    //console.log(this.inDoku)
+
   }
 }
 </script>
