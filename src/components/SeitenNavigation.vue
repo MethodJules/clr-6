@@ -22,8 +22,8 @@
                                 <b-link :disabled=isDisabled[7]  :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe auflösen'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
                                 <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
 
-   
-  
+
+
         <b-dropdown text="Phasen abschließen" class="m-2">
                 <b-dropdown-item v-on:click="phaseAbschließen(0)">"Gruppe bilden" abschließen</b-dropdown-item>
                 <b-dropdown-item v-on:click="phaseAbschließen(1)">"Ziel" abschließen</b-dropdown-item>
@@ -44,9 +44,9 @@
                 <p></p>
 
 
-                
-                
-                
+
+
+
 
                 </b-modal>
 
@@ -76,9 +76,9 @@
             // in welchem content type speichern? phasetemplate oder Gruppenbereich?
             // hier checken ob phase abgeschlossen werden kann ->  eine phase kann nur abgeschlossen werden wenn die vorherige abgeschlossen wurde
             console.log(phase)
-           
-          
-            
+
+
+
         },
         /**Phase wird hier wieder geöffnet, wenn erfolgreich über die Reaktivierung abgestimmt wurde */
         phaseWiederOeffnen(phase) {
@@ -92,8 +92,8 @@
                var ausgabe = "Bitte erst die letzte abgeschlossene Phase wieder öffnen"
                console.log(ausgabe)
            }
-           
-            
+
+
         },
         /**parameter: Int
          * Ein Button der eine Phase verlinkt wird hier deaktiviert. Ist der Button bereits aktiviert, wird die Phase reaktiviert.

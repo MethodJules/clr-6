@@ -1,6 +1,9 @@
 <template>
     <b-row>
                 <b-col cols="2">
+
+                    <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
+
                     
                     <b-link :to="{name: 'Home'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
                     
@@ -108,10 +111,10 @@ export default {
                 documentationText: this.inDoku.documentationText
                // title: this.inDoku.title
             }
-            
+
             this.$store.dispatch('documentation/createDocumentation', ausgabe)
             //this.documentationText.push(ausgabe)
-            
+
             //this.docus.push(ausgabe)
             this.documentationText= ' '
         },
@@ -131,8 +134,8 @@ export default {
       
     },
     mounted() {
-    console.log(this.inDoku)
-    
+    //console.log(this.inDoku)
+
   }
 }
 </script>

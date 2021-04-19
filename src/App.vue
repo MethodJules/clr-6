@@ -28,9 +28,7 @@
         </b-col>
 
         <b-col cols="8" class="mitte border border-primary">
-          
-          <router-view></router-view>
-          
+          <router-view :key="$route.path"></router-view>
         </b-col>
         <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
