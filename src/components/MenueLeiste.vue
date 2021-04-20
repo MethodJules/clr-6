@@ -23,9 +23,6 @@
                             <b-navbar-nav>
                                 <b-nav-item to="/projectlist">Projektliste</b-nav-item>
                             </b-navbar-nav>
-                            <b-navbar-nav>
-                                <b-nav-item to="/documentation">Dokumentation</b-nav-item>
-                            </b-navbar-nav>
                         </b-collapse>
                     </b-navbar>
                 </b-row>
