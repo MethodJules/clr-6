@@ -27,6 +27,8 @@
           <b-col>
             <div>
               <b-modal id="create_project" title="Projekt Anlegen">
+                <b-form @submit.stop.prevent="onSubmit">
+                  
                 <table>
                   <tr>
                     <td>
@@ -38,11 +40,16 @@
                       <input
                         id="titel"
                         v-model="project.titel"
+                        
                         type="text"
+                        
                         placeholder="hier eingeben"
                       >
+                      
                     </td>
+                    
                   </tr>
+                  
                   <tr>
                     <td>
                       <label for="titel">Betreuer: </label>
@@ -101,7 +108,11 @@
                     </td>
                   </tr>
                 </table>
-                <b-button @click="newProject()">Projekt anlegen</b-button>
+                 
+                </b-form>
+                <b-button type="submit" variant="primary">Projekt anlegen</b-button>
+                
+
               </b-modal>
 
               <b-button size="lg" v-b-modal.create_project>+</b-button>
@@ -115,8 +126,11 @@
 </template>
 
 <script>
+import { validationMixin } from "vuelidate";
+import { required, minLength } from "vuelidate/lib/validators";
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 export default {
+
     name: "ProjectList",
     props:{
       bedreuenderDozent: String
@@ -125,8 +139,10 @@ export default {
   components: {
     ReflexionAuswahl,
   },
+  mixins: [validationMixin],
   data() {
     return {
+      
       project: {
         titel: "",
         kurzbeschreibung: "",
@@ -149,10 +165,60 @@ export default {
       }
 
       ],
+
+      form: {
+        titel: null,
+        kurzbeschreibung: null,
+        bedreuenderDozent: null,
+        externeMitwirkende: null,
+        schlagwoerter: null,
+
+        
+      }
     };
   },
+
+  validations: {
+    form: {
+      titel: {
+        required
+        
+      },
+      
+      bedreuenderDozent: {
+        required,
+        minLength: minLength(3)
+      },
+      externeMitwirkende: {
+        required,
+        minLength: minLength(3)
+      },
+      schlagwoerter: {
+        required,
+        minLength: minLength(3)
+      }
+
+    }
+  },
+      
+  
+
   methods: {
-    newProject() {
+
+    validateState(titel) {
+      const { $dirty, $error } = this.$v.form[titel];
+      return $dirty ? !$error : null;
+    },
+
+   
+
+    onSubmit() {
+      this.$v.form.$touch();
+      if (this.$v.form.$anyError) {
+        return;
+      }
+
+      alert("Form submitted!");
       var addProj={
             titel: "",
             kurzbeschreibung: "",
@@ -168,7 +234,13 @@ export default {
       addProj.schlagwoerter=this.project.schlagwoerter
       addProj.projectId= this.projectList.length + 1
       this.projectList.push(addProj);
-    },
-  },
-};
+
+      
+
+
+    }
+  }
+}
+   
+  
 </script>
