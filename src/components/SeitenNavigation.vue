@@ -12,14 +12,14 @@
                           <br>
 
                                 <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
-                                <b-link :disabled=isDisabled[0] :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe bilden'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
-                                <b-link :disabled=isDisabled[1]  :to="{name: 'PhaseTemplate', params: { phase: 'Ziel'}}" class="btn btn-outline-dark btn-block mb-2">Ziel &amp; Umfang definieren</b-link>
-                                <b-link :disabled=isDisabled[2]  :to="{name: 'PhaseTemplate', params: { phase: 'Konzepte'}}" class="btn btn-outline-dark btn-block mb-2">Konzepte &amp; Definitionen identifizieren</b-link>
-                                <b-link :disabled=isDisabled[3]  :to="{name: 'PhaseTemplate', params: { phase: 'Literatur'}}" class="btn btn-outline-dark btn-block mb-2">Literatur suchen</b-link>
-                                <b-link :disabled=isDisabled[4]  :to="{name: 'PhaseTemplate', params: { phase: 'Daten'}}" class="btn btn-outline-dark btn-block mb-2">Daten extrahieren</b-link>                         
-                                <b-link :disabled=isDisabled[5]  :to="{name: 'PhaseTemplate', params: { phase: 'Analyse'}}" class="btn btn-outline-dark btn-block mb-2">Literatur analysieren &amp; synthetisieren</b-link>
-                                <b-link :disabled=isDisabled[6]  :to="{name: 'PhaseTemplate', params: { phase: 'Ergebnisse'}}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse kommunizieren</b-link>
-                                <b-link :disabled=isDisabled[7]  :to="{name: 'PhaseTemplate', params: { phase: 'Gruppe auflösen'}}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
+                                <b-link :disabled=isDisabled[0] :to="{name: 'PhaseTemplate', params: { phase_id: 0}}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
+                                <b-link :disabled=isDisabled[1]  :to="{name: 'PhaseTemplate', params: { phase_id: 1}}" class="btn btn-outline-dark btn-block mb-2">Ziel &amp; Umfang definieren</b-link>
+                                <b-link :disabled=isDisabled[2]  :to="{name: 'PhaseTemplate', params: { phase_id: 2}}" class="btn btn-outline-dark btn-block mb-2">Konzepte &amp; Definitionen identifizieren</b-link>
+                                <b-link :disabled=isDisabled[3]  :to="{name: 'PhaseTemplate', params: { phase_id: 3}}" class="btn btn-outline-dark btn-block mb-2">Literatur suchen</b-link>
+                                <b-link :disabled=isDisabled[4]  :to="{name: 'PhaseTemplate', params: { phase_id: 4}}" class="btn btn-outline-dark btn-block mb-2">Daten extrahieren</b-link>                         
+                                <b-link :disabled=isDisabled[5]  :to="{name: 'PhaseTemplate', params: { phase_id: 5}}" class="btn btn-outline-dark btn-block mb-2">Literatur analysieren &amp; synthetisieren</b-link>
+                                <b-link :disabled=isDisabled[6]  :to="{name: 'PhaseTemplate', params: { phase_id: 6}}" class="btn btn-outline-dark btn-block mb-2">Ergebnisse kommunizieren</b-link>
+                                <b-link :disabled=isDisabled[7]  :to="{name: 'PhaseTemplate', params: { phase_id: 7}}" class="btn btn-outline-dark btn-block mb-2">Gruppe auflösen</b-link>
                                 <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
 
 

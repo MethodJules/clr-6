@@ -12,6 +12,7 @@ import tool from './modules/tool'
 import todo from './modules/todo'
 import assistent from './modules/assistent'
 import phases from './modules/phases'
+import project from './modules/project'
 
 
 Vue.use(Vuex)
@@ -21,6 +22,7 @@ export default new Vuex.Store({
     modules: {
        items,
        concepts,
+       project,
        concept_map,
        members,
        daily_scrum,

@@ -10,7 +10,11 @@
             <p style="font-weight: bold" >Projekttitel</p>
         </b-row>
         <b-row>
-            <ProjectList project.titel></ProjectList>
+            <table>
+                <tr v-for= "proj in projectList" :key="proj.projectIdd">
+                    <h3>{{proj.titel}}</h3>
+                </tr>
+          </table>
            <!-- <ProjectList projectContent[0].titel></ProjectList> -->
         </b-row>
         <b-row>
@@ -63,21 +67,22 @@
 </template>
 
 <script>
-import ProjectList from '@/views/ProjectList.vue'
+//import ProjectList from '@/views/ProjectList.vue'
 
 export default({
     name: "Projektbeschreibung",
     components: {
-        ProjectList,
+        //ProjectList,
     },
     data(){
         return{
             projectContent: []
         }
     },
-    mounted(){
-        this.ProjectList = this.$store.state.project.projectList
-        this.projectContent=this.projectList
-    }
+    mounted() {
+    this.$store.dispatch('project/loadProjectsFromBackend')
+    this.projectList = this.$store.state.project.projectList
+    
+  },
 })
 </script>
