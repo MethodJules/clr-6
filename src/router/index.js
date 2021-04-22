@@ -7,8 +7,8 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
+        name: 'Projectlist',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectList.vue')
     },
     {
         path: '/scope',
@@ -122,6 +122,11 @@ const routes = [
         name: 'Groupmanagement',
         props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },
 
     

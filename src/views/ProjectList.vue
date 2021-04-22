@@ -9,7 +9,7 @@
       >
         <b-row>
           <b-col>
-            <b-link to="/" class="btn btn-outline-dark btn-block mb-2"
+            <b-link to="/home" class="btn btn-outline-dark btn-block mb-2"
               >Dashboard</b-link
             >
           </b-col>

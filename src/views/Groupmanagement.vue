@@ -9,9 +9,9 @@
       <p>{{ projectGroup.admin }}</p>
 
       <h4>Gruppenmitglieder</h4>
-
+      <div class="border border-dark">
       <div
-        class="border border-dark"
+        
         v-for="member in projectGroup.member"
         :key="member.index"
       >
@@ -26,6 +26,7 @@
             <b-button @click="deleteMember(member)"> X </b-button>
           </b-col>
         </b-row>
+      </div>
       </div>
       <br />
       <h4>Betreuer</h4>
