@@ -47,7 +47,7 @@ const mutations ={
         
         axios(config)
             .then(function(response){
-                console.log(response)
+                 console.log(response)
             })
             .catch(function(error) {
                 console.log(error)
@@ -58,21 +58,21 @@ const mutations ={
         
         project.forEach(element => {
             const field_titel = element.attributes.field_titel;
-            console.log(field_titel)
+            //console.log(field_titel)
             const field_betreuender_dozent = element.attributes.field_betreuender_dozent;
-            console.log(field_betreuender_dozent)
+            //console.log(field_betreuender_dozent)
             const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
-            console.log(field_externe_mitwirkende)
+            //console.log(field_externe_mitwirkende)
             const field_schlagworter = element.attributes.field_schlagworter;
-            console.log(field_schlagworter)
+            //console.log(field_schlagworter)
             const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
-            console.log(field_kurzbeschreibung)
+            //console.log(field_kurzbeschreibung)
             const field_id = element.id;
-            console.log(element.id)
+            //console.log(element.id)
             const field_title = element.attributes.title;
-            console.log(element.id)
+            //console.log(element.id)
             state.projectList.push( { titel: field_titel, betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title })
-            console.log(state)
+            //console.log(state)
         });
     }
 }

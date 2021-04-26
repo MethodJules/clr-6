@@ -99,7 +99,7 @@ export default {
             betreuenderDozent: this.project.betreuenderDozent,
             externeMitwirkende: this.project.externeMitwirkende,
             schlagworter: this.project.schlagworter,
-           
+            projectIdd: 0
       }
       
       this.$store.dispatch('project/createProject', this.project)
