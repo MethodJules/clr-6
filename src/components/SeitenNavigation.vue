@@ -12,7 +12,7 @@
                           <br>
 
                                 <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
-                                <b-link :disabled=isDisabled[0] :to="{name: 'PhaseTemplate', params: { phase_id: 0}}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
+                                <b-link :disabled=isDisabled[0]  :to="{name: 'PhaseTemplate', params: { phase_id: 0}}" class="btn btn-outline-dark btn-block mb-2">Gruppe bilden</b-link>
                                 <b-link :disabled=isDisabled[1]  :to="{name: 'PhaseTemplate', params: { phase_id: 1}}" class="btn btn-outline-dark btn-block mb-2">Ziel &amp; Umfang definieren</b-link>
                                 <b-link :disabled=isDisabled[2]  :to="{name: 'PhaseTemplate', params: { phase_id: 2}}" class="btn btn-outline-dark btn-block mb-2">Konzepte &amp; Definitionen identifizieren</b-link>
                                 <b-link :disabled=isDisabled[3]  :to="{name: 'PhaseTemplate', params: { phase_id: 3}}" class="btn btn-outline-dark btn-block mb-2">Literatur suchen</b-link>

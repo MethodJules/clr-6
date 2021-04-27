@@ -1,67 +1,124 @@
 <template>
   <div id="app">
-    <b-container fluid>
-      <b-row class="obereLeiste">
-        <b-col class="border border-dark">
-          <MenueLeiste />
-        </b-col>
-      </b-row>
+    <div v-if="validCredential != true">
+      <div class="mx-auto" style="width: 50rem;">
+      <b-container >
+        <b-row align-v="center">
+          <b-col>
+            <b-card  class="login">
+              <b-form-group>
+              <b-tabs content-class="mt-3">
+                <!-- Tab 1 -->
+                <b-tab title="Login">
+                  <table>
+                    <tr>
+                      <td>
+                        <label for="zugangsKennung" class="mr-1">Zugangskennung</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="zugangsKennung"
+                          id="zugangskennung"
+                          type="text"
+                          placeholder=""
+                          class="form-control"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="password" class="mr-1 mt-1">Passwort</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="passwort"
+                          id="password"
+                          type="password"
+                          placeholder=""
+                          class="form-control mt-1"
+                        />
+                      </td>
+                    </tr>
+                  </table>
 
-      <b-row>
-        <b-col class="linkeSeite" cols="2">
-          <b-row>
-            <b-col class="border border-dark">
-              <TodoList />
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col> </b-col>
-            <b-col>
-              <br />
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col class="border border-dark">
-              <Kalender />
-            </b-col>
-          </b-row>
-        </b-col>
+                  <b-button @click="login()">Login</b-button>
+                </b-tab>
 
-        <b-col cols="8" class="mitte border border-primary">
-          <router-view :key="$route.path"></router-view>
-        </b-col>
-        <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
+                <b-tab title="Registrierung">
+                  <h5>Registriere dich hier mit deinem Uni-Account</h5>
+                  <p>
+                    Falls du Hilfe benötigst, wende dich an
+                    mail@uni-hildesheim.de
+                  </p>
+                  <b-button @click="registrieren()">Registrieren</b-button>
+                </b-tab>
+              </b-tabs>
+              </b-form-group>
+            </b-card>
+          </b-col>
+        </b-row>
+      </b-container>
+      </div>
+    </div>
+    <div v-else>
+      <b-container fluid>
+        <b-row class="obereLeiste">
+          <b-col class="border border-dark">
+            <MenueLeiste />
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col class="linkeSeite" cols="2">
+            <b-row>
+              <b-col class="border border-dark">
+                <TodoList />
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col> </b-col>
+              <b-col>
+                <br />
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col class="border border-dark">
+                <Kalender />
+              </b-col>
+            </b-row>
+          </b-col>
+
+          <b-col cols="8" class="mitte border border-primary">
+            <router-view :key="$route.path"></router-view>
+          </b-col>
+          <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
-        <b-col v-if="!isChanged" cols="2" class="rechteSeite">
-          <b-row>
-            <b-col class="border border-dark">
-              <SeitenNavigation />
-            </b-col>
-          </b-row>
-        
+          <b-col v-if="!isChanged" cols="2" class="rechteSeite">
+            <b-row>
+              <b-col class="border border-dark">
+                <SeitenNavigation />
+              </b-col>
+            </b-row>
 
-          <b-row class="chat">
-            <b-col class="border border-dark">
-              <Chat />
-            </b-col>
-          </b-row>
-          <b-row class="postfach">
-            <b-col class="border border-dark">
-              <Postfach />
-            </b-col>
-          </b-row>
-        </b-col>
-        <b-col v-else>
-        </b-col>
-      </b-row>
+            <b-row class="chat">
+              <b-col class="border border-dark">
+                <Chat />
+              </b-col>
+            </b-row>
+            <b-row class="postfach">
+              <b-col class="border border-dark">
+                <Postfach />
+              </b-col>
+            </b-row>
+          </b-col>
+          <b-col v-else> </b-col>
+        </b-row>
 
-      <b-row class="untereLeiste">
-        
-      </b-row>
-    </b-container>
+        <b-row class="untereLeiste"> </b-row> </b-container
+      >.
+    </div>
   </div>
 </template>
-
 
 <script>
 import SeitenNavigation from "@/components/SeitenNavigation.vue";
@@ -73,8 +130,8 @@ import Postfach from "@/components/Postfach.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
-  props:{
-    showRightMenu: Boolean
+  props: {
+    showRightMenu: Boolean,
   },
   name: "App",
   components: {
@@ -88,13 +145,14 @@ export default {
   },
   data() {
     return {
+      zugangsKennung: "",
+      passwort: "",
+      validCredential: false,
       nameState: null,
       showMenu: true,
       eintragTodo: {
         todo: "",
-        
       },
-      
 
       /* listOfToDos [
                     {todo:"Mein1", date:"20.02.2021"},
@@ -116,9 +174,37 @@ export default {
     };
   },
   methods: {
-     closeMenu(){
+    closeMenu() {
       this.showMenu = false;
-    } 
+    },
+
+    login() {
+      /*     
+      
+      anmeldedaten werden an anmeldeserver gesendet und antwort ist??
+      -> bei fehler kommt fehler message und dann eigene fehlermeldung ausgeben lassen
+      -> wenn korrekt, dann kommt bestimmte antwort -> dann valid=true
+      */
+      //hier abgleich mit daten durch api call an authentifizierungs server - login.js gleicht passwörter ab und gibt nur boolean zurück,
+      // keine pw werden zurückgegeben
+      let antwort; // = this.$store.dispatch('login/validateLoginData', zugangsKennung, passwort)
+
+      //der teil ist nur temporär
+      if (this.zugangsKennung == "Max" && this.passwort == "Musterpasswort") {
+        antwort = true;
+      }
+
+      //wenn rückgabe true, dann wird freigeschaltet, sonst wird fehlermeldung ausgegeben
+      if (antwort) {
+        this.validCredential = true;
+        //modal/popup mit message
+      } else {
+        //modal popup, fehlermeldung
+      }
+
+      console.log(this.validCredential);
+    },
+
     /* formularTodo(){
                 this.$refs['my-todo-modal'].show()
                 this.eintragTodo.date=""
@@ -143,10 +229,10 @@ export default {
                 this.$refs['my-todo-modal'].hide()
             } */
   },
-  computed:{
-    isChanged(){
-      return this.$route.name === 'ProjectList'
-    }
+  computed: {
+    isChanged() {
+      return this.$route.name === "ProjectList";
+    },
   } /* ,
         mounted() {
             this.$store.dispatch('todo/loadToDoFromBackend')
@@ -177,6 +263,11 @@ export default {
   display: table;
   margin-top: 20px;
 }
+
+.login {
+  margin-top: 30rem;
+}
+
 .obereLeiste {
   /*         width: auto;
         border: 1px solid black; */

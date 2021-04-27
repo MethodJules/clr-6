@@ -2,7 +2,6 @@
     <div id="phase">
         <b-container fluid>
             <!-- gibt an in welcher Phase man sich befindet -->
-            <h2>Phase: {{this.phase}}</h2>
             <h2>{{phaseId}}</h2>
             <h2>Phase: {{xphase.phase_name}}</h2>
             <b-row>
