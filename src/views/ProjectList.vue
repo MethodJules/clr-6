@@ -13,7 +13,7 @@
       <div>
         <b-row>
           <b-col>
-<<<<<<< HEAD
+
           <table>
           <tr v-for= "proj in projectList" :key="proj.id">
             <b-card  style="max-height: 20rem;" >
@@ -40,16 +40,7 @@
             </b-card>
           </tr>
           </table>
-=======
-            <b-link to="/home" class="btn btn-outline-dark btn-block mb-2"
-              >Dashboard</b-link
-            >
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <ReflexionAuswahl />
->>>>>>> assistent_backend
+
           </b-col>
         </b-row>
         
@@ -59,110 +50,11 @@
       <b-card title="Neues Projekt" style="max-height: 10rem;" class="m-2">
           
         <b-row>
-<<<<<<< HEAD
+
           <b-col col="3">
             <ProjectForm :project=project></ProjectForm>
             
-=======
-          <b-col>
-            <div>
-              <b-modal id="create_project" title="Projekt Anlegen">
 
-            <form @submit.prevent="submitForm">
-                <table>
-                  <tr>
-                    <td>
-                      <label for="titel">Projekttitel: </label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td> 	 
-                      <div class="form-group"> 
-                      <input
-                        id="titel"
-                        v-model="project.titel"
-                        type="text"
-                        placeholder="hier eingeben" class="form-control">
-                                   <span v-if="!$v.project.titel.required && $v.project.titel.$dirty" class="text-danger">Title is required!</span>
-            <span v-if="!$v.project.titel.minLength && $v.project.titel.$dirty" class="text-danger">Title should be at least 4 letters long</span>
-                       </div> 
-                    </td>
-                    
-                  </tr>
-                  <tr>
-                    <td>
-                      <label for="betreuenderDozent">Betreuer: </label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="form-group"> 
-                      <input
-                        v-model="project.betreuenderDozent"
-                        type="text"
-                        placeholder="hier eingeben" class="form-control">
-            <span v-if="!$v.project.betreuenderDozent.required && $v.project.betreuenderDozent.$dirty" class="text-danger">Dozent is required!</span>
-            <span v-if="!$v.project.betreuenderDozent.alpha && $v.project.betreuenderDozent.$dirty" class="text-danger">A name is only allowed to use letters</span>
-                       </div> 
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label for="externeMitwirkende">Externe Partner*innen(bitte mit Komma trennen) </label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="form-group">
-                      <input
-                        v-model="project.externeMitwirkende"
-                        type="text"
-                        placeholder="hier eingeben" class="form-control"
-                      /></div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label for="schlagwörter">Schlagwörter(bitte mit Komma trennen) </label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="form-group">
-                      <input
-                        v-model="project.schlagwörter"
-                        type="text"
-                        placeholder="hier eingeben" class="form-control"
-                      />
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <label for="kurzbeschreibung">Projektbeschreibung: </label>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="form-group"> 
-                      <input
-                      id="kurzbeschreibung"
-                        v-model="project.kurzbeschreibung"
-                        type="text"
-                        placeholder="hier eingeben" class="form-control">
-            <span v-if="!$v.project.kurzbeschreibung.required && $v.project.kurzbeschreibung.$dirty" class="text-danger">Kurzbeschreibung is required!</span>
-            <span v-if="!$v.project.kurzbeschreibung.minLength && $v.project.kurzbeschreibung.$dirty" class="text-danger">A Kurzbeschreibung must be at least 4 letters long</span>
-                       </div> 
-                    </td>
-                  </tr>
-                </table>
-                <b-button @click="submitForm()">Projekt anlegen</b-button>
-                </form>
-              </b-modal>
-
-              <b-button size="lg" v-b-modal.create_project>+</b-button>
-            </div>
->>>>>>> assistent_backend
             <!-- <b-link class=" btn btn-outline-dark mt-5">Neues Projekt</b-link> -->
           </b-col>
         </b-row>
@@ -172,14 +64,13 @@
 </template>
 
 <script>
-<<<<<<< HEAD
+
 import ReflexionAuswahl from '@/components/ReflexionAuswahl.vue'
 import ProjectForm from '@/components/ProjectForm'
-=======
-import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
-import { required, minLength, alpha } from 'vuelidate/lib/validators'
 
->>>>>>> assistent_backend
+
+
+
 export default {
 
     name: "ProjectList",
@@ -218,26 +109,10 @@ export default {
       ],
     };
   },
-  validations: {
-    project: {
-      titel:{
-            required,
-            minLength: minLength(4)
-      },
-      betreuenderDozent: {
-            required,
-            alpha
-    },
-    kurzbeschreibung: {
-        required,
-        minLength: minLength(4)
-    }
-    },
-
-  },
+  
 
   methods: {
-<<<<<<< HEAD
+
     
   },
   mounted() {
@@ -245,34 +120,7 @@ export default {
     this.projectList = this.$store.state.project.projectList
     console.log(this.projectList)
     console.log("mount projectList")
-=======
-    submitForm() {
-      this.$v.$touch();
-      if(!this.$v.$invalid){
-        console.log('titel: ${this.titela}')
-        this.newProject()
-      }
-    },
 
-    newProject() {
-
-      var addProj={
-            titel: "",
-            kurzbeschreibung: "",
-            bedreuenderDozent: "",
-            externeMitwirkende: "",
-            schlagwoerter: "",
-            projectId: 0
-      }
-      addProj.titel=this.project.titel
-      addProj.kurzbeschreibung=this.project.kurzbeschreibung
-      addProj.bedreuenderDozent=this.project.bedreuenderDozent
-      addProj.externeMitwirkende=this.project.externeMitwirkende
-      addProj.schlagwoerter=this.project.schlagwoerter
-      addProj.projectId= this.projectList.length + 1
-      this.projectList.push(addProj);
-    },
->>>>>>> assistent_backend
   },
 };
 </script>

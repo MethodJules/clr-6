@@ -13,6 +13,7 @@ import 'zircle/dist/zircle.css'
 import Vuelidate from 'vuelidate'
 
 
+
 import AppDate from '@/components/AppDate'
 Vue.component('AppDate', AppDate)
 

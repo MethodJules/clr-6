@@ -2,6 +2,7 @@
     <div class="projektAnlegen">
         <div>
               <b-modal id="create_project" title="Projekt Anlegen">
+                <form @submit.prevent="submitForm">
                 <table>
                   <tr>
                     <td>
@@ -10,12 +11,15 @@
                   </tr>
                   <tr>
                     <td>
+                      <div class="form-group"> 
                       <input
                         id="titel"
                         v-model="project.titel"
                         type="text"
-                        placeholder="hier eingeben"
-                      >
+                        placeholder="hier eingeben" class="form-control">
+                                   <span v-if="!$v.project.titel.required && $v.project.titel.$dirty" class="text-danger">Title is required!</span>
+            <span v-if="!$v.project.titel.minLength && $v.project.titel.$dirty" class="text-danger">Title should be at least 4 letters long</span>
+                       </div> 
                     </td>
                   </tr>
                   <tr>
@@ -25,11 +29,14 @@
                   </tr>
                   <tr>
                     <td>
+                      <div class="form-group"> 
                       <input
                         v-model="project.betreuenderDozent"
                         type="text"
-                        placeholder="hier eingeben"
-                      />
+                        placeholder="hier eingeben" class="form-control">
+            <span v-if="!$v.project.betreuenderDozent.required && $v.project.betreuenderDozent.$dirty" class="text-danger">Dozent is required!</span>
+            <span v-if="!$v.project.betreuenderDozent.alpha && $v.project.betreuenderDozent.$dirty" class="text-danger">A name is only allowed to use letters</span>
+                       </div> 
                     </td>
                   </tr>
                   <tr>
@@ -39,11 +46,12 @@
                   </tr>
                   <tr>
                     <td>
+                      <div class="form-group">
                       <input
                         v-model="project.externeMitwirkende"
                         type="text"
-                        placeholder="hier eingeben"
-                      />
+                        placeholder="hier eingeben" class="form-control"
+                      /></div>
                     </td>
                   </tr>
                   <tr>
@@ -53,11 +61,13 @@
                   </tr>
                   <tr>
                     <td>
+                      <div class="form-group">
                       <input
                         v-model="project.schlagworter"
                         type="text"
-                        placeholder="hier eingeben"
+                        placeholder="hier eingeben" class="form-control"
                       />
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -67,16 +77,21 @@
                   </tr>
                   <tr>
                     <td>
+                      <div class="form-group"> 
                       <input
-                        id="kurzbeschreibung"
+                      id="kurzbeschreibung"
                         v-model="project.kurzbeschreibung"
                         type="text"
-                        placeholder="hier eingeben"
-                      />
+                        placeholder="hier eingeben" class="form-control">
+            <span v-if="!$v.project.kurzbeschreibung.required && $v.project.kurzbeschreibung.$dirty" class="text-danger">Kurzbeschreibung is required!</span>
+            <span v-if="!$v.project.kurzbeschreibung.minLength && $v.project.kurzbeschreibung.$dirty" class="text-danger">A Kurzbeschreibung must be at least 4 letters long</span>
+                       </div> 
                     </td>
                   </tr>
                 </table>
-                <b-button @click="newProject()">Projekt anlegen</b-button>
+                <b-button @click="submitForm()">Projekt anlegen</b-button>
+                <!-- <b-button @click="newProject()">Projekt anlegen</b-button> -->
+                </form>
               </b-modal>
 
               <b-button size="lg" v-b-modal.create_project>+</b-button>
@@ -85,13 +100,37 @@
 </template>
 <script>
 
-
+import { required, minLength, alpha } from 'vuelidate/lib/validators'
 export default {
     
     props:{
       project: Object
     },
+    validations: {
+    project: {
+      titel:{
+            required,
+            minLength: minLength(4)
+      },
+      betreuenderDozent: {
+            required,
+            alpha
+    },
+    kurzbeschreibung: {
+        required,
+        minLength: minLength(4)
+    }
+    },
+
+  },
     methods: {
+      submitForm() {
+      this.$v.$touch();
+      if(!this.$v.$invalid){
+        console.log('titel: ${this.titela}')
+        this.newProject()
+      }
+    },
         newProject() {
       var addProj={
             titel: this.project.titel,
