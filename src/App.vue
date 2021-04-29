@@ -147,7 +147,7 @@ export default {
     return {
       zugangsKennung: "",
       passwort: "",
-      validCredential: false,
+      validCredential: true,
       nameState: null,
       showMenu: true,
       eintragTodo: {
