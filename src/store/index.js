@@ -34,7 +34,7 @@ export default new Vuex.Store({
        todo,
        assistent,
        phases,
-       project_new
+       project_new,
        output_documents
     },
 
