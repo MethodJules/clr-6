@@ -15,13 +15,14 @@
           <b-col>
 
           <table>
-          <tr v-for= "proj in projectList" :key="proj.id">
+          <tr v-for= "project in projectList" :key="project.id">
             <b-card  style="max-height: 20rem;" >
           
             <b-col>
             <b-row>
               <b-col>
-                <h3>{{proj.titel}}</h3>
+                <h3>{{project.titel}}</h3>
+                
               </b-col>
             </b-row>
             <b-row>
@@ -112,10 +113,25 @@ export default {
   
 
   methods: {
-
+    fetchData(proj){
+        this.project.titel=proj.titel
+    },
+    getProjectTitles: function(){
+      this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projektanlegeformular', function(titel){
+        this.$set('titel', titel);
+        console.log(titel);
+      })
+    }
     
   },
-  mounted() {
+  ready: function(){
+    this.getProjectTitles();
+  },
+  /* created(){
+    return this.$store.state.project[this.$route.params.titel]
+    
+  }, */
+  async mounted() {
     this.$store.dispatch('project/loadProjectsFromBackend')
     this.projectList = this.$store.state.project.projectList
     console.log(this.projectList)

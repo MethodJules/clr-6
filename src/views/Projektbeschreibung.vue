@@ -12,8 +12,8 @@
         <b-row>
             <table>
                 //FIXME: Attribut wird ausgegeben, beim refreshen der Seite allerdings nicht mehr
-                <tr v-for= "proj in projectList" :key="proj[0]">
-                    <td>{{proj.titel}}</td>
+                <tr >
+                    <td>{{projectList[0].titel}}</td>
                 </tr>
             </table>
            <!-- <ProjectList projectContent[0].titel></ProjectList> -->
@@ -47,7 +47,7 @@
             <table>
                 <tr>
                     //FIXME: Attribut wird ausgegeben, beim refreshen der Seite allerdings nicht mehr
-                    <td>{{projectList[0].schlagworter}}</td>
+                    <td>{{ausgabeProjekt}}</td>
                 </tr>
             </table>
         </b-row>
@@ -82,7 +82,14 @@
                 <b-link :to="{name: 'Home'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
             </b-col>
             <b-col col="3">
-                <!-- <ProjectForm :project=project> </ProjectForm> -->
+                <b-card title="bearbeiten" style="max-height: 10rem;" class="m-2">
+          
+                <b-row>    
+                    <ProjectForm :project=project></ProjectForm>
+                    
+                </b-row>
+                </b-card>
+                 
                 <b-button v-b-modal.create_project>Beschreibung bearbeiten </b-button>
             </b-col>
             <b-col col="3">
@@ -97,29 +104,46 @@
 
 <script>
 //import ProjectList from '@/views/ProjectList.vue'
-//import ProjectForm from '@/components/ProjectForm.vue'
-import { mapState } from "vuex";
+import ProjectForm from '@/components/ProjectForm.vue'
+
 export default({
     name: "Projektbeschreibung",
     
     components: {
         //ProjectList,
-        //ProjectForm
+        ProjectForm
     },
     data(){
+        
         return{
+            projectList:{
+                titel: '',
+                betreuenderDozent: '',
+                externeMitwirkende: '',
+                kurzbeschreibung: '',
+                schlagworter:'',
+            }
+            ,
             projectContent: []
         }
     },
+    methods:{
+        openThisModal(){
+            this.$refs['create_project'].show()
+        }
+    },
     mounted() {
-    //this.$store.dispatch('project/loadProjectsFromBackend')
+    this.$store.dispatch('project/loadProjectsFromBackend')
     this.projectList = this.$store.state.project.projectList
     
   },
   computed: {
-    ...mapState({
-      members: (state) => state.members,
-    }),
+    ausgabeProjekt:{
+        get: function(){
+            return this.projectList[0].schlagworter
+            
+        }
+    }
   },
 })
 </script>

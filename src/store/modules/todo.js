@@ -26,7 +26,7 @@ const actions = {
         commit('ADD_TODO_ENTRY', todoEntry)
 
     },
-    /* deleteTodo({commit}, todoEntry) {
+     deleteTodo({commit}, todoEntry) {
         var config = {
             method: 'delete',
             url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
@@ -45,16 +45,17 @@ const actions = {
             });
         commit('DELETE_TODO_ENTRY', todoEntry);
     },
+    /*
     updateTodo({commit}, todoEntry) {
 
         commit('UPDATE_TODO_ENTRY', todoEntry);
     }, */
 }
 const mutations = {
-    /* DELETE_TODO_ENTRY(state, todoEntry) {
+    DELETE_TODO_ENTRY(state, todoEntry) {
         let index = state.listOfToDos.indexOf(todoEntry);
         state.listOfToDos.splice(index, 1);
-    }, */
+    }, 
     ADD_TODO_ENTRY(state, todoEntry) {
         //console.log(todoEntry.todo)
         var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "Todo Titel", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;

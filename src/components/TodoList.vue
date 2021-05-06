@@ -55,7 +55,10 @@ export default {
         },
         deleteTodo(todo){
                 //Löschen eines Todos
-                this.listOfToDos.splice(this.listOfToDos.indexOf(todo), 1)
+                //this.listOfToDos.splice(this.listOfToDos.indexOf(todo), 1)
+                alert("Delete");
+              
+            this.$store.dispatch('todo/deleteTodo', todo)
             
         }
     },

@@ -1,7 +1,7 @@
 <template>
     <div class="projektAnlegen">
         <div>
-              <b-modal id="create_project" title="Projekt Anlegen">
+              <b-modal ref="create_project" title="Projekt Anlegen">
                 <form @submit.prevent="submitForm">
                 <table>
                   <tr>
@@ -94,7 +94,7 @@
                 </form>
               </b-modal>
 
-              <b-button size="lg" v-b-modal.create_project>+</b-button>
+              <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
             </div>
     </div>
 </template>
@@ -104,6 +104,7 @@ import { required, minLength, alpha } from 'vuelidate/lib/validators'
 export default {
     
     props:{
+      titel: String,
       project: Object
     },
     validations: {
@@ -124,6 +125,9 @@ export default {
 
   },
     methods: {
+      showThisModal(){
+        this.$refs['create_project'].show()
+      },
       submitForm() {
       this.$v.$touch();
       if(!this.$v.$invalid){
