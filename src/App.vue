@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="validCredential != true">
+    <div v-if="validCredential != false">
       <div class="mx-auto" style="width: 50rem;">
       <b-container >
         <b-row align-v="center">

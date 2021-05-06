@@ -21,14 +21,16 @@
         <b-modal id="output_edit_modal" title="Output">
             <b-form-textarea id="output_edit_form_textarea" rows="6" v-model="outputFile"></b-form-textarea>
             <!-- https://www.raymondcamden.com/2019/08/08/drag-and-drop-file-upload-in-vuejs -->
-            <div id="app" v-cloak @drop.prevent="addFile" @dragover.prevent>
+            <div id="output" v-cloak @drop.prevent="addFile" @dragover.prevent>
               <h2>Files to Upload (Drag them over)</h2>
               <ul>
                 <li v-for="file in files" :key="file">
                 {{ file.name }} ({{ file.size | kb }} kb) <button @click="removeFile(file)" title="Remove">X</button>
                 </li>
                </ul>
-  
+       <label>File
+        <input type="file" id="file" ref="file" @change="handleFileUpload()"/>
+      </label>
               <button :disabled="uploadDisabled" @click="upload">Upload</button>
             </div>
                             
@@ -44,16 +46,49 @@
   export default {
     data() {
       return {
+
+        file: '',
         listOfOutputs: [
             {file: 'Outputdatei 1'},
             {file: 'Outputdatei 2'},
             {file: 'Outputdatei 3'}
         ]
+
       }
     },
-    methods:{
-      upload() {
+
+ methods: {
+   
+      handleFileUpload(){
+        this.file = this.$refs.file.files[0];
+        console.log("heyyy")
+        console.log(this.file)
+      },
       
+      upload() {
+
+
+        var fileausgabe = new FormData();
+        var output_datei= this.file
+        fileausgabe.append(output_datei, "titel")
+        this.$store.dispatch('output_documents/createOutputData', fileausgabe)
+        
+        console.log(this.file + "  in upload this.file")
+        console.log(fileausgabe.output_datei + "  in upload fileausgabeoutputdatei")
+    },
+
+      
+/*          var ausgabe = {
+
+            output_datei: this.file,
+         }
+      this.$store.dispatch('output_document/createOutputData', ausgabe) */
+
+
+
+
+
+/*       
       let formData = new FormData();
       this.files.forEach((f,x) => {
         formData.append('file'+(x+1), f);
@@ -69,10 +104,13 @@
       })
       .catch(e => {
         console.error(JSON.stringify(e.message));
-      });
+      }); */
       
     }
-    }
+    
+
+
+    
   }
 </script>
 <style>

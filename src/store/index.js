@@ -13,6 +13,7 @@ import todo from './modules/todo'
 import assistent from './modules/assistent'
 import phases from './modules/phases'
 import project from './modules/project'
+import output_documents from './modules/output_documents'
 
 
 Vue.use(Vuex)
@@ -31,7 +32,8 @@ export default new Vuex.Store({
        tool,
        todo,
        assistent,
-       phases
+       phases,
+       output_documents
     },
 
 //noch in Datei packen

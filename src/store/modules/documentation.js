@@ -14,7 +14,7 @@ const actions = {
                 let documentations = [];
                 for (var i in data) {
                     //console.log(i)
-                    documentations.push({idd: data[i].attributes.id, title: data[i].attributes.field_title, documentation: data[i].attributes.field_documentationtext})
+                    documentations.push({idd: data[i].id, title: data[i].attributes.title, documentation: data[i].attributes.field_documentationtext})
                 }
 
                 //console.log(documentations)
@@ -31,13 +31,18 @@ const actions = {
 
     },
 
+    updateDocumentation({commit}, docuEntry) {
+
+        commit('UPDATE_DOCUMENTATION', docuEntry);
+    },
+
 }
 
 const mutations = {
 
     ADD_DOCUMENTATION(state, docuEntry) {
-        console.log(docuEntry.documentationText)
-        var data = `{"data": {"type": "node--documentation", "attributes": {"title": "Documentation Gruppe + Phase", "field_documentationtext": "${docuEntry.documentationText}" }}}`;
+        console.log(docuEntry.documentation)
+        var data = `{"data": {"type": "node--documentation", "attributes": {"title": "Documentation Gruppe + Phase", "field_documentationtext": "${docuEntry.documentation}" }}}`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/documentation',
@@ -73,7 +78,31 @@ const mutations = {
         */
         //console.log(documentations)
         state.documentations = documentations
-    }
+    },
+
+    UPDATE_DOCUMENTATION(state, docuEntry){
+            //let index = state.rowData.indexOf(dailyEntry);
+            //state.rowData[index]=dailyEntry;
+        //console.log(dailyEntry.todaydoings)
+        var data = `{"data": {"type": "node--documentation", "id": "${docuEntry.idd}", "attributes": {"title": "${docuEntry.title}", "field_documentationtext": "${docuEntry.documentation}" }}}`;
+        var config = {
+            method: 'patch',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+            },
+            data: data
+        };
+        axios(config)
+        .then(function(response){
+            console.log(response)
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+        },
 }
 
 export default {

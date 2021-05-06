@@ -1,18 +1,16 @@
 <template>
     <b-row>
-                <b-col cols="2">
-
-                    <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
-
-                    
+                <b-col cols="2"> 
                     <b-link :to="{name: 'Home'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
                     
                 </b-col>
 
                 <b-col cols="7">
                     <b-modal id="documentation_edit_modal" title="Bearbeiten">
-                            <b-form-textarea id= "documentation_edit_form_textarea" rows="6" v-model="inDoku.documentationText"></b-form-textarea>
+                            <b-form-textarea id= "documentation_edit_form_textarea" rows="6" v-model="inDoku.documentation" placeholder="Dokumentieren Sie ihre Arbeit hier"></b-form-textarea>
                             <b-button @click="addTheDocu()">Hinzufügen</b-button>
+                            <b-button @click="updateDocu(inDoku)">Update</b-button>
+                            
                     </b-modal>
                     <b-button v-b-modal.documentation_edit_modal>Dokumentation bearbeiten</b-button>
                     <!-- <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Dokumentation bearbeiten</b-link>   -->
@@ -108,7 +106,7 @@ export default {
         addTheDocu() {
             var ausgabe={
                 //documentationText: this.documentation,
-                documentationText: this.inDoku.documentationText
+                documentationText: this.inDoku.documentation
                // title: this.inDoku.title
             }
 
@@ -116,8 +114,14 @@ export default {
             //this.documentationText.push(ausgabe)
 
             //this.docus.push(ausgabe)
-            this.documentationText= ' '
+            this.documentation= ' '
         },
+        updateDocu(inDoku){
+          console.log(inDoku + "das ist in templatebuttons")
+          this.$store.dispatch('documentation/updateDocumentation', inDoku)
+          console.log(inDoku.documentation)
+        },
+        
 
         /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
         addTodo() {
