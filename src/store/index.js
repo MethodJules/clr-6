@@ -27,14 +27,15 @@ export default new Vuex.Store({
        documentation,
        tool,
        todo,
-       assistent
+       assistent,
     },
 
 //noch in Datei packen
     state: {
         ...sourceData,
         // authId: '98St7Q8Zi2N9SPa5ahzssq9kbyp6'
-        authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2'
+        authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2', 
+        assistents: {},
     },
 
     getters: {
@@ -105,6 +106,8 @@ export default new Vuex.Store({
         },
 
 
-    }
+    },
+
+
 
 })

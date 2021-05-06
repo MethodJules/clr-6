@@ -1,172 +1,157 @@
 <template>
-    <b-container>
-        <b-row>
-            <b-col>
-                <b-row>
-                    <b-col>
-                        
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        
+  <b-container>
+    <b-row>
+      <b-col>
+        <div>
+          <!-- modal des Assistenten mit Angabe von Text und der Angabe der gespeicherten 
+                 Informationen in der Datenbank -->
+          <b-row class="d-flex justify-content-center">
+            <b-button
+              v-b-modal.modal-1
+              size="lg"
+              variant="primary"
+              class="mb-2"
+            >
+              <!-- Assistent als Fragezeichen Symbol -->
+              <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
+            </b-button>
+          </b-row>
+          <!-- Hilfstext von Assistent wird mit Modal Bootstrap ausgegeben, wenn man auf das Fragezeichen klickt -->
+          <b-modal id="modal-1" title="Assistent">
+            <h5>{{ assistent.title }}</h5>
+            <hr />
 
+            <p class="my-4">
+              {{ assistent.text }}
+            </p>
 
-                        
-                    </b-col>
-                </b-row>
-            </b-col>
-            <b-col>
-                
-                
-            </b-col>
-            <b-col>
-            </b-col>
-            <b-col>
-            </b-col>
-            <b-col>
-            </b-col>
-            <b-col>
-            </b-col>
-            <b-col>
-            </b-col>
-            <b-col>
-            </b-col>
-            <b-col>
-            </b-col>
-            <b-col>
+            <div class="container">
+              <div>
+                <div class="eingabe">
+                  <div class="inputcontainer">
+                    <!-- Input Feld für die Erstellung der Todos. Jede neue Todo wird durch Enter-Taste in die Liste mit der Methode addTodo eingefügt -->
+                    <input
+                      type="text"
+                      placeholder="Aufgaben, die zu erledigen"
+                      v-model="newTodo"
+                      @keyup.enter="addTodo"
+                    />
+                  </div>
+                  <div class="border"></div>
+                </div>
 
-                <div>
-            
-                <!-- <div v-for="assistent in assistents" :key="assistent.hilfstext"> -->
-
-                 <!-- modal des Assistenten mit Angabe von Text und der Angabe der gespeicherten 
-                 Informationen in der Datenbank -->   
-                <b-button v-b-modal.modal-1 size="lg" variant="primary" class="mb-2"> 
-                <!-- Assistent als Fragezeichen Symbol -->
-                <b-icon icon="question-circle-fill" aria-label="Help"></b-icon>
-                </b-button>
-                <!-- Hilfstext von Assistent wird mit Modal Bootstrap ausgegeben, wenn man auf das Fragezeichen klickt --> 
-                <b-modal id="modal-1" title="Assistent">
-                <p class="my-4">Hallo! Ich sehe, du möchtest wissen, was du in dieser Phase machen sollst.</p>
-                <p class="my-4">Diese Phase dient dazu...</p>
-
-                <div class="container">
-                    <div>
-                        <div class="eingabe">
-                            <div class="inputcontainer">
-                                <!-- Input Feld für die Erstellung der Todos. Jede neue Todo wird durch Enter-Taste in die Liste mit der Methode addTodo eingefügt -->
-                                <input type="text" placeholder="Aufgaben, die zu erledigen" v-model="newTodo" @keyup.enter="addTodo" />
-                            </div>
-                            <div class="border"></div>
-                        </div>
-
-                        <div class="todo-list">
-                            <!-- for-Schleife: über alle To-dos durchgelaufen -->
-                            <div v-for="todo in todos" :key="todo.id" class="list">
-                            <!-- Einträge werden sichtbar und in die Auflistung übertragen -->
-                                <label class="material-checkbox">
-                                    <input type="checkbox" v-model="todo.erledigt">
-                                    <span></span>
-                                </label>
-                                <div class="text" :class="{erledigt: todo.erledigt}" v-if="!todo.zuerledigen" @dblclick="todo.zuerledigen = true; TodoList=todo.text">{{ todo.text }} </div> 
-          
-                            </div>
-                        </div>
+                <div class="todo-list">
+                  <!-- for-Schleife: über alle To-dos durchgelaufen -->
+                  <div v-for="todo in todos" :key="todo.id" class="list">
+                    <!-- Einträge werden sichtbar und in die Auflistung übertragen -->
+                    <label class="material-checkbox">
+                      <input type="checkbox" v-model="todo.erledigt" />
+                      <span></span>
+                    </label>
+                    <div
+                      class="text"
+                      :class="{ erledigt: todo.erledigt }"
+                      v-if="!todo.zuerledigen"
+                      @dblclick="
+                        todo.zuerledigen = true;
+                        TodoList = todo.text;
+                      "
+                    >
+                      {{ todo.text }}
                     </div>
-                        <!-- Gibt die Anzahl der noch zu erledigenden Aufgaben -->
-                        <footer>
-                            <span>{{ übrig }} Aufgaben sind zu erledigen.</span>
-                        </footer>
-                </div>                 
-                    
-                <!-- Datensätze aus dem Backend für die Hilfstexte werden als Array ausgegeben -->
-                <div class="card" v-for="assistent in assistents" :key="assistent.date">
-                    {{assistent.hilfstext}}
-                   
+                  </div>
                 </div>
-                
+              </div>
+              <!-- Gibt die Anzahl der noch zu erledigenden Aufgaben -->
+              <footer>
+                <span>{{ übrig }} Aufgaben sind zu erledigen.</span>
+              </footer>
+            </div>
 
-                </b-modal>
-                </div>
-            </b-col>
-        </b-row>
-    </b-container>
+            <!-- Datensätze aus dem Backend für die Hilfstexte werden als Array ausgegeben -->
+            <!-- <div
+              class="card"
+              v-for="assistent in assistents"
+              :key="assistent.date"
+            >
+              {{ assistent }}
+
+              
+            </div> -->
+            <hr />
+            <ul>
+              <li v-for="assistent in assistentsArray" :key="assistent.id">
+                {{ assistent.title }}
+              </li>
+            </ul>
+          </b-modal>
+        </div>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
-
 export default {
-  /* Datenausgabe */
-    data() {
-        return {
-            assistents: [
-                {hilfstext: '1'},
-                
-            ],
+  data() {
+    return {
+      assistent: this.$store.state.assistent.assistents,
+      assistentsArray: this.$store.state.assistent.assistentsArray,
 
-            lastEntry_id: 2,
-            newTodo: "",
-            TodoList: "",
-            todos: [
-                {
-                    id: 1,
-                    text: "Aufgabe 1",
-                    erledigt: false,
-                    zuerledigen: false
-                },
-                {
-                    id: 2,
-                    text: "Aufgabe 2",
-                    erledigt: false,
-                    zuerledigen: false
-                }
-            ]
-        };
-    },
-
-    computed: {
-        // Anzahl der nicht erledigten Todos werden ausgegeben
-        übrig() {
-            return this.todos.filter(todo => !todo.erledigt).length;
-        }
-    },
-
-    methods: {
-        /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
-        addTodo() {
-            if (this.newTodo.trim() == "") 
-                return;
-                let todo = {
-                    id: ++this.lastEntry_id,
-                    text: this.newTodo,
-                    zuerledigen: false
-                };
-                this.todos.push(todo);
-                this.newTodo = "";
+      lastEntry_id: 2,
+      newTodo: "",
+      TodoList: "",
+      todos: [
+        {
+          id: 1,
+          text: "Aufgabe 1",
+          erledigt: false,
+          zuerledigen: false,
         },
+        {
+          id: 2,
+          text: "Aufgabe 2",
+          erledigt: false,
+          zuerledigen: false,
+        },
+      ],
+    };
+  },
 
-        
-            
-        
-
- 
+  computed: {
+    // Anzahl der nicht erledigten Todos werden ausgegeben
+    übrig() {
+      return this.todos.filter((todo) => !todo.erledigt).length;
     },
-    //Die in der Datenbank gespeicherten Hilfstexte werden hiermit angegeben
-    /* Anbindung an Backend mit Get Operator, um die Daten (Hilfstexte von Assistent) lesen zu können */
-    mounted() {
-        this.$store.dispatch('assistent/loadAssistentFromBackend')
-        this.assistents = this.$store.state.assistent.assistents
+  },
 
+  methods: {
+    /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
+    addTodo() {
+      if (this.newTodo.trim() == "") return;
+      let todo = {
+        id: ++this.lastEntry_id,
+        text: this.newTodo,
+        zuerledigen: false,
+      };
+      this.todos.push(todo);
+      this.newTodo = "";
     },
-
-    
-}
+  },
+  //Die in der Datenbank gespeicherten Hilfstexte werden hiermit angegeben
+  /* Anbindung an Backend mit Get Operator, um die Daten (Hilfstexte von Assistent) lesen zu können */
+  mounted() {
+    this.$store.dispatch("assistent/loadAssistentArrayFromBackend");
+    this.$store.dispatch("assistent/loadAssistentFromBackend");
+    // this.assistents = this.$store.state.assistents;
+    // this.assistentsArray = this.$store.state.assistentsArray;
+    console.log("");
+    // Wenn ich etwas auf der Konsole machen, dann funktioniert diese Linien. Warum?
+  },
+};
 </script>
 
 <style scoped>
-
-
 footer {
   padding: 8px 15px;
   background: #76dbae;
