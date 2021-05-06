@@ -13,6 +13,7 @@ import todo from './modules/todo'
 import assistent from './modules/assistent'
 import phases from './modules/phases'
 import project from './modules/project'
+import project_new from './modules/project_new'
 import output_documents from './modules/output_documents'
 
 
@@ -33,6 +34,7 @@ export default new Vuex.Store({
        todo,
        assistent,
        phases,
+       project_new
        output_documents
     },
 

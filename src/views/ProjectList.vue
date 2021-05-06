@@ -13,9 +13,16 @@
       <div>
         <b-row>
           <b-col>
-
-          <table>
-          <tr v-for= "project in projectList" :key="project.id">
+            <div v-for="project in projectList" :key="project.id">
+              <b-card style="max-height: 20rem;">
+                <b-col>
+                  <h3>{{project.titel}}</h3>
+                  <div v-html="project.kurzbeschreibung"></div>
+                </b-col>
+              </b-card>
+            </div>
+          <!-- <table>
+          <tr v-for= "proj in projectList" :key="proj.id">
             <b-card  style="max-height: 20rem;" >
           
             <b-col>
@@ -40,7 +47,7 @@
             
             </b-card>
           </tr>
-          </table>
+          </table> -->
 
           </b-col>
         </b-row>
@@ -66,7 +73,7 @@
 
 <script>
 
-import ReflexionAuswahl from '@/components/ReflexionAuswahl.vue'
+//import ReflexionAuswahl from '@/components/ReflexionAuswahl.vue'
 import ProjectForm from '@/components/ProjectForm'
 
 
@@ -78,7 +85,7 @@ export default {
     
     
   components: {
-    ReflexionAuswahl,
+    //ReflexionAuswahl,
     ProjectForm
   },
   data() {
@@ -98,16 +105,7 @@ export default {
         TODO: array in backend dafür machen externeMitwirkende: [], */
       },
 
-      projectList: [{
-        titel: "Testtitel",
-        kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
-        betreuenderDozent: "Julien, Maren",
-        externeMitwirkende: "Nithusha, Aylin",
-        schlagworter: "test, projektliste, projekte"
-        
-      }
-
-      ],
+      projectList: [],
     };
   },
   
@@ -131,9 +129,9 @@ export default {
     return this.$store.state.project[this.$route.params.titel]
     
   }, */
-  async mounted() {
-    this.$store.dispatch('project/loadProjectsFromBackend')
-    this.projectList = this.$store.state.project.projectList
+  async mounted () {
+    this.$store.dispatch('project_new/loadProjectListFromBackend')
+    this.projectList = this.$store.state.project_new.projectList
     console.log(this.projectList)
     console.log("mount projectList")
 
