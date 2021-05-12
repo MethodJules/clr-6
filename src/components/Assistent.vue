@@ -56,7 +56,14 @@
 
                 </div>
 
-               
+               <!-- exemplarische Hilfstext eingabe -->
+                <div class="card">
+                    <label for = "eingabe_Hilf">Hilfstext Eingabe: </label>
+                    <input v-model="eingabe_Hilf" type ="text" placeholder="hier eingeben">
+                    <b-button @click="ok()">
+                         Hilfstext speichern
+                    </b-button>
+                </div>
                 
 
                 </b-modal>
@@ -76,13 +83,20 @@ export default {
                 {hilfstext: '1'},
                 
             ],
+            eingabe_Hilf: ''
         }
 
             
             
     },
 
-    
+    methods:{
+        ok(){
+            this.assistents.push(this.eingabe_Hilf)
+            this.$store.dispatch('assistent/createHilfstext', this.eingabe_Hilf)
+            this.eingabe_Hilf= ''
+        }
+    },
 
 
     //Die in der Datenbank gespeicherten Hilfstexte werden hiermit angegeben

@@ -20,9 +20,36 @@ const actions={
             });
 
     },
+    createHilfstext({commit}, assistentEntry) {
+        
+        commit('ADD_ASSISTENT_HT', assistentEntry)
+
+    },
 
 }
 const mutations={
+    ADD_ASSISTENT_HT(state, assistentEntry) {
+    
+        var data = `{"data": {"type": "node--assistent", "attributes": {"title": "Assistent Titel", "field_hilfstext": "${assistentEntry.hilfstext}"}}}`;
+        var config = {
+            method: 'post',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/assistent',
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+            },
+            data: data
+        };
+        
+        axios(config)
+            .then(function(response){
+                console.log(response)
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+    },
 
     SAVE_NEW_ASSISTENT(state, hilfstext) {
 

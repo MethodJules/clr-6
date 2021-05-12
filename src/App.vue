@@ -101,13 +101,15 @@
             </b-row>
 
             <b-row class="chat">
+              <br>
               <b-col class="border border-dark">
-                <Chat />
+                <Postfach />
+                
               </b-col>
             </b-row>
             <b-row class="postfach">
               <b-col class="border border-dark">
-                <Postfach />
+                <Chat />
               </b-col>
             </b-row>
           </b-col>
@@ -147,7 +149,7 @@ export default {
     return {
       zugangsKennung: "",
       passwort: "",
-      validCredential: true,
+      validCredential: false,
       nameState: null,
       showMenu: true,
       eintragTodo: {

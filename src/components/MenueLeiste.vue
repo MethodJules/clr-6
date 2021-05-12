@@ -9,14 +9,16 @@
                                 <b-nav-item to="/profil">Profil</b-nav-item>
                             </b-navbar-nav>
                             <b-navbar-nav>
-                                <b-nav-item to="/project">Projektbeschreibung</b-nav-item>
+                                <b-nav-item to="/settings">Einstellungen</b-nav-item>
                             </b-navbar-nav>
                             <div v-if="!startpage">
                             <b-row>
                             <!-- <b-navbar-nav>
                                 <b-nav-item to="/">Startseite</b-nav-item>
                             </b-navbar-nav> -->
-                            
+                            <b-navbar-nav>
+                                <b-nav-item to="/project">Projektbeschreibung</b-nav-item>
+                            </b-navbar-nav>
                             <b-navbar-nav>
                                 <b-nav-item to="/forum">Projektforum</b-nav-item>
                             </b-navbar-nav>
@@ -24,7 +26,7 @@
                                 <b-nav-item to="/groupmanagement">Gruppenmanagement</b-nav-item>
                             </b-navbar-nav>
                             <b-navbar-nav>
-                                <b-nav-item to="/settings">Einstellungen</b-nav-item>
+                                <b-nav-item to="/home">Dashboard</b-nav-item>
                             </b-navbar-nav>
                             <b-navbar-nav>
                                 <b-nav-item to="/projectlist">Startseite</b-nav-item>
@@ -50,9 +52,3 @@ export default ({
   }
 })
 </script>
-
-
-
-
-
-
