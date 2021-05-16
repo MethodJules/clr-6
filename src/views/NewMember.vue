@@ -1,23 +1,34 @@
 <template>
     <div class="home">
-        <h5>Gruppenmitglied hinzufügen</h5>
+        <h2>Gruppenmitglied hinzufügen</h2>
         <form @submit.prevent="save">
             <div class="form-group">
-                Benutzer/in:
+                Benutzer:
                 <input name=""
                        id=""
                        class="form-input"
                        v-model="member" />
+                Rolle:
+                <input name=""
+                       id=""
+                       class="form-input"
+                       v-model="role" />
                 
-               
-
                 
 
             </div>
+            <b-container>
+            <b-row>
+                <b-col>
+           
+                <button>Speichern</button>
 
-            <div class="form-actions">
-                <button class>Add Member</button>
-            </div>
+                </b-col>
+
+                
+            </b-row>
+            </b-container>
+            
         </form>
     </div>
 </template>
@@ -31,8 +42,8 @@ export default {
     data() {
         return {
             member: '',
-            role: '',
-            img: ''
+            role: ''
+            
         }
     },
     methods: {
@@ -40,7 +51,7 @@ export default {
             const member = {
                 name: this.member,
                 role: this.role,
-                img: this.img
+               
             }
             this.$store.dispatch('members/addMember', member)
 
