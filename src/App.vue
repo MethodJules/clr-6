@@ -1,14 +1,10 @@
 <template>
   <div id="app">
-    <b-container fluid>
-      <b-row class="obereLeiste">
-        <b-col class="border border-dark">
-          <MenueLeiste />
-        </b-col>
-      </b-row>
+    <b-container fluid class="p-0">
+      <MenueLeiste />
 
-      <b-row>
-        <b-col class="linkeSeite" cols="2">
+      <b-row class="p-4">
+        <b-col class="linkeSeite" md="3">
           <b-row>
             <b-col class="border border-dark">
               <TodoList />
@@ -27,20 +23,17 @@
           </b-row>
         </b-col>
 
-        <b-col cols="8" class="mitte border border-primary">
-          
+        <b-col class="mitte border border-primary" md="6">
           <router-view></router-view>
-          
         </b-col>
         <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
-        <b-col v-if="!isChanged" cols="2" class="rechteSeite">
+        <b-col v-if="!isChanged" class="rechteSeite" md="3">
           <b-row>
             <b-col class="border border-dark">
               <SeitenNavigation />
             </b-col>
           </b-row>
-        
 
           <b-row class="chat">
             <b-col class="border border-dark">
@@ -53,13 +46,10 @@
             </b-col>
           </b-row>
         </b-col>
-        <b-col v-else>
-        </b-col>
+        <b-col v-else> </b-col>
       </b-row>
 
-      <b-row class="untereLeiste">
-        
-      </b-row>
+      <b-row class="untereLeiste"> </b-row>
     </b-container>
   </div>
 </template>
@@ -75,8 +65,8 @@ import Postfach from "@/components/Postfach.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
-  props:{
-    showRightMenu: Boolean
+  props: {
+    showRightMenu: Boolean,
   },
   name: "App",
   components: {
@@ -94,9 +84,7 @@ export default {
       showMenu: true,
       eintragTodo: {
         todo: "",
-        
       },
-      
 
       /* listOfToDos [
                     {todo:"Mein1", date:"20.02.2021"},
@@ -118,9 +106,9 @@ export default {
     };
   },
   methods: {
-     closeMenu(){
+    closeMenu() {
       this.showMenu = false;
-    } 
+    },
     /* formularTodo(){
                 this.$refs['my-todo-modal'].show()
                 this.eintragTodo.date=""
@@ -145,10 +133,10 @@ export default {
                 this.$refs['my-todo-modal'].hide()
             } */
   },
-  computed:{
-    isChanged(){
-      return this.$route.name === 'ProjectList'
-    }
+  computed: {
+    isChanged() {
+      return this.$route.name === "ProjectList";
+    },
   } /* ,
         mounted() {
             this.$store.dispatch('todo/loadToDoFromBackend')
@@ -179,10 +167,14 @@ export default {
   display: table;
   margin-top: 20px;
 }
+
 .obereLeiste {
-  /*         width: auto;
-        border: 1px solid black; */
+  /* width: auto;
+  border: 5px solid red;
+  padding:0px !important;
+  margin:0px !important; */
 }
+
 .linkeSeite {
   /* width: auto;
         border: 1px solid black; */
