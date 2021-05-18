@@ -1,7 +1,16 @@
 ﻿@charset "UTF-8";
+html {
+    margin: 0px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 body {
     background-color: #F6F8FF;
     min-height: 100vh;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
 }
 
 *,
@@ -13,12 +22,16 @@ body {
 @media (min-width: 1024px) {
     html {
         font-size: 16px;
+        margin: 0px;
+        box-sizing: border-box;
     }
 }
 
 @media (min-width: 240px) and (max-width: 1023px) {
     html {
         font-size: 14px;
+        margin: 0px;
+        box-sizing: border-box;
     }
 }
 
@@ -26,6 +39,8 @@ body {
     line-height: 1.5;
     margin: 0;
     padding: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 img {
