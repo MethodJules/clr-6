@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <b-container fluid class="p-0">
+    <b-container fluid class="p-0 m-0">
       <MenueLeiste />
 
-      <b-row class="p-4">
-        <b-col class="linkeSeite" md="3">
+      <b-row class="p-4 d-flex flex-wrap">
+        <b-col class="linkeSeite" md="2" style="min-width: 20rem">
           <b-row>
             <b-col class="border border-dark">
               <TodoList />
@@ -17,18 +17,26 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col class="border border-dark">
+            <b-col class="border border-dark d-flex p-3">
               <Kalender />
             </b-col>
           </b-row>
         </b-col>
 
-        <b-col class="mitte border border-primary" md="6">
+        <b-col
+          class="border border-primary p-0 flex-grow-1"
+          style="min-width: 20rem"
+        >
           <router-view></router-view>
         </b-col>
         <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
-        <b-col v-if="!isChanged" class="rechteSeite" md="3">
+        <b-col
+          v-if="!isChanged"
+          class="rechteSeite"
+          md="2"
+          style="min-width: 20rem"
+        >
           <b-row>
             <b-col class="border border-dark">
               <SeitenNavigation />
@@ -49,7 +57,9 @@
         <b-col v-else> </b-col>
       </b-row>
 
-      <b-row class="untereLeiste"> </b-row>
+      <b-row class="untereLeiste m-0 p-4 d-flex align-center">
+        <h3>What are gonna put here?</h3>
+      </b-row>
     </b-container>
   </div>
 </template>
@@ -168,109 +178,13 @@ export default {
   margin-top: 20px;
 }
 
-.obereLeiste {
-  /* width: auto;
-  border: 5px solid red;
-  padding:0px !important;
-  margin:0px !important; */
-}
-
-.linkeSeite {
-  /* width: auto;
-        border: 1px solid black; */
-}
-.rechteSeite {
-  /*  width: 60 px;
-        border: 1px solid black; */
-}
 .untereLeiste {
-  width: auto;
-  height: 100 px;
+  height: 100%;
   border: 1px solid black;
 }
 
-/* .background {
-        background-color: red;
-        background-image: url('~@/assets/background2.jpg');
-        width: 100%;
-        height: 90%;
-        position: absolute;
-        background-size: cover;
-
-    } */
-/*
-    .sc-launcher {
-        position: unset !important;
-        height: 60px !important;
-        margin-bottom: 20px !important;
-
-    }
-
-    .sc-launcher::before {
-        position: unset !important;
-        height: 60px !important;
-        height:unset !important;
-    }
-
-    .sc-open-icon {
-        position: unset !important;
-
-    }
-
-    .sc-closed-icon {
-        position: unset !important;
-    }
-
-    .sc-chat-window {
-        width: 20% !important;
-        height: 50% !important;
-    }
-
-    .sc-header {
-        height: 15% !important;
-        min-height: unset !important;
-    }
-    .sc-header--title {
-        font-size: 10px !important;
-        min-height: unset !important;
-    }
-
-    .sc-message {
-        width: unset !important;
-        margin-right: 10px !important;
-    }
-    .sc-message--text {
-        padding-bottom: 5px !important;
-        padding-top: 5px !important;
-        padding-left: 5px !important;
-        padding-right: 5px !important;
-        font-size: 12px !important;
-        max-width: unset !important;
-
-    }
-    .sc-message--content.sent {
-        margin-left: 15%;
-    }
-
-    .sc-message--text-content {
-        margin-bottom: 0px;
-    }
-
-    .sc-user-input {
-        min-height: unset !important;
-        height: 10% !important;
-    }
-    .sc-user-input--text {
-        height: 40px !important;
-        min-height: unset !important;
-        padding: 5px !important;
-        width: 90% !important;
-    }
-    .sc-user-input--button {
-        margin-left: 50px !important;
-
-    }
-
-    */
+.row {
+  width: 100% !important;
+}
 </style>
 
