@@ -6,19 +6,19 @@
                 <table>
                   <tr>
                     <td>
-                      <label for="titel">Projekttitel: </label>
+                      <label for="title">Projekttitel: </label>
                     </td>
                   </tr>
                   <tr>
                     <td>
                       <div class="form-group"> 
                       <input
-                        id="titel"
-                        v-model="project.titel"
+                        id="title"
+                        v-model="project.title"
                         type="text"
                         placeholder="hier eingeben" class="form-control">
-                                   <span v-if="!$v.project.titel.required && $v.project.titel.$dirty" class="text-danger">Title is required!</span>
-            <span v-if="!$v.project.titel.minLength && $v.project.titel.$dirty" class="text-danger">Title should be at least 4 letters long</span>
+                                   <span v-if="!$v.project.title.required && $v.project.title.$dirty" class="text-danger">Title is required!</span>
+            <span v-if="!$v.project.title.minLength && $v.project.title.$dirty" class="text-danger">Title should be at least 4 letters long</span>
                        </div> 
                     </td>
                   </tr>
@@ -104,12 +104,12 @@ import { required, minLength, alpha } from 'vuelidate/lib/validators'
 export default {
     
     props:{
-      titel: String,
+      title: String,
       project: Object
     },
     validations: {
     project: {
-      titel:{
+      title:{
             required,
             minLength: minLength(4)
       },
@@ -131,13 +131,13 @@ export default {
       submitForm() {
       this.$v.$touch();
       if(!this.$v.$invalid){
-        console.log('titel: ${this.titela}')
+        console.log('title: ${this.titela}')
         this.newProject()
       }
     },
         newProject() {
       var addProj={
-            titel: this.project.titel,
+            title: this.project.title,
             kurzbeschreibung: this.project.kurzbeschreibung,
             betreuenderDozent: this.project.betreuenderDozent,
             externeMitwirkende: this.project.externeMitwirkende,
@@ -145,16 +145,19 @@ export default {
             projectIdd: 0
       }
       
-      this.$store.dispatch('project/createProject', this.project)
+      this.$store.dispatch('project/createProject', addProj)
       console.log(this.project.kurzbeschreibung)
-      this.projectList.push(addProj)
+      console.log("das hier nach ist addproj")
+      console.log(addProj)
+      console.log(this.project)
+      //this.projectList.push(addProj)
       
-      this.titel = " "
+      this.title = " "
       this.kurzbeschreibung= ""
       this.betreuenderDozent= " "
       this.externeMitwirkende= " "
       this.schlagworter= " "
-      this.projectList.length + 1
+      //this.projectList.length + 1
       
     },
     }

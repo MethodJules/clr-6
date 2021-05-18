@@ -128,6 +128,11 @@ const routes = [
         name: 'Home',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },
+    {
+        path: '/projectsearch',
+        name: 'ProjectSearch',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
+    },
 
     
 

@@ -21,7 +21,7 @@
             <b-col>
             <b-row>
               <b-col>
-                <h3>{{project.titel}}</h3>
+                <h3>{{project.title}}</h3>
                 
               </b-col>
             </b-row>
@@ -85,7 +85,6 @@ export default {
     return {
         
       project: {
-        titel: "",
         kurzbeschreibung: "",
         betreuenderDozent: "",
         externeMitwirkende: "",
@@ -99,7 +98,7 @@ export default {
       },
 
       projectList: [{
-        titel: "Testtitel",
+        title: "Testtitel",
         kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
         betreuenderDozent: "Julien, Maren",
         externeMitwirkende: "Nithusha, Aylin",
@@ -114,12 +113,12 @@ export default {
 
   methods: {
     fetchData(proj){
-        this.project.titel=proj.titel
+        this.project.title=proj.title
     },
     getProjectTitles: function(){
-      this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projektanlegeformular', function(titel){
-        this.$set('titel', titel);
-        console.log(titel);
+      this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projektanlegeformular', function(title){
+        this.$set('title', title);
+        console.log(title);
       })
     }
     

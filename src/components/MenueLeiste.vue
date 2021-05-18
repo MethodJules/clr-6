@@ -31,6 +31,9 @@
                             <b-navbar-nav>
                                 <b-nav-item to="/projectlist">Startseite</b-nav-item>
                             </b-navbar-nav>
+                            <b-navbar-nav>
+                                <b-nav-item to="/projectsearch">Projektsuche</b-nav-item>
+                            </b-navbar-nav>
                             </b-row>
                             </div>
                         </b-collapse>
