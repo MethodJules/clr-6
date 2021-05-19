@@ -3,8 +3,8 @@
     <b-container fluid class="p-0 m-0">
       <MenueLeiste />
 
-      <b-row class="p-4 d-flex flex-wrap">
-        <b-col class="linkeSeite" md="2" style="min-width: 20rem">
+      <b-row class="d-flex flex-wrap pageContainer">
+        <b-col class="linkeSeite" md="2">
           <b-row>
             <b-col class="border border-dark">
               <TodoList />
@@ -17,25 +17,21 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col class="border border-dark d-flex p-3">
+            <b-col class="border border-dark d-flex">
               <Kalender />
             </b-col>
           </b-row>
         </b-col>
 
-        <b-col
-          class="border border-primary p-0 flex-grow-1"
-          style="min-width: 20rem"
-        >
+        <b-col class="border border-primary flex-grow-1 mainContent">
           <router-view></router-view>
         </b-col>
         <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
         <b-col
           v-if="!isChanged"
-          class="rechteSeite"
+          class="d-flex flex-column justify-content-between p-2 rechtseite"
           md="2"
-          style="min-width: 20rem"
         >
           <b-row>
             <b-col class="border border-dark">
@@ -43,21 +39,23 @@
             </b-col>
           </b-row>
 
-          <b-row class="chat">
-            <b-col class="border border-dark">
-              <Chat />
-            </b-col>
-          </b-row>
-          <b-row class="postfach">
-            <b-col class="border border-dark">
-              <Postfach />
-            </b-col>
+          <b-row>
+            <b-row class="chat mb-2">
+              <b-col class="border border-dark">
+                <Chat />
+              </b-col>
+            </b-row>
+            <b-row class="postfach">
+              <b-col class="border border-dark">
+                <Postfach />
+              </b-col>
+            </b-row>
           </b-row>
         </b-col>
         <b-col v-else> </b-col>
       </b-row>
 
-      <b-row class="untereLeiste m-0 p-4 d-flex align-center">
+      <b-row class="untereLeiste p-4 d-flex align-center">
         <h3>What are gonna put here?</h3>
       </b-row>
     </b-container>
@@ -157,34 +155,39 @@ export default {
 </script>
 <style>
 @import "assets/style.css";
+.row {
+  width: 100% !important;
+  margin: 0 !important;
+}
 
+.pageContainer {
+  padding: 1rem 1rem 1rem 0;
+}
+
+.linkeSeite {
+  min-width: 20rem;
+}
+
+.rechtseite {
+  min-width: 20rem;
+  border: 1px solid red;
+}
+.mainContent {
+  min-width: 20rem;
+  padding: 0 !important;
+}
 .postfach {
-  width: 100%;
   text-align: center;
-  position: absolute;
-  bottom: 0;
-  height: 15%;
-  display: table;
-  margin: auto;
 }
 
 .chat {
-  width: 100%;
   text-align: center;
-  position: absolute;
-  bottom: 0;
-  height: 10%;
-  display: table;
-  margin-top: 20px;
 }
 
 .untereLeiste {
   height: 100%;
   border: 1px solid black;
-}
-
-.row {
-  width: 100% !important;
+  margin: 0;
 }
 </style>
 
