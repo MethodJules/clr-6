@@ -4,9 +4,13 @@
             v-model="keyword"
             type="text"
             class="form-input"
-            placeholder="Geben Sie ein Schlagwort ein, um die Projektliste zu filtern!"
+            placeholder
+            ="Geben Sie ein Schlagwort ein, um die Projektliste zu filtern!"
           />
+  <b-badge v-for= "keyword in keywords" :key="keyword.id" variant="primary">{{keyword}} <button v-on:click="deletekeyword(keyword)"> </button></b-badge>
+
             <!-- free input or a list of all existing keywords where one can choose keywords for filtering -->
+            <br>
         <b-button @click="keywordSearch(keyword)">Suchen</b-button>
 
     <b-card-group columns v-for= "project in searchResult" :key="project.id">
@@ -54,6 +58,7 @@ export default {
     
     searchResult: [
       ],
+      keywords: [],
       keyword: "",
 
     };
@@ -61,24 +66,35 @@ export default {
   
 
   methods: {
+      
+      deletekeyword(keyword){
+          var keywordIndex = this.keywords.indexOf(keyword)
+          this.keywords.splice(keywordIndex, 1)
+          this.adjustKeywords()
+      },
 
       keywordSearch(keyword){
-          console.log("test " + keyword)
-          this.searchResult= []
-          for( var project of this.projectList){
-              console.log(project)
-              if(project.schlagworter==keyword){
-                  this.searchResult.push(project)
-              }
-          }
+          this.keywords.push(keyword)
           console.log(this.searchResult)
+          this.adjustKeywords()
+      },
+
+            adjustKeywords(){
+                this.searchResult= []
+                for( var project of this.projectList){
+                    console.log(project)
+                    for(var keyword of this.keywords)
+                        if(project.schlagworter==keyword){
+                            this.searchResult.push(project)
+                    }
+                }
       },
 
     fetchData(proj){
         this.project.titel=proj.titel
     },
     getProjectTitles: function(){
-      this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projektanlegeformular', function(titel){
+      this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projekt', function(titel){
         this.$set('titel', titel);
         console.log(titel);
       })
@@ -95,6 +111,7 @@ export default {
   async mounted() {
     this.$store.dispatch('project/loadProjectsFromBackend')
     this.projectList = this.$store.state.project.projectList
+    this.searchResult=this.projectList;
     console.log(this.projectList)
     console.log("mount projectList")
 
