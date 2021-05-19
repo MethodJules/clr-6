@@ -1,8 +1,9 @@
 <template>
-    <div>
-        <App v-bind:showRightMenu="false" ></App>
+  <div>
+    <App v-bind:showRightMenu="false"></App>
     <b-row>
-      <b-card class="m-2"
+      <b-card
+        class="m-2"
         v-for="project in projectList"
         :key="project.projectId"
         :title="project.titel"
@@ -22,7 +23,6 @@
       </b-card>
 
       <b-card title="Neues Projekt" class="m-2">
-          
         <b-row>
           <b-col>
             <div>
@@ -119,7 +119,7 @@
 <script>
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 export default {
-    name: "ProjectList",
+  name: "ProjectList",
   components: {
     ReflexionAuswahl,
   },
@@ -138,37 +138,37 @@ export default {
         //TODO: array in backend dafür machen externeMitwirkende: [],
       },
 
-      projectList: [{
-                  titel: "Testtitel",
-        kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
-        nameDesAnlegenden: "Marcel",
-        bedreuenderDozent: "Julien, Maren",
-        externeMitwirkende: "Nithusha, Aylin",
-        schlagwoerter: "test, projektliste, projekte",
-        projectId: 0,
-      }
-
+      projectList: [
+        {
+          titel: "Testtitel",
+          kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
+          nameDesAnlegenden: "Marcel",
+          bedreuenderDozent: "Julien, Maren",
+          externeMitwirkende: "Nithusha, Aylin",
+          schlagwoerter: "test, projektliste, projekte",
+          projectId: 0,
+        },
       ],
     };
   },
   methods: {
     newProject() {
-      var addProj={
-            titel: "",
-            kurzbeschreibung: "",
-            nameDesAnlegenden: "",
-            bedreuenderDozent: "",
-            externeMitwirkende: "",
-            schlagwoerter: "",
-            projectId: 0
-      }
-      addProj.titel=this.project.titel
-      addProj.kurzbeschreibung=this.project.kurzbeschreibung
-      addProj.nameDesAnlegenden=this.project.nameDesAnlegenden
-      addProj.bedreuenderDozent=this.project.bedreuenderDozent
-      addProj.externeMitwirkende=this.project.externeMitwirkende
-      addProj.schlagwoerter=this.project.schlagwoerter
-      addProj.projectId= this.projectList.length + 1
+      var addProj = {
+        titel: "",
+        kurzbeschreibung: "",
+        nameDesAnlegenden: "",
+        bedreuenderDozent: "",
+        externeMitwirkende: "",
+        schlagwoerter: "",
+        projectId: 0,
+      };
+      addProj.titel = this.project.titel;
+      addProj.kurzbeschreibung = this.project.kurzbeschreibung;
+      addProj.nameDesAnlegenden = this.project.nameDesAnlegenden;
+      addProj.bedreuenderDozent = this.project.bedreuenderDozent;
+      addProj.externeMitwirkende = this.project.externeMitwirkende;
+      addProj.schlagwoerter = this.project.schlagwoerter;
+      addProj.projectId = this.projectList.length + 1;
       this.projectList.push(addProj);
     },
   },
