@@ -1,6 +1,6 @@
 const state = () => ({
     members: [
-        { name: 'Person 1', role: 'Gruppenadministrator*in'},
+        { name: 'Person 1', role: 'Gruppenadmin'},
         { name: 'Person 2', role: 'Gruppenmitglied'},
         { name: 'Person 3', role: 'Betreuer*in'}, 
         
