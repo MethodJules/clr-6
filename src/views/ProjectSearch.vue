@@ -1,9 +1,10 @@
 <template>
 <div>
-          <input
+          <vue-simple-suggest
             v-model="keyword"
             type="text"
-            class="form-input"
+            :list="simpleSuggestionList"
+            :filter-by-query="true"
             placeholder
             ="Geben Sie ein Schlagwort ein, um die Projektliste zu filtern!"
           />
@@ -31,14 +32,15 @@
 
 
 <script>
+import VueSimpleSuggest from 'vue-simple-suggest'
+import 'vue-simple-suggest/dist/styles.css' 
+
 export default {
+name: "ProjectList",
+    components: {
+        VueSimpleSuggest
+    },
 
-
-    name: "ProjectList",
-    
-    
-  components: {
-  },
   data() {
     return { 
       project: {
@@ -55,9 +57,10 @@ export default {
 
       projectList: [
       ],
-    
     searchResult: [
       ],
+      existingKeywordList: [],
+
       keywords: [],
       keyword: "",
 
@@ -66,6 +69,15 @@ export default {
   
 
   methods: {
+
+    simpleSuggestionList() {
+        //return this.existingKeywordList
+        return [
+          'schlagwort',
+          'Testprojekt',
+          'Literaturreview'
+        ]  
+      },
       
       deletekeyword(keyword){
           var keywordIndex = this.keywords.indexOf(keyword)
@@ -83,10 +95,15 @@ export default {
                 this.searchResult= []
                 for( var project of this.projectList){
                     console.log(project)
-                    for(var keyword of this.keywords)
-                        if(project.schlagworter==keyword){
-                            this.searchResult.push(project)
+                    
+                        for(var keyword of this.keywords){
+                            if(project.schlagworter==keyword){
+                                this.searchResult.push(project)
+                                }                                            }
+                    if(this.keywords<1){  
+                        this.searchResult=this.projectList
                     }
+
                 }
       },
 
@@ -112,7 +129,14 @@ export default {
     this.$store.dispatch('project/loadProjectsFromBackend')
     this.projectList = this.$store.state.project.projectList
     this.searchResult=this.projectList;
-    console.log(this.projectList)
+
+
+    for(var keyword of this.projectList){
+        console.log("test")
+        this.existingKeywordList.push(keyword.schlagworter[0])
+    }
+
+    console.log(this.existingKeywordList)
     console.log("mount projectList")
 
   },
