@@ -10,12 +10,22 @@
             <div
             v-for="(member, index) in members.members" :key="index">
                 
-                <h3>{{member.name}}</h3>
-               
-                <b-button @click="deleteMember(member)"> X </b-button>
-                <br />
-                
+            <b-row>
+                <b-col>  
                 <h5>{{member.role}}</h5>
+                </b-col>
+                <b-col>
+                <h5>{{member.name}}</h5>
+                </b-col>
+                <b-col>
+                <b-button @click="deleteMember(member)"> X </b-button>
+                <br>
+                </b-col>
+                
+                
+            </b-row>
+                
+                
                 
                 
             </div>
@@ -90,17 +100,16 @@ import { mapState } from 'vuex';
 <style scoped>
 
     h1 {
-        text-align: center;
+        text-align: right;
     }
 
-    h3 {
+    
+    h5 {
+        text-align: right;
         float:left;
         margin: 3px;
         margin-left: 10%;
-        display: inline-block;
-    }
-    h5 {
-        text-align: center;
+        display: inline-block; 
     }
 
     button {

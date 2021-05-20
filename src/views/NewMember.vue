@@ -1,22 +1,38 @@
 <template>
     <div class="home">
         <h2>Gruppenmitglied hinzufügen</h2>
-        <form @submit.prevent="save">
+        <b-form @submit.prevent="save">
             <div class="form-group">
                 Benutzer:
-                <input name=""
+                <!-- <label for="input-with-list"></label> -->
+                <div container>
+                <input list="input-list"
                        id=""
                        class="form-input"
-                       v-model="member" />
+                       v-model="member"
+                       placeholder="Benutzer*in suchen"
+                       
+                       
+                       />
+                <b-form-datalist id="input-list" :options="options"></b-form-datalist>
+                </div>
                 Rolle:
                 <input name=""
                        id=""
                        class="form-input"
                        v-model="role" />
+
+                       
+                        
                 
-                
+                        
+
+
+                       
+               
 
             </div>
+        
             <b-container>
             <b-row>
                 <b-col>
@@ -29,7 +45,7 @@
             </b-row>
             </b-container>
             
-        </form>
+        </b-form>
     </div>
 </template>
 
@@ -41,8 +57,15 @@ export default {
     },
     data() {
         return {
-            member: '',
-            role: ''
+            member: null,
+            role: '',
+            options: [
+           
+            { value: 'Max Müller', text: 'Max Müller' },
+            { value: 'Sara Becker', text: 'Sara Becker' },
+            { value: 'Kim Johnson' , text: 'Kim Johnson' },
+            
+            ]
             
         }
     },
