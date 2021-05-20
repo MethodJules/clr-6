@@ -116,7 +116,7 @@ export default {
         this.project.title=proj.title
     },
     getProjectTitles: function(){
-      this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projektanlegeformular', function(title){
+      this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projekt', function(title){
         this.$set('title', title);
         console.log(title);
       })

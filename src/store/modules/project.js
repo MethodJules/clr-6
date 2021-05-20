@@ -12,7 +12,7 @@ const state = () => ({
 
 const actions = {
     async loadProjectsFromBackend({commit}) {
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projektanlegeformular')
+        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt')
             .then((response) => {
                 console.log(response);
                 const data = response.data.data;
@@ -33,10 +33,10 @@ const actions = {
 const mutations ={
     ADD_PROJECT(state, projEntry) {
         console.log(projEntry)
-        var data = `{"data": {"type": "node--projektanlegeformular", "attributes": {"title": "${projEntry.title}", "field_schlagworter": "${projEntry.schlagworter}", "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}" }, "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3" }}}, "field_externe_mitwirkende": {"data": {"0": {"type": "user--user", "id": "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3" }}} }}}`;
+        var data = `{"data": {"type": "node--projekt", "attributes": {"title": "${projEntry.title}", "field_schlagworter": "${projEntry.schlagworter}", "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}" }, "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3" }}}, "field_externe_mitwirkende": {"data": {"0": {"type": "user--user", "id": "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3" }}} }}}`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/projektanlegeformular',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

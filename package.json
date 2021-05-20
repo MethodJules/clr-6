@@ -19,6 +19,7 @@
     "vue-d3-network": "^0.1.28",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.4.3",
+    "vue-simple-suggest": "^1.10.4",
     "vuelidate": "^0.7.6",
     "vuescroll": "^4.16.1",
     "vuetify": "^2.3.10",
