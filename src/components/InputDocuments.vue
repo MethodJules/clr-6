@@ -5,6 +5,16 @@
     </b-row>
 
     <b-row>
+      <!-- problem about computed start -->
+      <div>
+        From Computed:
+        <p v-for="input in inputs" :key="input">
+          <span>P tags are not being seen</span>
+          {{ input.name }}
+        </p>
+      </div>
+
+      <!-- problem about computed end -->
       <div
         v-for="(input, i) in inputFiles"
         :key="i"
