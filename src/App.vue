@@ -56,7 +56,7 @@
       </b-row>
 
       <b-row class="untereLeiste p-4 d-flex align-center">
-        <h3>What are gonna put here?</h3>
+        <h3>Footer oder Impressium vielleicht</h3>
       </b-row>
     </b-container>
   </div>
