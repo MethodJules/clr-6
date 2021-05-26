@@ -47,6 +47,18 @@ const mutations = {
 
         });
     },
+    /**
+     * 
+     * @param state we send our state to the method
+     * @param index index of the file that we are going to delete
+     * 
+     * Deletes the file from state
+     */
+    deleteInput(state, index) {
+
+        state.inputs.splice(index, 1);
+
+    }
 
 
 }

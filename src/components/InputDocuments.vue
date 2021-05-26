@@ -1,5 +1,7 @@
 <template>
   <div>
+    <!-- Input Box 
+    The uploaded files shown in here.  -->
     <b-row class="title p-1 d-flex justify-content-center">
       <h3>Input</h3>
     </b-row>
@@ -7,20 +9,27 @@
       <b-button v-b-modal.fileUpload>Datei Hochladen</b-button>
     </b-row>
     <b-row>
-      <!-- problem about computed end -->
-      <div v-for="(input, i) in getInputs" :key="i" class="card card-body">
+      <div v-for="(input, i) in getInputs" :key="i" class="card card-body p-2">
         <div>
-          <p>
+          <p class="m-0">
             {{ input.name }}
           </p>
+          <span class="float-right sizeBox">{{ input.size }} </span>
 
-          <span class="float-right sizeBox">
-            {{ input.size }}
-          </span>
+          <b-button
+            block
+            variant="outline-danger"
+            size="sm"
+            @click="deleteFile(i)"
+            >Delete</b-button
+          >
         </div>
       </div>
     </b-row>
 
+    <!-- Modal, when user click "datei hochladen" button
+    The place user adds files. 
+     -->
     <b-row>
       <b-modal id="fileUpload" title="INPUT" ref="fileUploadModal" hide-footer>
         <template>
@@ -35,11 +44,12 @@
             class="mb-2"
           ></b-form-file>
           <hr />
-          <!-- It does not show state -->
+
           <span ref="infoBox" class="mt-2">
             Button namen in Deutsch?
             <hr />
-            Ausgewählte Dateien:
+
+            <!-- Ausgewählte Dateien: -->
 
             <li v-for="(input, i) in inputFiles" :key="i" class="mb-1">
               <b>{{ input.name }}</b>
@@ -49,7 +59,7 @@
               </span>
             </li>
           </span>
-          <b-card-text align="right">
+          <b-card-text align="right" class="mt-3">
             <b-button
               class="mr-2"
               variant="primary"
@@ -82,6 +92,7 @@ export default {
   data() {
     return {
       inputFiles: [],
+      noFile: "Keine Datei Ausgewählt",
     };
   },
   computed: {
@@ -94,7 +105,6 @@ export default {
      * @param files files that we are going to use
      */
     upload(files) {
-      console.log(files);
       this.$store.commit("inputDocuments/uploadFiles", files);
       this.inputFiles = [];
       this.$refs["fileUploadModal"].hide();
@@ -135,6 +145,13 @@ export default {
       }
       return size;
     },
+    /**
+     * @param index, index of the file that will be deleted
+     * Deletes the file from state
+     */
+    deleteFile(index) {
+      this.$store.commit("inputDocuments/deleteInput", index);
+    },
   },
 };
 </script>
@@ -153,12 +170,13 @@ hr {
 .sizeBox {
   font-size: 0.8rem;
   color: white;
-  background: tomato;
+  background: rgb(49, 180, 167);
   padding: 0.3rem;
+  margin-bottom: 0.4rem;
   border-radius: 10%;
 }
 .sizeBox:hover {
-  background: red;
+  background: rgb(39, 146, 135);
 }
 .card:hover {
   cursor: pointer;
