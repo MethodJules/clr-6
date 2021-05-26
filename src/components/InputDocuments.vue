@@ -81,7 +81,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      inputFiles: [{ name: "Keine Datei ausgewählt", size: 0 }],
+      inputFiles: [],
     };
   },
   computed: {
@@ -96,7 +96,7 @@ export default {
     upload(files) {
       console.log(files);
       this.$store.commit("inputDocuments/uploadFiles", files);
-      this.inputFiles = [{ name: "Keine Datei ausgewählt" }];
+      this.inputFiles = [];
       this.$refs["fileUploadModal"].hide();
     },
     //
@@ -105,7 +105,7 @@ export default {
      * inputFiles array to the start value
      */
     clear() {
-      this.inputFiles = [{ name: "Keine Datei ausgewählt" }];
+      this.inputFiles = [];
     },
     /**
      * deletes all of the files that are selected by assigning to
@@ -114,7 +114,7 @@ export default {
      *  */
 
     closeModal() {
-      this.inputFiles = [{ name: "Keine Datei ausgewählt" }];
+      this.inputFiles = [];
       this.$refs["fileUploadModal"].hide();
     },
 
