@@ -1,6 +1,5 @@
 const state = {
     inputs: [],
-    files: "hello"
 }
 
 const getters = {
@@ -12,17 +11,10 @@ const getters = {
      */
     getInputs(state) {
         let files = state.inputs.reverse();
-
         return files;
     },
-    getFiles(state) {
-        return state;
-    }
 
 }
-
-
-
 
 const mutations = {
 
@@ -37,7 +29,6 @@ const mutations = {
      */
     uploadFiles(state, files) {
         files.forEach(element => {
-            console.log(element.name);
             let size = element.size;
             if (element.size > 100000000) {
                 size /= 1073741824;
@@ -55,8 +46,6 @@ const mutations = {
             state.inputs.push(file);
 
         });
-        console.log("Hello from mutation");
-        console.log(files);
     },
 
 
