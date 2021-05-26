@@ -21,10 +21,13 @@
             <b-row>
               <h5>{{ getAssistentText.title }}</h5>
 
-              <hr />
+              <!-- Why this hr is not shown in htmldom?? -->
               <hr />
 
               <p class="my-4">
+                How will it see these html tags as html insted of text?
+                <br /><br />
+
                 {{ getAssistentText.text }}
               </p>
             </b-row>
@@ -86,9 +89,6 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      assistent: this.$store.state.assistent.assistents,
-      assistentsArray: this.$store.state.assistent.assistentsArray,
-
       lastEntry_id: 2,
       newTodo: "",
       TodoList: "",
@@ -111,15 +111,10 @@ export default {
 
   computed: {
     ...mapGetters({ getAssistentText: "assistent/getAssistentText" }),
+    übrig() {
+      return this.todos.filter((todo) => !todo.erledigt).length;
+    },
   },
-  // übrigi hallet
-  // computed: {
-  //   // Anzahl der nicht erledigten Todos werden ausgegeben
-  //   übrig() {
-  //     return this.todos.filter((todo) => !todo.erledigt).length;
-  //   },
-  //
-  // },
 
   methods: {
     /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
