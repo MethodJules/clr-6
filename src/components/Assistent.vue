@@ -83,6 +83,13 @@
               <li v-for="assistent in assistentsArray" :key="assistent.id">
                 {{ assistent.title }}
               </li>
+
+              deneme:
+              {{
+                assistentText
+              }}
+
+              <!-- <li v-for="ass in assistentText" :key="ass">hello {{ ass }}</li> -->
             </ul>
           </b-modal>
         </div>
@@ -122,6 +129,9 @@ export default {
     // Anzahl der nicht erledigten Todos werden ausgegeben
     übrig() {
       return this.todos.filter((todo) => !todo.erledigt).length;
+    },
+    assistentText() {
+      return this.$store.getters.getAssistentFromState;
     },
   },
 

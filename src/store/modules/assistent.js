@@ -7,11 +7,17 @@ const state = () => ({
     assistents: {
         // hier gibt es nur die Array von die Link, Julien mir gegeben hat. 
     }
-
-
-
-
 })
+
+const getters = {
+    getAssistentFromState(state) {
+        console.log("hello from assistent getter::::::::::::::::::::")
+        console.log(state.assistents);
+        return state.assistentsArray;
+
+    }
+}
+
 const actions = {
     async loadAssistentArrayFromBackend({ commit }) {
         await axios.get('https://clr-backend.x-navi.de/jsonapi/node/assistententext/')
@@ -50,6 +56,9 @@ const actions = {
     },
 
 }
+
+
+
 const mutations = {
 
 
@@ -60,7 +69,7 @@ const mutations = {
             let assistentTitle = element.attributes.title;
             let assistentText = element.attributes.body.value;
             let assistentId = element.id;
-      
+
 
             state.assistentsArray.push({ id: assistentId, title: assistentTitle, text: assistentText });
 
@@ -75,13 +84,15 @@ const mutations = {
 
 
     }
-
-
-
 }
+
+
+
+
 export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }

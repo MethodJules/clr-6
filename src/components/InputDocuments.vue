@@ -3,25 +3,20 @@
     <b-row class="title p-1 d-flex justify-content-center">
       <h3>Input</h3>
     </b-row>
-
+    <b-row class="d-flex justify-content-center p-2">
+      <b-button v-b-modal.fileUpload>Datei Hochladen</b-button>
+    </b-row>
     <b-row>
-      <!-- problem about computed start -->
-      <div>
-        From Computed:
-        <p v-for="input in inputs" :key="input">
-          <span>P tags are not being seen</span>
-          {{ input.name }}
-        </p>
-      </div>
-
       <!-- problem about computed end -->
-      <div
-        v-for="(input, i) in inputFiles"
-        :key="i"
-        class="card card-body text-center"
-      >
-        <div class="text-center">
-          {{ input.name }}
+      <div v-for="(input, i) in getInputs" :key="i" class="card card-body">
+        <div>
+          <p>
+            {{ input.name }}
+          </p>
+
+          <span class="float-right sizeBox">
+            {{ input.size }}
+          </span>
         </div>
       </div>
     </b-row>
@@ -34,18 +29,24 @@
           <b-form-file
             v-model="inputFiles"
             ref="files-input"
-            placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here..."
+            placeholder="Wählen Sie eine Datei oder legen Sie sie hier ab ..."
+            drop-placeholder="Datei hier ablegen..."
             multiple
             class="mb-2"
           ></b-form-file>
           <hr />
           <!-- It does not show state -->
           <span ref="infoBox" class="mt-2">
-            Selected Files:
+            Button namen in Deutsch?
+            <hr />
+            Ausgewählte Dateien:
 
-            <li v-for="(input, i) in inputFiles" :key="i">
+            <li v-for="(input, i) in inputFiles" :key="i" class="mb-1">
               <b>{{ input.name }}</b>
+
+              <span class="ml-2 sizeBox">
+                {{ convertSize(input.size) }}
+              </span>
             </li>
           </span>
           <b-card-text align="right">
@@ -70,54 +71,69 @@
         </template>
       </b-modal>
     </b-row>
-
-    <b-row class="d-flex justify-content-end p-2">
-      <b-button v-b-modal.fileUpload align-self="end">+</b-button>
-    </b-row>
   </div>
 </template>
 
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
-      inputFiles: [{ name: "No File Selected" }],
+      inputFiles: [{ name: "Keine Datei ausgewählt", size: 0 }],
     };
   },
   computed: {
-    inputs() {
-      // I cannot use computed properties here. I cannot show the inputs in the HTML-DOM.
-      // thats why I have created inputFiles array above. I am using it to show uploaded files.
-      // But every time I upload files, I cannot see previous files while it overrides to inputFiles array.
-      // I do not delete this computed property. If we can solve this problem, our system will work more logical and better.
-      console.log("hello");
-      return this.$store.getters.getInputs;
-    },
+    ...mapGetters({ getInputs: "inputDocuments/getInputs" }),
   },
+
   methods: {
     // uploads the files and hides the modal
+    /**
+     * @param files files that we are going to use
+     */
     upload(files) {
       console.log(files);
       this.$store.commit("inputDocuments/uploadFiles", files);
-
+      this.inputFiles = [{ name: "Keine Datei ausgewählt" }];
       this.$refs["fileUploadModal"].hide();
     },
-    // deletes all of the files that are selected
+    //
+    /**
+     * deletes all of the files that are selected by assigning to
+     * inputFiles array to the start value
+     */
     clear() {
-      // this.listOfInputs = this.listOfInputsTemplate;
-      this.inputFiles = [{ name: "No File Selected" }];
-      // console.log("state is clean...");
-      // console.log(state.listOfInputs);
+      this.inputFiles = [{ name: "Keine Datei ausgewählt" }];
     },
-    // deletes all ofthe file and closes the modal
-    closeModal() {
-      // this.listOfInputs = this.listOfInputsTemplate;
-      this.inputFiles = [{ name: "No File Selected" }];
+    /**
+     * deletes all of the files that are selected by assigning to
+     * inputFiles array to the start value
+     * and closes the modal
+     *  */
 
-      // console.log("state is clean...");
-      // console.log(state.listOfInputs);
+    closeModal() {
+      this.inputFiles = [{ name: "Keine Datei ausgewählt" }];
       this.$refs["fileUploadModal"].hide();
+    },
+
+    /**
+     * @param size a value in byte
+     * @return size a value in GB or MB
+     * converts given size in byte to MB or GB
+     */
+    convertSize(size) {
+      if (size > 100000000) {
+        size /= 1073741824;
+        size = size.toFixed(2);
+        size += " GB";
+      } else {
+        size /= 1048576;
+        size = size.toFixed(2);
+        size += " MB";
+      }
+      return size;
     },
   },
 };
@@ -133,5 +149,18 @@ export default {
 hr {
   background-color: #e9ecef;
   border-radius: 0.1px;
+}
+.sizeBox {
+  font-size: 0.8rem;
+  color: white;
+  background: tomato;
+  padding: 0.3rem;
+  border-radius: 10%;
+}
+.sizeBox:hover {
+  background: red;
+}
+.card:hover {
+  cursor: pointer;
 }
 </style>
