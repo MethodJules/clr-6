@@ -29,7 +29,8 @@ export default new Vuex.Store({
         tool,
         todo,
         assistent,
-        inputDocuments,
+        inputDocuments
+
 
     },
 
