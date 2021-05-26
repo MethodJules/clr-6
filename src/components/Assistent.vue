@@ -18,12 +18,16 @@
           </b-row>
           <!-- Hilfstext von Assistent wird mit Modal Bootstrap ausgegeben, wenn man auf das Fragezeichen klickt -->
           <b-modal id="modal-1" title="Assistent">
-            <h5>{{ assistent.title }}</h5>
-            <hr />
+            <b-row>
+              <h5>{{ getAssistentText.title }}</h5>
 
-            <p class="my-4">
-              {{ assistent.text }}
-            </p>
+              <hr />
+              <hr />
+
+              <p class="my-4">
+                {{ getAssistentText.text }}
+              </p>
+            </b-row>
 
             <div class="container">
               <div>
@@ -68,29 +72,7 @@
               </footer>
             </div>
 
-            <!-- Datensätze aus dem Backend für die Hilfstexte werden als Array ausgegeben -->
-            <!-- <div
-              class="card"
-              v-for="assistent in assistents"
-              :key="assistent.date"
-            >
-              {{ assistent }}
-
-              
-            </div> -->
             <hr />
-            <ul>
-              <li v-for="assistent in assistentsArray" :key="assistent.id">
-                {{ assistent.title }}
-              </li>
-
-              deneme:
-              {{
-                assistentText
-              }}
-
-              <!-- <li v-for="ass in assistentText" :key="ass">hello {{ ass }}</li> -->
-            </ul>
           </b-modal>
         </div>
       </b-col>
@@ -99,6 +81,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -126,14 +110,16 @@ export default {
   },
 
   computed: {
-    // Anzahl der nicht erledigten Todos werden ausgegeben
-    übrig() {
-      return this.todos.filter((todo) => !todo.erledigt).length;
-    },
-    assistentText() {
-      return this.$store.getters.getAssistentFromState;
-    },
+    ...mapGetters({ getAssistentText: "assistent/getAssistentText" }),
   },
+  // übrigi hallet
+  // computed: {
+  //   // Anzahl der nicht erledigten Todos werden ausgegeben
+  //   übrig() {
+  //     return this.todos.filter((todo) => !todo.erledigt).length;
+  //   },
+  //
+  // },
 
   methods: {
     /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
@@ -155,6 +141,8 @@ export default {
     this.$store.dispatch("assistent/loadAssistentFromBackend");
     // this.assistents = this.$store.state.assistents;
     // this.assistentsArray = this.$store.state.assistentsArray;
+    console.log("");
+    console.log("");
     console.log("");
     // Wenn ich etwas auf der Konsole machen, dann funktioniert diese Linien. Warum?
   },

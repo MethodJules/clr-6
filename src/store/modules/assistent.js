@@ -1,18 +1,17 @@
 import axios from 'axios';
 
-const state = () => ({
+const state = {
     assistentsArray: [
         // Es gibt alle assistent fields in this array
     ],
-    assistents: {
-        // hier gibt es nur die Array von die Link, Julien mir gegeben hat. 
-    }
-})
+    assistentsAll: []
+}
+
 
 const getters = {
-    getAssistentFromState(state) {
+    getAssistentText(state) {
         console.log("hello from assistent getter::::::::::::::::::::")
-        console.log(state.assistents);
+        console.log(state.assistentsArray);
         return state.assistentsArray;
 
     }
@@ -37,7 +36,8 @@ const actions = {
     async loadAssistentFromBackend({ commit }) {
         await axios.get('https://clr-backend.x-navi.de/jsonapi/node/assistententext/595f3448-168d-4979-80b3-b96e9ef84885?resourceVersion=id%3A191')
             .then((response) => {
-
+                console.log("RESPOMNS::::::::::::::::::::::::::::::::::::::::::::")
+                console.log(response);
                 // How to deal with html tags???
                 const text = response.data.data.attributes.body.value;
                 const title = response.data.data.attributes.title;
@@ -71,7 +71,7 @@ const mutations = {
             let assistentId = element.id;
 
 
-            state.assistentsArray.push({ id: assistentId, title: assistentTitle, text: assistentText });
+            state.assistentsAll.push({ id: assistentId, title: assistentTitle, text: assistentText });
 
         });
 
@@ -80,7 +80,7 @@ const mutations = {
 
     SAVE_NEW_ASSISTENT(state, data) {
         console.log(data);
-        state.assistents = data;
+        state.assistentsArray = data;
 
 
     }
