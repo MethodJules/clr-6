@@ -18,12 +18,19 @@
           </b-row>
           <!-- Hilfstext von Assistent wird mit Modal Bootstrap ausgegeben, wenn man auf das Fragezeichen klickt -->
           <b-modal id="modal-1" title="Assistent">
-            <h5>{{ assistent.title }}</h5>
-            <hr />
+            <b-row>
+              <h5>{{ getAssistentText.title }}</h5>
 
-            <p class="my-4">
-              {{ assistent.text }}
-            </p>
+              <!-- Why this hr is not shown in htmldom?? -->
+              <hr />
+
+              <p class="my-4">
+                How will it see these html tags as html insted of text?
+                <br /><br />
+
+                {{ getAssistentText.text }}
+              </p>
+            </b-row>
 
             <div class="container">
               <div>
@@ -68,22 +75,7 @@
               </footer>
             </div>
 
-            <!-- Datensätze aus dem Backend für die Hilfstexte werden als Array ausgegeben -->
-            <!-- <div
-              class="card"
-              v-for="assistent in assistents"
-              :key="assistent.date"
-            >
-              {{ assistent }}
-
-              
-            </div> -->
             <hr />
-            <ul>
-              <li v-for="assistent in assistentsArray" :key="assistent.id">
-                {{ assistent.title }}
-              </li>
-            </ul>
           </b-modal>
         </div>
       </b-col>
@@ -92,12 +84,11 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
-      assistent: this.$store.state.assistent.assistents,
-      assistentsArray: this.$store.state.assistent.assistentsArray,
-
       lastEntry_id: 2,
       newTodo: "",
       TodoList: "",
@@ -119,7 +110,7 @@ export default {
   },
 
   computed: {
-    // Anzahl der nicht erledigten Todos werden ausgegeben
+    ...mapGetters({ getAssistentText: "assistent/getAssistentText" }),
     übrig() {
       return this.todos.filter((todo) => !todo.erledigt).length;
     },
@@ -145,6 +136,8 @@ export default {
     this.$store.dispatch("assistent/loadAssistentFromBackend");
     // this.assistents = this.$store.state.assistents;
     // this.assistentsArray = this.$store.state.assistentsArray;
+    console.log("");
+    console.log("");
     console.log("");
     // Wenn ich etwas auf der Konsole machen, dann funktioniert diese Linien. Warum?
   },

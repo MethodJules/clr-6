@@ -77,10 +77,10 @@
       >
     </b-dropdown>
 
-    <b-button v-b-modal.modal-1 size="lg" class="mb-2"> </b-button>
+    <b-button v-b-modal.modal-1 size="lg" class="mb-2"></b-button>
     <b-modal id="modal-seitennavi" title="Phase abschließen">
       <p>
-        Der Beendigung von Phase: "Gruppe bilden" haben {{ voted }}, von n
+        Der Beendigung von Phase: "Gruppe bilden" haben , von n
         Gruppenmitgliedern zugestimmt
       </p>
       <b-form-checkbox
