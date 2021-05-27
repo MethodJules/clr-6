@@ -1,10 +1,10 @@
 <template>
-
-    <b-calendar
-                                    size= "sm"
-                                    id="ex-disabled-readonly"
-                                    :disabled="disabled"
-                                    :readonly="readonly"
-    ></b-calendar>
-    
+  <b-calendar
+    block
+    size="sm"
+    id="ex-disabled-readonly"
+    :disabled="disabled"
+    :readonly="readonly"
+    class="flex-grow-1"
+  ></b-calendar>
 </template>

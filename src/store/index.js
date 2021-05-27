@@ -11,6 +11,7 @@ import documentation from './modules/documentation'
 import tool from './modules/tool'
 import todo from './modules/todo'
 import assistent from './modules/assistent'
+import inputDocuments from './modules/inputDocuments'
 import phases from './modules/phases'
 import project from './modules/project'
 import output_documents from './modules/output_documents'
@@ -21,32 +22,35 @@ Vue.config.devtools = true
 
 export default new Vuex.Store({
     modules: {
-       items,
-       concepts,
-       project,
-       concept_map,
-       members,
-       daily_scrum,
-       reflexion,
-       documentation,
-       tool,
-       todo,
-       assistent,
-       phases,
-       output_documents
+        items,
+        concepts,
+        project,
+        concept_map,
+        members,
+        daily_scrum,
+        reflexion,
+        documentation,
+        tool,
+        todo,
+        assistent,
+        phases,
+        output_documents,
+        inputDocuments
     },
 
-//noch in Datei packen
+    //noch in Datei packen
     state: {
         ...sourceData,
         // authId: '98St7Q8Zi2N9SPa5ahzssq9kbyp6'
-        authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2'
+        authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
+
     },
 
     getters: {
         authUser(state) {
             return state.users[state.authId]
-        }
+        },
+
     },
 
     actions: {
@@ -60,7 +64,7 @@ export default new Vuex.Store({
         },
 
         // create new Thread
-            createNewThread(context, [thread, post]) {
+        createNewThread(context, [thread, post]) {
             const threadId = 'greatThread' + Math.random()
             const postId = 'greatPost' + Math.random()
 
@@ -75,12 +79,12 @@ export default new Vuex.Store({
             thread['firstPostId'] = postId
             thread['lastPostId'] = postId
             thread['lastPostAt'] = post.publishedAt
-           
+
 
             context.commit('setThread', { thread, threadId })
             context.commit('appendPostToThread', { threadId: post.threadId, postId })
             context.commit('appendThreadToForum', { forumId: thread.forumId, threadId })
-            
+
 
         }
     },
@@ -100,8 +104,8 @@ export default new Vuex.Store({
             Vue.set(user.posts, postId, postId)
         },
 
-         setThread(state, { thread, threadId }) {
-             Vue.set(state.threads, threadId, thread)
+        setThread(state, { thread, threadId }) {
+            Vue.set(state.threads, threadId, thread)
         },
 
         appendThreadToForum(state, { threadId, forumId }) {
@@ -111,6 +115,9 @@ export default new Vuex.Store({
         },
 
 
-    }
+
+    },
+
+
 
 })

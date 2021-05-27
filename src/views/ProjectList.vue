@@ -1,4 +1,15 @@
 <template>
+<<<<<<< HEAD
+  <div>
+    <App v-bind:showRightMenu="false"></App>
+    <b-row>
+      <b-card
+        class="m-2"
+        v-for="project in projectList"
+        :key="project.projectId"
+        :title="project.titel"
+      >
+=======
     <div>
         <h1>
           Meine Projekte
@@ -11,6 +22,7 @@
         :title="proj.titel"
       > -->
       <div>
+>>>>>>> 735937242b032fde0a6a2e6ef35d59d4423bd1db
         <b-row>
           <b-col>
 
@@ -48,8 +60,12 @@
       </div>
       <!-- </b-card> -->
 
+<<<<<<< HEAD
+      <b-card title="Neues Projekt" class="m-2">
+=======
       <b-card title="Neues Projekt" style="max-height: 10rem;" class="m-2">
           
+>>>>>>> 735937242b032fde0a6a2e6ef35d59d4423bd1db
         <b-row>
 
           <b-col col="3">
@@ -73,10 +89,14 @@ import ProjectForm from '@/components/ProjectForm'
 
 
 export default {
+<<<<<<< HEAD
+  name: "ProjectList",
+=======
 
     name: "ProjectList",
     
     
+>>>>>>> 735937242b032fde0a6a2e6ef35d59d4423bd1db
   components: {
     ReflexionAuswahl,
     ProjectForm
@@ -97,6 +117,18 @@ export default {
         TODO: array in backend dafür machen externeMitwirkende: [], */
       },
 
+<<<<<<< HEAD
+      projectList: [
+        {
+          titel: "Testtitel",
+          kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
+          nameDesAnlegenden: "Marcel",
+          bedreuenderDozent: "Julien, Maren",
+          externeMitwirkende: "Nithusha, Aylin",
+          schlagwoerter: "test, projektliste, projekte",
+          projectId: 0,
+        },
+=======
       projectList: [{
         title: "Testtitel",
         kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
@@ -106,14 +138,36 @@ export default {
         
       }
 
+>>>>>>> 735937242b032fde0a6a2e6ef35d59d4423bd1db
       ],
     };
   },
   
 
   methods: {
+<<<<<<< HEAD
+    newProject() {
+      var addProj = {
+        titel: "",
+        kurzbeschreibung: "",
+        nameDesAnlegenden: "",
+        bedreuenderDozent: "",
+        externeMitwirkende: "",
+        schlagwoerter: "",
+        projectId: 0,
+      };
+      addProj.titel = this.project.titel;
+      addProj.kurzbeschreibung = this.project.kurzbeschreibung;
+      addProj.nameDesAnlegenden = this.project.nameDesAnlegenden;
+      addProj.bedreuenderDozent = this.project.bedreuenderDozent;
+      addProj.externeMitwirkende = this.project.externeMitwirkende;
+      addProj.schlagwoerter = this.project.schlagwoerter;
+      addProj.projectId = this.projectList.length + 1;
+      this.projectList.push(addProj);
+=======
     fetchData(proj){
         this.project.title=proj.title
+>>>>>>> 735937242b032fde0a6a2e6ef35d59d4423bd1db
     },
     getProjectTitles: function(){
       this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projekt', function(title){

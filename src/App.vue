@@ -1,63 +1,67 @@
 <template>
   <div id="app">
     <div v-if="validCredential != false">
-      <div class="mx-auto" style="width: 50rem;">
-      <b-container >
-        <b-row align-v="center">
-          <b-col>
-            <b-card  class="login">
-              <b-form-group>
-              <b-tabs content-class="mt-3">
-                <!-- Tab 1 -->
-                <b-tab title="Login">
-                  <table>
-                    <tr>
-                      <td>
-                        <label for="zugangsKennung" class="mr-1">Zugangskennung</label>
-                      </td>
-                      <td>
-                        <input
-                          v-model="zugangsKennung"
-                          id="zugangskennung"
-                          type="text"
-                          placeholder=""
-                          class="form-control"
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label for="password" class="mr-1 mt-1">Passwort</label>
-                      </td>
-                      <td>
-                        <input
-                          v-model="passwort"
-                          id="password"
-                          type="password"
-                          placeholder=""
-                          class="form-control mt-1"
-                        />
-                      </td>
-                    </tr>
-                  </table>
+      <div class="mx-auto" style="width: 50rem">
+        <b-container>
+          <b-row align-v="center">
+            <b-col>
+              <b-card class="login">
+                <b-form-group>
+                  <b-tabs content-class="mt-3">
+                    <!-- Tab 1 -->
+                    <b-tab title="Login">
+                      <table>
+                        <tr>
+                          <td>
+                            <label for="zugangsKennung" class="mr-1"
+                              >Zugangskennung</label
+                            >
+                          </td>
+                          <td>
+                            <input
+                              v-model="zugangsKennung"
+                              id="zugangskennung"
+                              type="text"
+                              placeholder=""
+                              class="form-control"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label for="password" class="mr-1 mt-1"
+                              >Passwort</label
+                            >
+                          </td>
+                          <td>
+                            <input
+                              v-model="passwort"
+                              id="password"
+                              type="password"
+                              placeholder=""
+                              class="form-control mt-1"
+                            />
+                          </td>
+                        </tr>
+                      </table>
 
-                  <b-button @click="login()">Login</b-button>
-                </b-tab>
+                      <b-button @click="login()">Login</b-button>
+                    </b-tab>
 
-                <b-tab title="Registrierung">
-                  <h5>Registriere dich hier mit deinem Uni-Account</h5>
-                  <p>
-                    Falls du Hilfe benötigst, wende dich an
-                    mail@uni-hildesheim.de
-                  </p>
-                  <b-button @click="registrieren()">Registrieren</b-button>
-                </b-tab>
-              </b-tabs>
-              </b-form-group>
-            </b-card>
-          </b-col>
-        </b-row>
-      </b-container>
+                    <b-tab title="Registrierung">
+                      <h5>Registriere dich hier mit deinem Uni-Account</h5>
+                      <p>
+                        Falls du Hilfe benötigst, wende dich an
+                        mail@uni-hildesheim.de
+                      </p>
+                      <b-button @click="registrieren()">Registrieren</b-button>
+                    </b-tab>
+                  </b-tabs>
+                </b-form-group>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-container>
       </div>
     </div>
     <div v-else>
@@ -101,10 +105,9 @@
             </b-row>
 
             <b-row class="chat">
-              <br>
+              <br />
               <b-col class="border border-dark">
                 <Postfach />
-                
               </b-col>
             </b-row>
             <b-row class="postfach">
@@ -123,12 +126,15 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
 import Chat from "@/components/Chat.vue";
 import Postfach from "@/components/Postfach.vue";
+
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
@@ -245,19 +251,33 @@ export default {
 </script>
 <style>
 @import "assets/style.css";
+@import "assets/loading.css";
+.row {
+  width: 100% !important;
+  margin: 0 !important;
+}
 
+.pageContainer {
+  padding: 1rem 1rem 1rem 0;
+}
+
+.linkeSeite {
+  min-width: 20rem;
+}
+
+.rechtseite {
+  min-width: 20rem;
+  border: 1px solid red;
+}
+.mainContent {
+  min-width: 20rem;
+  padding: 0 !important;
+}
 .postfach {
-  width: 100%;
   text-align: center;
-  position: absolute;
-  bottom: 0;
-  height: 15%;
-  display: table;
-  margin: auto;
 }
 
 .chat {
-  width: 100%;
   text-align: center;
   position: absolute;
   bottom: 0;
@@ -282,94 +302,11 @@ export default {
   /*  width: 60 px;
         border: 1px solid black; */
 }
+
 .untereLeiste {
-  width: auto;
-  height: 100 px;
+  height: 100%;
   border: 1px solid black;
+  margin: 0;
 }
-
-/* .background {
-        background-color: red;
-        background-image: url('~@/assets/background2.jpg');
-        width: 100%;
-        height: 90%;
-        position: absolute;
-        background-size: cover;
-
-    } */
-/*
-    .sc-launcher {
-        position: unset !important;
-        height: 60px !important;
-        margin-bottom: 20px !important;
-
-    }
-
-    .sc-launcher::before {
-        position: unset !important;
-        height: 60px !important;
-        height:unset !important;
-    }
-
-    .sc-open-icon {
-        position: unset !important;
-
-    }
-
-    .sc-closed-icon {
-        position: unset !important;
-    }
-
-    .sc-chat-window {
-        width: 20% !important;
-        height: 50% !important;
-    }
-
-    .sc-header {
-        height: 15% !important;
-        min-height: unset !important;
-    }
-    .sc-header--title {
-        font-size: 10px !important;
-        min-height: unset !important;
-    }
-
-    .sc-message {
-        width: unset !important;
-        margin-right: 10px !important;
-    }
-    .sc-message--text {
-        padding-bottom: 5px !important;
-        padding-top: 5px !important;
-        padding-left: 5px !important;
-        padding-right: 5px !important;
-        font-size: 12px !important;
-        max-width: unset !important;
-
-    }
-    .sc-message--content.sent {
-        margin-left: 15%;
-    }
-
-    .sc-message--text-content {
-        margin-bottom: 0px;
-    }
-
-    .sc-user-input {
-        min-height: unset !important;
-        height: 10% !important;
-    }
-    .sc-user-input--text {
-        height: 40px !important;
-        min-height: unset !important;
-        padding: 5px !important;
-        width: 90% !important;
-    }
-    .sc-user-input--button {
-        margin-left: 50px !important;
-
-    }
-
-    */
 </style>
 
