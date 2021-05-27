@@ -7,7 +7,10 @@
     </b-row>
     <b-row class="d-flex justify-content-center p-2">
       <b-button v-b-modal.fileUpload>Datei Hochladen</b-button>
+      <!-- For Database upload. This button may be activated later...     -->
+      <!-- <b-button @click="uploadToDatabase()">Database Hochladen</b-button> -->
     </b-row>
+
     <b-row>
       <div v-for="(input, i) in getInputs" :key="i" class="card card-body p-2">
         <div>
@@ -92,6 +95,7 @@ export default {
   data() {
     return {
       inputFiles: [],
+      uploadedFiles: [],
       noFile: "Keine Datei Ausgewählt",
     };
   },
@@ -106,9 +110,18 @@ export default {
      */
     upload(files) {
       this.$store.commit("inputDocuments/uploadFiles", files);
+      this.uploadedFiles.push(this.inputFiles);
       this.inputFiles = [];
       this.$refs["fileUploadModal"].hide();
     },
+
+    uploadToDatabase() {
+      this.$store.dispatch(
+        "inputDocuments/uploadFilesToDatabase",
+        this.uploadedFiles
+      );
+    },
+
     //
     /**
      * deletes all of the files that are selected by assigning to

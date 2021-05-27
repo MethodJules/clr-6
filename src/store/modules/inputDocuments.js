@@ -1,5 +1,6 @@
 const state = {
-    inputs: [],
+    inputs: [], // we are using this array to store the file names and sizes only
+    inputsForDatabase: [] // we are going to use this array in order to upload our files to database
 }
 
 const getters = {
@@ -28,6 +29,9 @@ const mutations = {
      * We have all files at variable files. We can easily send it to the database.
      */
     uploadFiles(state, files) {
+        // this line uploads the files to inputsForDatabase for database reactions
+        state.inputsForDatabase.push(files);
+        // after here we are storing data to state
         files.forEach(element => {
             let size = element.size;
             if (element.size > 100000000) {
@@ -58,7 +62,24 @@ const mutations = {
 
         state.inputs.splice(index, 1);
 
-    }
+    },
+
+
+
+}
+
+const actions = {
+    /**
+     * 
+     * @param state we send our state to method
+     * To upload files to database. 
+     * Will be written later.... 
+     */
+    uploadFilesToDatabase({ state }) {
+        console.log("Files that we are goint upload database");
+        console.log(state.inputsForDatabase);
+        // Database Reactions....
+    },
 
 
 }
@@ -69,5 +90,6 @@ export default {
     state,
     getters,
     mutations,
+    actions
 
 }
