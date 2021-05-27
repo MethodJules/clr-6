@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="loading" :style="isLoading">
+      <div class="lds-ripple">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
     <!-- Input Box 
     The uploaded files shown in here.  -->
     <b-row class="title p-1 d-flex justify-content-center">
@@ -95,24 +102,39 @@ export default {
   data() {
     return {
       inputFiles: [],
-      uploadedFiles: [],
+      uploadedFiles: [], // this is for database interaction.
       noFile: "Keine Datei Ausgewählt",
+      okButtonClicked: false,
     };
   },
   computed: {
     ...mapGetters({ getInputs: "inputDocuments/getInputs" }),
+    isLoading() {
+      if (this.okButtonClicked) {
+        return { display: "block" };
+      } else {
+        return { display: "none" };
+      }
+    },
   },
 
   methods: {
-    // uploads the files and hides the modal
     /**
      * @param files files that we are going to use
+     * uploads the file
+     * triggers loading bar
+     * closes the modal
      */
+
     upload(files) {
+      // changing okButtonClicked for loading bar
+      this.okButtonClicked = true;
       this.$store.commit("inputDocuments/uploadFiles", files);
       this.uploadedFiles.push(this.inputFiles);
       this.inputFiles = [];
       this.$refs["fileUploadModal"].hide();
+      // setTimeout is for loading bar. - incomplete
+      setTimeout(() => (this.okButtonClicked = false), 1000);
     },
 
     uploadToDatabase() {

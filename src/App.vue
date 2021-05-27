@@ -64,12 +64,15 @@
 
 
 <script>
+import { mapGetters } from "vuex";
+
 import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
 import Chat from "@/components/Chat.vue";
 import Postfach from "@/components/Postfach.vue";
+
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
@@ -142,19 +145,16 @@ export default {
             } */
   },
   computed: {
+    ...mapGetters({ isLoading: "isLoading" }),
     isChanged() {
       return this.$route.name === "ProjectList";
     },
-  } /* ,
-        mounted() {
-            this.$store.dispatch('todo/loadToDoFromBackend')
-            this.listOfToDos = this.$store.state.todo.listOfToDos
-
-        }, */,
+  },
 };
 </script>
 <style>
 @import "assets/style.css";
+@import "assets/loading.css";
 .row {
   width: 100% !important;
   margin: 0 !important;
