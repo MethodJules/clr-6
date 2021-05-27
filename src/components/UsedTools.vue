@@ -4,21 +4,14 @@
       <h3>Verwendete Tools</h3>
     </b-row>
     <b-row>
-      <div
-        class="card-body text-center"
-        v-for="tool in listOfTools"
-        :key="tool.date"
-      >
-        <div>
-          <b-form-checkbox
-            :id="tool.date"
-            v-model="status"
-            name="checkbox-1"
-            value="checked"
-            unchecked-value="unchecked"
-          >
-            {{ tool.usedTool }}
-          </b-form-checkbox>
+        
+        <div class="card-body text-center "  v-for="tool in listOfTools" :key="tool.date">
+            <div >
+                <b-form-checkbox :id="tool.date" v-model="status" name="checkbox-1" value="checked" unchecked-value="unchecked">
+                  {{tool.tool}}
+                </b-form-checkbox>
+            </div>
+        
         </div>
       </div>
     </b-row>

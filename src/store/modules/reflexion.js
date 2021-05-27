@@ -29,6 +29,11 @@ const actions = {
 
     },
 
+    updateReflexion({commit}, reflexion) {
+
+        commit('UPDATE_REFLEXION', reflexion);
+    },
+
 /*     deleteDaily({commit}, dailyEntry) {
 
         commit('DELETE_DAILY_ENTRY', dailyEntry);
@@ -101,6 +106,31 @@ const mutations = {
                 console.log(error)
             })
     },
+
+UPDATE_REFLEXION(state, reflexion){
+        //let index = state.rowData.indexOf(dailyEntry);
+        //state.rowData[index]=dailyEntry;
+    //console.log(dailyEntry.todaydoings)
+    var data = `{"data": {"type": "node--reflexionstemplate", "id": "${reflexion.idd}", "attributes": {"title": "${reflexion.title}", "field_berichten_reagieren": "${reflexion.berichten_reagieren}", "field_in_bezug_setzen": "${reflexion.in_bezug_setzen}" , "field_rekonstruieren": "${reflexion.rekonstruieren}", "field_schlussfolgern": "${reflexion.schlussfolgern}" }}}`;
+    var config = {
+        method: 'patch',
+        url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
+        headers: {
+            'Accept': 'application/vnd.api+json',
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+        },
+        data: data
+    };
+    axios(config)
+    .then(function(response){
+        console.log(response)
+    })
+    .catch(function(error) {
+        console.log(error)
+    })
+    },
+
 
 /*     UPDATE_DAILY_ENTRY(state, dailyEntry) {
             //let index = state.rowData.indexOf(dailyEntry);

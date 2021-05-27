@@ -1,30 +1,51 @@
 <template>
     <div class="home">
-        <h1>Create New Member</h1>
-        <form @submit.prevent="save">
+        <h2>Gruppenmitglied hinzufügen</h2>
+        <b-form @submit.prevent="save">
             <div class="form-group">
-                Member:
-                <input name=""
+                Benutzer:
+                <!-- <label for="input-with-list"></label> -->
+                <div container>
+                <input list="input-list"
                        id=""
                        class="form-input"
-                       v-model="member" />
-                Role:
+                       v-model="member"
+                       placeholder="Benutzer*in suchen"
+                       
+                       
+                       />
+                <b-form-datalist id="input-list" :options="options"></b-form-datalist>
+                </div>
+                Rolle:
                 <input name=""
                        id=""
                        class="form-input"
                        v-model="role" />
-                Image:
-                <input name=""
-                       id=""
-                       class="form-input"
-                       v-model="img" />
+
+                       
+                        
+                
+                        
+
+
+                       
+               
 
             </div>
+        
+            <b-container>
+            <b-row>
+                <b-col>
+           
+                <button>Speichern</button>
 
-            <div class="form-actions">
-                <button class="btn-red">Add Member</button>
-            </div>
-        </form>
+                </b-col>
+
+                
+            </b-row>
+            </b-container>
+            
+        </b-form>
     </div>
 </template>
 
@@ -36,9 +57,16 @@ export default {
     },
     data() {
         return {
-            member: '',
+            member: null,
             role: '',
-            img: ''
+            options: [
+           
+            { value: 'Max Müller', text: 'Max Müller' },
+            { value: 'Sara Becker', text: 'Sara Becker' },
+            { value: 'Kim Johnson' , text: 'Kim Johnson' },
+            
+            ]
+            
         }
     },
     methods: {
@@ -46,7 +74,7 @@ export default {
             const member = {
                 name: this.member,
                 role: this.role,
-                img: this.img
+               
             }
             this.$store.dispatch('members/addMember', member)
 

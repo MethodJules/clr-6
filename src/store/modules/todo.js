@@ -11,26 +11,26 @@ const actions = {
     async loadToDoFromBackend({commit}) {
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/to_dos')
             .then((response) => {
-                console.log(response);
+                //console.log(response);
                 const data = response.data.data;
                 //let to-dos = [];
                 commit('SAVE_TODO', data);
-                
+
             }).catch(error =>{
                 throw new Error(`API ${error}`);
-            });         
-            
+            });
+
     },
     createToDo({commit}, todoEntry) {
-        console.log(todoEntry.todo)
+        //console.log(todoEntry.todo)
         commit('ADD_TODO_ENTRY', todoEntry)
 
     },
-    /* deleteTodo({commit}, todoEntry) {
+     deleteTodo({commit}, todoEntry) {
         var config = {
             method: 'delete',
             url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
-           
+
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -45,18 +45,19 @@ const actions = {
             });
         commit('DELETE_TODO_ENTRY', todoEntry);
     },
+    /*
     updateTodo({commit}, todoEntry) {
 
         commit('UPDATE_TODO_ENTRY', todoEntry);
     }, */
 }
 const mutations = {
-    /* DELETE_TODO_ENTRY(state, todoEntry) {
+    DELETE_TODO_ENTRY(state, todoEntry) {
         let index = state.listOfToDos.indexOf(todoEntry);
         state.listOfToDos.splice(index, 1);
-    }, */
+    }, 
     ADD_TODO_ENTRY(state, todoEntry) {
-        console.log(todoEntry.todo)
+        //console.log(todoEntry.todo)
         var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "Todo Titel", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
         var config = {
             method: 'post',
@@ -68,7 +69,7 @@ const mutations = {
             },
             data: data
         };
-        console.log("te")
+        //console.log("te")
         axios(config)
             .then(function(response){
                 console.log(response)
@@ -99,18 +100,18 @@ const mutations = {
         })
     }, */
     SAVE_TODO(state, todo) {
-        
+
         todo.forEach(element => {
             const field_aufgaben = element.attributes.field_aufgaben;
-            console.log(field_aufgaben)
+            //console.log(field_aufgaben)
             const field_date = element.attributes.field_date;
-            console.log(field_date)
+            //console.log(field_date)
             const field_id = element.id;
-            console.log(element.id)
+            //console.log(element.id)
             const field_title = element.attributes.title;
-            console.log(element.id)
+            //console.log(element.id)
             state.listOfToDos.push( { date: field_date, todo: field_aufgaben, idd: field_id, title: field_title })
-            console.log(state)  
+            //console.log(state)
         });
     }
 }

@@ -11,43 +11,49 @@
     <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
     <b-link
       :disabled="isDisabled[0]"
-      :to="{ name: 'PhaseTemplate', params: { phase: 'Gruppe bilden' } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 0 } }"
       class="btn btn-outline-dark btn-block mb-2"
       >Gruppe bilden</b-link
     >
     <b-link
       :disabled="isDisabled[1]"
-      :to="{ name: 'PhaseTemplate', params: { phase: 'Ziel' } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 1 } }"
       class="btn btn-outline-dark btn-block mb-2"
-      >Ziel</b-link
+      >Ziel &amp; Umfang definieren</b-link
     >
     <b-link
       :disabled="isDisabled[2]"
-      :to="{ name: 'PhaseTemplate', params: { phase: 'Literatur' } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 2 } }"
       class="btn btn-outline-dark btn-block mb-2"
-      >Literatur</b-link
+      >Konzepte &amp; Definitionen identifizieren</b-link
     >
     <b-link
       :disabled="isDisabled[3]"
-      :to="{ name: 'PhaseTemplate', params: { phase: 'Daten' } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 3 } }"
       class="btn btn-outline-dark btn-block mb-2"
-      >Daten</b-link
+      >Literatur suchen</b-link
     >
     <b-link
       :disabled="isDisabled[4]"
-      :to="{ name: 'PhaseTemplate', params: { phase: 'Analyse' } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 4 } }"
       class="btn btn-outline-dark btn-block mb-2"
-      >Analyse</b-link
+      >Daten extrahieren</b-link
     >
     <b-link
       :disabled="isDisabled[5]"
-      :to="{ name: 'PhaseTemplate', params: { phase: 'Ergebnisse' } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 5 } }"
       class="btn btn-outline-dark btn-block mb-2"
-      >Ergebnisse</b-link
+      >Literatur analysieren &amp; synthetisieren</b-link
     >
     <b-link
       :disabled="isDisabled[6]"
-      :to="{ name: 'PhaseTemplate', params: { phase: 'Gruppe auflösen' } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 6 } }"
+      class="btn btn-outline-dark btn-block mb-2"
+      >Ergebnisse kommunizieren</b-link
+    >
+    <b-link
+      :disabled="isDisabled[7]"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 7 } }"
       class="btn btn-outline-dark btn-block mb-2"
       >Gruppe auflösen</b-link
     >
@@ -61,26 +67,29 @@
         >"Ziel" abschließen</b-dropdown-item
       >
       <b-dropdown-item v-on:click="phaseAbschließen(2)"
-        >"Literatur" abschließen</b-dropdown-item
+        >"Konzepte" abschließen</b-dropdown-item
       >
       <b-dropdown-item v-on:click="phaseAbschließen(3)"
-        >"Daten" abschließen</b-dropdown-item
+        >"Literatur" abschließen</b-dropdown-item
       >
       <b-dropdown-item v-on:click="phaseAbschließen(4)"
-        >"Analyse" abschließen</b-dropdown-item
+        >"Daten" abschließen</b-dropdown-item
       >
       <b-dropdown-item v-on:click="phaseAbschließen(5)"
-        >"Ergebnisse" abschließen</b-dropdown-item
+        >"Analyse" abschließen</b-dropdown-item
       >
       <b-dropdown-item v-on:click="phaseAbschließen(6)"
+        >"Ergebnisse" abschließen</b-dropdown-item
+      >
+      <b-dropdown-item v-on:click="phaseAbschließen(7)"
         >"Gruppe auflösen" abschließen</b-dropdown-item
       >
     </b-dropdown>
 
-    <b-button v-b-modal.modal-1 size="lg" class="mb-2"></b-button>
+    <b-button v-b-modal.modal-seitennavi size="lg" class="mb-2"> </b-button>
     <b-modal id="modal-seitennavi" title="Phase abschließen">
       <p>
-        Der Beendigung von Phase: "Gruppe bilden" haben , von n
+        Der Beendigung von Phase: "Gruppe bilden" haben {{ voted }}, von n
         Gruppenmitgliedern zugestimmt
       </p>
       <b-form-checkbox
@@ -93,6 +102,7 @@
         werden?</b-form-checkbox
       >
       {{ status }}
+      <p></p>
     </b-modal>
   </div>
 </template>
@@ -109,33 +119,52 @@ export default {
   },
   components: {},
 
-  methods: {
-    /**Abstimmung über die Beendigung einer Phase wird gestartet */
-    abstimmungPhaseAbschließen(phase) {
-      //to do: Nachricht an alle Gruppenmitglieder (in Postfach) dort Feld zur Abstimmung von abschluss oder eine checkbox für jedes mitglied
-      // checkbox oder mail zählt votes hoch und speichert in backend - weitere funktion gibt boolean aus ob abgeschlossen ist und speichert in backend
-      // in welchem content type speichern? phasetemplate oder Gruppenbereich?
-      // hier checken ob phase abgeschlossen werden kann ->  eine phase kann nur abgeschlossen werden wenn die vorherige abgeschlossen wurde
-      console.log(phase);
-    },
-    /**Phase wird hier wieder geöffnet, wenn erfolgreich über die Reaktivierung abgestimmt wurde */
-    phaseWiederOeffnen(phase) {
-      /*TODO:
-       */
-      console.log(phase);
-      if (/*phase==aktuellephase-1*/ phase == 1) {
-        this.isDisabled[phase] = false;
-      } else {
-        var ausgabe =
-          "Bitte erst die letzte abgeschlossene Phase wieder öffnen";
-        console.log(ausgabe);
-      }
-    },
-    /**parameter: Int
-     * Ein Button der eine Phase verlinkt wird hier deaktiviert. Ist der Button bereits aktiviert, wird die Phase reaktiviert.
-     */
-    phaseAbschließen(phase) {
-      /*TODO: phase wird abgeschlossen wenn mehr als n/2 Gruppenmitglieder abgestimmt haben 
+    export default {
+        name: 'App',
+        data: function () {
+            return {
+                isDisabled: [false, false, false, false, false, false, false],
+                votes: 2,
+                status: 0
+               // isDisabled: false
+            }
+        },
+        components: {
+
+        },
+
+        methods: {
+        /**Abstimmung über die Beendigung einer Phase wird gestartet */
+        abstimmungPhaseAbschließen(phase) {
+            //to do: Nachricht an alle Gruppenmitglieder (in Postfach) dort Feld zur Abstimmung von abschluss oder eine checkbox für jedes mitglied
+            // checkbox oder mail zählt votes hoch und speichert in backend - weitere funktion gibt boolean aus ob abgeschlossen ist und speichert in backend
+            // in welchem content type speichern? phasetemplate oder Gruppenbereich?
+            // hier checken ob phase abgeschlossen werden kann ->  eine phase kann nur abgeschlossen werden wenn die vorherige abgeschlossen wurde
+            console.log(phase)
+
+
+
+        },
+        /**Phase wird hier wieder geöffnet, wenn erfolgreich über die Reaktivierung abgestimmt wurde */
+        phaseWiederOeffnen(phase) {
+            /*TODO: 
+            */
+            console.log(phase)
+           if(/*phase==aktuellephase-1*/phase==1){
+             this.isDisabled[phase]=false
+           }
+           else{
+               var ausgabe = "Bitte erst die letzte abgeschlossene Phase wieder öffnen"
+               console.log(ausgabe)
+           }
+
+
+        },
+        /**parameter: Int
+         * Ein Button der eine Phase verlinkt wird hier deaktiviert. Ist der Button bereits aktiviert, wird die Phase reaktiviert.
+         */
+        phaseAbschließen(phase) {
+            /*TODO: phase wird abgeschlossen wenn mehr als n/2 Gruppenmitglieder abgestimmt haben 
             -> diese methode hier wird dann bei jeder änderung aufrufen (welche änderungen?) -> jedes mal wenn ein mitglied abstimmt
             wo wird die Anzahl der Gruppenmitglieder gespeichert? -> immer updaten und hier abrufen für berechnung
             */

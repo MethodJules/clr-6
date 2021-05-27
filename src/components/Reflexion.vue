@@ -105,6 +105,7 @@
                         <!-- <b-button v-b-modal.reflexion_speichern_modal>Speichern</b-button> -->
                         <b-button  @click="addItem">Speichern</b-button>
                         <b-button  @click="loadReflexion">Reflexion laden</b-button>
+                        <b-button  @click="updateReflexion">Reflexion updaten</b-button>
                         
 
                         </b-col>
@@ -339,8 +340,10 @@
                         </b-col>
                         <b-col>
                         <!-- <b-button v-b-modal.reflexion_speichern_modal>Speichern</b-button> -->
+                        <b-button  @click="updateReflexion">Reflexion updaten</b-button>
                         <b-button  @click="addItem">Speichern</b-button>
                         <b-button  @click="loadReflexion">Reflexion laden</b-button>
+                        
                         
 
                         </b-col>
@@ -407,6 +410,8 @@ export default {
         },
         /**Reflexion wird manuell aus dem Backend geladen */
         loadReflexion(){
+            //daten werden hier nur in felder geladen, aus dem backend wurden die inhalte schon bei mounted geladen ->
+            // daher lädt der button nur die alten daten, außer es wurde neu aus dem backend geladen (bisher nicht möglich)
             //To Do: dynamisch machen - oder wie bei tabelledaily etc unten während der mount phase in die felder laden
             this.berichten_reagieren=this.reflexionList[1].berichten_reagieren
             this.in_bezug_setzen=this.reflexionList[1].in_bezug_setzen
@@ -415,7 +420,19 @@ export default {
             console.log(this.test)        
         },
         updateReflexion(){
-            //to do
+
+        var ausgabe = {
+            idd: this.reflexionList[1].idd,
+            title: this.reflexionList[1].title,
+            berichten_reagieren: this.berichten_reagieren,
+            in_bezug_setzen:  this.in_bezug_setzen,
+            schlussfolgern: this.schlussfolgern,
+            rekonstruieren: this.rekonstruieren
+
+            };
+          //console.log(inDoku + "das ist in templatebuttons")
+          this.$store.dispatch('reflexion/updateReflexion', ausgabe)
+          //console.log(inDoku.documentation)
         },
     },
     /** lädt alle Reflexionen aus dem Backend */

@@ -10,6 +10,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Chat from 'vue-beautiful-chat'
 import zircle from 'zircle'
 import 'zircle/dist/zircle.css'
+import Vuelidate from 'vuelidate'
+
+
 
 import AppDate from '@/components/AppDate'
 Vue.component('AppDate', AppDate)
@@ -19,9 +22,9 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Chat)
 Vue.use(zircle)
+Vue.use(Vuelidate)
 
 Vue.use(Vuex);
-
 new Vue({
     router,
     vuetify,

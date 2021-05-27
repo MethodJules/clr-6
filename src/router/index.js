@@ -7,8 +7,8 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
+        name: 'Projectlist',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectList.vue')
     },
     {
         path: '/scope',
@@ -90,9 +90,9 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
     {
-        path: '/phasetemplate',
+        path: '/phasetemplate/:phase_id',
         name: 'PhaseTemplate',
-        props: true,
+        //props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {
@@ -105,7 +105,11 @@ const routes = [
         name: 'Documentation',
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
     },
-
+    {
+        path: '/project',
+        name: 'Projektbeschreibung',
+        component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
+    },
     {
         path: '/reflexion',
         name: 'Reflexion',
@@ -113,14 +117,31 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
     },
 
+    {
+        path: '/group',
+        name: 'Groupmanagement',
+        props: true,
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
+    },
+    {
+        path: '/projectsearch',
+        name: 'ProjectSearch',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
+    },
+
     
 
-   
 
 
-    
 
-    
+
+
+
 
 
 
