@@ -64,6 +64,10 @@ const mutations = {
 
     },
 
+    setOkButtonClicked(state, isClicked) {
+        state.okButtonClicked = isClicked;
+    }
+
 
 
 }

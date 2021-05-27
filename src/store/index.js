@@ -39,13 +39,14 @@ export default new Vuex.Store({
         ...sourceData,
         // authId: '98St7Q8Zi2N9SPa5ahzssq9kbyp6'
         authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
-        assistents: {},
+
     },
 
     getters: {
         authUser(state) {
             return state.users[state.authId]
-        }
+        },
+
     },
 
     actions: {
@@ -108,6 +109,7 @@ export default new Vuex.Store({
             Vue.set(forum.threads, threadId, threadId)
 
         },
+
 
 
     },
