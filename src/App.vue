@@ -285,15 +285,6 @@ export default {
   margin-top: 30rem;
 }
 
-.linkeSeite {
-  /* width: auto;
-        border: 1px solid black; */
-}
-.rechteSeite {
-  /*  width: 60 px;
-        border: 1px solid black; */
-}
-
 .untereLeiste {
   height: 100%;
   border: 1px solid black;
