@@ -65,46 +65,41 @@
       </div>
     </div>
     <div v-else>
-      <b-container fluid>
-        <b-row class="obereLeiste">
-          <b-col class="border border-dark">
-            <MenueLeiste />
-          </b-col>
-        </b-row>
+      <b-container fluid class="p-0 m-0">
+        <MenueLeiste />
 
-        <b-row>
-          <b-col class="linkeSeite" cols="2">
+        <b-row class="d-flex flex-wrap pageContainer">
+          <b-col class="linkeSeite" md="2">
             <b-row>
               <b-col class="border border-dark">
                 <TodoList />
               </b-col>
             </b-row>
+
             <b-row>
-              <b-col> </b-col>
-              <b-col>
-                <br />
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col class="border border-dark">
+              <b-col class="border border-dark d-flex">
                 <Kalender />
               </b-col>
             </b-row>
           </b-col>
 
-          <b-col cols="8" class="mitte border border-primary">
+          <b-col class="border border-primary flex-grow-1 mainContent">
             <router-view :key="$route.path"></router-view>
           </b-col>
           <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
-          <b-col v-if="!isChanged" cols="2" class="rechteSeite">
+          <b-col
+            v-if="!isChanged"
+            class="d-flex flex-column justify-content-between p-2 rechtseite"
+            md="2"
+          >
             <b-row>
               <b-col class="border border-dark">
                 <SeitenNavigation />
               </b-col>
             </b-row>
 
-            <b-row class="chat">
+            <b-row class="chat mb-2">
               <br />
               <b-col class="border border-dark">
                 <Postfach />
@@ -119,8 +114,10 @@
           <b-col v-else> </b-col>
         </b-row>
 
-        <b-row class="untereLeiste"> </b-row> </b-container
-      >.
+        <b-row class="untereLeiste p-4 d-flex align-center">
+          <h3>Footer oder Impressium vielleicht</h3>
+        </b-row>
+      </b-container>
     </div>
   </div>
 </template>
@@ -277,21 +274,17 @@ export default {
 
 .chat {
   text-align: center;
-  position: absolute;
+  /* position: absolute;
   bottom: 0;
   height: 10%;
   display: table;
-  margin-top: 20px;
+  margin-top: 20px; */
 }
 
 .login {
   margin-top: 30rem;
 }
 
-.obereLeiste {
-  /*         width: auto;
-        border: 1px solid black; */
-}
 .linkeSeite {
   /* width: auto;
         border: 1px solid black; */
