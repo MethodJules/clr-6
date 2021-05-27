@@ -126,8 +126,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
