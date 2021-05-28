@@ -2793,13 +2793,3 @@ hr {
     background: #F5F8FE;
     min-height: 100vh;
 }
-
-.home {
-    width: 70%;
-    background-color: white;
-    height: 85%;
-    position: absolute;
-    top: 10%;
-    left: 5%;
-    padding: 30px
-}

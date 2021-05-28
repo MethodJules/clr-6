@@ -3,124 +3,147 @@
     <div>
       <!-- Hier ist der Button, der Modal zum Eintragen eines neuen Daily öffnet. In dem Modal wird die Komponente Formular geöffnet.
       Dabei wird das/der prop formdata, ein Objekt übergeben, was attribute beinhaltet, die von formdata genutzt werden können -->
-      <b-button id="show-btn" @click="showAddRow ">Neuer Eintrag</b-button>
-      <b-modal ref="bv-modal-example" size="xl" title="Daily Tabelle" hide-footer>
+      <b-button id="show-btn" @click="showAddRow">Neuer Eintrag</b-button>
+      <b-modal
+        ref="bv-modal-example"
+        size="xl"
+        title="Daily Tabelle"
+        hide-footer
+      >
         <template #modal-title>
           <h3>Daily Tabelle</h3>
         </template>
         <div class="d-block text-center">
-              <Form :formdata=formdata></Form>
+          <Form :formdata="formdata"></Form>
         </div>
         <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
       </b-modal>
     </div>
-      <br>
-        <div id="Einsicht">
-            <h3> Einsicht </h3>
-            <table>
-                <tr>
-                    <th> Datum: </th>
-                    <th> Was habe ich gestern gemacht? </th>
-                    <th>Was habe ich heute vor?</th>
-                    <th> Welche Probleme hatte ich? </th>
-                </tr>
-                <!-- row beinhaltet auch ID von Objekt/Content Type Instanz Ding - wird in loaddaily auch runtergeladen -->
-                <tr v-for="row in rowData" :key="row.id">
-                    <td> {{ row.date}} </td>
-                    <td> {{row.doings}} </td>
-                    <td>{{row.todaydoings}}</td>
-                    <td> {{row.problems}} </td>
-                    <td><button @click="deleteRow(row)">Löschen</button></td> 
-                    <!-- <td><button @click="updateRow(row)">Ändern</button></td>  -->
-                    <td><button @click="showUpdateRow(row)">Ändern</button></td> 
+    <br />
+    <div id="Einsicht">
+      <h3>Einsicht</h3>
 
-                </tr>
-
-            </table>
-
+      <table class="table table-striped table-hover table-bordered table-sm">
+        <thead>
+          <tr class="bg-success text-light">
+            <th class="text-center" scope="col">Datum</th>
+            <th class="text-center" scope="col">
+              Was habe ich gestern gemacht?
+            </th>
+            <th class="text-center" scope="col">Was habe ich heute vor?</th>
+            <th class="text-center" scope="col">Welche Probleme hatte ich?</th>
+            <th class="text-center" scope="col">Button</th>
+            <th class="text-center" scope="col">Button</th>
+          </tr>
+        </thead>
+        <!-- row beinhaltet auch ID von Objekt/Content Type Instanz Ding - wird in loaddaily auch runtergeladen -->
+        <tbody>
+          <tr v-for="row in rowData" :key="row.id">
+            <td class="text-center p-1">{{ row.date }}</td>
+            <td class="text-center p-1">{{ row.doings }}</td>
+            <td class="text-center p-1">{{ row.todaydoings }}</td>
+            <td class="text-center p-1">{{ row.problems }}</td>
+            <td class="text-center p-1">
+              <button
+                class="btn btn-outline-danger btn-sm"
+                @click="deleteRow(row)"
+              >
+                Löschen
+              </button>
+            </td>
+            <!-- <td><button @click="updateRow(row)">Ändern</button></td>  -->
+            <td class="text-center p-1">
+              <button
+                class="btn btn-outline-primary btn-sm"
+                @click="showUpdateRow(row)"
+              >
+                Ändern
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
-import Form from '@/components/Form'
+import Form from "@/components/Form";
 export default {
-  
-  
-  name: 'TabelleDaily',
+  name: "TabelleDaily",
   props: {
     msg: String,
   },
 
   components: {
-            Form,    
-        },
+    Form,
+  },
 
   data() {
-  
     return {
       //das objekt formdata wird mit leeren Strings initialisiert, weil das definieren der variablem alleine nicht möglich war
-    formdata: {
-      updateOrAdd:"",
-      date:"",
-      doings:"",
-      todaydoings:"",
-      problems:"",
-      idd:"",
-      title: ""
-  },
+      formdata: {
+        updateOrAdd: "",
+        date: "",
+        doings: "",
+        todaydoings: "",
+        problems: "",
+        idd: "",
+        title: "",
+      },
       rowData: [
-        
-        { date: "JJGJ", doings: "fhshdf ", todaydoings: "hfdshf", problems: "hjsdhfj"  },
-        
-      ]
-
-    };  
+        {
+          date: "JJGJ",
+          doings: "fhshdf ",
+          todaydoings: "hfdshf",
+          problems: "hjsdhfj",
+        },
+      ],
+    };
   },
-  
+
   methods: {
-
-      showAddRow() {
-        /*diese Methode wird aufgerufen, wenn mit dem Formular ein neuer Eintrag gemacht werden soll. this.$refs ist nur dazu da das modal anzuzeigen.
+    showAddRow() {
+      /*diese Methode wird aufgerufen, wenn mit dem Formular ein neuer Eintrag gemacht werden soll. this.$refs ist nur dazu da das modal anzuzeigen.
         danach werden den formdata attributen leere Strings zugewiesen. Das Attribut updateorAdd wird in Formular genutzt um nur den Add Button anzuzeigen */
-       //$bvModal.show('bv-modal-example')
-        this.$refs['bv-modal-example'].show()
-        this.formdata.date=""
-        this.formdata.doings=""
-        this.formdata.todaydoings=""
-        this.formdata.problems=""
-        this.formdata.title=""
-        this.formdata.updateOrAdd="add"
-      },
-      showUpdateRow(row) {
-        //hier wird die row aus rowdata als parameter übergeben. aus der row werden die daten an das objekt übergeben
-        this.$refs['bv-modal-example'].show()
-        this.formdata.date=row.date
-        this.formdata.doings=row.doings
-        this.formdata.todaydoings=row.todaydoings
-        this.formdata.problems=row.problems
-        this.formdata.idd=row.idd
-        this.formdata.title=row.title
-        this.formdata.updateOrAdd="update"
-      },
+      //$bvModal.show('bv-modal-example')
+      this.$refs["bv-modal-example"].show();
+      this.formdata.date = "";
+      this.formdata.doings = "";
+      this.formdata.todaydoings = "";
+      this.formdata.problems = "";
+      this.formdata.title = "";
+      this.formdata.updateOrAdd = "add";
+    },
+    showUpdateRow(row) {
+      //hier wird die row aus rowdata als parameter übergeben. aus der row werden die daten an das objekt übergeben
+      this.$refs["bv-modal-example"].show();
+      this.formdata.date = row.date;
+      this.formdata.doings = row.doings;
+      this.formdata.todaydoings = row.todaydoings;
+      this.formdata.problems = row.problems;
+      this.formdata.idd = row.idd;
+      this.formdata.title = row.title;
+      this.formdata.updateOrAdd = "update";
+    },
 
-      hideModal() {
-        this.$refs['bv-modal-example'].hide()
-      },
+    hideModal() {
+      this.$refs["bv-modal-example"].hide();
+    },
 
-/*     updateRow(row) {
+    /*     updateRow(row) {
 
       this.$store.dispatch('daily_scrum/updateDaily', row)
 
     }, */
 
-        deleteRow(row) {
-            alert("Delete");
-              //console.log(row);
-            this.$store.dispatch('daily_scrum/deleteDaily', row)
-        },
+    deleteRow(row) {
+      alert("Delete");
+      //console.log(row);
+      this.$store.dispatch("daily_scrum/deleteDaily", row);
+    },
 
-/*     deleteRow(id, row){
+    /*     deleteRow(id, row){
       var indx = this.rowData.indexOf(row);
       console.log(indx, row.id) ;
       if(indx > -1){
@@ -129,41 +152,28 @@ export default {
       this.$store.dispatch('daily_scrum/deleteDaily', indx)
 
     } */
-
-  }, 
- 
-  mounted() {
-    this.$store.dispatch('daily_scrum/loadDailysFromBackend')
-    this.rowData = this.$store.state.daily_scrum.rowData
-    
   },
-    
-}
 
+  mounted() {
+    this.$store.dispatch("daily_scrum/loadDailysFromBackend");
+    this.rowData = this.$store.state.daily_scrum.rowData;
+  },
+};
 </script>
 
 
 
 <style scoped>
-
-
-table, td, th {
-  height: 30px;
-  border: 1px solid black;
-  text-align: left;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
+tbody tr:hover {
+  background-color: #e7e4e4;
 }
 input {
   width: 60%;
 }
-b-form-datepicker{
+b-form-datepicker {
   width: 60%;
 }
-.eingabe{
+.eingabe {
   border-style: none;
 }
 </style>
