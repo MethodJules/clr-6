@@ -13,6 +13,7 @@
     "bootstrap-vue": "^2.17.0",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
+    "sparkyservice_api": "file:swagger/sparky_api",
     "vue": "^2.6.12",
     "vue-beautiful-chat": "^2.5.0",
     "vue-comment-grid": "^1.0.12",

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="validCredential != false">
+    <div v-if="validCredential != true">
       <div class="mx-auto" style="width: 50rem;">
       <b-container >
         <b-row align-v="center">
@@ -131,6 +131,27 @@ import Chat from "@/components/Chat.vue";
 import Postfach from "@/components/Postfach.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
+var SparkyserviceApi = require('sparkyservice_api');
+
+var api = new SparkyserviceApi.AuthControllerApi()
+var body = new SparkyserviceApi.CredentialsDto(); // {CredentialsDto} 
+var apiResponse = ""
+var apiData = ""
+
+var callback = function(error, data, response) {
+  console.log("test" + response)
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+    apiResponse=response
+    apiData=data
+    console.log(apiResponse.status)
+    console.log(apiData)
+  }
+};
+
+
 export default {
   props: {
     showRightMenu: Boolean,
@@ -181,18 +202,18 @@ export default {
     },
 
     login() {
-      /*     
-      
-      anmeldedaten werden an anmeldeserver gesendet und antwort ist??
-      -> bei fehler kommt fehler message und dann eigene fehlermeldung ausgeben lassen
-      -> wenn korrekt, dann kommt bestimmte antwort -> dann valid=true
-      */
-      //hier abgleich mit daten durch api call an authentifizierungs server - login.js gleicht passwörter ab und gibt nur boolean zurück,
-      // keine pw werden zurückgegeben
-      let antwort; // = this.$store.dispatch('login/validateLoginData', zugangsKennung, passwort)
+         //body.username = this.zugangsKennung;
+         //body.password = this.passwort;
+         body.username = "user";
+         body.password = "abcdefgh";
+         
+         
+        api.authenticate(body, callback);
 
-      //der teil ist nur temporär
-      if (this.zugangsKennung == "Max" && this.passwort == "Musterpasswort") {
+
+
+      let antwort; 
+      if (apiResponse.status==200) {
         antwort = true;
       }
 
@@ -203,7 +224,6 @@ export default {
       } else {
         //modal popup, fehlermeldung
       }
-
       console.log(this.validCredential);
     },
 
