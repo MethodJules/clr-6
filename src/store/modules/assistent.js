@@ -71,9 +71,7 @@ const mutations = {
     },
 
     SAVE_NEW_ASSISTENT(state, data) {
-        console.log(data);
         state.assistentsArray = data;
-
 
     },
     ADD_ASSISTENT_HT(state, assistentEntry) {

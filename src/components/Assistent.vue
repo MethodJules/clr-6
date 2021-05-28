@@ -17,7 +17,12 @@
             </b-button>
           </b-row>
           <!-- Hilfstext von Assistent wird mit Modal Bootstrap ausgegeben, wenn man auf das Fragezeichen klickt -->
-          <b-modal id="modal-1" title="Assistent">
+          <b-modal
+            id="modal-1"
+            title="Assistent"
+            cancel-title="Abbrechen"
+            button-size="sm"
+          >
             <b-row>
               <h5>{{ getAssistentText.title }}</h5>
 

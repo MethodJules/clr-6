@@ -31,7 +31,7 @@
             variant="outline-danger"
             size="sm"
             @click="deleteFile(i)"
-            >Delete</b-button
+            >Löschen</b-button
           >
         </div>
       </div>
@@ -41,7 +41,13 @@
     The place user adds files. 
      -->
     <b-row>
-      <b-modal id="fileUpload" title="INPUT" ref="fileUploadModal" hide-footer>
+      <b-modal
+        id="fileUpload"
+        title="INPUT"
+        ref="fileUploadModal"
+        hide-footer
+        centered
+      >
         <template>
           <!-- https://bootstrap-vue.org/docs/components/form-file
           Form file input -->
@@ -56,11 +62,7 @@
           <hr />
 
           <span ref="infoBox" class="mt-2">
-            Button namen in Deutsch?
-            <hr />
-
             <!-- Ausgewählte Dateien: -->
-
             <li v-for="(input, i) in inputFiles" :key="i" class="mb-1">
               <b>{{ input.name }}</b>
 
@@ -82,10 +84,10 @@
               variant="secondary"
               size="sm"
               @click="clear()"
-              >Clear</b-button
+              >Leeren</b-button
             >
             <b-button variant="danger" size="sm" @click="closeModal()"
-              >Cancel</b-button
+              >Abbrechen</b-button
             >
           </b-card-text>
         </template>
