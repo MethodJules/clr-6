@@ -25,7 +25,7 @@
 
       <table class="table table-striped table-hover table-bordered table-sm">
         <thead>
-          <tr class="bg-success text-light">
+          <tr class="bg-danger text-light">
             <th class="text-center" scope="col">Datum</th>
             <th class="text-center" scope="col">
               Was habe ich gestern gemacht?
