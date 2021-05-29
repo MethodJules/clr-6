@@ -33,19 +33,9 @@ const mutations = {
         state.inputsForDatabase.push(files);
         // after here we are storing data to state
         files.forEach(element => {
-            let size = element.size;
-            if (element.size > 100000000) {
-                size /= 1073741824;
-                size = size.toFixed(2);
-                size += " GB"
-            } else {
-                size /= 1048576;
-                size = size.toFixed(2);
-                size += " MB";
-            }
             let file = {
                 name: element.name,
-                size: size
+                size: element.size
             };
             state.inputs.push(file);
 

@@ -199,7 +199,7 @@ export default {
 
       //wenn rückgabe true, dann wird freigeschaltet, sonst wird fehlermeldung ausgegeben
       if (antwort) {
-        this.validCredential = true;
+        this.validCredential = false;
         //modal/popup mit message
       } else {
         //modal popup, fehlermeldung
@@ -236,12 +236,14 @@ export default {
     isChanged() {
       return this.$route.name === "ProjectList";
     },
-  } /* ,
+  },
+
+  /* ,
         mounted() {
             this.$store.dispatch('todo/loadToDoFromBackend')
             this.listOfToDos = this.$store.state.todo.listOfToDos
 
-        }, */,
+        }, */
 };
 </script>
 <style>
