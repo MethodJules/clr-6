@@ -4,137 +4,160 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [
-    {
+const routes = [{
         path: '/',
         name: 'Projectlist',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectList.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/ProjectList.vue')
     },
     {
         path: '/scope',
         name: 'Scope',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Scope.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Scope.vue')
     },
     {
         path: '/search',
         name: 'Search',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Search.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Search.vue')
     },
     {
         path: '/concept',
         name: 'Concept',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Concept.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Concept.vue')
     },
     {
         path: '/newconcept',
         name: 'NewConcept',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewConcept.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/NewConcept.vue')
     },
     {
         path: '/analysis',
         name: 'Analysis',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Analysis.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Analysis.vue')
     },
     {
         path: '/agenda',
         name: 'Agenda',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Agenda.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Agenda.vue')
     },
     {
         path: '/forum',
         name: 'Forum',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Forum.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Forum.vue')
     },
     {
         path: '/category/:id',
         name: 'Category',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumCategory.vue'),
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/ForumCategory.vue'),
         props: true
     },
     {
         path: '/forum/:id',
         name: 'ForumThreads',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumCategoryThreads.vue'),
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/ForumCategoryThreads.vue'),
         props: true
     },
     {
         path: '/thread/:id',
         name: 'ThreadShow',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumThreadShow.vue'),
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/ForumThreadShow.vue'),
         props: true
     },
     {
         path: '/newThread/:id',
         name: 'NewThread',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewThread.vue'),
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/NewThread.vue'),
         props: true
     },
     {
         path: '/review',
         name: 'Review',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Review.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Review.vue')
     },
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
     {
         path: '/newMember',
         name: 'NewMember',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
     },
     {
         path: '/dailyscrum',
         name: 'TabelleDaily',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
     {
         path: '/phasetemplate/:phase_id',
         name: 'PhaseTemplate',
         //props: true,
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {
         path: '/projectlist',
         name: 'ProjectList',
-        component: () => import(/*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
+        component: () =>
+            import ( /*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
     },
     {
         path: '/documentation',
         name: 'Documentation',
-        component: () => import(/*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
+        component: () =>
+            import ( /*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
     },
     {
         path: '/project',
         name: 'Projektbeschreibung',
-        component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
+        component: () =>
+            import ( /*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
     },
     {
         path: '/reflexion',
         name: 'Reflexion',
         props: true,
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
     },
 
     {
         path: '/group',
         name: 'Groupmanagement',
         props: true,
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
     {
         path: '/home',
         name: 'Home',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },
     {
         path: '/projectsearch',
         name: 'ProjectSearch',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
+        component: () =>
+            import ( /*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
     },
 
-    
+
 
 
 
