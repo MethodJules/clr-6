@@ -204,8 +204,8 @@ export default {
     login() {
          //body.username = this.zugangsKennung;
          //body.password = this.passwort;
-         body.username = "user";
-         body.password = "abcdefgh";
+         body.username = "";
+         body.password = "";
          
          
         api.authenticate(body, callback);
