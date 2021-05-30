@@ -39,6 +39,9 @@
             <b-navbar-nav>
               <b-nav-item to="/projectsearch">Projektsuche</b-nav-item>
             </b-navbar-nav>
+            <b-navbar-nav>
+              <b-nav-item to="/concept">Concept</b-nav-item>
+            </b-navbar-nav>
           </b-row>
         </div>
       </b-collapse>

@@ -24,7 +24,9 @@
           <p class="m-0">
             {{ input.name }}
           </p>
-          <span class="float-right sizeBox">{{ input.size }} </span>
+          <span class="float-right sizeBox"
+            >{{ input.size | convertSize }}
+          </span>
 
           <b-button
             block
@@ -67,7 +69,7 @@
               <b>{{ input.name }}</b>
 
               <span class="ml-2 sizeBox">
-                {{ convertSize(input.size) }}
+                {{ input.size | convertSize }}
               </span>
             </li>
           </span>
@@ -163,24 +165,6 @@ export default {
     closeModal() {
       this.inputFiles = [];
       this.$refs["fileUploadModal"].hide();
-    },
-
-    /**
-     * @param size a value in byte
-     * @return size a value in GB or MB
-     * converts given size in byte to MB or GB
-     */
-    convertSize(size) {
-      if (size > 100000000) {
-        size /= 1073741824;
-        size = size.toFixed(2);
-        size += " GB";
-      } else {
-        size /= 1048576;
-        size = size.toFixed(2);
-        size += " MB";
-      }
-      return size;
     },
     /**
      * @param index, index of the file that will be deleted

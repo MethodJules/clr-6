@@ -1,109 +1,143 @@
 <template>
-  <div class="hello">
-    <Button  :button="{
-    name: 'Concept',
-    link: './concept'
-  }"
+  <div class="form-group">
+    <Button
+      :button="{
+        name: 'Concept',
+        link: './concept',
+      }"
     ></Button>
-      <form target="1">
-      <table class="eingabe" >
-      <tr>
-        <!-- hier werden die des übergebenen Objekts aus TabelleDaily in den Felder gespeichert -->
-        <b-form-datepicker id="example-datepicker" v-model="formdata.date" class="mb-2"></b-form-datepicker>
-        </tr>
-      <tr>
-      <td><label for = "titel">Titel</label></td>
-      <td> <input v-model="formdata.title" type ="text" placeholder="Geben Sie einen Titel ein!"></td>
-        <br>
-      </tr>
-      <tr>
-      <td><label for = "gestern">Was habe ich gestern gemacht?</label></td>
-      <td> <input v-model="formdata.doings" type ="text" placeholder="Geben Sie ein, was sie gemacht haben!"></td>
-        <br>
-      </tr>
-      <tr> 
-      <td><label for = "heute">Was habe ich heute vor?</label></td>
-        <td><input v-model="formdata.todaydoings" type ="text" placeholder="Geben Sie ein was Sie heute vor haben!">
-        <br></td></tr>
+    <form target="1">
+      <!-- hier werden die des übergebenen Objekts aus TabelleDaily in den Felder gespeichert -->
+      <b-form-datepicker
+        id="example-datepicker"
+        v-model="formdata.date"
+        class="mb-2"
+      ></b-form-datepicker>
 
-      <tr>  <td><label for = "probleme">Welche Probleme hatte ich? </label></td>
-        <td><input v-model="formdata.problems" type ="text" placeholder="Geben Sie ein, welche Probleme es gab!"></td>
-      </tr>
-      </table>
-      <div style ="margin:10px">
-        <div v-if="formdata.updateOrAdd==='add'">
-            <button type="button" class="btn btn-primary" @click="addItem()">Hinzufügen</button>
-        </div>
-        <div v-else-if="formdata.updateOrAdd==='update'">
-            <button type="button" class="btn btn-primary" @click="updateRow(formdata)">Ändern</button>
+      <div class="form-group row">
+        <label class="col-sm-3 text-left text-dark" for="titel">Titel</label>
+        <div class="col-sm-9">
+          <input
+            v-model="formdata.title"
+            type="text"
+            placeholder="Geben Sie einen Titel ein!"
+          />
         </div>
       </div>
-      </form>
-      <br>
-    </div>
+      <div class="form-group row">
+        <label class="col-sm-3 text-left text-dark" for="gestern"
+          >Was habe ich gestern gemacht?</label
+        >
+        <div class="col-sm-9">
+          <input
+            v-model="formdata.doings"
+            type="text"
+            placeholder="Geben Sie ein, was sie gemacht haben!"
+          />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 text-left text-dark" for="heute"
+          >Was habe ich heute vor?</label
+        >
+        <div class="col-sm-9">
+          <input
+            v-model="formdata.todaydoings"
+            type="text"
+            placeholder="Geben Sie ein was Sie heute vor haben!"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-3 text-left text-dark" for="probleme"
+          >Welche Probleme hatte ich?
+        </label>
+        <div class="col-sm-9">
+          <input
+            v-model="formdata.problems"
+            type="text"
+            placeholder="Geben Sie ein, welche Probleme es gab!"
+          />
+        </div>
+      </div>
+
+      <div style="margin: 10px">
+        <div v-if="formdata.updateOrAdd === 'add'">
+          <button type="button" class="btn btn-primary" @click="addItem()">
+            Hinzufügen
+          </button>
+        </div>
+        <div v-else-if="formdata.updateOrAdd === 'update'">
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="updateRow(formdata)"
+          >
+            Ändern
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>
 
 <script>
-import Button from '@/components/Button'
+import Button from "@/components/Button";
 //import Button from './Button.vue';
-  export default {
-        props: {
-    formdata: Object
-    },
+export default {
+  props: {
+    formdata: Object,
+  },
 
-      components: {
-            Button,     
-            },
+  components: {
+    Button,
+  },
 
- data() {
-  
+  data() {
     return {
-/*     button: {
+      /*     button: {
       buttonlink:"./concept",
       buttonname:"Concept",
   }, */
-
-    }
+    };
   },
-  
-  methods: {
-        test() {
-          console.log("hallo");
-    },
 
+  methods: {
+    test() {
+      console.log("hallo");
+    },
 
     updateRow(formdata) {
-      this.$store.dispatch('daily_scrum/updateDaily', formdata)
+      this.$store.dispatch("daily_scrum/updateDaily", formdata);
     },
 
-
     addItem() {
-            var ausgabe = {
-                date: this.formdata.date,
-                doings: this.formdata.doings,
-                todaydoings: this.formdata.todaydoings,
-                problems: this.formdata.problems,
-                title: this.formdata.title
-            };
+      var ausgabe = {
+        date: this.formdata.date,
+        doings: this.formdata.doings,
+        todaydoings: this.formdata.todaydoings,
+        problems: this.formdata.problems,
+        title: this.formdata.title,
+      };
 
-            this.$store.dispatch('daily_scrum/createDaily', this.formdata)
-            this.rowData.push(ausgabe)
+      this.$store.dispatch("daily_scrum/createDaily", this.formdata);
+      this.rowData.push(ausgabe);
 
-            this.date = ''
-            this.doings = ''
-            this.todaydoings= ''
-            this.problems = ''
-            this.title = ''
-        },
+      this.date = "";
+      this.doings = "";
+      this.todaydoings = "";
+      this.problems = "";
+      this.title = "";
+    },
 
+    deleteRow(row) {
+      alert("Delete");
+      //console.log(row);
+      this.$store.dispatch("daily_scrum/deleteDaily", row);
+    },
 
-        deleteRow(row) {
-            alert("Delete");
-              //console.log(row);
-            this.$store.dispatch('daily_scrum/deleteDaily', row)
-        },
-
-/*     deleteRow(id, row){
+    /*     deleteRow(id, row){
       var indx = this.rowData.indexOf(row);
       console.log(indx, row.id) ;
       if(indx > -1){
@@ -112,39 +146,21 @@ import Button from '@/components/Button'
       this.$store.dispatch('daily_scrum/deleteDaily', indx)
 
     } */
-  }, 
- 
-  mounted() {
-    console.log(this.formdata)
-    
-  }
-    
-}
+  },
 
+  mounted() {
+    console.log(this.formdata);
+  },
+};
 </script>
 
 
 
 <style scoped>
-
-
-table, td, th {
-  height: 30px;
-  border: 1px solid black;
-  text-align: left;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
 input {
-  width: 60%;
+  width: 100%;
 }
-b-form-datepicker{
-  width: 60%;
-}
-.eingabe{
-  border-style: none;
+.form-group {
+  padding: 0.5rem;
 }
 </style>
