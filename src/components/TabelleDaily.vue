@@ -23,10 +23,13 @@
     <div id="Einsicht">
       <h3>Einsicht</h3>
 
-      <table class="table table-striped table-hover table-bordered table-sm">
+      <table
+        class="table table-striped table-hover table-bordered table-sm table-responsive"
+      >
         <thead>
           <tr class="bg-danger text-light">
             <th class="text-center" scope="col">Datum</th>
+            <th class="text-center" scope="col">Titel</th>
             <th class="text-center" scope="col">
               Was habe ich gestern gemacht?
             </th>
@@ -40,6 +43,7 @@
         <tbody>
           <tr v-for="row in rowData" :key="row.id">
             <td class="text-center p-1">{{ row.date }}</td>
+            <td class="text-center p-1">{{ row.title }}</td>
             <td class="text-center p-1">{{ row.doings }}</td>
             <td class="text-center p-1">{{ row.todaydoings }}</td>
             <td class="text-center p-1">{{ row.problems }}</td>
@@ -69,6 +73,8 @@
 
 <script>
 import Form from "@/components/Form";
+import { mapGetters } from "vuex";
+
 export default {
   name: "TabelleDaily",
   props: {
@@ -91,17 +97,19 @@ export default {
         idd: "",
         title: "",
       },
-      rowData: [
-        {
-          date: "JJGJ",
-          doings: "fhshdf ",
-          todaydoings: "hfdshf",
-          problems: "hjsdhfj",
-        },
-      ],
+      // rowData: [
+      //   {
+      //     date: "JJGJ",
+      //     doings: "fhshdf ",
+      //     todaydoings: "hfdshf",
+      //     problems: "hjsdhfj",
+      //   },
+      // ],
     };
   },
-
+  computed: {
+    ...mapGetters({ rowData: "daily_scrum/getRowData" }),
+  },
   methods: {
     showAddRow() {
       /*diese Methode wird aufgerufen, wenn mit dem Formular ein neuer Eintrag gemacht werden soll. this.$refs ist nur dazu da das modal anzuzeigen.
@@ -153,14 +161,8 @@ export default {
 
     } */
   },
-
-  mounted() {
-    this.$store.dispatch("daily_scrum/loadDailysFromBackend");
-    this.rowData = this.$store.state.daily_scrum.rowData;
-  },
 };
 </script>
-
 
 
 <style scoped>

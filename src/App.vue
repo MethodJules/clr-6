@@ -238,12 +238,11 @@ export default {
     },
   },
 
-  /* ,
-        mounted() {
-            this.$store.dispatch('todo/loadToDoFromBackend')
-            this.listOfToDos = this.$store.state.todo.listOfToDos
-
-        }, */
+  mounted() {
+    this.$store.dispatch("todo/loadToDoFromBackend");
+    this.listOfToDos = this.$store.state.todo.listOfToDos;
+    this.$store.dispatch("daily_scrum/loadDailysFromBackend");
+  },
 };
 </script>
 <style>
