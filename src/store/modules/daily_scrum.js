@@ -83,7 +83,6 @@ const mutations = {
 
 
     ADD_DAILY_ENTRY(state, dailyEntry) {
-        console.log(dailyEntry.todaydoings)
         var data = `{"data": {"type": "node--dailyscrum", "attributes": {"title": "${dailyEntry.title}", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
         var config = {
             method: 'post',
@@ -103,11 +102,25 @@ const mutations = {
             .catch(function (error) {
                 console.log(error)
             })
+        state.rowData.push(dailyEntry);
+
     },
 
     UPDATE_DAILY_ENTRY(state, dailyEntry) {
-        //let index = state.rowData.indexOf(dailyEntry);
-        //state.rowData[index]=dailyEntry;
+        let index = state.rowData.indexOf(dailyEntry);
+        let id = dailyEntry.idd;
+        console.log("INDEX::::::::::::::::::::::::");
+        console.log(id);
+        // I could not update the state here.... Lets stay here and ask julien..
+        state.rowData.forEach(element => {
+            console.log(element.idd);
+            element.idd == id ? element = dailyEntry : "";
+        });
+        console.log(id);
+        console.log(dailyEntry);
+        console.log(state.rowData);
+
+        state.rowData[index] = dailyEntry;
         //console.log(dailyEntry.todaydoings)
         var data = `{"data": {"type": "node--dailyscrum", "id": "${dailyEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
         var config = {

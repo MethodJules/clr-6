@@ -15,8 +15,10 @@
         </template>
         <div class="d-block text-center">
           <Form :formdata="formdata"></Form>
+          <b-button block @click="hideModal" variant="outline-danger"
+            >Close Me</b-button
+          >
         </div>
-        <b-button class="mt-3" block @click="hideModal">Close Me</b-button>
       </b-modal>
     </div>
     <br />

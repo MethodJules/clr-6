@@ -1,17 +1,31 @@
 <template>
   <div class="form-group">
-    <Button
-      :button="{
-        name: 'Concept',
-        link: './concept',
-      }"
-    ></Button>
+    <!-- We need to define each property of bootstrap vue again in order to use them. 
+    Thats why using another component just makes things harder. 
+    There are already bootstrap vue buttons, which work like a component. 
+    Thats why I am deleting this button component here. 
+    I think we can delete the whole component too.  -->
+
+    <!-- Why do we have a button for concept here???? -->
+    <b-button block variant="outline-primary" href="./concept" class="mb-2"
+      >Concept</b-button
+    >
+
     <form target="1">
       <!-- hier werden die des übergebenen Objekts aus TabelleDaily in den Felder gespeichert -->
       <b-form-datepicker
-        id="example-datepicker"
+        id="datepicker-placeholder"
         v-model="formdata.date"
         class="mb-2"
+        placeholder="Wahlen Sie ein Datum aus."
+        today-button
+        label-today-button="Heute"
+        calendar-width="100%"
+        menu-class="w-100"
+        start-weekday="1"
+        locale="de"
+        labelHelp="Mit den Pfeiltasten durch den Kalender navigieren"
+        labelNoDateSelected="Kein Datum gewählt"
       ></b-form-datepicker>
 
       <div class="form-group row">
@@ -62,20 +76,16 @@
         </div>
       </div>
 
-      <div style="margin: 10px">
-        <div v-if="formdata.updateOrAdd === 'add'">
-          <button type="button" class="btn btn-primary" @click="addItem()">
+      <div>
+        <div v-if="formdata.updateOrAdd === 'add'" class="mt-2">
+          <b-button block variant="primary" @click="addItem()">
             Hinzufügen
-          </button>
+          </b-button>
         </div>
         <div v-else-if="formdata.updateOrAdd === 'update'">
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="updateRow(formdata)"
-          >
+          <b-button block variant="primary" @click="updateRow(formdata)">
             Ändern
-          </button>
+          </b-button>
         </div>
       </div>
     </form>
@@ -83,73 +93,58 @@
 </template>
 
 <script>
-import Button from "@/components/Button";
-//import Button from './Button.vue';
 export default {
+  data() {
+    return {};
+  },
   props: {
     formdata: Object,
   },
 
-  components: {
-    Button,
-  },
-
-  data() {
-    return {
-      /*     button: {
-      buttonlink:"./concept",
-      buttonname:"Concept",
-  }, */
-    };
-  },
-
   methods: {
-    test() {
-      console.log("hallo");
-    },
-
     updateRow(formdata) {
       this.$store.dispatch("daily_scrum/updateDaily", formdata);
+      // we cannot update state here. look at updateDaily methode..
     },
 
     addItem() {
-      var ausgabe = {
-        date: this.formdata.date,
-        doings: this.formdata.doings,
-        todaydoings: this.formdata.todaydoings,
-        problems: this.formdata.problems,
-        title: this.formdata.title,
-      };
-
       this.$store.dispatch("daily_scrum/createDaily", this.formdata);
-      this.rowData.push(ausgabe);
+      // QUESTION??????
+      // This line below does not work because our modal is in another component.
+      // Why do we have another component for this form. They can be together and our modal would work better.
+      this.$refs["bv-modal-example"].hide();
 
-      this.date = "";
-      this.doings = "";
-      this.todaydoings = "";
-      this.problems = "";
-      this.title = "";
+      // We do not need all of them.
+      // We just need to take the values with getters and computed.
+      // After that we need to update state with commit.
+      // computed will triggered and take the values from state again.
+      // our component is renewed without renewing the page.
+
+      // var ausgabe = {
+      //   date: this.formdata.date,
+      //   doings: this.formdata.doings,
+      //   todaydoings: this.formdata.todaydoings,
+      //   problems: this.formdata.problems,
+      //   title: this.formdata.title,
+      // };
+
+      // overrites the rowData here in component.
+      // this.rowData.push(ausgabe);
+
+      // this.date = "";
+      // this.doings = "";
+      // this.todaydoings = "";
+      // this.problems = "";
+      // this.title = "";
     },
 
     deleteRow(row) {
       alert("Delete");
-      //console.log(row);
       this.$store.dispatch("daily_scrum/deleteDaily", row);
     },
-
-    /*     deleteRow(id, row){
-      var indx = this.rowData.indexOf(row);
-      console.log(indx, row.id) ;
-      if(indx > -1){
-        this.rowData.splice(indx, 1);
-      }
-      this.$store.dispatch('daily_scrum/deleteDaily', indx)
-
-    } */
-  },
-
-  mounted() {
-    console.log(this.formdata);
+    hideModal() {
+      this.$refs["bv-modal-example"].hide();
+    },
   },
 };
 </script>
@@ -161,6 +156,6 @@ input {
   width: 100%;
 }
 .form-group {
-  padding: 0.5rem;
+  padding: 0.5rem 0;
 }
 </style>
