@@ -14,6 +14,7 @@ import assistent from './modules/assistent'
 import phases from './modules/phases'
 import project from './modules/project'
 import output_documents from './modules/output_documents'
+import api from './modules/api'
 
 
 Vue.use(Vuex)
@@ -33,7 +34,8 @@ export default new Vuex.Store({
        todo,
        assistent,
        phases,
-       output_documents
+       output_documents,
+       api
     },
 
 //noch in Datei packen

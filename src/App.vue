@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    {{account}}gggg
     <div v-if="validCredential != true">
       <div class="mx-auto" style="width: 50rem;">
       <b-container >
@@ -14,6 +15,7 @@
                     <tr>
                       <td>
                         <label for="zugangsKennung" class="mr-1">Zugangskennung</label>
+                        
                       </td>
                       <td>
                         <input
@@ -131,6 +133,7 @@ import Chat from "@/components/Chat.vue";
 import Postfach from "@/components/Postfach.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
+/*
 var SparkyserviceApi = require('sparkyservice_api');
 
 var api = new SparkyserviceApi.AuthControllerApi()
@@ -150,7 +153,7 @@ var callback = function(error, data, response) {
     console.log(apiData)
   }
 };
-
+*/
 
 export default {
   props: {
@@ -200,7 +203,7 @@ export default {
     closeMenu() {
       this.showMenu = false;
     },
-
+    /*
     login() {
          //body.username = this.zugangsKennung;
          //body.password = this.passwort;
@@ -226,7 +229,13 @@ export default {
       }
       console.log(this.validCredential);
     },
-
+    */
+    login(username, password) {
+      this.$store.dispatch('api/signin', {
+        username,
+        password
+      })
+    },
     /* formularTodo(){
                 this.$refs['my-todo-modal'].show()
                 this.eintragTodo.date=""
@@ -255,6 +264,14 @@ export default {
     isChanged() {
       return this.$route.name === "ProjectList";
     },
+
+    account() {
+      return this.$store.api.state.account
+    },
+
+    //validCredential() {
+    //  return this.$store.api.validCredential
+    //}
   } /* ,
         mounted() {
             this.$store.dispatch('todo/loadToDoFromBackend')
