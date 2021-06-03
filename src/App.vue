@@ -173,7 +173,7 @@ export default {
     return {
       zugangsKennung: "",
       passwort: "",
-      validCredential: false,
+      //validCredential: false,
       nameState: null,
       showMenu: true,
       eintragTodo: {
@@ -266,8 +266,12 @@ export default {
     },
 
     account() {
-      return this.$store.api.state.account
+      return this.$store.state.api.validCredential;
     },
+
+    validCredential() {
+      return this.$store.state.api.validCredential;
+    }
 
     //validCredential() {
     //  return this.$store.api.validCredential

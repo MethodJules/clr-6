@@ -7,9 +7,9 @@ const state = () => ({
 
 const mutations = {
     setAccount(state, account) {
-        console.log(account)
+        console.log(account.data)
         state.account = account;
-        if (account.lastName == "Fiedler") {
+        if (account.data.lastName == "Fiedler") {
             state.validCredential = true
         }
     }
