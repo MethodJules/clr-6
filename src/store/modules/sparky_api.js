@@ -22,7 +22,7 @@ const mutations = {
         if (account.lastName == "Fiedler") {
             state.validCredential = true
         } */
-        if (account.state == 200) {
+        if (account.status == 200) {
             state.validCredential = true
         }
         
