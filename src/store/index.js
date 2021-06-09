@@ -15,6 +15,7 @@ import inputDocuments from './modules/inputDocuments'
 import phases from './modules/phases'
 import project from './modules/project'
 import output_documents from './modules/output_documents'
+import sparky_api from './modules/sparky_api'
 
 
 Vue.use(Vuex)
@@ -35,6 +36,7 @@ export default new Vuex.Store({
         assistent,
         phases,
         output_documents,
+       sparky_api,
         inputDocuments
     },
 
