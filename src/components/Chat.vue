@@ -60,7 +60,7 @@
                                                 <!-- shows who sends which content and when -->
                                                 <p >
                                                         
-                                                        Ich(<span>{{timestamp}}</span>): 
+                                                        Ich(<span>{{message.timestamp}}</span>): 
                                                         <span>{{ message.text}}</span>
                                                 </p>
                                                 </li>

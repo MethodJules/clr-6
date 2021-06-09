@@ -81,6 +81,7 @@
                 <br />
               </b-col>
             </b-row>
+            
             <b-row>
               <b-col class="border border-dark">
                 <Kalender />
@@ -99,19 +100,20 @@
                 <SeitenNavigation />
               </b-col>
             </b-row>
-
-            <b-row class="chat">
+            
+            <b-row class="postfach">
               <br>
               <b-col class="border border-dark">
                 <Postfach />
                 
               </b-col>
             </b-row>
-            <b-row class="postfach">
+            <b-row class="chat">
               <b-col class="border border-dark">
-                <Chat />
+                <ShowChat />
               </b-col>
             </b-row>
+            
           </b-col>
           <b-col v-else> </b-col>
         </b-row>
@@ -127,7 +129,9 @@ import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
-import Chat from "@/components/Chat.vue";
+//import Chat from "@/components/Chat.vue";
+import ShowChat from "@/views/ShowChat.vue";
+
 import Postfach from "@/components/Postfach.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
@@ -138,11 +142,14 @@ export default {
   name: "App",
   components: {
     SeitenNavigation,
+    
     //ProjectList,
     TodoList,
+    ShowChat,
     MenueLeiste,
     Kalender,
-    Chat,
+    //Chat,
+ 
     Postfach,
   },
   data() {
