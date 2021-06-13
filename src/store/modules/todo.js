@@ -2,17 +2,20 @@ import axios from 'axios';
 
 const state = () => ({
     listOfToDos: [
-        //{ todo:"", date:" "},
+       // { todo:"", date:" "},
     ],
-    date: "",
-    todo:[]
+    todos:[],
+    dates:[]
+    /* todo: [],
+    date: [] */
+    
 })
 const getters={
-    todoL: state => {
-        return state.listOfToDos.filter(todo=>todo.todo)
+    getTodo: state => {
+        return state.listOfToDos.todo
     },
-    dateL: state => {
-        return state.listOfToDos.filter(todo=>todo.date)
+    getDate: state => {
+        return state.listOfToDos.date
     }
 }
 
@@ -122,9 +125,10 @@ const mutations = {
             //console.log(element.id)
             state.listOfToDos.push( { date: field_date, todo: field_aufgaben, idd: field_id, title: field_title })
             //console.log(state)
-            
-            
+            state.todos.push(element.attributes.field_aufgaben)
+            state.dates.push(element.attributes.field_date)
         });
+        
     }
 }
 export default {

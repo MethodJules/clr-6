@@ -11,6 +11,7 @@ import Chat from 'vue-beautiful-chat'
 import zircle from 'zircle'
 import 'zircle/dist/zircle.css'
 import Vuelidate from 'vuelidate'
+import VCalendar from 'v-calendar'
 
 
 
@@ -23,7 +24,10 @@ Vue.use(IconsPlugin)
 Vue.use(Chat)
 Vue.use(zircle)
 Vue.use(Vuelidate)
-
+Vue.use(VCalendar, {
+  componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
+                 // ...other defaults
+});
 Vue.use(Vuex);
 new Vue({
     router,

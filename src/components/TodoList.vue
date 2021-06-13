@@ -24,9 +24,9 @@
         <!-- Zum öffnen des Modals -->
         <b-button v-b-modal.to_do_edit_modal>+</b-button>
         </div>
-        <div class="giveTodo" v-for="todo in listOfToDos" :key="todo.date">
+        <!-- <div class="giveTodo" v-for="todo in listOfToDos" :key="todo.date">
             <b-card v-if="diffMonth">Todo: '{{ todo.todo }}', bis: '{{ todo.date }}'</b-card>
-        </div>
+        </div> -->
     </div>
 
 </template>

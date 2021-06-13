@@ -13,9 +13,19 @@
                                     :select-attribute="selectAttribute"
                                     :readonly="readonly"
                 ></b-calendar>
-                <div class="giveTodo" v-for="todo in ourTodos" :key="todo.date">
-           <b-card> Todo: '{{ ourTodos}}', bis: </b-card>
-        </div>
+                <vc-calendar 
+                    
+                    :attributes='attributes'
+                />
+                   <b-container>
+                       <b-row v-for="i in listOfToDos" :key="i.idx"> <b-col><b-row>Todo: <b-col>{{getTodo[i]}}, bis : {{getDate[i]}}</b-col></b-row></b-col> </b-row>
+                        <b-card style="width: 11rem;"><b-row> <b-col><b-row>Todo: <b-col>{{getTodo[0]}}, <b-row> bis : <b-col>{{getDate[0]}}</b-col></b-row></b-col></b-row></b-col> </b-row></b-card>
+                        <b-card style="width: 11rem;"><b-row> <b-col><b-row>Todo: <b-col>{{getTodo[1]}}, <b-row> bis : <b-col>{{getDate[1]}}</b-col></b-row></b-col></b-row></b-col> </b-row></b-card>
+                   
+                    </b-container>
+                <!-- <div class="giveTodo" v-for="todo in getTodo" :key="todo.getDate">
+                    <b-card> Todo: '{{ getTodo}}', bis: {{getDate}} </b-card>
+                </div> -->
                    
                     
                     <!-- <TodoList :date="todo.date"/> -->
@@ -34,10 +44,32 @@ export default {
         //TodoList
     },
     data(){
+        const todos = [
+      {
+        description: this.$store.state.todo.todos[0],
+        isComplete: false,
+        dates: this.$store.state.todo.dates[0], // Every Friday
+        color: 'red',
+      },
+      {
+        description: this.$store.state.todo.todos[1],
+        isComplete: false,
+        dates: this.$store.state.todo.dates[1], // Every Friday
+        color: 'red',
+      },
+    ];
         return{
-                
+            incId: todos.length,
+            todos,
+                /* attributes: [
+                    {
+                        key: 'today',
+                        highlight: true,
+                        dates: new Date(),
+                    },
+                ], */
                 date:"",
-                listeTodos: [],
+                listeToDos: [],
                
             
             selectAttribute: {
@@ -61,14 +93,37 @@ export default {
        
     }, */
     computed:{
-        ourTodos(){
-                var neueTodo= this.$store.state.todo.listOfToDos
-                 
-                return neueTodo
+        getTodo(){
             
-        
-        
-    }
+                var neueTodo= this.$store.state.todo.todos
+                
+                return neueTodo
+        },
+        getDate(){
+            var neueDate = this.$store.state.todo.dates
+            return neueDate
+        },
+        attributes() {
+            
+      return [
+        // Attributes for todos
+        ...this.todos.map(todo => ({
+          dates: todo.dates,
+          
+          dot: {
+            color: todo.color,
+            class: todo.isComplete ? 'opacity-75' : '',
+          },
+          popover: {
+            
+            label: 
+                todo.description,
+            
+          },
+          customData: todo,
+        })),
+      ];
+    },
     }
 }
 </script>
