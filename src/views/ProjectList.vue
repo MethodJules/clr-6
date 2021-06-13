@@ -45,7 +45,7 @@
 
       <b-card title="Neues Projekt" style="max-height: 10rem" class="m-2">
         <b-row>
-          <b-col col="3">
+          <b-col cols="3">
             <ProjectForm :project="project"></ProjectForm>
 
             <!-- <b-link class=" btn btn-outline-dark mt-5">Neues Projekt</b-link> -->
@@ -117,7 +117,7 @@ export default {
   }, */
   async mounted() {
     this.$store.dispatch("project/loadProjectsFromBackend");
-    this.projectList = this.$store.state.project.projectList;
+    this.projectList = this.$store.state.project.myProjects;
     console.log(this.projectList);
     console.log("mount projectList");
   },

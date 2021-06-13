@@ -8,3 +8,13 @@
     class="flex-grow-1"
   ></b-calendar>
 </template>
+<script>
+export default{
+    data() {
+        return {
+      disabled:"disabled",
+      readonly:"readonly"
+      }
+},
+}
+</script>

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="validCredential != false">
+    <div v-if="validCredential != true">
       <div class="mx-auto" style="width: 50rem;">
       <b-container >
         <b-row align-v="center">
@@ -227,12 +227,13 @@ export default {
     },
     */
     login() {
-      let username=this.zugangsKennung
+/*      let username=this.zugangsKennung
       let password=this.passwort
-      this.$store.dispatch('sparky_api/signin', {
+       this.$store.dispatch('sparky_api/login', {
         username,
         password
-      })
+      }) */
+      this.$store.dispatch('sparky_api/login2')
       //console.log(this.$store.state.sparky_api.account)
     },
     /* formularTodo(){
@@ -269,9 +270,10 @@ export default {
     },
 
     validCredential() {
+     // return true
       return this.$store.state.sparky_api.validCredential
     }
-  } /* ,
+  }  ,
 
   mounted() {
     this.$store.dispatch("todo/loadToDoFromBackend");

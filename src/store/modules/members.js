@@ -1,4 +1,7 @@
 const state = () => ({
+
+    currentUser: localStorage.getItem("userLoggedIn"),
+    
     members: [
         { name: 'Person 1', role: 'Gruppenadmin'},
         { name: 'Person 2', role: 'Gruppenmitglied'},

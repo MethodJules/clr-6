@@ -93,7 +93,7 @@
         Gruppenmitgliedern zugestimmt
       </p>
       <b-form-checkbox
-        :id="Gruppe"
+        :id="gruppe"
         v-model="status"
         name="checkbox-1"
         value="1"
@@ -114,6 +114,7 @@ export default {
       isDisabled: [false, false, false, false, false, false, false],
       votes: 2,
       status: 0,
+      gruppe: 1,
       // isDisabled: false
     };
   },

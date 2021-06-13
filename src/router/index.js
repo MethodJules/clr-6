@@ -77,6 +77,7 @@ const routes = [
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
+        meta: {requiresAuth: true},
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
     {
@@ -117,12 +118,12 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
     },
 
-    {
+/*     {
         path: '/group',
         name: 'Groupmanagement',
         props: true,
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
-    },
+        component: () => import(webpackChunkName: "begruessung_home"  '../views/Groupmanagement.vue')
+    }, */
     {
         path: '/home',
         name: 'Home',
@@ -134,17 +135,6 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
     },
 
-    
-
-
-
-
-
-
-
-
-
-
 ]
 
 const router = new VueRouter({
@@ -152,5 +142,53 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 })
+
+  
+router.beforeEach((to, from, next) => {
+    // check if route requires Login 
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        console.log("in")
+
+        // check if user is logged in 
+        if (localStorage.getItem("userLoggedIn") != null) {  
+            console.log(localStorage.getItem("userLoggedIn"))       
+            next()
+        } else {
+            alert("Login erforderlich")
+            console.log("in")
+
+            next({name: 'App'})
+        }
+
+       
+    } else {
+        next();
+    }
+
+})
+
+
+/* router.beforeEach((to, from, next) => {
+    // check if route requires Login 
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        console.log("in")
+
+        // check if user is logged in 
+        if (localStorage.getItem("userLoggedIn") != null) {  
+            console.log(localStorage.getItem("userLoggedIn"))       
+            next()
+        } else {
+            alert("Login erforderlich")
+            console.log("in")
+
+            next({name: 'App'})
+        }
+
+       
+    } else {
+        next();
+    }
+
+}) */
 
 export default router

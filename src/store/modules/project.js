@@ -7,23 +7,41 @@ const state = () => ({
         betreuenderDozent: "Julien, Maren",
         externeMitwirkende: "Nithusha, Aylin",
         schlagworter: "test, projektliste, projekte"} */
-    ]
+    ],
+    myProjects: []
+
 })
 
+
+/*   const getters = {
+    getRowData(state) {
+        return state.rowData;
+
+    }
+} */
+
+
+
 const actions = {
-    async loadProjectsFromBackend({commit}) {
+    async loadProjectsFromBackend({commit, state, rootState}) {
+        console.log(state)
+        console.log(rootState.sparky_api.drupalUserID)
+        var drupalUserID = rootState.sparky_api.drupalUserID
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt')
             .then((response) => {
                 console.log(response);
-                const data = response.data.data;
-                
-                commit('SAVE_NEW_PROJECT', data);
+                console.log("es lfniosdn")
+                /* console.log($store.state.sparky_api.validCredential)
+                console.log($store.state.sparky_api.drupalUserID) */
+                const project = response.data.data;
+                commit('SAVE_NEW_PROJECT', {project, drupalUserID});
                
             }).catch(error =>{
                 throw new Error(`API ${error}`);
             });         
             
     },
+
     createProject({commit}, projEntry) {
         
         commit('ADD_PROJECT', projEntry)
@@ -33,6 +51,7 @@ const actions = {
 const mutations ={
     ADD_PROJECT(state, projEntry) {
         console.log(projEntry)
+        console.log(state)
         var data = `{"data": {"type": "node--projekt", "attributes": {"title": "${projEntry.title}", "field_schlagworter": "${projEntry.schlagworter}", "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}" }, "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3" }}}, "field_externe_mitwirkende": {"data": {"0": {"type": "user--user", "id": "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3" }}} }}}`;
         var config = {
             method: 'post',
@@ -54,7 +73,7 @@ const mutations ={
             })
     },
 
-    SAVE_NEW_PROJECT(state, project) {
+    SAVE_NEW_PROJECT(state, {project, drupalUserID}) {
         
         project.forEach(element => {
             //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
@@ -70,8 +89,20 @@ const mutations ={
             //console.log(element.id)
             const field_title = element.attributes.title;
             //console.log(element.id)
-            state.projectList.push( { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title })
+            
+            let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title }
+            state.projectList.push(projectObject)
             //console.log(state)
+            for(let mitglied of element.relationships.field_gruppenmitglieder.data )
+            {
+                if(mitglied.id==drupalUserID){
+                    //state.myProjectList.push({ betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title })
+                    state.myProjects.push(projectObject)                   
+                }
+            }
+
+            console.log(drupalUserID)
+
         });
     }
 }
