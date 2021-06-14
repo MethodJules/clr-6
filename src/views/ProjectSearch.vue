@@ -129,7 +129,7 @@ name: "ProjectList",
     
   }, */
   async mounted() {
-    this.$store.dispatch('project/loadProjectsFromBackend')
+    //this.$store.dispatch('project/loadProjectsFromBackend')
     this.projectList = this.$store.state.project.projectList
     this.searchResult=this.projectList;
 

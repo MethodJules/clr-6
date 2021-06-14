@@ -91,7 +91,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
     {
-        path: '/phasetemplate/:phase_id',
+        path: '/phasetemplate/:phase_id:project_id',
         name: 'PhaseTemplate',
         //props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
@@ -125,7 +125,8 @@ const routes = [
         component: () => import(webpackChunkName: "begruessung_home"  '../views/Groupmanagement.vue')
     }, */
     {
-        path: '/home',
+        //path: '/home:user_id',
+        path: '/home:project_id',
         name: 'Home',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },

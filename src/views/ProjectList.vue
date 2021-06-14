@@ -22,8 +22,14 @@
                     </b-row>
                     <b-row>
                       <b-col>
+<!--                         <b-link
+                          :to="{ name: 'Home', params: { user_id: getUserID } }"
+                          class="btn btn-outline-dark btn-block mb-2"
+                          >Dashboard</b-link
+                        >
+                      </b-col> -->
                         <b-link
-                          to="/home"
+                          :to="{ name: 'Home', params: { project_id: project.idd } }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
                         >
@@ -108,6 +114,15 @@ export default {
       );
     },
   },
+
+computed:{
+
+    getUserID() {
+     // return true
+      return this.$store.state.sparky_api.drupalUserID
+    }
+
+},
   ready: function () {
     this.getProjectTitles();
   },
@@ -116,7 +131,7 @@ export default {
     
   }, */
   async mounted() {
-    this.$store.dispatch("project/loadProjectsFromBackend");
+    //this.$store.dispatch("project/loadProjectsFromBackend");
     this.projectList = this.$store.state.project.myProjects;
     console.log(this.projectList);
     console.log("mount projectList");

@@ -36,8 +36,8 @@ export default new Vuex.Store({
         assistent,
         phases,
         output_documents,
-       sparky_api,
-        inputDocuments
+        sparky_api,
+        inputDocuments,
     },
 
     //noch in Datei packen

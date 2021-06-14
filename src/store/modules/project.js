@@ -25,6 +25,7 @@ const state = () => ({
 const actions = {
     async loadProjectsFromBackend({commit, state, rootState}) {
         console.log(state)
+            console.log("hallo")
         console.log(rootState.sparky_api.drupalUserID)
         var drupalUserID = rootState.sparky_api.drupalUserID
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt')
@@ -89,19 +90,26 @@ const mutations ={
             //console.log(element.id)
             const field_title = element.attributes.title;
             //console.log(element.id)
-            
-            let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title }
-            state.projectList.push(projectObject)
+            let field_gruppenmitglieder_IDs = []
+
             //console.log(state)
+            let is_my_project = false
             for(let mitglied of element.relationships.field_gruppenmitglieder.data )
             {
+                field_gruppenmitglieder_IDs.push(mitglied.id)
                 if(mitglied.id==drupalUserID){
                     //state.myProjectList.push({ betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title })
-                    state.myProjects.push(projectObject)                   
+                    is_my_project= true                  
                 }
             }
+            let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
+            state.projectList.push(projectObject)
+            if(is_my_project){
+                state.myProjects.push(projectObject)
+            }
 
-            console.log(drupalUserID)
+
+            console.log(projectObject)
 
         });
     }

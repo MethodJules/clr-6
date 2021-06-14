@@ -196,6 +196,7 @@ async authenticate ({commit }, {username, password}) {
                     //längere ID
                     state.drupalUserID=user.id
                     state.drupalUserObject=user
+                    dispatch("project/loadProjectsFromBackend", null, { root: true })
 
                     //das ist drupalinterne UID
                     //state.druoalUserID=user.attributes.drupal_internal__uid
@@ -212,10 +213,10 @@ async authenticate ({commit }, {username, password}) {
 
     },
 
-    login2({commit, state}){
+    login2({commit, state, dispatch}){
         
 
-       // dispatch('/project/loadProjectsFromBackend', null, { root: true })
+
           console.log(commit)
         var config = {
             method: 'get',
@@ -246,6 +247,7 @@ async authenticate ({commit }, {username, password}) {
                     //längere ID
                     state.drupalUserID=user.id
                     state.drupalUserObject=user
+                    dispatch("project/loadProjectsFromBackend", null, { root: true })
 
                     //das ist drupalinterne UID
                     //state.druoalUserID=user.attributes.drupal_internal__uid

@@ -11,13 +11,13 @@
     <!-- <b-link :to="{name: 'NAME DER ROUTE AUS router/index.js'}" class="btn btn-outline-dark btn-block mb-2">MENU LINK</b-link> -->
     <b-link
       :disabled="isDisabled[0]"
-      :to="{ name: 'PhaseTemplate', params: { phase_id: 0 } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 0, project_id: getProjectID } }"
       class="btn btn-outline-dark btn-block mb-2"
       >Gruppe bilden</b-link
     >
     <b-link
       :disabled="isDisabled[1]"
-      :to="{ name: 'PhaseTemplate', params: { phase_id: 1 } }"
+      :to="{ name: 'PhaseTemplate', params: { phase_id: 1, project_id: getProjectID } }"
       class="btn btn-outline-dark btn-block mb-2"
       >Ziel &amp; Umfang definieren</b-link
     >
@@ -163,6 +163,12 @@ export default {
     voted() {
       return this.votes + +this.status;
     },
+
+    getProjectID(){
+      return this.$route.params.project_id
+    }
+
+
   },
   /* watch:{
             $route(to="/projectlist"){
