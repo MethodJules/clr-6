@@ -17,13 +17,13 @@
             value="checked"
             unchecked-value="unchecked"
           >
-            {{ tool.tool }}
+            {{ tool.title }}
           </b-form-checkbox>
         </div>
       </div>
     </b-row>
     <b-row>
-      <b-col col="6"> </b-col>
+      <b-col cols="6"> </b-col>
       <b-col>
         <b-modal id="tools_edit_modal" title="tools">
           <label for="neueTools">Benutztes Tool: </label>
@@ -49,7 +49,7 @@ export default {
   methods: {
     ok() {
       var neueEingabe = {
-        usedTool: this.tool,
+        tool: this.tool,
       };
       this.listOfTools.push(neueEingabe);
       this.$store.dispatch("tool/createTool", neueEingabe);
@@ -57,8 +57,9 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch("tool/loadToolFromBackend");
+    this.$store.dispatch("tool/loadToolsFromBackend", {projectId: this.$route.params.project_id});
     this.listOfTools = this.$store.state.tool.listOfTools;
+    console.log("tool startet")
   },
 };
 </script>

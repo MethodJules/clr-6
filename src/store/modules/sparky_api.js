@@ -233,7 +233,7 @@ async authenticate ({commit }, {username, password}) {
                 console.log(response)
                  //console.log(response.data.data[2].attributes.field_sparky_id)
                 console.log("jetzt sparkyID")
-                state.sparkyUserID= "6ee6aa71-5e18-4db5-b91f-f3faedf5bcb2"
+                state.sparkyUserID= "sparkyid aus clr backend"
                 //state.sparkyUserID="6ee6aa71-5e18-4db5-b91f-f3faedf5bcb2"
                 console.log(state.sparkyUserID)
                 for(var user of response.data.data){

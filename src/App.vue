@@ -227,13 +227,13 @@ export default {
     },
     */
     login() {
-/*      let username=this.zugangsKennung
+     let username=this.zugangsKennung
       let password=this.passwort
        this.$store.dispatch('sparky_api/login', {
         username,
         password
-      }) */
-      this.$store.dispatch('sparky_api/login2')
+      })
+      //this.$store.dispatch('sparky_api/login2')
       //console.log(this.$store.state.sparky_api.account)
     },
     /* formularTodo(){

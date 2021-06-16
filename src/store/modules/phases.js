@@ -68,14 +68,14 @@ const actions = {
 
         for(let phase of state.phases_this_project){
             if (phase.attributes.field_phase_number== phaseId){
-                console.log(phaseId)
+                console.log(phase)
                 console.log(phase.attributes.title)
                 console.log(phase.relationships.field_projektid.data.id)
                 currentPhase= phase
             }
             
         }
-
+            console.log(currentPhase)
 
                 commit('LOAD_PHASE', {currentPhase});
        
@@ -102,9 +102,10 @@ const mutations = {
            console.log(phases)
             console.log(state);
     },
-    LOAD_PHASE(state, {phase}) {
+    LOAD_PHASE(state, currentPhase) {
+        console.log(currentPhase.currentPhase)
 
-        state.current_phase=phase
+        state.current_phase=currentPhase.currentPhase
             console.log(state.current_phase)         
         ;
     }
