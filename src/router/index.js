@@ -112,9 +112,9 @@ const routes = [
     },
     {
         path: '/reflexion',
-        name: 'Reflexion',
+        name: 'ReflexionView',
         props: true,
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ReflexionView.vue')
     },
 
     {
@@ -133,6 +133,12 @@ const routes = [
         name: 'ProjectSearch',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
     },
+    {
+        path: '/postfach',
+        name: 'Postfach',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Postfach.vue')
+    },
+ 
 
     
 

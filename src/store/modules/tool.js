@@ -54,6 +54,7 @@ const mutations={
 
         tool.forEach(element => {
             const field_tool = element.attributes.field_tool;
+            
             //console.log(field_tool)
             const field_id = element.id;
            //console.log(element.id)

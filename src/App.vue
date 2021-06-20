@@ -102,13 +102,14 @@
 
             <b-row class="chat">
               <br>
-              <b-col class="border border-dark">
-                <Postfach />
-                
-              </b-col>
-            </b-row>
+              
+            </b-row> 
             <b-row class="postfach">
-              <b-col class="border border-dark">
+              <b-col>
+                      
+                <Postfach />
+              </b-col>
+              <b-col>
                 <Chat />
               </b-col>
             </b-row>
@@ -128,7 +129,9 @@ import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
 import Chat from "@/components/Chat.vue";
-import Postfach from "@/components/Postfach.vue";
+import Postfach from "@/views/Postfach.vue";
+
+
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
@@ -143,7 +146,9 @@ export default {
     MenueLeiste,
     Kalender,
     Chat,
-    Postfach,
+    Postfach
+    
+    
   },
   data() {
     return {

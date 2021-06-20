@@ -14,10 +14,22 @@ import Vuelidate from 'vuelidate'
 
 
 
+
+
+
+
+
 import AppDate from '@/components/AppDate'
 Vue.component('AppDate', AppDate)
 
 Vue.config.productionTip = false
+
+
+
+
+
+
+
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Chat)
@@ -31,3 +43,5 @@ new Vue({
     store,
   render: h => h(App),
 }).$mount('#app')
+
+

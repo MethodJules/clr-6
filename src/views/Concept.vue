@@ -18,6 +18,7 @@
                 </div>
                 <div class="recomander">
                     <v-btn class="addButton" @click="openRecommander"> Recommander </v-btn>
+                    <v-btn class="recButton" @click="openRecommander"> Recommander </v-btn>
                 </div>
 
             </div>
@@ -376,6 +377,25 @@ import {mapState} from 'vuex'
 
 }
 </script>
+
+
+<style scoped>
+    .addButton {
+        position: relative;
+        margin-bottom: 10px;
+        color: white;
+        background-color: #c93e37 !important;
+        width: 50%;
+    }
+    .recButton {
+        position: relative;
+        margin-bottom: 10px;
+        color: white;
+        background-color: #c93e37 !important;
+        padding: 4px !important;
+        font-size: 10px;
+    }
+</style>
 <style>
 
     .home {
