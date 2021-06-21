@@ -5,14 +5,31 @@ const state = () => ({
 
     ]
 })
+
+
+
 const actions={
-    async loadToolFromBackend({commit}) {
+    async loadToolsFromBackend({commit, rootState}, {projectId}) {
+
+ 
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/tools')
             .then((response) => {
-                //console.log(response);
+                console.log(response);                                                                                                                                                                         
+                
                 const data = response.data.data;
+                console.log(response.data.data)
+                let tools = []
+                let current_phase_ID=rootState.phases.current_phase
+                let current_project_ID=rootState.phases.current_phase.relationships.field_projektid.data.id
+                console.log(current_phase_ID)
+                for(let tool of data){
+                   if (tool.relationships.field_phasenid.data.id==current_phase_ID.id && current_project_ID == projectId){
+                       tools.push(tool)
+                    }
+                }
+                
 
-                commit('SAVE_NEW_TOOL', data);
+                commit('SAVE_TOOLS', tools);
                 //commit('SAVE_NEW_TOOL', tool)
             }).catch(error =>{
                 throw new Error(`API ${error}`);
@@ -29,7 +46,7 @@ const actions={
 const mutations={
     ADD_NEW_TOOL(state, toolEntry) {
 
-        var data = `{"data": {"type": "node--tools", "attributes": {"title": "neu eingefügtes tool", "field_tool": "${toolEntry.tool}" }}}`;
+        var data = `{"data": {"type": "node--tools", "attributes": {"title": "${toolEntry.tool}"}}}`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/tools',
@@ -50,17 +67,15 @@ const mutations={
                 console.log(error)
             })
     },
-    SAVE_NEW_TOOL(state, tool) {
+    SAVE_TOOLS(state, tools) {
 
-        tool.forEach(element => {
-            const field_tool = element.attributes.field_tool;
-            
+        tools.forEach(element => {
             //console.log(field_tool)
             const field_id = element.id;
            //console.log(element.id)
             const field_title = element.attributes.title;
             //console.log(element.id)
-            state.listOfTools.push( { tool: field_tool, idd: field_id, title: field_title })
+            state.listOfTools.push( { idd: field_id, title: field_title })
             //console.log(state)
 
 

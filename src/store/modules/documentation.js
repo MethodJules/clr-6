@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const state = () => ({
-    documentations: null,
+    documentations: [],
+    documentation: null,
 })
 
 const actions = {
@@ -25,6 +26,31 @@ const actions = {
             });
 
     },
+
+/*     async loadSingleDocuFromBackend({commit}, documentID) {
+
+        var config = {
+            method: 'get',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+            },
+        };
+        axios(config)
+        .then(function(response){
+            console.log("dies ist einzelne doku")
+            console.log(response)
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+        }, */
+
+
+
+
     createDocumentation({commit}, docuEntry) {
 
         commit('ADD_DOCUMENTATION', docuEntry)

@@ -16,6 +16,7 @@ import phases from './modules/phases'
 import project from './modules/project'
 import output_documents from './modules/output_documents'
 import postfach from './modules/postfach'
+import sparky_api from './modules/sparky_api'
 
 
 Vue.use(Vuex)
@@ -37,6 +38,7 @@ export default new Vuex.Store({
        phases,
        output_documents,
        postfach,
+        sparky_api,
        inputDocuments
     },
 

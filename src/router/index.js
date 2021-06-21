@@ -77,6 +77,7 @@ const routes = [
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
+        meta: {requiresAuth: true},
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
     {
@@ -90,7 +91,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
     {
-        path: '/phasetemplate/:phase_id',
+        path: '/phasetemplate/:phase_id:project_id',
         name: 'PhaseTemplate',
         //props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
@@ -117,14 +118,15 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ReflexionView.vue')
     },
 
-    {
+/*     {
         path: '/group',
         name: 'Groupmanagement',
         props: true,
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
-    },
+        component: () => import(webpackChunkName: "begruessung_home"  '../views/Groupmanagement.vue')
+    }, */
     {
-        path: '/home',
+        //path: '/home:user_id',
+        path: '/home:project_id',
         name: 'Home',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },
@@ -145,17 +147,6 @@ const routes = [
     },
  
 
-    
-
-
-
-
-
-
-
-
-
-
 ]
 
 const router = new VueRouter({
@@ -163,5 +154,53 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 })
+
+  
+router.beforeEach((to, from, next) => {
+    // check if route requires Login 
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        console.log("in")
+
+        // check if user is logged in 
+        if (localStorage.getItem("userLoggedIn") != null) {  
+            console.log(localStorage.getItem("userLoggedIn"))       
+            next()
+        } else {
+            alert("Login erforderlich")
+            console.log("in")
+
+            next({name: 'App'})
+        }
+
+       
+    } else {
+        next();
+    }
+
+})
+
+
+/* router.beforeEach((to, from, next) => {
+    // check if route requires Login 
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        console.log("in")
+
+        // check if user is logged in 
+        if (localStorage.getItem("userLoggedIn") != null) {  
+            console.log(localStorage.getItem("userLoggedIn"))       
+            next()
+        } else {
+            alert("Login erforderlich")
+            console.log("in")
+
+            next({name: 'App'})
+        }
+
+       
+    } else {
+        next();
+    }
+
+}) */
 
 export default router

@@ -1,49 +1,46 @@
 <template>
   <div id="app">
-    <div v-if="validCredential != false">
-      <div class="mx-auto" style="width: 50rem">
-        <b-container>
-          <b-row align-v="center">
-            <b-col>
-              <b-card class="login">
-                <b-form-group>
-                  <b-tabs content-class="mt-3">
-                    <!-- Tab 1 -->
-                    <b-tab title="Login">
-                      <table>
-                        <tr>
-                          <td>
-                            <label for="zugangsKennung" class="mr-1"
-                              >Zugangskennung</label
-                            >
-                          </td>
-                          <td>
-                            <input
-                              v-model="zugangsKennung"
-                              id="zugangskennung"
-                              type="text"
-                              placeholder=""
-                              class="form-control"
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <label for="password" class="mr-1 mt-1"
-                              >Passwort</label
-                            >
-                          </td>
-                          <td>
-                            <input
-                              v-model="passwort"
-                              id="password"
-                              type="password"
-                              placeholder=""
-                              class="form-control mt-1"
-                            />
-                          </td>
-                        </tr>
-                      </table>
+    <div v-if="validCredential != true">
+      <div class="mx-auto" style="width: 50rem;">
+      <b-container >
+        <b-row align-v="center">
+          <b-col>
+            <b-card  class="login">
+              <b-form-group>
+              <b-tabs content-class="mt-3">
+                <!-- Tab 1 -->
+                <b-tab title="Login">
+                  <table>
+                    <tr>
+                      <td>
+                        <label for="zugangsKennung" class="mr-1">Zugangskennung</label>
+                        
+                      </td>
+                      <td>
+                        <input
+                          v-model="zugangsKennung"
+                          id="zugangskennung"
+                          type="text"
+                          placeholder=""
+                          class="form-control"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="password" class="mr-1 mt-1">Passwort</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="passwort"
+                          id="password"
+                          type="password"
+                          placeholder=""
+                          class="form-control mt-1"
+                        />
+                      </td>
+                    </tr>
+                  </table>
 
                       <b-button @click="login()">Login</b-button>
                     </b-tab>
@@ -135,6 +132,28 @@ import Postfach from "@/views/Postfach.vue";
 //import Chat from "@/components/Chat.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
+/*
+var SparkyserviceApi = require('sparkyservice_api');
+
+var api = new SparkyserviceApi.AuthControllerApi()
+var body = new SparkyserviceApi.CredentialsDto(); // {CredentialsDto} 
+var apiResponse = ""
+var apiData = ""
+
+var callback = function(error, data, response) {
+  console.log("test" + response)
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+    apiResponse=response
+    apiData=data
+    console.log(apiResponse.status)
+    console.log(apiData)
+  }
+};
+*/
+
 export default {
   props: {
     showRightMenu: Boolean,
@@ -155,7 +174,7 @@ export default {
     return {
       zugangsKennung: "",
       passwort: "",
-      validCredential: false,
+      //validCredential: false,
       nameState: null,
       showMenu: true,
       eintragTodo: {
@@ -185,20 +204,20 @@ export default {
     closeMenu() {
       this.showMenu = false;
     },
-
+    /*
     login() {
-      /*     
-      
-      anmeldedaten werden an anmeldeserver gesendet und antwort ist??
-      -> bei fehler kommt fehler message und dann eigene fehlermeldung ausgeben lassen
-      -> wenn korrekt, dann kommt bestimmte antwort -> dann valid=true
-      */
-      //hier abgleich mit daten durch api call an authentifizierungs server - login.js gleicht passwörter ab und gibt nur boolean zurück,
-      // keine pw werden zurückgegeben
-      let antwort; // = this.$store.dispatch('login/validateLoginData', zugangsKennung, passwort)
+         //body.username = this.zugangsKennung;
+         //body.password = this.passwort;
+         body.username = "";
+         body.password = "";
+         
+         
+        api.authenticate(body, callback);
 
-      //der teil ist nur temporär
-      if (this.zugangsKennung == "Max" && this.passwort == "Musterpasswort") {
+
+
+      let antwort; 
+      if (apiResponse.status==200) {
         antwort = true;
       }
 
@@ -209,10 +228,23 @@ export default {
       } else {
         //modal popup, fehlermeldung
       }
-
       console.log(this.validCredential);
     },
-
+    */
+    login() {
+      //this is the real login
+/*      let username=this.zugangsKennung
+      let password=this.passwort
+       this.$store.dispatch('sparky_api/login', {
+        username,
+        password
+      }) 
+      this.$store.dispatch('sparky_api/login')
+      */
+     //this is the fake login without sparky backend 
+      this.$store.dispatch('sparky_api/fakeLogin')
+      //console.log(this.$store.state.sparky_api.account)
+    },
     /* formularTodo(){
                 this.$refs['my-todo-modal'].show()
                 this.eintragTodo.date=""
@@ -241,7 +273,16 @@ export default {
     isChanged() {
       return this.$route.name === "ProjectList";
     },
-  },
+
+    account() {
+      return this.$store.state.sparky_api.account
+    },
+
+    validCredential() {
+     // return true
+      return this.$store.state.sparky_api.validCredential
+    }
+  }  ,
 
   mounted() {
     this.$store.dispatch("todo/loadToDoFromBackend");

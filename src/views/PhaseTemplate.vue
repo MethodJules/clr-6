@@ -3,6 +3,7 @@
         <b-container fluid>
             <!-- gibt an in welcher Phase man sich befindet -->
             <h2>{{phaseId}}</h2>
+            <h2>{{projectId}}</h2>  
             <h2>Phase: {{xphase.phase_name}}</h2>
             <b-row>
                 <b-col cols="10">
@@ -61,7 +62,8 @@ export default {
 
     data() {
         return {
-            phaseId: this.$route.params.phase_id
+            phaseId: this.$route.params.phase_id,
+            projectId: this.$route.params.project_id
         }
     },
 
@@ -78,10 +80,6 @@ export default {
 
     },
 
-    mounted() {
-        console.log(this.$store.state.phases)
-    },
-
     computed: { 
         xphase() {
             return this.$store.state.phases.phases.find(
@@ -89,6 +87,12 @@ export default {
             );
         }
     },
+
+    async mounted() {
+        this.$store.dispatch('phases/loadSinglePhaseFromState', {phaseId: this.$route.params.phase_id})
+
+              console.log(this.$store.state.phases)
+  },
 
    
 
