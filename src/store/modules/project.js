@@ -35,7 +35,7 @@ const actions = {
                 /* console.log($store.state.sparky_api.validCredential)
                 console.log($store.state.sparky_api.drupalUserID) */
                 const project = response.data.data;
-                commit('SAVE_NEW_PROJECT', {project, drupalUserID});
+                commit('LOAD_PROJECT', {project, drupalUserID});
                
             }).catch(error =>{
                 throw new Error(`API ${error}`);
@@ -53,7 +53,18 @@ const mutations ={
     ADD_PROJECT(state, projEntry) {
         console.log(projEntry)
         console.log(state)
-        var data = `{"data": {"type": "node--projekt", "attributes": {"title": "${projEntry.title}", "field_schlagworter": "${projEntry.schlagworter}", "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}" }, "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3" }}}, "field_externe_mitwirkende": {"data": {"0": {"type": "user--user", "id": "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3" }}} }}}`;
+        projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+        projEntry.externeID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+
+        console.log(projEntry.schlagworter)
+        const keywords = JSON.stringify(projEntry.schlagworter)
+        //projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+        var data = `{"data": {"type": "node--projekt", "attributes": 
+        {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}" }, 
+        "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
+        "field_externe_mitwirkende": {"data": {"0": {"type": "user--user", "id": "${projEntry.externeID}" }}}, 
+        "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
+        "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
@@ -74,7 +85,7 @@ const mutations ={
             })
     },
 
-    SAVE_NEW_PROJECT(state, {project, drupalUserID}) {
+    LOAD_PROJECT(state, {project, drupalUserID}) {
         
         project.forEach(element => {
             //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user

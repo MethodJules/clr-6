@@ -11,7 +11,7 @@
       >
         <div>
           <b-form-checkbox
-            :id="tool.date"
+            id="tool.date"
             v-model="status"
             name="checkbox-1"
             value="checked"
@@ -44,6 +44,9 @@ export default {
         { usedTool: "Tool 2" },
         { usedTool: "Tool 3" },
       ],
+      tool: "",
+      status: 'not_accepted'
+
     };
   },
   methods: {

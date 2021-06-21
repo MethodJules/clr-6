@@ -79,7 +79,7 @@ export default {
         kurzbeschreibung: "",
         betreuenderDozent: "",
         externeMitwirkende: "",
-        schlagworter: "",
+        schlagworter: [],
 
         idd: "",
         title: "",
@@ -94,7 +94,7 @@ export default {
           kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
           betreuenderDozent: "Julien, Maren",
           externeMitwirkende: "Nithusha, Aylin",
-          schlagworter: "test, projektliste, projekte",
+          schlagworter: ["test, projektliste, projekte"],
         },
       ],
     };

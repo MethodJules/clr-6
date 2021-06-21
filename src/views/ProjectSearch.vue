@@ -8,6 +8,12 @@
             placeholder
             ="Geben Sie ein Schlagwort ein, um die Projektliste zu filtern!"
           />
+                                <div>
+            <vue-simple-suggest
+            placeholder
+            ="Dozenten eingeben"
+          />
+                      </div>
   <b-badge v-for= "keyword in keywords" :key="keyword.id" variant="primary">{{keyword}} <BIconXCircleFill v-on:click="deletekeyword(keyword)"> </BIconXCircleFill></b-badge>
 
             <!-- free input or a list of all existing keywords where one can choose keywords for filtering -->
@@ -138,9 +144,9 @@ name: "ProjectList",
         console.log("test")
         this.existingKeywordList.push(keyword.schlagworter[0])
     }
-
+    console.log("keywordlist")
     console.log(this.existingKeywordList)
-    console.log("mount projectList")
+
 
   },
 };
