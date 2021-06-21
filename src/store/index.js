@@ -37,6 +37,7 @@ export default new Vuex.Store({
        phases,
        output_documents,
        postfach,
+       inputDocuments
     },
 
     //noch in Datei packen
