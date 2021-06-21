@@ -2,7 +2,7 @@
     <div>
         <!-- open modal -->
          <!-- https://www.youtube.com/watch?v=2wEcS32MGQc -->
-        <b-button @click="showThisModal()" v-b-modal="'chat_open2'">CHAT</b-button>
+        <b-button @click="showThisModal()" v-b-modal="'chat_open2'"><b-icon icon="chat"></b-icon></b-button>
         <b-modal ref="chat_open2" height="600" width="600" title="Projekt 1 Chat" hide-footer>
             <ChatAdvanced/>
             
