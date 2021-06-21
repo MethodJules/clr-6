@@ -285,7 +285,7 @@ export default {
   }  ,
 
   mounted() {
-    this.$store.dispatch("todo/loadToDoFromBackend");
+    //this.$store.dispatch("todo/loadToDoFromBackend");
     this.listOfToDos = this.$store.state.todo.listOfToDos;
     this.$store.dispatch("daily_scrum/loadDailysFromBackend");
   },

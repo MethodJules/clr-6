@@ -35,18 +35,13 @@
 
 <script>
 export default {
-   state:{
-       listOfToDos: [{todo:"todo1", date:"21.02.2021"} , {todo:"todo2", date:"22.02.2021"}, {todo:"todo3", date:"23.02.2021"}],
-   },
     props:{
         date: String
     },
     components:{
     },
     data(){
-        
-      
-            return{
+          return{
                 //To DO: new key for todo list
                 listOfToDos: [{todo:"todo1", date:"21.02.2021"} , {todo:"todo2", date:"23.02.2021"}, {todo:"todo3", date:"24.02.2021"}],
                 status: '',
