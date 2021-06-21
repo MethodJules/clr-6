@@ -1,35 +1,81 @@
 import axios from 'axios';
 
-const state = () => ({
-    assistents: [
-        //{hilfstext: " "},
-    ]
+const state = {
+    assistentsArray: [
+        // Es gibt alle assistent fields in this array
+    ],
+    assistentsAll: []
+}
 
-})
-const actions={
-    async loadAssistentFromBackend({commit}) {
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/assistent')
+
+const getters = {
+    getAssistentText(state) {
+
+        return state.assistentsArray;
+
+    }
+}
+
+const actions = {
+    async loadAssistentArrayFromBackend({ commit }) {
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/assistententext/')
             .then((response) => {
-                //console.log(response);
-                const data = response.data.data;
-                // let assistent = []
-                commit('SAVE_NEW_ASSISTENT', data);
 
-            }).catch(error =>{
+                const newData = response.data.data;
+
+                commit('SAVE_NEW_ASSISTENT_ARRAY', newData);
+
+            }).catch(error => {
+
                 throw new Error(`API ${error}`);
+
             });
 
     },
-    createHilfstext({commit}, assistentEntry) {
-        
-        commit('ADD_ASSISTENT_HT', assistentEntry)
+    async loadAssistentFromBackend({ commit }) {
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/assistententext/595f3448-168d-4979-80b3-b96e9ef84885?resourceVersion=id%3A191')
+            .then((response) => {
+
+
+                const text = response.data.data.attributes.body.value;
+                const title = response.data.data.attributes.title;
+                const data = {
+                    title,
+                    text,
+                }
+                commit('SAVE_NEW_ASSISTENT', data);
+
+            }).catch(error => {
+
+                throw new Error(`API ${error}`);
+
+            });
 
     },
 
 }
-const mutations={
+
+const mutations = {
+    SAVE_NEW_ASSISTENT_ARRAY(state, data) {
+        data.forEach(element => {
+            console.log("For each");
+            let assistentTitle = element.attributes.title;
+            let assistentText = element.attributes.body.value;
+            let assistentId = element.id;
+
+            state.assistentsAll.push({ id: assistentId, title: assistentTitle, text: assistentText });
+
+        });
+
+
+    },
+
+    SAVE_NEW_ASSISTENT(state, data) {
+        state.assistentsArray = data;
+
+    },
     ADD_ASSISTENT_HT(state, assistentEntry) {
-    
+
         var data = `{"data": {"type": "node--assistent", "attributes": {"title": "Assistent Titel", "field_hilfstext": "${assistentEntry.hilfstext}"}}}`;
         var config = {
             method: 'post',
@@ -41,40 +87,22 @@ const mutations={
             },
             data: data
         };
-        
+
         axios(config)
-            .then(function(response){
+            .then(function(response) {
                 console.log(response)
             })
             .catch(function(error) {
                 console.log(error)
             })
     },
-
-    SAVE_NEW_ASSISTENT(state, hilfstext) {
-
-        hilfstext.forEach(element => {
-
-
-            const field_hilfstext = element.attributes.field_hilfstext;
-            //console.log(field_hilfstext)
-            const field_id = element.id;
-            //console.log(element.id)
-            const field_title = element.attributes.title;
-            //console.log(element.id)
-            state.assistents.push( { hilfstext: field_hilfstext, idd: field_id, title: field_title })
-            //console.log(state)
-
-
-
-
-        });
-    }
-
 }
+
+
 export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }

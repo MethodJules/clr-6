@@ -1,57 +1,61 @@
 <template>
-    <div class="scrollbar">
-        <vuescroll :ops="ops">
-            <div class="listElement" v-for="concept in concepts" :key="concept.name">
-                <div class="listIcon" @click="deleteItem(concept)"> <b-icon icon="trash" aria-hidden="true"></b-icon> </div>
-                <div class="listName"> {{concept.name}} </div>
-                <div class="listArrow" @click="createElement(concept)"> <b-icon icon="arrow-right" aria-hidden="true"></b-icon> </div>
-            </div>
-        </vuescroll>
-    </div>
+  <div class="scrollbar">
+    <vuescroll :ops="ops">
+      <div class="listElement" v-for="concept in concepts" :key="concept.name">
+        <div class="listIcon" @click="deleteItem(concept)">
+          <b-icon icon="trash" aria-hidden="true"></b-icon>
+        </div>
+        <div class="listName">{{ concept.name }}</div>
+        <div class="listArrow" @click="createElement(concept)">
+          <b-icon icon="arrow-right" aria-hidden="true"></b-icon>
+        </div>
+      </div>
+    </vuescroll>
+  </div>
 </template>
 
 <script>
-import vuescroll from 'vuescroll';
-import { mapState } from 'vuex';
+import vuescroll from "vuescroll";
+import { mapState } from "vuex";
 
 export default {
-    components: {
-        vuescroll,
+  components: {
+    vuescroll,
+  },
+  data: function () {
+    return {
+      conceptList: null,
+      ops: {
+        rail: {
+          background: "#bababa",
+          border: "1px solid #000",
+          opacity: 0.5,
+          size: "10px",
+        },
+        bar: {
+          background: "white",
+          size: "8px",
+          keepShow: true,
+        },
+      },
+    };
+  },
+  methods: {
+    createElement(value) {
+      alert("Create");
+      this.$emit("childToParent", value);
     },
-    data: function() {
-        return {
-            conceptList: null,
-            ops: {
-                    rail: {
-                        background: '#bababa',
-                        border: '1px solid #000',
-                        opacity: 0.5,
-                        size: "10px"
-                    },
-                    bar: {
-                        background: 'white',
-                        size: "8px",
-                        keepShow: true,
-                    }
-                }
-        }
+    deleteItem(concept) {
+      alert("Delete");
+      this.$store.dispatch("concepts/deleteConcept", concept);
     },
-    methods: {
-        createElement (value) {
-            alert("Create");
-            this.$emit('childToParent', value)
-            },
-        deleteItem(concept) {
-            alert("Delete");
-            this.$store.dispatch('concepts/deleteConcept', concept)
-        }
-    },
-        computed: {
-            ...mapState({
-                concepts: state => state.concepts.concepts
-            })
-           
-          /*  
+  },
+  computed: {
+    ...mapState({
+      concepts: (state) => state.concepts.concepts,
+    }),
+
+    /*  
         ...mapState({ 
                 concepts(state) {
                     
@@ -78,24 +82,23 @@ export default {
                 }
         })
         */
-    },
-    async mounted() {
-        console.log("mounted");     
-        await this.$store.dispatch('concepts/loadConcepts');
-        
-        console.log(this.$store.state.concepts.concepts);
+  },
+  async mounted() {
+    console.log("mounted");
+    await this.$store.dispatch("concepts/loadConcepts");
 
-        this.conceptList = this.$store.state.concepts.concepts;
+    console.log(this.$store.state.concepts.concepts);
 
-        for (let map of this.$store.state.concept_map.nodes) {
-            console.log(map);
+    this.conceptList = this.$store.state.concepts.concepts;
 
-        }
+    for (let map of this.$store.state.concept_map.nodes) {
+      console.log(map);
+    }
 
-        for (let concept of this.$store.state.concepts.concepts) {
-            console.log(this.$store.state.concept_map.nodes);
-            console.log(concept);
-            /*
+    for (let concept of this.$store.state.concepts.concepts) {
+      console.log(this.$store.state.concept_map.nodes);
+      console.log(concept);
+      /*
             for (let map of this.$store.state.concept_map.nodes) {
                 console.log(concept.id);
                 console.log(map.uuid);
@@ -107,9 +110,36 @@ export default {
                 }
             }
             */
-        }
-        
-        
     }
-}
+  },
+};
 </script>
+<style scoped>
+.listElement {
+  border: dashed;
+  width: 90%;
+  margin-left: 5%;
+  float: left;
+  text-align: center;
+  color: white;
+}
+.listIcon {
+  background-color: #c93e37;
+  float: left;
+  margin-right: 3px;
+  width: 10%;
+  cursor: pointer;
+}
+.listName {
+  background-color: #c93e37;
+  width: 75%;
+  margin-right: 3px;
+  float: left;
+}
+.listArrow {
+  background-color: #c93e37;
+  width: 10%;
+  float: left;
+  cursor: pointer;
+}
+</style>

@@ -1,99 +1,98 @@
 <template>
   <div id="app">
     <div v-if="validCredential != false">
-      <div class="mx-auto" style="width: 50rem;">
-      <b-container >
-        <b-row align-v="center">
-          <b-col>
-            <b-card  class="login">
-              <b-form-group>
-              <b-tabs content-class="mt-3">
-                <!-- Tab 1 -->
-                <b-tab title="Login">
-                  <table>
-                    <tr>
-                      <td>
-                        <label for="zugangsKennung" class="mr-1">Zugangskennung</label>
-                      </td>
-                      <td>
-                        <input
-                          v-model="zugangsKennung"
-                          id="zugangskennung"
-                          type="text"
-                          placeholder=""
-                          class="form-control"
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <label for="password" class="mr-1 mt-1">Passwort</label>
-                      </td>
-                      <td>
-                        <input
-                          v-model="passwort"
-                          id="password"
-                          type="password"
-                          placeholder=""
-                          class="form-control mt-1"
-                        />
-                      </td>
-                    </tr>
-                  </table>
+      <div class="mx-auto" style="width: 50rem">
+        <b-container>
+          <b-row align-v="center">
+            <b-col>
+              <b-card class="login">
+                <b-form-group>
+                  <b-tabs content-class="mt-3">
+                    <!-- Tab 1 -->
+                    <b-tab title="Login">
+                      <table>
+                        <tr>
+                          <td>
+                            <label for="zugangsKennung" class="mr-1"
+                              >Zugangskennung</label
+                            >
+                          </td>
+                          <td>
+                            <input
+                              v-model="zugangsKennung"
+                              id="zugangskennung"
+                              type="text"
+                              placeholder=""
+                              class="form-control"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label for="password" class="mr-1 mt-1"
+                              >Passwort</label
+                            >
+                          </td>
+                          <td>
+                            <input
+                              v-model="passwort"
+                              id="password"
+                              type="password"
+                              placeholder=""
+                              class="form-control mt-1"
+                            />
+                          </td>
+                        </tr>
+                      </table>
 
-                  <b-button @click="login()">Login</b-button>
-                </b-tab>
+                      <b-button @click="login()">Login</b-button>
+                    </b-tab>
 
-                <b-tab title="Registrierung">
-                  <h5>Registriere dich hier mit deinem Uni-Account</h5>
-                  <p>
-                    Falls du Hilfe benötigst, wende dich an
-                    mail@uni-hildesheim.de
-                  </p>
-                  <b-button @click="registrieren()">Registrieren</b-button>
-                </b-tab>
-              </b-tabs>
-              </b-form-group>
-            </b-card>
-          </b-col>
-        </b-row>
-      </b-container>
+                    <b-tab title="Registrierung">
+                      <h5>Registriere dich hier mit deinem Uni-Account</h5>
+                      <p>
+                        Falls du Hilfe benötigst, wende dich an
+                        mail@uni-hildesheim.de
+                      </p>
+                      <b-button @click="registrieren()">Registrieren</b-button>
+                    </b-tab>
+                  </b-tabs>
+                </b-form-group>
+              </b-card>
+            </b-col>
+          </b-row>
+        </b-container>
       </div>
     </div>
     <div v-else>
-      <b-container fluid>
-        <b-row class="obereLeiste">
-          <b-col class="border border-dark">
-            <MenueLeiste />
-          </b-col>
-        </b-row>
+      <b-container fluid class="p-0 m-0">
+        <MenueLeiste />
 
-        <b-row>
-          <b-col class="linkeSeite" cols="2">
+        <b-row class="d-flex flex-wrap pageContainer">
+          <b-col class="linkeSeite" md="2">
             <b-row>
               <b-col class="border border-dark">
                 <TodoList />
               </b-col>
             </b-row>
+
             <b-row>
-              <b-col> </b-col>
-              <b-col>
-                <br />
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col class="border border-dark">
+              <b-col class="border border-dark d-flex">
                 <Kalender />
               </b-col>
             </b-row>
           </b-col>
 
-          <b-col cols="8" class="mitte border border-primary">
+          <b-col class="border border-primary flex-grow-1 mainContent">
             <router-view :key="$route.path"></router-view>
           </b-col>
           <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
-          <b-col v-if="!isChanged" cols="2" class="rechteSeite">
+          <b-col
+            v-if="!isChanged"
+            class="d-flex flex-column justify-content-between p-2 rechtseite"
+            md="2"
+          >
             <b-row>
               <b-col class="border border-dark">
                 <SeitenNavigation />
@@ -117,8 +116,10 @@
           <b-col v-else> </b-col>
         </b-row>
 
-        <b-row class="untereLeiste"> </b-row> </b-container
-      >.
+        <b-row class="untereLeiste p-4 d-flex align-center">
+          <h3>Footer oder Impressium vielleicht</h3>
+        </b-row>
+      </b-container>
     </div>
   </div>
 </template>
@@ -203,7 +204,7 @@ export default {
 
       //wenn rückgabe true, dann wird freigeschaltet, sonst wird fehlermeldung ausgegeben
       if (antwort) {
-        this.validCredential = true;
+        this.validCredential = false;
         //modal/popup mit message
       } else {
         //modal popup, fehlermeldung
@@ -240,141 +241,60 @@ export default {
     isChanged() {
       return this.$route.name === "ProjectList";
     },
-  } /* ,
-        mounted() {
-            this.$store.dispatch('todo/loadToDoFromBackend')
-            this.listOfToDos = this.$store.state.todo.listOfToDos
+  },
 
-        }, */,
+  mounted() {
+    this.$store.dispatch("todo/loadToDoFromBackend");
+    this.listOfToDos = this.$store.state.todo.listOfToDos;
+    this.$store.dispatch("daily_scrum/loadDailysFromBackend");
+  },
 };
 </script>
 <style>
 @import "assets/style.css";
+@import "assets/loading.css";
+.row {
+  width: 100% !important;
+  margin: 0 !important;
+}
 
+.pageContainer {
+  padding: 1rem 1rem 1rem 0;
+}
+
+.linkeSeite {
+  min-width: 20rem;
+}
+
+.rechtseite {
+  min-width: 20rem;
+  border: 1px solid red;
+}
+.mainContent {
+  min-width: 20rem;
+  padding: 0 !important;
+}
 .postfach {
-  width: 100%;
   text-align: center;
-  position: absolute;
-  bottom: 0;
-  height: 15%;
-  display: table;
-  margin: auto;
 }
 
 .chat {
-  width: 100%;
   text-align: center;
-  position: absolute;
+  /* position: absolute;
   bottom: 0;
   height: 10%;
   display: table;
-  margin-top: 20px;
+  margin-top: 20px; */
 }
 
 .login {
   margin-top: 30rem;
 }
 
-.obereLeiste {
-  /*         width: auto;
-        border: 1px solid black; */
-}
-.linkeSeite {
-  /* width: auto;
-        border: 1px solid black; */
-}
-.rechteSeite {
-  /*  width: 60 px;
-        border: 1px solid black; */
-}
 .untereLeiste {
-  width: auto;
-  height: 100 px;
+  height: 100%;
   border: 1px solid black;
+  margin: 0;
 }
-
-/* .background {
-        background-color: red;
-        background-image: url('~@/assets/background2.jpg');
-        width: 100%;
-        height: 90%;
-        position: absolute;
-        background-size: cover;
-
-    } */
-/*
-    .sc-launcher {
-        position: unset !important;
-        height: 60px !important;
-        margin-bottom: 20px !important;
-
-    }
-
-    .sc-launcher::before {
-        position: unset !important;
-        height: 60px !important;
-        height:unset !important;
-    }
-
-    .sc-open-icon {
-        position: unset !important;
-
-    }
-
-    .sc-closed-icon {
-        position: unset !important;
-    }
-
-    .sc-chat-window {
-        width: 20% !important;
-        height: 50% !important;
-    }
-
-    .sc-header {
-        height: 15% !important;
-        min-height: unset !important;
-    }
-    .sc-header--title {
-        font-size: 10px !important;
-        min-height: unset !important;
-    }
-
-    .sc-message {
-        width: unset !important;
-        margin-right: 10px !important;
-    }
-    .sc-message--text {
-        padding-bottom: 5px !important;
-        padding-top: 5px !important;
-        padding-left: 5px !important;
-        padding-right: 5px !important;
-        font-size: 12px !important;
-        max-width: unset !important;
-
-    }
-    .sc-message--content.sent {
-        margin-left: 15%;
-    }
-
-    .sc-message--text-content {
-        margin-bottom: 0px;
-    }
-
-    .sc-user-input {
-        min-height: unset !important;
-        height: 10% !important;
-    }
-    .sc-user-input--text {
-        height: 40px !important;
-        min-height: unset !important;
-        padding: 5px !important;
-        width: 90% !important;
-    }
-    .sc-user-input--button {
-        margin-left: 50px !important;
-
-    }
-
-    */
 </style>
 
