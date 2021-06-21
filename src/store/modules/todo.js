@@ -2,9 +2,22 @@ import axios from 'axios';
 
 const state = () => ({
     listOfToDos: [
-       // { id: 1, todo:"", date:" "},
-    ]
+       // { todo:"", date:" "},
+    ],
+    todos:[],
+    dates:[]
+    /* todo: [],
+    date: [] */
+    
 })
+const getters={
+    getTodo: state => {
+        return state.listOfToDos.todo
+    },
+    getDate: state => {
+        return state.listOfToDos.date
+    }
+}
 
 const actions = {
 
@@ -112,12 +125,16 @@ const mutations = {
             //console.log(element.id)
             state.listOfToDos.push( { date: field_date, todo: field_aufgaben, idd: field_id, title: field_title })
             //console.log(state)
+            state.todos.push(element.attributes.field_aufgaben)
+            state.dates.push(element.attributes.field_date)
         });
+        
     }
 }
 export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }

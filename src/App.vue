@@ -98,8 +98,8 @@
                 <SeitenNavigation />
               </b-col>
             </b-row>
-
-            <b-row class="chat">
+            
+            <b-row class="postfach">
               <br>
               
             </b-row> 
@@ -109,9 +109,10 @@
                 <Postfach />
               </b-col>
               <b-col>
-                <Chat />
+                <ShowChat />
               </b-col>
             </b-row>
+            
           </b-col>
           <b-col v-else> </b-col>
         </b-row>
@@ -129,10 +130,9 @@ import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
-import Chat from "@/components/Chat.vue";
+import ShowChat from "@/views/ShowChat.vue";
 import Postfach from "@/views/Postfach.vue";
-
-
+//import Chat from "@/components/Chat.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
@@ -142,14 +142,14 @@ export default {
   name: "App",
   components: {
     SeitenNavigation,
+    
     //ProjectList,
     TodoList,
+    ShowChat,
     MenueLeiste,
     Kalender,
-    Chat,
-    Postfach
-    
-    
+    //Chat,
+    Postfach,
   },
   data() {
     return {

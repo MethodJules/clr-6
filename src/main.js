@@ -12,6 +12,7 @@ import zircle from 'zircle'
 import 'zircle/dist/zircle.css'
 import Vuelidate from 'vuelidate'
 import Filters from './store/tools/Filters.js'
+import VCalendar from 'v-calendar'
 
 
 import AppDate from '@/components/AppDate'
@@ -31,7 +32,10 @@ Vue.use(IconsPlugin)
 Vue.use(Chat)
 Vue.use(zircle)
 Vue.use(Vuelidate)
-
+Vue.use(VCalendar, {
+  componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
+                 // ...other defaults
+});
 
 Vue.use(Vuex);
 new Vue({
