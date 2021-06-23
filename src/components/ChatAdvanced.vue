@@ -1,5 +1,5 @@
 <template>
-
+<!-- binding iframe --> 
 <iframe height="500" width="470"
 src="http://localhost:3000/channel/general/?layout=embedded"
 title="myframe"

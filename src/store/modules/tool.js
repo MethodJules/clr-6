@@ -3,11 +3,13 @@ import axios from 'axios';
 const state = () => ({
     listOfTools: [
 
-    ]
+    ]//we are using this array to store the used tools and upload the titles of the tools to database 
 })
 
 
-
+/*  
+    * to load the saved tools in database 
+    */ 
 const actions={
     async loadToolsFromBackend({commit, rootState}, {projectId}) {
 
@@ -44,6 +46,10 @@ const actions={
 
 }
 const mutations={
+    /*  
+    *  
+    * method to add a new tool to database 
+    */ 
     ADD_NEW_TOOL(state, toolEntry) {
 
         var data = `{"data": {"type": "node--tools", "attributes": {"title": "${toolEntry.tool}"}}}`;
@@ -67,6 +73,9 @@ const mutations={
                 console.log(error)
             })
     },
+    /*  
+    uploads the title of the tools to the state 
+    */ 
     SAVE_TOOLS(state, tools) {
 
         tools.forEach(element => {

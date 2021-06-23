@@ -4,48 +4,25 @@
      <div class="giveAppointment"  >
             
             <div class="card-body text-center">
-                 <!-- <b-calendar
-                                    
-                                    size= "sm"
-                                    hide-header
-                                    id="ex-disabled-readonly"
-                                    @date="showTodos"
-                                    :select-attribute="selectAttribute"
-                                    :readonly="readonly"
-                ></b-calendar> -->
+                 
+                 <!-- v-calendar component open attributes method in computed -->
                 <vc-calendar 
                     
                     :attributes='attributes'
                 />
-                   <!-- <b-container>
-                       <b-row v-for="i in listOfToDos" :key="i.idx"> <b-col><b-row>Todo: <b-col>{{getTodo[i]}}, bis : {{getDate[i]}}</b-col></b-row></b-col> </b-row>
-                       <b-card style="width: 11rem;" v-for="i in listOfToDos" :key="i.idx"><b-row> <b-col><b-row>Todo: <b-col>{{getTodo[i]}}, <b-row> bis : <b-col>{{getDate[i]}}</b-col></b-row></b-col></b-row></b-col> </b-row></b-card>
-                        <b-card style="width: 11rem;"><b-row> <b-col><b-row>Todo: <b-col>{{getTodo[0]}}, <b-row> bis : <b-col>{{getDate[0]}}</b-col></b-row></b-col></b-row></b-col> </b-row></b-card>
-                        <b-card style="width: 11rem;"><b-row> <b-col><b-row>Todo: <b-col>{{getTodo[1]}}, <b-row> bis : <b-col>{{getDate[1]}}</b-col></b-row></b-col></b-row></b-col> </b-row></b-card>
-                   
-                    </b-container> -->
-                <!-- <div class="giveTodo" v-for="todo in getTodo" :key="todo.getDate">
-                    <b-card> Todo: '{{ getTodo}}', bis: {{getDate}} </b-card>
-                </div> -->
-                   
-                    
-                    <!-- <TodoList :date="todo.date"/> -->
+                  
                      
             </div>
         </div>
     </div>
 </template>
 <script>
-//import TodoForm from '@/components/TodoForm'
-//import TodoList from '@/components/TodoList'
+
 
 export default {
-    components:{
-        //TodoForm
-        //TodoList
-    },
+    
     data(){
-        
+        //todos array
         const todos = [
       {
         description: this.$store.state.todo.listOfToDos,
