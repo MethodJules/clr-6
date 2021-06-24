@@ -7,9 +7,13 @@
           <b-col>
             <b-card  class="login">
               <b-form-group>
-              <b-tabs content-class="mt-3">
+              <b-tabs>
                 <!-- Tab 1 -->
                 <b-tab title="Login">
+                    <h5>Melde dich hier mit deinem Uni-Account an</h5>
+                      <p>
+                        Wenn du dich noch nicht registriert hast, bitte registriere dich mit deinem Uni-Account
+                      </p>
                   <table>
                     <tr>
                       <td>
@@ -46,11 +50,42 @@
                     </b-tab>
 
                     <b-tab title="Registrierung">
-                      <h5>Registriere dich hier mit deinem Uni-Account</h5>
+                     <!--  TODO: make new variables for registration -->
+                    <h5>Registriere dich hier mit deinem Uni-Account</h5>
                       <p>
                         Falls du Hilfe benötigst, wende dich an
                         mail@uni-hildesheim.de
                       </p>
+                  <table>
+                    <tr>
+                      <td>
+                        <label for="zugangsKennung" class="mr-1">Zugangskennung</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="zugangsKennung"
+                          id="zugangskennung"
+                          type="text"
+                          placeholder=""
+                          class="form-control"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="password" class="mr-1 mt-1">Passwort</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="passwort"
+                          id="password"
+                          type="password"
+                          placeholder=""
+                          class="form-control mt-1"
+                        />
+                      </td>
+                    </tr>
+                  </table>
                       <b-button @click="registrieren()">Registrieren</b-button>
                     </b-tab>
                   </b-tabs>
@@ -132,27 +167,6 @@ import Postfach from "@/views/Postfach.vue";
 //import Chat from "@/components/Chat.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
-/*
-var SparkyserviceApi = require('sparkyservice_api');
-
-var api = new SparkyserviceApi.AuthControllerApi()
-var body = new SparkyserviceApi.CredentialsDto(); // {CredentialsDto} 
-var apiResponse = ""
-var apiData = ""
-
-var callback = function(error, data, response) {
-  console.log("test" + response)
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-    apiResponse=response
-    apiData=data
-    console.log(apiResponse.status)
-    console.log(apiData)
-  }
-};
-*/
 
 export default {
   props: {
@@ -201,6 +215,15 @@ export default {
     };
   },
   methods: {
+    registrieren(){
+      let username=this.zugangsKennung
+      let password=this.passwort
+      this.$store.dispatch('drupal_api/getSessionToken', {
+        username,
+        password
+      }) 
+    },
+    
     closeMenu() {
       this.showMenu = false;
     },
@@ -239,7 +262,6 @@ export default {
         username,
         password
       }) 
-      this.$store.dispatch('sparky_api/login')
       */
      //this is the fake login without sparky backend 
       this.$store.dispatch('sparky_api/fakeLogin')
@@ -329,7 +351,7 @@ export default {
 }
 
 .login {
-  margin-top: 30rem;
+  margin-top: 25rem;
 }
 
 .untereLeiste {

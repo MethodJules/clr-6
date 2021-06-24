@@ -1,13 +1,8 @@
 import axios from 'axios';
+//TO DO: comments
 
 const state = () => ({
-    projectList: [
-      /* {titel: "Testtitel",
-        kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
-        betreuenderDozent: "Julien, Maren",
-        externeMitwirkende: "Nithusha, Aylin",
-        schlagworter: "test, projektliste, projekte"} */
-    ],
+    projectList: [],
     myProjects: []
 
 })
@@ -23,6 +18,14 @@ const state = () => ({
 
 
 const actions = {
+
+    /**
+     * loads all projects from Backend and commits the mutation LOAD_PROJECT
+     * and passes drupal user id gotten from rootstate on
+    * @param state state as parameter for access and manipulation of state data
+    * @param commit commit us used to call a mutation from this function
+    * @param rootState rootState allows access to states of other modules in store
+    */
     async loadProjectsFromBackend({commit, state, rootState}) {
         console.log(state)
             console.log("hallo")
@@ -34,8 +37,8 @@ const actions = {
                 console.log("es lfniosdn")
                 /* console.log($store.state.sparky_api.validCredential)
                 console.log($store.state.sparky_api.drupalUserID) */
-                const project = response.data.data;
-                commit('LOAD_PROJECT', {project, drupalUserID});
+                const projects = response.data.data;
+                commit('LOAD_PROJECT', {projects, drupalUserID});
                
             }).catch(error =>{
                 throw new Error(`API ${error}`);
@@ -43,6 +46,7 @@ const actions = {
             
     },
 
+    
     createProject({commit}, projEntry) {
         
         commit('ADD_PROJECT', projEntry)
@@ -50,6 +54,12 @@ const actions = {
     },
 }
 const mutations ={
+
+        /**
+    * saves the new project in the backend
+    * @param projEntry project which will be added to the backend
+    * @param state state as parameter for access and manipulation of state data
+    */
     ADD_PROJECT(state, projEntry) {
         console.log(projEntry)
         console.log(state)
@@ -85,9 +95,16 @@ const mutations ={
             })
     },
 
-    LOAD_PROJECT(state, {project, drupalUserID}) {
+        /**
+    * takes all projects and puts all relevant data of the project in state.projectList
+    * filters through all projects and puts all projects of the user in state.myProjects
+    * @param projects all project existing in the backend
+    * @param drupalUserID id of the user in drupal backend
+    * @param state state as parameter for access and manipulation of state data
+    */
+    LOAD_PROJECT(state, {projects, drupalUserID}) {
         
-        project.forEach(element => {
+        projects.forEach(element => {
             //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
             const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
             //console.log(field_betreuender_dozent)

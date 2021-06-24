@@ -9,7 +9,7 @@ const state = () => ({
         { name: 'Person 3', role: 'Betreuer*in'}, 
         
     ],
-    lecturers: [],
+    //lecturers: [],
 })
 
 
@@ -20,6 +20,8 @@ const actions = {
     deleteMembers({ commit }, member) {
         commit('deleteMembers', member)
     },
+
+    
     /**
     * fake Login that skips the request to sparky api, for development purposes
     */

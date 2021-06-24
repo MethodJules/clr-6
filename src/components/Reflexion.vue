@@ -98,9 +98,9 @@
                         <b-col>
                         <!-- <b-button v-b-modal.reflexion_speichern_modal>Speichern</b-button> -->
                         
-                        <b-button  @click="addItem">Speichern</b-button> 
-                        <b-button  @click="loadReflexion">Reflexion laden</b-button>
-                        <b-button  @click="updateReflexion">Reflexion updaten</b-button> 
+                        <b-button  @click="addItem()">Speichern</b-button> 
+                        <b-button  @click="loadReflexion()">Reflexion laden</b-button>
+                        <b-button  @click="updateReflexion()">Reflexion updaten</b-button> 
                         
 
                         </b-col>

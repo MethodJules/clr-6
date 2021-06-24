@@ -1,6 +1,7 @@
 import axios from 'axios';
 const baseUrl = "http://147.172.178.30:8080/"
 
+//TO DO: Coments
 const state = () => ({
     account: null,
     validCredential: false,
@@ -18,7 +19,9 @@ const state = () => ({
 
 const mutations = {
 
-
+        /**
+ * validcredential= true allows the user to login and see the real website
+*/
     dummyCredential(state) {
 
         state.validCredential = true
@@ -128,6 +131,7 @@ const actions = {
     * @param password input from login
     */
     async getWhoamI({dispatch }, { username, password }) {
+        console.log("hallo")
         await dispatch('authenticate', { username, password })
         axios.get(
             "http://147.172.178.30:3000/auth/whoAmI",

@@ -1,4 +1,5 @@
 import axios from 'axios';
+//TODO: comments
 const state = () => ({
     phases: [
         {
@@ -41,6 +42,13 @@ const state = () => ({
 })
 
 const actions = {
+
+    /**
+     * loads all phases from backend, passes loaded phases and projectID to mutation
+    * @param projectId projectID of current project
+    * @param commit commit us used to call a mutation from this function
+    * @param state state as parameter for access and manipulation of state data
+    */
     async loadPhasesFromBackend({commit, state}, {projectId}) {
         console.log(state)
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell')
@@ -48,13 +56,6 @@ const actions = {
                 console.log(response);
                 const phases = response.data.data;
                 console.log(projectId)
-                for(let phase of phases){
-                   if (phase.relationships.field_projektid.data.id==projectId){
-                        console.log(phase.attributes.title)
-                        console.log(phase.relationships.field_projektid.data.id)
-                    }
-
-                }
                 commit('LOAD_PHASES', {phases, projectId});
                
             }).catch(error =>{
@@ -88,6 +89,12 @@ const actions = {
 
 
 const mutations = {
+    /**
+    * filters all received phases for project id of current project and saves the current phase in state
+    * @param phases username the user gives as input in App.vue for registration
+    * @param projectId password the user gives as input in App.vue for registration
+    * @param state state as parameter for access and manipulation of state data
+    */
     LOAD_PHASES(state, {phases, projectId}) {
 
         for(let phase of phases){
