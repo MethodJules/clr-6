@@ -5,11 +5,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-    {
-        path: '/',
-        name: 'Projectlist',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectList.vue')
-    },
+   
     {
         path: '/scope',
         name: 'Scope',
@@ -97,7 +93,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {
-        path: '/projectlist',
+        path: '/',
         name: 'ProjectList',
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
     },
@@ -107,7 +103,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
     },
     {
-        path: '/project',
+        path: '/projectDescription/:project_id',
         name: 'Projektbeschreibung',
         component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
     },
@@ -126,7 +122,7 @@ const routes = [
     }, */
     {
         //path: '/home:user_id',
-        path: '/home:project_id',
+        path: '/home/:project_id',
         name: 'Home',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },

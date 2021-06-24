@@ -2,14 +2,15 @@ import axios from 'axios';
 
 const state = () => ({
     listOfToDos: [
-       // { todo:"", date:" "},
+       // array to store users todos with given deadline 
     ],
-    todos:[],
-    dates:[]
-    /* todo: [],
-    date: [] */
+    todos:[],//array to store only the todo tasks from listOfToDos[] 
+    dates:[]//array to store only the deadlines from listOfToDos[] 
     
 })
+/*  
+getter to call the arrays todos[] and dates[] 
+*/ 
 const getters={
     getTodo: state => {
         return state.listOfToDos.todo
@@ -39,6 +40,9 @@ const actions = {
         commit('ADD_TODO_ENTRY', todoEntry)
 
     },
+    /*  
+    calls function to delete tool from Backend 
+    */ 
      deleteTodo({commit}, todoEntry) {
         var config = {
             method: 'delete',
@@ -65,10 +69,16 @@ const actions = {
     }, */
 }
 const mutations = {
+     /* delete one entry from state list OfToDos */ 
     DELETE_TODO_ENTRY(state, todoEntry) {
         let index = state.listOfToDos.indexOf(todoEntry);
         state.listOfToDos.splice(index, 1);
     }, 
+     /** 
+     * adds a new todo by user input 
+     * @param {*} state we send our state to the method 
+     * @param {*} todoEntry is the new todo entry to save given attributes like title, date and task as a new todo 
+     */ 
     ADD_TODO_ENTRY(state, todoEntry) {
         //console.log(todoEntry.todo)
         var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "Todo Titel", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
@@ -112,6 +122,12 @@ const mutations = {
             console.log(error)
         })
     }, */
+    /** 
+     * to fill the listOfToDos[] with all entries in the backend 
+     * @param {*} state we send our state to the method 
+     * @param {*} todo element to go through the array 
+     *  
+     */ 
     SAVE_TODO(state, todo) {
 
         todo.forEach(element => {

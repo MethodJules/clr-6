@@ -22,7 +22,7 @@
                                 <b-nav-item to="/">Startseite</b-nav-item>
                             </b-navbar-nav> -->
             <b-navbar-nav>
-              <b-nav-item to="/project">Projektbeschreibung</b-nav-item>
+              <b-nav-item :to="{ name: 'Projektbeschreibung', params: { project_id: this.$route.params.project_id } }">Projektbeschreibung</b-nav-item>
             </b-navbar-nav>
             <b-navbar-nav>
               <b-nav-item to="/forum">Projektforum</b-nav-item>
@@ -31,10 +31,10 @@
               <b-nav-item to="/groupmanagement">Gruppenmanagement</b-nav-item>
             </b-navbar-nav>
             <b-navbar-nav>
-              <b-nav-item to="/home">Dashboard</b-nav-item>
+              <b-nav-item to="/home:project_id">Dashboard</b-nav-item>
             </b-navbar-nav>
             <b-navbar-nav>
-              <b-nav-item to="/projectlist">Startseite</b-nav-item>
+              <b-nav-item to="/">Startseite</b-nav-item>
             </b-navbar-nav>
             <b-navbar-nav>
               <b-nav-item to="/projectsearch">Projektsuche</b-nav-item>
