@@ -5,6 +5,15 @@ const state = () => ({
     ]
 })
 
+const getters = {
+    getRowData(state) {
+        return state.rowData;
+
+    }
+}
+
+
+
 const actions = {
    
 
@@ -34,53 +43,18 @@ const actions = {
         commit('UPDATE_REFLEXION', reflexion);
     },
 
-/*     deleteDaily({commit}, dailyEntry) {
+    saveReflexion({commit}, reflexion) {
 
-        commit('DELETE_DAILY_ENTRY', dailyEntry);
-    }, */
-
-/*     deleteDaily({commit}, dailyEntry) {
-        //console.log(`das hier ist die ID von Daily Entry ${dailyEntry.idd}`)
-        var config = {
-            method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.idd}`,
-           // das hier löscht korrekt einen eintrag -> url: `http://clr-backend.x-navi.de/jsonapi/node/dailyscrum/0765516c-d202-4ceb-ae44-5f86d203a278`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-        };
-        axios(config)
-            .then((response) => {
-                console.log(response);
-            }).catch(function(error) {
-                console.log(error);
-            });
-        commit('DELETE_DAILY_ENTRY', dailyEntry);
+        commit('SAVE_REFLEXION', reflexion);
     },
 
-
-
-    updateDaily({commit}, dailyEntry) {
-
-        commit('UPDATE_DAILY_ENTRY', dailyEntry);
-    },
-
-   
- */
     
 
 }
 
 const mutations = {
 
- //der Teil löscht nur die Zeile aus Frontend Tabelle in Vue raus
-/* DELETE_DAILY_ENTRY(state, dailyEntry) {
-    let index = state.rowData.indexOf(dailyEntry);
-    state.rowData.splice(index, 1);
-},
- */
+ 
  
 
 
@@ -108,8 +82,8 @@ const mutations = {
     },
 
 UPDATE_REFLEXION(state, reflexion){
-        //let index = state.rowData.indexOf(dailyEntry);
-        //state.rowData[index]=dailyEntry;
+        let index = state.rowData.indexOf(reflexion);
+        state.rowData[index]=reflexion;
     //console.log(dailyEntry.todaydoings)
     var data = `{"data": {"type": "node--reflexionstemplate", "id": "${reflexion.idd}", "attributes": {"title": "${reflexion.title}", "field_berichten_reagieren": "${reflexion.berichten_reagieren}", "field_in_bezug_setzen": "${reflexion.in_bezug_setzen}" , "field_rekonstruieren": "${reflexion.rekonstruieren}", "field_schlussfolgern": "${reflexion.schlussfolgern}" }}}`;
     var config = {
@@ -132,30 +106,7 @@ UPDATE_REFLEXION(state, reflexion){
     },
 
 
-/*     UPDATE_DAILY_ENTRY(state, dailyEntry) {
-            //let index = state.rowData.indexOf(dailyEntry);
-            //state.rowData[index]=dailyEntry;
-        //console.log(dailyEntry.todaydoings)
-        var data = `{"data": {"type": "node--dailyscrum", "id": "${dailyEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
-        var config = {
-            method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/dailyscrum/${dailyEntry.idd}`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-            data: data
-        };
 
-        axios(config)
-            .then(function(response){
-                console.log(response)
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
-    }, */
 
     
     SAVE_REFLEXION(state, reflexion) {
@@ -168,7 +119,7 @@ UPDATE_REFLEXION(state, reflexion){
             const field_id = element.id;
             const field_title = element.attributes.title;
             state.rowData.push( { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title })
-            console.log(state)         
+            //console.log(state)         
         });
     }      
     
@@ -180,7 +131,8 @@ export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }
 
 
