@@ -6,6 +6,7 @@
       <ReviewCircle> </ReviewCircle>
     </z-canvas>
     <ReflexionAuswahl />
+    {{getProjectID}}
   </div>
 </template>
 
@@ -18,6 +19,18 @@ export default {
     ReviewCircle,
     ReflexionAuswahl,
   },
+  computed: {
+    getUserID(){
+      return this.$route.params.user_id
+    },
+    getProjectID(){
+      return this.$route.params.project_id
+    }
+
+    
+    
+
+  },
   mounted() {
     this.$zircle.config({
       mode: "mixed",
@@ -27,6 +40,12 @@ export default {
     });
 
     this.$zircle.setView("ReviewCircle");
+
+        this.$store.dispatch('phases/loadPhasesFromBackend', {
+        projectId: this.$route.params.project_id
+      })
+  //To DO: Load all phases for this project with projectid and put it in state. click on specific phase loads the respective phase from the state
+
   },
 };
 </script>

@@ -2,9 +2,23 @@ import axios from 'axios';
 
 const state = () => ({
     listOfToDos: [
-       // { id: 1, todo:"", date:" "},
-    ]
+       // array to store users todos with given deadline 
+    ],
+    todos:[],//array to store only the todo tasks from listOfToDos[] 
+    dates:[]//array to store only the deadlines from listOfToDos[] 
+    
 })
+/*  
+getter to call the arrays todos[] and dates[] 
+*/ 
+const getters={
+    getTodo: state => {
+        return state.listOfToDos.todo
+    },
+    getDate: state => {
+        return state.listOfToDos.date
+    }
+}
 
 const actions = {
 
@@ -26,6 +40,9 @@ const actions = {
         commit('ADD_TODO_ENTRY', todoEntry)
 
     },
+    /*  
+    calls function to delete tool from Backend 
+    */ 
      deleteTodo({commit}, todoEntry) {
         var config = {
             method: 'delete',
@@ -52,10 +69,16 @@ const actions = {
     }, */
 }
 const mutations = {
+     /* delete one entry from state list OfToDos */ 
     DELETE_TODO_ENTRY(state, todoEntry) {
         let index = state.listOfToDos.indexOf(todoEntry);
         state.listOfToDos.splice(index, 1);
     }, 
+     /** 
+     * adds a new todo by user input 
+     * @param {*} state we send our state to the method 
+     * @param {*} todoEntry is the new todo entry to save given attributes like title, date and task as a new todo 
+     */ 
     ADD_TODO_ENTRY(state, todoEntry) {
         //console.log(todoEntry.todo)
         var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "Todo Titel", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
@@ -99,6 +122,12 @@ const mutations = {
             console.log(error)
         })
     }, */
+    /** 
+     * to fill the listOfToDos[] with all entries in the backend 
+     * @param {*} state we send our state to the method 
+     * @param {*} todo element to go through the array 
+     *  
+     */ 
     SAVE_TODO(state, todo) {
 
         todo.forEach(element => {
@@ -112,12 +141,16 @@ const mutations = {
             //console.log(element.id)
             state.listOfToDos.push( { date: field_date, todo: field_aufgaben, idd: field_id, title: field_title })
             //console.log(state)
+            state.todos.push(element.attributes.field_aufgaben)
+            state.dates.push(element.attributes.field_date)
         });
+        
     }
 }
 export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }
