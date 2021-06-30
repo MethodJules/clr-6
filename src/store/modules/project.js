@@ -137,7 +137,7 @@ const mutations ={
             }
 
 
-            console.log(projectObject)
+            //console.log(projectObject)
 
         });
     }

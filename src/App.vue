@@ -63,7 +63,7 @@
                       </td>
                       <td>
                         <input
-                          v-model="zugangsKennung"
+                          v-model="registrierungsKennung"
                           id="zugangskennung"
                           type="text"
                           placeholder=""
@@ -77,7 +77,7 @@
                       </td>
                       <td>
                         <input
-                          v-model="passwort"
+                          v-model="registrierungsPasswort"
                           id="password"
                           type="password"
                           placeholder=""
@@ -188,6 +188,8 @@ export default {
     return {
       zugangsKennung: "",
       passwort: "",
+      registrierungsKennung: "",
+      registrierungsPasswort: "",
       //validCredential: false,
       nameState: null,
       showMenu: true,
@@ -216,8 +218,8 @@ export default {
   },
   methods: {
     registrieren(){
-      let username=this.zugangsKennung
-      let password=this.passwort
+      let username=this.registrierungsKennung
+      let password=this.registrierungsPasswort
       this.$store.dispatch('drupal_api/getSessionToken', {
         username,
         password

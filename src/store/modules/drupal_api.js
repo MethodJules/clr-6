@@ -30,7 +30,7 @@ const actions= {
                 console.log(response.data);
                 const token = response.data;
                 commit('SAVE_SESSION_TOKEN', token);
-                dispatch('createUser', { username, password })
+                dispatch('createUser', { username, password, token })
             }).catch(error =>{
                 throw new Error(`API ${error}`);
             });         
@@ -45,12 +45,13 @@ const actions= {
     * @param dispatch dispatch is used to call another action from this function
     * @param rootState rootState allows access to states of other modules in store
     */
-    async createUser({ state, dispatch, rootState},{ username, password }) {
+    async createUser({ state, dispatch, commit, rootState}, {username, password, token}) {
         await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
         var sparkyUserobject = rootState.sparky_api.sparkyUserObject
+        console.log(username, password)
         console.log(sparkyUserobject)
 
-/* 
+        /* 
 TODO: look up which attributes of sparkyuserobject are needed and put in user data dynamically, when sparky backend is not down again
         const data = JSON.stringify ({ 
             'name': {'value': `${sparkyUserobject.user}`},
@@ -63,29 +64,31 @@ TODO: look up which attributes of sparkyuserobject are needed and put in user da
 
         })
  */
+
+
         
         const data = JSON.stringify ({ 
-            'name': {'value': 'testname'},
-            'mail': {'value': 'mail@testmail.com'},
-            'pass': {'value': '1234'},
+            'name': {'value': 'testname2'},
+            'mail': {'value': 'mail2@testmail.com'},
+            'pass': {'value': '123456'},
             'field_sparky_id': {'value': 'sparkyid'},
             'field_fullname': {'value': 'max mustermann'},
             'field_matrikelnummer': {'value': '123456'},
-            //'roles': {'value': 'sparkyid'}
 
         })
-        console.log(state)
+        console.log(token)
+        console.log(state.session_token)
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/user/register?_format=json',
             headers: {
-                'X-CSRF-Token': 'km9x0Dj73SxPmewhVM8dd1He-zDrdDnlFDAkshme8f8',
+                'X-CSRF-Token': state.session_token,
                 'Content-Type': 'application/json'
             },
             data: data
         };
         console.log(config)
-/*         axios(config)
+       axios(config)
         .then((response) => {
             console.log(response.data);
             const user = response.data;
@@ -93,7 +96,7 @@ TODO: look up which attributes of sparkyuserobject are needed and put in user da
            
         }).catch(error =>{
             throw new Error(`API ${error}`);
-        });   */           
+        });          
     },
     
 

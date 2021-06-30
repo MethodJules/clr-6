@@ -51,7 +51,7 @@ const actions = {
     */
     async loadPhasesFromBackend({commit, state}, {projectId}) {
         console.log(state)
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell')
+        await  axios.get(`https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}`)
             .then((response) => {
                 console.log(response);
                 const phases = response.data.data;

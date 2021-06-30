@@ -17,7 +17,7 @@ const actions={
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/tools')
             .then((response) => {
                 console.log(response);                                                                                                                                                                         
-                
+                //if one of the tools has null in tool.relationships.field_phasenid.data.id -> breaks and no tools displayed
                 const data = response.data.data;
                 console.log(response.data.data)
                 let tools = []
