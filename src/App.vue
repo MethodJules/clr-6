@@ -46,7 +46,7 @@
                     </tr>
                   </table>
 
-                      <b-button @click="login()">Login</b-button>
+                      <b-button @click="drupalLogin()">Login</b-button>
                     </b-tab>
 
                     <b-tab title="Registrierung">
@@ -226,6 +226,21 @@ export default {
     
     closeMenu() {
       this.showMenu = false;
+    },
+    drupalLogin() {
+      let username = this.zugangsKennung;
+      let password = this.passwort;
+
+      this.$store.dispatch('drupal_api/loginToDrupal', {username, password});
+      let authorization_token = this.encodeBasicAuth(username, password);
+
+      return authorization_token;
+    },
+
+    encodeBasicAuth(user, password) {
+      var creds = user + ':' + password;
+      var base64 = btoa(creds);
+      return 'Basic ' + base64;
     },
     /*
     login() {
