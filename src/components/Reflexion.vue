@@ -7,7 +7,7 @@
                         </div>
                         </transition> 
    
-                <h2>Reflexion zu Phase: {{reflexionsPhase}}</h2>
+                <h2>Reflexion zu Phase: {{phaseId}}</h2>
                 <b-container fluid>
 
                     
@@ -64,7 +64,7 @@
                             v-on:input="$v.schlussfolgern.$touch"
                             v-bind:class="{error: $v.schlussfolgern.$error, valid: $v.schlussfolgern.$dirty && !$v.schlussfolgern.$invalid}"
                             id="textfeld-3"
-                            placeholder="Rekonstruieren Sie zukünftiges Handeln in Bezug auf den Vorfall bzw. das Problem. Wie würden Sie beim nächsten Mal vorgehen? Welche Ansätze könnten funktionieren und wieso? Gibt es verschiedene Optionen, aus denen Sie wählen können? Welches Ergebnis erwarten Sie?">
+                            placeholder="Beleuchten Sie mögliche Ursachen oder Erklärungen für den Vorfall bzw. das Problem. Welche Faktoren waren ausschlaggebend? Setzen Sie Ihre Überlegungen ggf. mit relevanten Theorien oder Wissen in Verbindung und berücksichtigen Sie verschiedene Perspektiven.">
                           <!--   <span v-if="!$v.schlussfolgern.required && $v.schlussfolgern.$dirty" class="text-danger">Bitte ausfülen!</span> -->
                         </b-form-textarea>
 
@@ -162,7 +162,8 @@ export default {
             berichten_reagieren: '',
             in_bezug_setzen: '',
             schlussfolgern: '',
-            rekonstruieren: ''
+            rekonstruieren: '',
+            phaseId: this.$route.params.reflexionsPhase,
         }
     },
 
@@ -247,7 +248,7 @@ export default {
         
     /** lädt alle Reflexionen aus dem Backend */
     mounted() {
-    this.$store.dispatch('reflexion/loadReflexionFromBackend')
+    this.$store.dispatch('reflexion/loadReflexionFromBackend', {phaseId: this.$route.params.reflexionsPhase})
     
 
     this.rowData = this.$store.state.reflexion.rowData

@@ -8,17 +8,19 @@
             placeholder
             ="Geben Sie ein Schlagwort ein, um die Projektliste zu filtern!"
           />
-                                <div>
+                                <!-- <div>
             <vue-simple-suggest
             placeholder
             ="Dozenten eingeben"
           />
-                      </div>
+                      </div> -->
   <b-badge v-for= "keyword in keywords" :key="keyword.id" variant="primary">{{keyword}} <BIconXCircleFill v-on:click="deletekeyword(keyword)"> </BIconXCircleFill></b-badge>
 
             <!-- free input or a list of all existing keywords where one can choose keywords for filtering -->
             <br>
         <b-button @click="keywordSearch(keyword)">Suchen</b-button>
+
+        <!-- {{keyword2}}  -->
         
 
     <b-card-group columns v-for= "project in searchResult" :key="project.id">
@@ -48,6 +50,10 @@ name: "ProjectList",
     components: {
         VueSimpleSuggest,
         BIconXCircleFill,
+    },
+
+   props: {
+    keyword2: String
     },
 
   data() {
@@ -146,6 +152,7 @@ name: "ProjectList",
     }
     console.log("keywordlist")
     console.log(this.existingKeywordList)
+    this.keywordSearch(this.keyword2)
 
 
   },

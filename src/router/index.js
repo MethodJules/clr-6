@@ -93,7 +93,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {
-        path: '/',
+        path: '/projectList',
         name: 'ProjectList',
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
     },
@@ -108,7 +108,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
     },
     {
-        path: '/reflexion',
+        path: '/reflexion/:reflexionsPhase',
         name: 'ReflexionView',
         props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ReflexionView.vue')
@@ -132,8 +132,9 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ShowChat.vue')
     },
     {
-        path: '/projectsearch',
-        name: 'ProjectSearch',
+        path: '/projectsearch/:keyword2',
+        name: 'ProjectSearch', 
+        props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
     },
     {
