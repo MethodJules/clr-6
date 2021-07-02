@@ -25,7 +25,7 @@
     <b-row>
       <b-col cols="6"> </b-col>
       <b-col>
-        <b-modal id="tools_edit_modal" title="tools">
+        <b-modal id="tools_edit_modal" title="tools"  cancel-title="Abbrechen">
           <label for="neueTools">Benutztes Tool: </label>
           <input v-model="tool" type="text" placeholder="Tool" />
           <b-button @click="ok()"> OK </b-button>
