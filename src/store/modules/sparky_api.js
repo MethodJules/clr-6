@@ -81,7 +81,8 @@ const actions = {
         console.log(commit)
         var config = {
             method: 'get',
-            url: 'https://clr-backend.x-navi.de/jsonapi/user/user',
+            url: `https://clr-backend.x-navi.de/jsonapi/user/user`,
+            //url: `https://clr-backend.x-navi.de/jsonapi/user/user?filter[roles.id]=141a7b5d-4223-4c52-abef-b33756921ff4`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

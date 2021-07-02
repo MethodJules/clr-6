@@ -24,7 +24,7 @@
                   </tr>
                   <tr>
                     <td>
-                      <label for="betreuenderDozent">Betreuer: </label>
+                      <label for="betreuenderDozent">Betreuer: mehrere eingeben möglich</label>
                     </td>
                   </tr>
                   <tr>

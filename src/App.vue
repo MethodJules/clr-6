@@ -45,7 +45,7 @@
                       </td>
                     </tr>
                   </table>
-
+                      <b-button @click="drupalLogin()">Drupal Login</b-button>
                       <b-button @click="login()">Login</b-button>
                     </b-tab>
 
@@ -196,66 +196,52 @@ export default {
       eintragTodo: {
         todo: "",
       },
-
-      /* listOfToDos [
-                    {todo:"Mein1", date:"20.02.2021"},
-                ], */
-
-      /* selected: null,
-                options: [
-                    { value: null, text: 'Zur Reflexion' },
-                    { value: 'a', text: 'Gruppe bilden' },
-                    { value: 'b', text: 'Ziel & Umfang definieren' },
-                    { value: 'c', text: 'Konzepte & Definitionen' },
-                    { value: 'd', text: 'Literatur suchen' },
-                    { value: 'e', text: 'Daten extrahieren' },
-                    { value: 'f', text: 'Analyse & Synthese' },
-                    { value: 'g', text: 'Ergebnisse kommunizieren' },
-                    { value: 'h', text: 'Gruppe auflösen' },
-                    
-                ], */
     };
   },
   methods: {
     registrieren(){
-      let username=this.registrierungsKennung
-      let password=this.registrierungsPasswort
       this.$store.dispatch('drupal_api/getSessionToken', {
-        username,
-        password
+        username: this.registrierungsKennung,
+        password: this.registrierungsPasswort,
+        generatedPassword: this.generatePassword(this.registrierungsKennung)
       }) 
     },
     
     closeMenu() {
       this.showMenu = false;
     },
-    /*
-    login() {
-         //body.username = this.zugangsKennung;
-         //body.password = this.passwort;
-         body.username = "";
-         body.password = "";
-         
-         
-        api.authenticate(body, callback);
+    generatePassword(username) {
+      const crypto = require('crypto')
 
+      const md5sum = crypto.createHash('md5');
+      let str = username;
 
+      const res = md5sum.update(str).digest('hex');
+      console.log(res);
 
-      let antwort; 
-      if (apiResponse.status==200) {
-        antwort = true;
-      }
-
-      //wenn rückgabe true, dann wird freigeschaltet, sonst wird fehlermeldung ausgegeben
-      if (antwort) {
-        this.validCredential = false;
-        //modal/popup mit message
-      } else {
-        //modal popup, fehlermeldung
-      }
-      console.log(this.validCredential);
+      return res
     },
-    */
+
+    drupalLogin() {
+      let username = this.zugangsKennung;
+      let password = this.passwort;
+
+      // wenn das hier genutzt wird -> password wird aus namen generiert - die "richtige" anmeldung des nutzers erfolgt beim sparky backend mit rz kennung
+      password=this.generatePassword(username)
+
+
+      this.$store.dispatch('drupal_api/loginToDrupal', {username, password});
+      let authorization_token = this.encodeBasicAuth(username, password);
+
+      return authorization_token;
+    },
+
+    encodeBasicAuth(user, password) {
+      var creds = user + ':' + password;
+      var base64 = btoa(creds);
+      return 'Basic ' + base64;
+    },
+
     login() {
       //this is the real login
 /*      let username=this.zugangsKennung
@@ -269,29 +255,8 @@ export default {
       this.$store.dispatch('sparky_api/fakeLogin')
       //console.log(this.$store.state.sparky_api.account)
     },
-    /* formularTodo(){
-                this.$refs['my-todo-modal'].show()
-                this.eintragTodo.date=""
-                this.eintragTodo.todo= ""
-                this.eintragTodo.buttonAdd= "add"
 
-            },
-            neueToDo(){
-                this.$refs['my-todo-modal'].show() */
-    /* this.eintragTodo.todo= listOfToDos.todo
-                this.eintragTodo.date= listOfToDos.date
-                this.eintragTodo.buttonAdd= "add" */
-    /* var ausgabeToDo ={
-                    date: this.eintragTodo.date,
-                    todo: this.eintragTodo.todo
-                }
-                this.listOfToDos.push(ausgabeToDo)
-                this.date = ''
-                this.todo = '' */
-    // },
-    /* hideModal() {
-                this.$refs['my-todo-modal'].hide()
-            } */
+
   },
   computed: {
     isChanged() {
