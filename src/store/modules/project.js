@@ -52,6 +52,11 @@ const actions = {
         commit('ADD_PROJECT', projEntry)
 
     },
+
+    updateProject({commit}, projEntry) {
+
+        commit('UPDATE_PROJECT', projEntry);
+    },
 }
 const mutations ={
 

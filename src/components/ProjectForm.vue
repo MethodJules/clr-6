@@ -1,7 +1,10 @@
 <template>
     <div class="projektAnlegen">
         <div>
-              <b-modal ref="create_project" title="Projekt Anlegen">
+        
+              <b-modal ref="create_project" title="Projekt anlegen">
+          
+          
                 <form @submit.prevent="submitForm">
                 <table>
                   <tr>
@@ -103,13 +106,29 @@
                     </td>
                   </tr>
                 </table>
+                <div v-if="inProjektbeschreibung">
+                  <b-button @click="updateForm()">Beschreibung bearbeiten</b-button>
+                
+                </div>
+                <div v-else>
                 <b-button @click="submitForm()">Projekt anlegen</b-button>
                 <!-- <b-button @click="newProject()">Projekt anlegen</b-button> -->
+                </div>
                 </form>
               </b-modal>
 
-              <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
-            </div>
+              <div v-if="inProjektbeschreibung">
+                <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>Beschreibung bearbeiten</b-button>
+
+
+              </div>
+              <div v-else>
+                
+                 
+               <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
+              </div>
+
+              </div>
     </div>
 </template>
 <script>
@@ -130,13 +149,24 @@ export default {
           defaultInput : "form-control",
           suggestions: "position-absolute list-group z-1000",
           suggestItem: "list-group-item"
-        }
+        },
+
+        project: {
+
+          title: '',
+          betreuenderDozent: '',
+          externeMitwirkende: '',
+          schlagworter: '',
+          kurzbeschreibung: ''
+
+
+        },
     }
   },
     
     props:{
       title: String,
-      project: Object
+      //project: Object
     },
     validations: {
     project: {
@@ -201,7 +231,14 @@ export default {
         computed: {
       simpleSuggestionList(){
         return this.$store.state.sparky_api.lecturers
-      }
+      },
+      inProjektbeschreibung() {
+        console.log(this.$route.name)
+      return this.$route.name === "Projektbeschreibung";
+      },
+      
+
+
     },
 }
 </script>

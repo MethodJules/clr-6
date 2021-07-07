@@ -1,80 +1,61 @@
 <template>
     <div >
-    
-        <b-row>
-            <br>
-            <b-col>
-                <br>
-            </b-col>
-        </b-row>
-        <b-row>
-           
-            
-            <p>{{this.$route.params.project_id}}</p>
-            <br>
-            <p style="font-weight: bold" >Projekttitel</p>
-        </b-row>
-        <b-row>
-            <table>
 
-                <tr >
-                    <td> {{projectList[findIndex()].title}}</td>
-                    <!-- <td v-if=" this.$route.params.project_id === '36e2c5a4-c795-4f64-acc9-6a8cc03e2838'">{{projectList[0].title}}</td>
-                    <td v-if=" this.$route.params.project_id === '6f01abff-4e23-4425-94b4-3743c3ebd82f'">{{projectList[1].title}}</td>
-                    <td v-if=" this.$route.params.project_id === 'c93deffc-ef26-406c-a3c1-f83d76eddbd0'">{{projectList[2].title}}</td>
-                    <td v-if=" this.$route.params.project_id === '99c847e2-cb0e-404b-8303-13ec8d19c3d9'">{{projectList[3].title}}</td> -->
-                </tr>
+        <table>
+
+            <tr>
+                <td> <p style="font-weight: bold" >Projekttitel</p> </td>
+            </tr>
+            <tr>
+                <td> {{projectList[findIndex()].title}} </td> 
+                <!-- <td> {{project.titel}}</td> -->
+            </tr>
+            <br>
+            <tr>
+                <td> <p style="font-weight: bold" >Betreuer*in </p> </td>
+            </tr>
+            <tr>
+                <td> {{project.betreuenderDozent}} </td>
+            </tr>
+            <br>
+            <tr>
+                <td> <p style="font-weight: bold" >Externe Partner </p> </td>
+            </tr>
+            <tr>
+                <td> {{project.externeMitwirkende}} </td>
+            </tr>
+            <br>
+            <tr>
+                <td> <p style="font-weight: bold" >Schlagwörter </p> </td>
+            </tr>
+            <tr>
+                <td> {{projectList[findIndex()].schlagworter}} </td>
+            </tr>
+            <br>
+            <tr>
+                <td> <p style="font-weight: bold" >Kurzbeschreibung </p> </td>
+            </tr>
+            <tr>
+                <td> {{projectList[findIndex()].kurzbeschreibung}} </td>
+            </tr>
+            <br>
+            <tr>
+                <td> <p style="font-weight: bold" > Gruppenmitglieder </p> </td>
+            </tr>
+            <tr>
+                <td> {{ project.gruppenmitglieder }} </td>
+            </tr>
+            <tr>
+                <td>  </td>
+            </tr>
+            <br>
+            
+
+
             </table>
            
-        </b-row>
-        <b-row>
-            <p style="font-weight: bold" >Betreuer*in</p>
-        </b-row>
-        <b-row>
-            <table>
-                <tr>
-                    <td >{{projectList[findIndex()].betreuenderDozent}}</td>
-                </tr>
-            </table>
- 
-        </b-row>
-        <b-row>
-            <p style="font-weight: bold" >Externe Partner*innen(bitte mit Komma trennen)</p>
-        </b-row>
-        <b-row>
-            <table>
-                <tr >
-                    <td>{{projectList[findIndex()].externeMitwirkende}}</td>
-                    
-                </tr>
-            </table>
-        </b-row>
-        <b-row>
-            <p style="font-weight: bold" >Schlagwörter(bitte mit Komma trennen)</p>
-        </b-row>
-        <b-row>
-            <table>
-                <tr>
-                    
-                    <td>{{ausgabeProjekt}}</td>
-                </tr>
-            </table>
-        </b-row>
-        <b-row>
-            <p style="font-weight: bold" >Projektbeschreibung</p>
-        </b-row>
-        <b-row>
-            <table>
-                <tr >
-                    <td >{{projectList[findIndex()].kurzbeschreibung}}</td>
-                  
-                </tr>
-            </table>
-        </b-row>
-        <b-row>
-            <p style="font-weight: bold" >Gruppenmitglieder</p>
-            
-        </b-row>
+        
+       
         <b-row>
             <!-- <div
                 class="border border-dark"
@@ -92,15 +73,17 @@
                 <b-link :to="{name: 'Home'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
             </b-col>
             <b-col col="3">
-                <b-card title="bearbeiten" style="max-height: 10rem;" class="m-2">
+                
           
-                <b-row>    
-                    <ProjectForm :project=project></ProjectForm>
+                <b-row>
+
+                    <ProjectForm :project="project"> Beschreibung bearbeiten </ProjectForm> 
+                   
                     
                 </b-row>
-                </b-card>
+                
                  
-                <b-button v-b-modal.create_project>Beschreibung bearbeiten </b-button>
+                
             </b-col>
             <b-col cols="3">
                 <b-link :to="{name: 'Groupmanagement'}" class="btn btn-outline-dark btn-block mb-2">Zum Gruppenmanagement</b-link>
@@ -118,6 +101,8 @@ import ProjectForm from '@/components/ProjectForm.vue'
 
 export default({
     name: "Projektbeschreibung",
+
+    
     
     components: {
         //ProjectList,
@@ -126,6 +111,8 @@ export default({
     data(){
         var rightIndex
         return{
+
+           
             projectId: this.$route.params.project_id,
             
             projectList:{
@@ -136,6 +123,16 @@ export default({
                 schlagworter:'',
             }
             ,
+            project:{
+                titel: "Projekt",
+                betreuenderDozent: ['Muster', 'Muster2'],
+                externeMitwirkende: "Max",
+                kurzbeschreibung: "Kurzbeschreibung x",
+                schlagworter:['Hallo'],
+                gruppenmitglieder:['Max']
+            },
+
+
             projectContent: [],
             rightIndex
         }
@@ -153,7 +150,9 @@ export default({
             }
            
             return rightIndex
-        }
+        },
+
+        
         /* showEntry(){
             var projectId = this.$store.state.project.myProjects.idd
             var rightIndex = 0;
@@ -170,11 +169,20 @@ export default({
         }, */
     },
     mounted() {
-    this.$store.dispatch('project/loadProjectsFromBackend',{projectId: this.$route.params.project_id})
+    //this.$store.dispatch('project/loadProjectsFromBackend',{projectId: this.$route.params.project_id})
     this.projectList = this.$store.state.project.myProjects
     
   },
   computed: {
+
+    title: {
+            get() {
+                return this.$store.state.title;
+            },
+            set(value) {
+                this.$store.commit('setTitel', value);
+            }
+    },
       giveID(){
           var projectId = this.$store.state.project.projectList.idd
           return projectId
@@ -192,7 +200,8 @@ export default({
                 project => project.project_id === this.$route.params.project_id
             );
     }
-    }
+    },
+    
   },
 })
 </script>

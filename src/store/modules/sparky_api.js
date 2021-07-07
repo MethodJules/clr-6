@@ -91,7 +91,7 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
-                state.sparkyUserID = "6ee6aa71-5e18-4db5-b91f-f3faedf5bcb2"
+                state.sparkyUserID = "ac0d76c8-9d7b-439a-b9d7-2f68ea9980fd"
                 for (var user of response.data.data) {
                     //console.log(user.attributes.field_sparky_id)
                     if (user.attributes.field_sparky_id == state.sparkyUserID) {
