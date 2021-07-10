@@ -107,8 +107,10 @@
                 <!-- <b-button @click="newProject()">Projekt anlegen</b-button> -->
                 </form>
               </b-modal>
+  
+  <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
 
-              <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
+
             </div>
     </div>
 </template>
@@ -201,7 +203,11 @@ export default {
         computed: {
       simpleSuggestionList(){
         return this.$store.state.sparky_api.lecturers
-      }
+      },
+          inProjektbeschreibung() {
+            console.log(this.$route.name)
+      return this.$route.name === "Projektbeschreibung";
+    },
     },
 }
 </script>

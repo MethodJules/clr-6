@@ -131,7 +131,7 @@ computed:{
     
   }, */
   async mounted() {
-    //this.$store.dispatch("project/loadProjectsFromBackend");
+    this.$store.dispatch("project/loadProjectsFromBackend");
     this.projectList = this.$store.state.project.myProjects;
     console.log(this.projectList);
     console.log("mount projectList");

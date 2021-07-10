@@ -29,8 +29,9 @@ const actions = {
     async loadProjectsFromBackend({commit, state, rootState}) {
         console.log(state)
             console.log("hallo")
-        console.log(rootState.sparky_api.drupalUserID)
+        //console.log(rootState.sparky_api.sparkyUserID)
         var drupalUserID = rootState.sparky_api.drupalUserID
+        console.log("hallo")
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt')
             .then((response) => {
                 console.log(response);
@@ -54,13 +55,14 @@ const actions = {
     },
 }
 const mutations ={
+    //TODO: authorization token ist noch statisch, dynamisch aus state holen
 
         /**
     * saves the new project in the backend
     * @param projEntry project which will be added to the backend
     * @param state state as parameter for access and manipulation of state data
     */
-    ADD_PROJECT(state, projEntry) {
+    ADD_PROJECT({state, rootState}, projEntry) {
         console.log(projEntry)
         console.log(state)
         projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
@@ -81,7 +83,7 @@ const mutations ={
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+                'Authorization': rootState.drupal_api.authToken
             },
             data: data
         };
@@ -131,7 +133,9 @@ const mutations ={
                 }
             }
             let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
-            state.projectList.push(projectObject)
+            // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
+            //state.projectList.push(projectObject)
+            state.myProjects.push(projectObject)
             if(is_my_project){
                 state.myProjects.push(projectObject)
             }

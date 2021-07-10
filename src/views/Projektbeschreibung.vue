@@ -95,7 +95,7 @@
                 <b-card title="bearbeiten" style="max-height: 10rem;" class="m-2">
           
                 <b-row>    
-                    <ProjectForm :project=project></ProjectForm>
+            <ProjectForm :project="project"></ProjectForm>
                     
                 </b-row>
                 </b-card>
@@ -126,6 +126,19 @@ export default({
     data(){
         var rightIndex
         return{
+
+                  project: {
+        kurzbeschreibung: "",
+        betreuenderDozent: "",
+        externeMitwirkende: "",
+        schlagworter: [],
+
+        idd: "",
+        title: "",
+        /* TODO: array in backend dafür machen schlagwörter: [],
+        TODO: array in backend dafür machen betreuenderDozent: [],
+        TODO: array in backend dafür machen externeMitwirkende: [], */
+      },
             projectId: this.$route.params.project_id,
             
             projectList:{
@@ -137,7 +150,8 @@ export default({
             }
             ,
             projectContent: [],
-            rightIndex
+            rightIndex,
+            gruppenmitglieder: ['person1', 'person 2']
         }
     },
     methods:{
@@ -170,7 +184,7 @@ export default({
         }, */
     },
     mounted() {
-    this.$store.dispatch('project/loadProjectsFromBackend',{projectId: this.$route.params.project_id})
+    //this.$store.dispatch('project/loadProjectsFromBackend',{projectId: this.$route.params.project_id})
     this.projectList = this.$store.state.project.myProjects
     
   },

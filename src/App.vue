@@ -190,7 +190,6 @@ export default {
       passwort: "",
       registrierungsKennung: "",
       registrierungsPasswort: "",
-      //validCredential: false,
       nameState: null,
       showMenu: true,
       eintragTodo: {
@@ -200,11 +199,16 @@ export default {
   },
   methods: {
     registrieren(){
-      this.$store.dispatch('drupal_api/getSessionToken', {
+      this.$store.dispatch('sparky_api/registrate', {
+        username: this.registrierungsKennung,
+        password: this.registrierungsPasswort,
+      }) 
+
+/*       this.$store.dispatch('drupal_api/getSessionToken', {
         username: this.registrierungsKennung,
         password: this.registrierungsPasswort,
         generatedPassword: this.generatePassword(this.registrierungsKennung)
-      }) 
+      })  */
     },
     
     closeMenu() {
@@ -227,11 +231,13 @@ export default {
       let password = this.passwort;
 
       // wenn das hier genutzt wird -> password wird aus namen generiert - die "richtige" anmeldung des nutzers erfolgt beim sparky backend mit rz kennung
-      password=this.generatePassword(username)
+      //password=this.generatePassword(username)
 
-
-      this.$store.dispatch('drupal_api/loginToDrupal', {username, password});
       let authorization_token = this.encodeBasicAuth(username, password);
+      this.$store.dispatch('drupal_api/loginToDrupal', {username, password});
+      this.$store.dispatch('drupal_api/saveBasicAuth', authorization_token);
+
+      console.log(authorization_token)
 
       return authorization_token;
     },
@@ -240,17 +246,19 @@ export default {
       var creds = user + ':' + password;
       var base64 = btoa(creds);
       return 'Basic ' + base64;
+
+        
     },
 
     login() {
       //this is the real login
-/*      let username=this.zugangsKennung
+/*    let username=this.zugangsKennung
       let password=this.passwort
        this.$store.dispatch('sparky_api/login', {
         username,
         password
-      }) 
-      */
+      })  */
+      
      //this is the fake login without sparky backend 
       this.$store.dispatch('sparky_api/fakeLogin')
       //console.log(this.$store.state.sparky_api.account)
@@ -269,14 +277,14 @@ export default {
 
     validCredential() {
      // return true
-      return this.$store.state.sparky_api.validCredential
+      return this.$store.state.drupal_api.validCredential
     }
   }  ,
 
   mounted() {
     //this.$store.dispatch("todo/loadToDoFromBackend");
     this.listOfToDos = this.$store.state.todo.listOfToDos;
-    this.$store.dispatch("daily_scrum/loadDailysFromBackend");
+    //this.$store.dispatch("daily_scrum/loadDailysFromBackend");
   },
 };
 </script>

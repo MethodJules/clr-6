@@ -15,6 +15,7 @@ const state = () => ({
     drupalUserObject: null,
     lecturers: [],
     lecturers2: [],
+    sparkylogin: false,
 });
 
 const mutations = {
@@ -35,6 +36,18 @@ const mutations = {
             state.validCredential = true
         }
     },
+
+    setSparkyObject(state, response) {
+        state.sparkyUserID = response.data.id
+        state.sparkyUserObject = response
+        console.log("pls funze")
+        console.log(response)
+        console.log(state.sparkyUserID)
+        console.log(state.sparkyUserObject)
+    },
+    sparkyLogin(state){
+        state.sparkylogin=true
+    }
 };
 
 const actions = {
@@ -92,7 +105,7 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
-                state.sparkyUserID = "6ee6aa71-5e18-4db5-b91f-f3faedf5bcb2"
+                state.sparkyUserID = "ac0d76c8-9d7b-439a-b9d7-2f68ea9980fd"
                 for (var user of response.data.data) {
                     //console.log(user.attributes.field_sparky_id)
                     if (user.attributes.field_sparky_id == state.sparkyUserID) {
@@ -131,11 +144,11 @@ const actions = {
     * @param username input from login
     * @param password input from login
     */
-    async getWhoamI({dispatch }, { username, password }) {
-        console.log("hallo")
-        await dispatch('authenticate', { username, password })
+    async getWhoamI({dispatch, commit }, { username, password }) {
+            //state.sparkyUserID = " response.data.id"
         axios.get(
             "http://147.172.178.30:3000/auth/whoAmI",
+
             {
                 headers: {
                     'Accept': '*/*',
@@ -148,9 +161,10 @@ const actions = {
             .then(response => {
                 if (response.status === 200) {
                     //sparky user id von nutzer holen der sich bei sparky mit rz kennung anmeldet
-                    state.sparkyUserID = response.data.id
-                    state.sparkyUserObject = response
+                    commit('setSparkyObject', response); 
                     console.log(state.sparkyUserID)
+                    console.log(state.sparkyUserObject)
+                   dispatch("drupal_api/getSessionToken", { username, password }, { root: true })
                 }
             })
             .catch((error) => {
@@ -180,9 +194,12 @@ const actions = {
         )
             .then(response => {
                 if (response.status === 200) {
-                    //commit('setAccount', response);
+                    commit('sparkyLogin');
                     state.responsestate = response
                     console.log(data)
+                    console.log(response)
+                    //dispatch ist hier störend, wenn nur authenticate benötigt wird, vorher mit await dispatch besser gewesen
+                    //dispatch('getWhoamI', { username, password })
                 }
             })
             .catch((error) => {
@@ -190,6 +207,41 @@ const actions = {
             });
         //console.log(data)
     },
+
+        /**
+    * makes api request to sparky backend, authenticates user, gets user token and saves it in state.
+    * @param username input from getWhoamI
+    * @param password input from getWhoamI
+    */
+         async registrate({ commit, dispatch }, { username, password }) {
+            let dynamicUrl = "api/v1/authenticate"
+            let fullUrl = baseUrl + dynamicUrl
+            let data = await axios.post(
+                fullUrl, {
+                "username": username,
+                "password": password
+            },
+                {
+                    headers: {
+                        'Accept': '*/*',
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
+                .then(response => {
+                    if (response.status === 200) {
+                        state.responsestate = response
+                        console.log(data)
+                        console.log(response)
+                        //dispatch ist hier störend, wenn nur authenticate benötigt wird, vorher mit await dispatch besser gewesen
+                        dispatch('getWhoamI', { username, password })
+                    }
+                })
+                .catch((error) => {
+                    commit('setAccount', error);
+                });
+            //console.log(data)
+        },
 };
 
 export default {
