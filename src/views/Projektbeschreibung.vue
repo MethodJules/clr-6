@@ -7,14 +7,15 @@
                 <td> <p style="font-weight: bold" >Projekttitel</p> </td>
             </tr>
             <tr>
-                <td> {{projectList[findIndex()].title}} </td> 
-                <!-- <td> {{project.titel}}</td> -->
+                <!-- <td> {{project[findIndex()].title}} </td>  -->
+                <td> {{project.title}}</td>  
             </tr>
             <br>
             <tr>
                 <td> <p style="font-weight: bold" >Betreuer*in </p> </td>
             </tr>
             <tr>
+               <!--  <td> {{project[findIndex()].betreuenderDozent}} </td> -->
                 <td> {{project.betreuenderDozent}} </td>
             </tr>
             <br>
@@ -29,14 +30,16 @@
                 <td> <p style="font-weight: bold" >Schlagwörter </p> </td>
             </tr>
             <tr>
-                <td> {{projectList[findIndex()].schlagworter}} </td>
+            <!-- <tr v-for = "project in myProjects" :key="project.id">  -->
+               <!--  <td> {{projectList[findIndex()].schlagworter}} </td> -->
+               <td> {{project.schlagworter}} </td>
             </tr>
             <br>
             <tr>
                 <td> <p style="font-weight: bold" >Kurzbeschreibung </p> </td>
             </tr>
             <tr>
-                <td> {{projectList[findIndex()].kurzbeschreibung}} </td>
+                <td> {{project.kurzbeschreibung}} </td>
             </tr>
             <br>
             <tr>
@@ -65,6 +68,7 @@
             <p>{{ member }}</p>
             </div> -->
         </b-row>
+        <div>
         <b-row>
             <b-col col="2">
             </b-col>
@@ -88,8 +92,10 @@
             <b-col cols="3">
                 <b-link :to="{name: 'Groupmanagement'}" class="btn btn-outline-dark btn-block mb-2">Zum Gruppenmanagement</b-link>
             </b-col>
+
             <b-col cols="2"/>
         </b-row>
+        </div>
         
 
     </div>
@@ -169,8 +175,10 @@ export default({
         }, */
     },
     mounted() {
-    //this.$store.dispatch('project/loadProjectsFromBackend',{projectId: this.$route.params.project_id})
-    this.projectList = this.$store.state.project.myProjects
+    this.$store.dispatch('project/loadProjectsFromBackend')
+    //this.projectList = this.$store.state.project.myProjects
+    this.project = this.$store.state.project.myProjects[this.findIndex()]
+    this.myProjects = this.$store.state.project.myProjects
     
   },
   computed: {
@@ -183,11 +191,23 @@ export default({
                 this.$store.commit('setTitel', value);
             }
     },
-      giveID(){
+    betreuenderDozent: {
+            get() {
+                return this.$store.state.betreuenderDozent;
+            },
+            set(value) {
+                this.$store.commit('setBetreuenderDozent', value);
+            }
+    },
+
+
+
+    
+     /*  giveID(){
           var projectId = this.$store.state.project.projectList.idd
           return projectId
-      },
-    ausgabeProjekt:{
+      }, */
+   /*  ausgabeProjekt:{
         get: function(){
             return this.projectList[0].schlagworter
             
@@ -200,7 +220,7 @@ export default({
                 project => project.project_id === this.$route.params.project_id
             );
     }
-    },
+    }, */
     
   },
 })

@@ -107,7 +107,8 @@
                   </tr>
                 </table>
                 <div v-if="inProjektbeschreibung">
-                  <b-button @click="updateForm()">Beschreibung bearbeiten</b-button>
+                  <b-button @click="updateProject()">Projektbeschreibung bearbeiten</b-button> 
+                  
                 
                 </div>
                 <div v-else>
@@ -151,7 +152,7 @@ export default {
           suggestItem: "list-group-item"
         },
 
-        project: {
+        /* project: {
 
           title: '',
           betreuenderDozent: '',
@@ -160,13 +161,13 @@ export default {
           kurzbeschreibung: ''
 
 
-        },
+        }, */
     }
   },
     
     props:{
       title: String,
-      //project: Object
+      project: Object
     },
     validations: {
     project: {
@@ -190,45 +191,48 @@ export default {
       showThisModal(){
         this.$refs['create_project'].show()
       },
-      submitForm() {
+      updateProject() {
       this.$v.$touch();
       if(!this.$v.$invalid){
         console.log('title: ${this.titela}')
-        this.newProject()
-      }
-    },
-        newProject() {
+        //this.updateForm()
       var schlagwortarray =this.project.schlagworter.split(",")
       var keywords = Object.assign({}, schlagwortarray);
       console.log(keywords)
-      var addProj={
+
+
+      var updatedProj={
+
             title: this.project.title,
             kurzbeschreibung: this.project.kurzbeschreibung,
             betreuenderDozent: this.project.betreuenderDozent,
             externeMitwirkende: this.project.externeMitwirkende,
             schlagworter: keywords,
             gruppenadmin: this.$store.state.sparky_api.drupalUserID,
-            projectIdd: 0
+            projectIdd: this.$route.params.project_id,
+          
+            
+      };
+
+      this.$store.dispatch('project/updateProject', updatedProj)
+
+      
+
+     
       }
+      },
+
+   
+    
       
-      this.$store.dispatch('project/createProject', addProj)
-      console.log(this.project.kurzbeschreibung)
-      console.log("das hier nach ist addproj")
-      console.log(addProj.schlagworter)
-      console.log(this.project)
-      //this.projectList.push(addProj)
-      
-      this.title = " "
-      this.kurzbeschreibung= ""
-      this.betreuenderDozent= " "
-      this.externeMitwirkende= " "
-      this.schlagworter= " "
-      //this.projectList.length + 1
       
     },
 
-    },
+    
+    
         computed: {
+
+          
       simpleSuggestionList(){
         return this.$store.state.sparky_api.lecturers
       },
@@ -236,6 +240,8 @@ export default {
         console.log(this.$route.name)
       return this.$route.name === "Projektbeschreibung";
       },
+
+      
       
 
 

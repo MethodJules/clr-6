@@ -31,6 +31,10 @@ const actions = {
             console.log("hallo")
         console.log(rootState.sparky_api.drupalUserID)
         var drupalUserID = rootState.sparky_api.drupalUserID
+        //await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_betreuender_dozent.field_fullname&include=field_gruppenmitglieder')
+        //await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt?fields[user--user]=fullname&include=uid')
+        //await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_user.name')
+        //await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_betreuender_dozent.field_fullname&include=field_gruppenmitglieder')
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt')
             .then((response) => {
                 console.log(response);
@@ -74,10 +78,9 @@ const mutations ={
         console.log(projEntry.schlagworter)
         const keywords = JSON.stringify(projEntry.schlagworter)
         //projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-        var data = `{"data": {"type": "node--projekt", "attributes": 
-        {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}" }, 
-        "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
-        "field_externe_mitwirkende": {"data": {"0": {"type": "user--user", "id": "${projEntry.externeID}" }}}, 
+        var data = `{"data": {"type": "node--projekt", "id": "${projEntry.projectIdd}", "attributes": 
+        {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
+        "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}},  
         "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
         "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`;
         var config = {
@@ -100,6 +103,37 @@ const mutations ={
             })
     },
 
+
+    UPDATE_PROJECT(state, projEntry){
+        let index = state.myProjects.indexOf(projEntry);
+        state.myProjects[index]=projEntry;
+    projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+    const keywords = JSON.stringify(projEntry.schlagworter)
+    var data = `{"data": {"type": "node--projekt", "id": "${projEntry.projectIdd}", "attributes": 
+    {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
+    "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
+    "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
+    "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`;
+    var config = {
+        method: 'patch',
+        url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectIdd}`,
+        headers: {
+            'Accept': 'application/vnd.api+json',
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+        },
+        data: data
+    };
+    axios(config)
+    .then(function(response){
+        console.log(response)
+    })
+    .catch(function(error) {
+        console.log(error)
+    })
+    },
+
+
         /**
     * takes all projects and puts all relevant data of the project in state.projectList
     * filters through all projects and puts all projects of the user in state.myProjects
@@ -113,7 +147,7 @@ const mutations ={
             //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
             const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
             //console.log(field_betreuender_dozent)
-            const field_externe_mitwirkende = element.relationships.field_externe_mitwirkende.data.id;
+            const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
             //console.log(field_externe_mitwirkende)
             const field_schlagworter = element.attributes.field_schlagworter;
             //console.log(field_schlagworter)
@@ -136,7 +170,8 @@ const mutations ={
                 }
             }
             let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
-            state.projectList.push(projectObject)
+            //state.projectList.push(projectObject)
+            state.myProjects.push(projectObject)
             if(is_my_project){
                 state.myProjects.push(projectObject)
             }
