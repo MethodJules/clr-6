@@ -83,6 +83,11 @@ const actions = {
         commit('ADD_PROJECT', projEntry)
 
     },
+
+    updateProject({commit}, projEntry) {
+
+        commit('UPDATE_PROJECT', projEntry);
+    },
 }
 const mutations ={
     //TODO: authorization token ist noch statisch, dynamisch aus state holen
@@ -125,6 +130,37 @@ const mutations ={
                 console.log(error)
             })
     },
+
+
+    UPDATE_PROJECT(state, projEntry){
+        let index = state.myProjects.indexOf(projEntry);
+        state.myProjects[index]=projEntry;
+    projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+    const keywords = JSON.stringify(projEntry.schlagworter)
+    var data = `{"data": {"type": "node--projekt", "id": "${projEntry.projectIdd}", "attributes": 
+    {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
+    "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
+    "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
+    "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`;
+    var config = {
+        method: 'patch',
+        url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectIdd}`,
+        headers: {
+            'Accept': 'application/vnd.api+json',
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+        },
+        data: data
+    };
+    axios(config)
+    .then(function(response){
+        console.log(response)
+    })
+    .catch(function(error) {
+        console.log(error)
+    })
+    },
+
 
         /**
     * takes all projects and puts all relevant data of the project in state.projectList

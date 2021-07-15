@@ -1,7 +1,10 @@
 <template>
     <div class="projektAnlegen">
         <div>
-              <b-modal ref="create_project" title="Projekt Anlegen">
+        
+              <b-modal ref="create_project" title="Projekt anlegen">
+          
+          
                 <form @submit.prevent="submitForm">
                 <table>
                   <tr>
@@ -103,15 +106,32 @@
                     </td>
                   </tr>
                 </table>
+                <div v-if="inProjektbeschreibung">
+                  <b-button @click="updateProject()">Projektbeschreibung bearbeiten</b-button> 
+                  
+                
+                </div>
+                <div v-else>
                 <b-button @click="submitForm()">Projekt anlegen</b-button>
                 <!-- <b-button @click="newProject()">Projekt anlegen</b-button> -->
+                </div>
                 </form>
               </b-modal>
   
   <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
 
+              <div v-if="inProjektbeschreibung">
+                <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>Beschreibung bearbeiten</b-button>
 
-            </div>
+
+              </div>
+              <div v-else>
+                
+                 
+               <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
+              </div>
+
+              </div>
     </div>
 </template>
 <script>
@@ -132,7 +152,18 @@ export default {
           defaultInput : "form-control",
           suggestions: "position-absolute list-group z-1000",
           suggestItem: "list-group-item"
-        }
+        },
+
+        /* project: {
+
+          title: '',
+          betreuenderDozent: '',
+          externeMitwirkende: '',
+          schlagworter: '',
+          kurzbeschreibung: ''
+
+
+        }, */
     }
   },
     
@@ -162,51 +193,60 @@ export default {
       showThisModal(){
         this.$refs['create_project'].show()
       },
-      submitForm() {
+      updateProject() {
       this.$v.$touch();
       if(!this.$v.$invalid){
         console.log('title: ${this.titela}')
-        this.newProject()
-      }
-    },
-        newProject() {
+        //this.updateForm()
       var schlagwortarray =this.project.schlagworter.split(",")
       var keywords = Object.assign({}, schlagwortarray);
       console.log(keywords)
-      var addProj={
+
+
+      var updatedProj={
+
             title: this.project.title,
             kurzbeschreibung: this.project.kurzbeschreibung,
             betreuenderDozent: this.project.betreuenderDozent,
             externeMitwirkende: this.project.externeMitwirkende,
             schlagworter: keywords,
             gruppenadmin: this.$store.state.sparky_api.drupalUserID,
-            projectIdd: 0
+            projectIdd: this.$route.params.project_id,
+          
+            
+      };
+
+      this.$store.dispatch('project/updateProject', updatedProj)
+
+      
+
+     
       }
+      },
+
+   
+    
       
-      this.$store.dispatch('project/createProject', addProj)
-      console.log(this.project.kurzbeschreibung)
-      console.log("das hier nach ist addproj")
-      console.log(addProj.schlagworter)
-      console.log(this.project)
-      //this.projectList.push(addProj)
-      
-      this.title = " "
-      this.kurzbeschreibung= ""
-      this.betreuenderDozent= " "
-      this.externeMitwirkende= " "
-      this.schlagworter= " "
-      //this.projectList.length + 1
       
     },
 
-    },
+    
+    
         computed: {
+
+          
       simpleSuggestionList(){
         return this.$store.state.sparky_api.lecturers
       },
-          inProjektbeschreibung() {
-            console.log(this.$route.name)
+      inProjektbeschreibung() {
+        console.log(this.$route.name)
       return this.$route.name === "Projektbeschreibung";
+      },
+
+      
+      
+
+
     },
     },
 }
