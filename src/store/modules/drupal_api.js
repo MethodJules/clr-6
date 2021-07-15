@@ -28,7 +28,7 @@ const actions= {
     * @param state state as parameter for access and manipulation of state data
     * @param dispatch dispatch is used to call another action from this function
     */
-    async getSessionToken({commit, state, dispatch}, { username, password }) {
+    async getSessionToken({commit, state, dispatch}, { username, password, matrikelnummer }) {
 
         //eigtl csrf token, nicht sessiontoken
         console.log(state)
@@ -37,7 +37,7 @@ const actions= {
                 console.log(response.data);
                 const token = response.data;
                 commit('SAVE_SESSION_TOKEN', token);
-                dispatch('createUser', { username, password})
+                dispatch('createUser', { username, password, matrikelnummer})
 
             }).catch(error =>{
                 throw new Error(`API ${error}`);
@@ -55,7 +55,7 @@ const actions= {
     * @param dispatch dispatch is used to call another action from this function
     * @param rootState rootState allows access to states of other modules in store
     */
-    async createUser({ state, commit, rootState}, {username, password}) {
+    async createUser({ state, commit, rootState}, {username, password, matrikelnummer}) {
         //await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
         var sparkyUserObject = rootState.sparky_api.sparkyUserObject
         console.log(rootState.sparky_api.sparkyUserID)
@@ -72,21 +72,13 @@ const actions= {
             //'name': {'value': `${username}`},
             'mail': {'value': `${sparkyUserObject.data.email}`},
             'pass': {'value': `${password}`},
-            'field_sparky_id': {'value': `${sparkyUserObject.data.id}`},
+            //'field_sparky_id': {'value': `${sparkyUserObject.data.id}`},
             'field_fullname': {'value': `${sparkyUserObject.data.displayName}`},
-            'field_matrikelnummer': {'value': `12345`},
+            'field_matrikelnummer': {'value': `${matrikelnummer}`},
+            //'field_matrikelnummer': {'value': `12345`},
             //'field_matrikelnummer': {'value': `${sparkyUserObject.data.matrNr}`},
         })
   
-        /* 
-man könnte auch nur die matrikelnummer als name, mail und sparky_api wenn noch nötig? speichern und den rest immer mit api call an sparky holen
- ({ 
-            'name': {'value': `${sparkyUserobject.user}`},
-            'mail': {'value': `${sparkyUserobject.user}`},
-            'pass': {'value': `${sparkyUserobject.user}`},
-            'field_sparky_id': {'value': `${sparkyUserobject.user}`}
-        })
- */  
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/user/register?_format=json',
@@ -112,27 +104,29 @@ man könnte auch nur die matrikelnummer als name, mail und sparky_api wenn noch 
      * Connects to the Drupal Backend and request a login
      * The Backend will give csrf_token a logout token and a current_user object
      */
-    async loginToDrupal({commit, dispatch, rootState},{username, password}) {
-        await dispatch("sparky_api/authenticate", { username, password }, { root: true })
+    async loginToDrupal({commit, rootState},{username, password}) {
+        //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
         const url = 'https://clr-backend.x-navi.de/user/login?_format=json';
         const data = `{"name": "${username}", "pass": "${password}"}`;
         const config = {
             method: 'post',
             url: url,
             headers: {
-                'Content-Type':'application/json'
+                'Accept': 'application/vnd.api+json',
+                'Content-Type':'application/vnd.api+json'
             },
+            withCredentials: true,
             data: data
         };
 
         await axios(config).then(
             (response) => {
                 console.log(rootState.sparky_api.sparkylogin)
-                if( rootState.sparky_api.sparkylogin==true){
+
                     state.test="ich funktioniere"
                     commit('SAVE_LOGIN_USER', response.data);
 
-                }
+                
                 //console.log(response.data.csrf_token);
                 //console.log(response.data.current_user);
                 //console.log(response.data.logout_token);
@@ -149,22 +143,23 @@ man könnte auch nur die matrikelnummer als name, mail und sparky_api wenn noch 
      * Connects to the Drupal Backend and request a login
      * The Backend will give csrf_token a logout token and a current_user object
      */
-             async logoutDrupal({commit, rootState}, logout) {
-                 console.log(logout)
+             async logoutDrupal({commit, rootState}) {
                  console.log(rootState.drupal_api.csrf_token)
                  console.log(rootState.drupal_api.logout_token)
                  console.log(state.logout_token)
                  console.log(rootState.drupal_api.authToken)
-                const url = `https://clr-backend.x-navi.de/user/logout?token=${rootState.drupal_api.logout_token}`;
+                const url = `https://clr-backend.x-navi.de/user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
                 const config = {
                     method: 'post',
                     url: url,
                     headers: {
-                        'Content-Type':'application/json',
-                        'X-CSRF-Token': rootState.drupal_api.csrf_token,
-                        'Authorization': rootState.drupal_api.authToken
+                        'Accept': 'application/vnd.api+json',
+                        'Content-Type':'application/vnd.api+json',
+                        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}` ,
+
 
                     },
+                    withCredentials: true
                 };
         
                 await axios(config).then(
@@ -173,11 +168,12 @@ man könnte auch nur die matrikelnummer als name, mail und sparky_api wenn noch 
                         //console.log(response.data.csrf_token);
                         //console.log(response.data.current_user);
                         //console.log(response.data.logout_token);
-                        commit('SAVE_LOGIN_USER')
+                        commit('SAVE_LOGOUT_USER')
                     
         
                     }
                 ).catch((error) => {
+                    state.validCredential=false;
                     console.log(error)
                 });
             },
@@ -234,6 +230,12 @@ const mutations ={
         state.validCredential=true;
     
         },
+
+        SAVE_LOGOUT_USER(state) {
+
+            state.validCredential=false;
+        
+            },
 
 }
 

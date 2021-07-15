@@ -46,7 +46,7 @@
                     </tr>
                   </table>
                       <b-button @click="drupalLogin()">Drupal Login</b-button>
-                      <b-button @click="login()">Login</b-button>
+                  <!--<b-button @click="login()">Login</b-button> -->
                     </b-tab>
 
                     <b-tab title="Registrierung">
@@ -80,6 +80,20 @@
                           v-model="registrierungsPasswort"
                           id="password"
                           type="password"
+                          placeholder=""
+                          class="form-control mt-1"
+                        />
+                      </td>
+                    </tr>
+                     <tr>
+                      <td>
+                        <label for="Matrikelnummer" class="mr-1 mt-1">Matrikelnummer</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="matrikelnummer"
+                          id="matrikelnummer"
+                          type="text"
                           placeholder=""
                           class="form-control mt-1"
                         />
@@ -190,6 +204,7 @@ export default {
       passwort: "",
       registrierungsKennung: "",
       registrierungsPasswort: "",
+      matrikelnummer: "",
       nameState: null,
       showMenu: true,
       eintragTodo: {
@@ -202,8 +217,13 @@ export default {
       this.$store.dispatch('sparky_api/registrate', {
         username: this.registrierungsKennung,
         password: this.registrierungsPasswort,
+        matrikelnummer: this.matrikelnummer,
       }) 
-
+      
+      //remove so username and password arent saved after login
+      this.registrierungsKennung=""
+      this.registrierungsPasswort=""
+      this.matrikelnummer=""
 /*       this.$store.dispatch('drupal_api/getSessionToken', {
         username: this.registrierungsKennung,
         password: this.registrierungsPasswort,
@@ -238,6 +258,10 @@ export default {
       this.$store.dispatch('drupal_api/saveBasicAuth', authorization_token);
 
       console.log(authorization_token)
+
+      //remove so username and password arent saved after login
+      this.username=""
+      this.password=""
 
       return authorization_token;
     },

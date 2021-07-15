@@ -90,9 +90,7 @@ export default {
     logout(){
       //wieso ist state.csrf_token bei aufruf von logout in drupal_api undefined
       //in dieser Komponente den csrf_token aus drupal_api state zu holen funktioniert aber wiederum
-      console.log(this.$store.state.drupal_api.csrf_token)
-      let logout =this.$store.state.drupal_api.csrf_token
-           this.$store.dispatch('drupal_api/logoutDrupal', logout);
+           this.$store.dispatch('drupal_api/logoutDrupal');
     }
   },
   computed: {

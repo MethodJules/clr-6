@@ -144,7 +144,7 @@ const actions = {
     * @param username input from login
     * @param password input from login
     */
-    async getWhoamI({dispatch, commit }, { username, password }) {
+    async getWhoamI({dispatch, commit }, { username, password, matrikelnummer }) {
             //state.sparkyUserID = " response.data.id"
         axios.get(
             "http://147.172.178.30:3000/auth/whoAmI",
@@ -164,7 +164,7 @@ const actions = {
                     commit('setSparkyObject', response); 
                     console.log(state.sparkyUserID)
                     console.log(state.sparkyUserObject)
-                   dispatch("drupal_api/getSessionToken", { username, password }, { root: true })
+                   dispatch("drupal_api/getSessionToken", { username, password, matrikelnummer }, { root: true })
                 }
             })
             .catch((error) => {
@@ -213,7 +213,7 @@ const actions = {
     * @param username input from getWhoamI
     * @param password input from getWhoamI
     */
-         async registrate({ commit, dispatch }, { username, password }) {
+         async registrate({ commit, dispatch }, { username, password, matrikelnummer }) {
             let dynamicUrl = "api/v1/authenticate"
             let fullUrl = baseUrl + dynamicUrl
             let data = await axios.post(
@@ -234,7 +234,7 @@ const actions = {
                         console.log(data)
                         console.log(response)
                         //dispatch ist hier störend, wenn nur authenticate benötigt wird, vorher mit await dispatch besser gewesen
-                        dispatch('getWhoamI', { username, password })
+                        dispatch('getWhoamI', { username, password, matrikelnummer })
                     }
                 })
                 .catch((error) => {
