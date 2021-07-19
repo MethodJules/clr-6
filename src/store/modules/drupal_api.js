@@ -78,7 +78,7 @@ const actions= {
             //'field_matrikelnummer': {'value': `12345`},
             //'field_matrikelnummer': {'value': `${sparkyUserObject.data.matrNr}`},
         })
-  
+  //TODO: state.csrf_token testen und evtl gegen rootState.drupal_api.csrf_token austauschen
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/user/register?_format=json',

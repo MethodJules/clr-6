@@ -97,7 +97,7 @@ const mutations ={
     * @param projEntry project which will be added to the backend
     * @param state state as parameter for access and manipulation of state data
     */
-    ADD_PROJECT({state, rootState}, projEntry) {
+    ADD_PROJECT({state, rootState, dispatch}, projEntry) {
         console.log(projEntry)
         console.log(state)
         projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
@@ -125,6 +125,9 @@ const mutations ={
         axios(config)
             .then(function(response){
                  console.log(response)
+                 let id_newly_created_project=response.data.id
+                 console.log(id_newly_created_project)
+                 dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
             })
             .catch(function(error) {
                 console.log(error)
@@ -191,8 +194,6 @@ const mutations ={
             let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
             // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
             state.myProjects.push(projectObject)
-
-
 
             //console.log(projectObject)
 

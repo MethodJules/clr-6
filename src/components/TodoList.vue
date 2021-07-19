@@ -49,6 +49,7 @@ export default {
                     dot: true,
                 },
                 todoNeu: '',
+                appointment: ''
                 //msg: "Datum:" + { date } + { todo }
             }
     },

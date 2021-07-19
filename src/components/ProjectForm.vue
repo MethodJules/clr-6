@@ -118,16 +118,13 @@
                 </form>
               </b-modal>
   
-  <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
+
 
               <div v-if="inProjektbeschreibung">
                 <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>Beschreibung bearbeiten</b-button>
 
-
               </div>
               <div v-else>
-                
-                 
                <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
               </div>
 
@@ -248,6 +245,6 @@ export default {
 
 
     },
-    },
+    
 }
 </script>
