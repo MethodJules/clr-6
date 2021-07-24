@@ -27,7 +27,7 @@
                   </tr>
                   <tr>
                     <td>
-                      <label for="betreuenderDozent">Betreuer: </label>
+                      <label for="betreuenderDozent">Betreuer: mehrere eingeben möglich</label>
                     </td>
                   </tr>
                   <tr>
@@ -117,15 +117,14 @@
                 </div>
                 </form>
               </b-modal>
+  
+
 
               <div v-if="inProjektbeschreibung">
                 <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>Beschreibung bearbeiten</b-button>
 
-
               </div>
               <div v-else>
-                
-                 
                <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
               </div>
 
@@ -246,5 +245,6 @@ export default {
 
 
     },
+    
 }
 </script>

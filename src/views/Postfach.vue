@@ -36,6 +36,7 @@ export default {
     data(){
             return{
                 listOfPostfach: [{postfach:"postfach1"} , {postfach:"postfach2"}, {postfach:"postfach3"}],
+                status: ""
                 
             }
     },

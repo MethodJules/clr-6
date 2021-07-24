@@ -70,19 +70,17 @@
         </b-row>
         <div>
         <b-row>
-            <b-col col="2">
+            <b-col cols="2">
             </b-col>
-            <b-col col="3">
+            <b-col cols="3">
           
                 <b-link :to="{name: 'Home'}" class="btn btn-outline-dark btn-block mb-2">Zum Dashboard</b-link>
             </b-col>
-            <b-col col="3">
+            <b-col cols="3">
                 
           
-                <b-row>
-
+                <b-row>    
                     <ProjectForm :project="project"> Beschreibung bearbeiten </ProjectForm> 
-                   
                     
                 </b-row>
                 
@@ -117,8 +115,20 @@ export default({
     data(){
         var rightIndex
         return{
+/*
+                  project: {
+        kurzbeschreibung: "",
+        betreuenderDozent: "",
+        externeMitwirkende: "",
+        schlagworter: [],
 
-           
+        idd: "",
+        title: "",
+         TODO: array in backend dafür machen schlagwörter: [],
+        TODO: array in backend dafür machen betreuenderDozent: [],
+        TODO: array in backend dafür machen externeMitwirkende: [], 
+      },
+      */
             projectId: this.$route.params.project_id,
             
             projectList:{
@@ -140,7 +150,8 @@ export default({
 
 
             projectContent: [],
-            rightIndex
+            rightIndex,
+            gruppenmitglieder: ['person1', 'person 2']
         }
     },
     methods:{
@@ -175,11 +186,16 @@ export default({
         }, */
     },
     mounted() {
-    this.$store.dispatch('project/loadProjectsFromBackend')
+    this.projectList = this.$store.state.project.myProjects
+   
+
+
+
+/*     this.$store.dispatch('project/loadProjectsFromBackend')
     //this.projectList = this.$store.state.project.myProjects
     this.project = this.$store.state.project.myProjects[this.findIndex()]
     this.myProjects = this.$store.state.project.myProjects
-    
+     */
   },
   computed: {
 

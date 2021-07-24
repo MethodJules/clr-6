@@ -7,25 +7,21 @@
       class="py-4"
       sticky
     >
-      <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
-      <b-navbar-brand>CLR Tool</b-navbar-brand>
-      <b-navbar-nav>
-            <b-nav-item to="/projectList"> <b-icon icon= "house-fill" to="/">Startseite </b-icon></b-nav-item>
-            </b-navbar-nav>
-      <b-collapse id="nav-text-collapse" is-nav>
+      <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>   
+         <b-navbar-brand>CLR Tool</b-navbar-brand>    
+               <b-navbar-nav>
+            <b-nav-item to="/"> <b-icon icon= "house-fill" to="/">Startseite </b-icon></b-nav-item>
+            </b-navbar-nav>   
+       <b-collapse id="nav-text-collapse" is-nav>         
+
+
+
         <b-navbar-nav>
           <b-nav-item to="/profil">Profil</b-nav-item>
         </b-navbar-nav>
-        <!-- <b-navbar-nav>
-          <b-nav-item to="/settings">Einstellungen</b-nav-item>
-        </b-navbar-nav> -->
+
+        <template v-if="!startpage">
         
-        <div v-if="!startpage">
-          <b-row>
-            <!-- <b-navbar-nav>
-                                <b-nav-item to="/">Startseite</b-nav-item>
-                            </b-navbar-nav> -->
-            
             <b-navbar-nav>
               <b-nav-item :to="{ name: 'Projektbeschreibung', params: { project_id: this.$route.params.project_id } }">Projektbeschreibung</b-nav-item>
             </b-navbar-nav>
@@ -42,16 +38,15 @@
               <b-nav-item to="/concept">Concept</b-nav-item>
             </b-navbar-nav>
         
-          </b-row>
-        </div>
+        </template>
 
         <b-navbar-nav>
           <b-nav-item to="/einstellungen">Einstellungen</b-nav-item>
         </b-navbar-nav>
         
 
-      <div v-if="!startpage">
-        <b-navbar-nav>
+
+        <b-navbar-nav v-if="!startpage">
           
           <b-input-group size="sm" class="mb-2">
       <b-input-group-prepend is-text>
@@ -61,9 +56,11 @@
     </b-input-group>
               
         </b-navbar-nav>
-      </div>
-    
+
       </b-collapse>
+                   <b-navbar-nav>
+            <b-button @click="logout()">  <b-icon icon= "box-arrow-right"></b-icon></b-button>
+            </b-navbar-nav>   
     </b-navbar>
   </div>
   
@@ -87,6 +84,13 @@ export default {
     return { 
       schlagwort: "Hallo",
       keyword2: ''
+    }
+  },
+  methods:{
+    logout(){
+      //wieso ist state.csrf_token bei aufruf von logout in drupal_api undefined
+      //in dieser Komponente den csrf_token aus drupal_api state zu holen funktioniert aber wiederum
+           this.$store.dispatch('drupal_api/logoutDrupal');
     }
   },
   computed: {
