@@ -142,6 +142,21 @@ const routes = [
         name: 'Postfach',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Postfach.vue')
     },
+
+    {
+        path: '/profil',
+        name: 'Profil',
+        props: true,
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
+    },
+
+    {
+        path: '/einstellungen',
+        name: 'Einstellungen',
+        props: true,
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Einstellungen.vue')
+    },
+
  
 
 ]

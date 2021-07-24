@@ -46,7 +46,7 @@
         </div>
 
         <b-navbar-nav>
-          <b-nav-item to="/settings">Einstellungen</b-nav-item>
+          <b-nav-item to="/einstellungen">Einstellungen</b-nav-item>
         </b-navbar-nav>
         
 
