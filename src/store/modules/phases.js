@@ -102,7 +102,7 @@ const actions = {
 * @param dispatch dispatch is used to call another action from this function
 * @param rootState rootState allows access to states of other modules in store
 */
-    async createAllPhasesforNewProject({ state, rootState }, id_newly_created_project) {
+     createAllPhasesforNewProject({ state, rootState }, id_newly_created_project) {
         console.log(state)
         console.log(id_newly_created_project)
         let assistent_id = "a6260ded-71e7-40c0-8e24-bf78caa8746e"

@@ -8,7 +8,7 @@
             </tr>
             <tr>
                 <!-- <td> {{project[findIndex()].title}} </td>  -->
-                <td> {{project.title}}</td>  
+                <td> {{getCurrentProject.title}}</td>  
             </tr>
             <br>
             <tr>
@@ -16,37 +16,37 @@
             </tr>
             <tr>
                <!--  <td> {{project[findIndex()].betreuenderDozent}} </td> -->
-                <td> {{project.betreuenderDozent}} </td>
+                <td> {{getCurrentProject.betreuenderDozent}} </td>
             </tr>
             <br>
             <tr>
                 <td> <p style="font-weight: bold" >Externe Partner </p> </td>
             </tr>
             <tr>
-                <td> {{project.externeMitwirkende}} </td>
+                <td> {{getCurrentProject.externeMitwirkende}} </td>
             </tr>
             <br>
             <tr>
                 <td> <p style="font-weight: bold" >Schlagwörter </p> </td>
             </tr>
-            <tr>
+            <tr v-for="(schlagwort, index) in getCurrentProject.schlagworter" :key="`schlagwort-${index}`">
             <!-- <tr v-for = "project in myProjects" :key="project.id">  -->
                <!--  <td> {{projectList[findIndex()].schlagworter}} </td> -->
-               <td> {{project.schlagworter}} </td>
+               <td> {{schlagwort}} </td>
             </tr>
             <br>
             <tr>
                 <td> <p style="font-weight: bold" >Kurzbeschreibung </p> </td>
             </tr>
             <tr>
-                <td> {{project.kurzbeschreibung}} </td>
+                <td> {{getCurrentProject.kurzbeschreibung}} </td>
             </tr>
             <br>
             <tr>
                 <td> <p style="font-weight: bold" > Gruppenmitglieder </p> </td>
             </tr>
-            <tr>
-                <td> {{ project.gruppenmitglieder }} </td>
+            <tr v-for="mitglied in getCurrentProject.gruppenmitglieder" :key="mitglied.id">
+                <td> {{ mitglied.id }} </td>
             </tr>
             <tr>
                 <td>  </td>
@@ -79,8 +79,9 @@
             <b-col cols="3">
                 
           
-                <b-row>    
-                    <ProjectForm :project="project"> Beschreibung bearbeiten </ProjectForm> 
+                <b-row >
+                    <div v-if="buttonRender"><ProjectForm :project="project2" > Beschreibung bearbeiten </ProjectForm> </div>
+                    
                     
                 </b-row>
                 
@@ -131,20 +132,13 @@ export default({
       */
             projectId: this.$route.params.project_id,
             
-            projectList:{
-                titel: '',
-                betreuenderDozent: '',
-                externeMitwirkende: '',
-                kurzbeschreibung: '',
-                schlagworter:'',
-            }
-            ,
-            project:{
-                titel: "Projekt",
+            
+            project2:{
+                title: "Projekt",
                 betreuenderDozent: ['Muster', 'Muster2'],
                 externeMitwirkende: "Max",
                 kurzbeschreibung: "Kurzbeschreibung x",
-                schlagworter:['Hallo'],
+                schlagworter:['Hallo','test'],
                 gruppenmitglieder:['Max']
             },
 
@@ -185,8 +179,25 @@ export default({
             return rightIndex
         }, */
     },
-    mounted() {
-    this.projectList = this.$store.state.project.myProjects
+   async mounted() {
+    //this.projectList = this.$store.state.project.myProjects
+
+       this.project2=this.$store.state.project.currentProject
+    console.log(this.$store.state.project.currentProject)
+    console.log(this.project2)
+
+
+
+/*     this.$store.dispatch('project/loadProjectsFromBackend')
+    //this.projectList = this.$store.state.project.myProjects
+    this.project = this.$store.state.project.myProjects[this.findIndex()]
+    this.myProjects = this.$store.state.project.myProjects
+     */
+  },
+   async created() {
+    //this.projectList = this.$store.state.project.myProjects
+    await this.$store.dispatch('project/loadCurrentProject', this.projectId)
+
    
 
 
@@ -198,6 +209,20 @@ export default({
      */
   },
   computed: {
+          getCurrentProject() {
+     
+     console.log(this.$store.state.project.currentProject)
+      return this.$store.state.project.currentProject
+    },
+
+    buttonRender(){
+        let exists=false
+        if(this.$store.state.project.currentProject!=null){
+            exists=true
+        }
+        
+        return exists
+    },
 
     title: {
             get() {

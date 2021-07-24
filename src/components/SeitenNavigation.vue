@@ -86,7 +86,7 @@
       >
     </b-dropdown>
 
-    <b-button v-b-modal.modal-seitennavi size="lg" class="mb-2"> </b-button>
+ <!--    <b-button v-b-modal.modal-seitennavi size="lg" class="mb-2"> </b-button>
     <b-modal id="modal-seitennavi" title="Phase abschließen">
       <p>
         Der Beendigung von Phase: "Gruppe bilden" haben {{ voted }}, von n
@@ -103,7 +103,7 @@
       >
       {{ status }}
       <p></p>
-    </b-modal>
+    </b-modal> -->
   </div>
 </template>
 <script>

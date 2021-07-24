@@ -15,6 +15,12 @@ import ReviewCircle from "@/components/ReviewCircle.vue";
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 export default {
   name: "Home",
+  data(){
+    return{
+          projectId: this.$route.params.project_id,
+
+    }
+  },
   components: {
     ReviewCircle,
     ReflexionAuswahl,
@@ -44,6 +50,7 @@ export default {
         this.$store.dispatch('phases/loadPhasesFromBackend', {
         projectId: this.$route.params.project_id
       })
+          //this.$store.dispatch('project/loadCurrentProject', this.projectId)
   //To DO: Load all phases for this project with projectid and put it in state. click on specific phase loads the respective phase from the state
 
   },

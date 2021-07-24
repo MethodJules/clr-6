@@ -190,6 +190,44 @@ export default {
       showThisModal(){
         this.$refs['create_project'].show()
       },
+
+      submitForm() {
+      this.$v.$touch();
+      if(!this.$v.$invalid){
+        console.log('title: ${this.titela}')
+        this.newProject()
+      }
+    },
+        newProject() {
+      var schlagwortarray =this.project.schlagworter.split(",")
+      var keywords = Object.assign({}, schlagwortarray);
+      console.log(keywords)
+      var addProj={
+            title: this.project.title,
+            kurzbeschreibung: this.project.kurzbeschreibung,
+            betreuenderDozent: this.project.betreuenderDozent,
+            externeMitwirkende: this.project.externeMitwirkende,
+            schlagworter: keywords,
+            gruppenadmin: this.$store.state.sparky_api.drupalUserID,
+            projectIdd: 0
+      }
+      
+      this.$store.dispatch('project/createProject', addProj)
+      console.log(this.project.kurzbeschreibung)
+      console.log("das hier nach ist addproj")
+      console.log(addProj.schlagworter)
+      console.log(this.project)
+      //this.projectList.push(addProj)
+      
+      this.title = " "
+      this.kurzbeschreibung= ""
+      this.betreuenderDozent= " "
+      this.externeMitwirkende= " "
+      this.schlagworter= " "
+      //this.projectList.length + 1
+      
+    },
+
       updateProject() {
       this.$v.$touch();
       if(!this.$v.$invalid){
