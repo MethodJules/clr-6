@@ -107,11 +107,13 @@ const mutations = {
     },
 
     UPDATE_DAILY_ENTRY(state, dailyEntry) {
+        // State update
         let index = state.rowData.indexOf(dailyEntry);
         let id = dailyEntry.idd;
         console.log("INDEX::::::::::::::::::::::::");
         console.log(id);
         // I could not update the state here.... Lets stay here and ask julien..
+
         state.rowData.forEach(element => {
             console.log(element.idd);
             element.idd == id ? element = dailyEntry : "";
@@ -121,6 +123,8 @@ const mutations = {
         console.log(state.rowData);
 
         state.rowData[index] = dailyEntry;
+
+        // DB Update
         //console.log(dailyEntry.todaydoings)
         var data = `{"data": {"type": "node--dailyscrum", "id": "${dailyEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_datum": "${dailyEntry.date}", "field_gestern": "${dailyEntry.doings}" , "field_heute": "${dailyEntry.todaydoings}", "field_probleme": "${dailyEntry.problems}" }}}`;
         var config = {
@@ -133,6 +137,8 @@ const mutations = {
             },
             data: data
         };
+        console.log("URL::::::::::::::::::::::")
+        console.log(config.url);
 
         axios(config)
             .then(function (response) {

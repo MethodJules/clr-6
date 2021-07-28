@@ -82,7 +82,10 @@ const mutations = {
             const title = element.attributes.title; //Get title
             const concepts = element.relationships.field_conceptmap_concepts.data;
             const relationships = element.relationships.field_conceptmap_relationships.data;
+            
             console.log(`Title: ${title}`)
+            // console.log(`Concepts: ${concepts}`)
+            // console.log(`Relationships: ${relationships}`)
             //Get concepts of concept map
             console.log(concepts);
             concepts.forEach(element => {
