@@ -17,7 +17,7 @@
     <b-row>
       <b-col cols="6"> </b-col>
       <b-col>
-        <b-modal id="output_edit_modal" title="Output">
+        <b-modal id="output_edit_modal" title="Output"  cancel-title="Abbrechen">
           <b-form-textarea
             id="output_edit_form_textarea"
             rows="6"
@@ -41,7 +41,7 @@
                 @change="handleFileUpload()"
               />
             </label>
-            <button :disabled="uploadDisabled" @click="upload">Upload</button>
+            <button :disabled="uploadDisabled" @click="upload">Hochladen</button>
           </div>
         </b-modal>
         <b-row class="d-flex justify-content-end p-2">

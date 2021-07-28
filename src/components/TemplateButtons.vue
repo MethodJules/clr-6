@@ -6,7 +6,7 @@
                 </b-col>
 
                 <b-col cols="7">
-                    <b-modal id="documentation_edit_modal" title="Bearbeiten">
+                    <b-modal id="documentation_edit_modal" title="Bearbeiten"  cancel-title="Abbrechen">
                             <b-form-textarea id= "documentation_edit_form_textarea" rows="6" v-model="inDoku.documentation" placeholder="Dokumentieren Sie ihre Arbeit hier"></b-form-textarea>
                             <b-button @click="addTheDocu()">Hinzufügen</b-button>
                             <b-button @click="updateDocu(inDoku)">Update</b-button>
@@ -24,7 +24,7 @@
                     
                     </b-button>
                    
-                    <b-modal id="modal-phase" title="Bist du dir Sicher?">
+                    <b-modal id="modal-phase" title="Bist du dir Sicher?"  cancel-title="Abbrechen">
                     <div class="container">
                     <div>
                         <div class="eingabe">

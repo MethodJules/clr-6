@@ -30,10 +30,17 @@
                   <tr>
                     <td>
                       <div class="form-group"> 
-                      <input
-                        v-model="project.betreuenderDozent"
-                        type="text"
-                        placeholder="hier eingeben" class="form-control">
+            <vue-simple-suggest
+            v-model="project.betreuenderDozent"
+            :styles="autoCompleteStyle"
+            type="text"
+            display-attribute="user"
+            value-attribute="id"
+            :list="simpleSuggestionList"
+            :filter-by-query="true"
+            placeholder
+            ="Dozenten eingeben"
+          />
             <span v-if="!$v.project.betreuenderDozent.required && $v.project.betreuenderDozent.$dirty" class="text-danger">Dozent is required!</span>
             <span v-if="!$v.project.betreuenderDozent.alpha && $v.project.betreuenderDozent.$dirty" class="text-danger">A name is only allowed to use letters</span>
                        </div> 
@@ -47,11 +54,18 @@
                   <tr>
                     <td>
                       <div class="form-group">
-                      <input
-                        v-model="project.externeMitwirkende"
-                        type="text"
-                        placeholder="hier eingeben" class="form-control"
-                      /></div>
+            <vue-simple-suggest
+            v-model="project.externeMitwirkende"
+            :styles="autoCompleteStyle"
+            type="text"
+            display-attribute="user"
+            value-attribute="id"
+            :list="simpleSuggestionList"
+            :filter-by-query="true"
+            placeholder
+            ="externe Mitwirkende eingeben"
+          />
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -101,7 +115,24 @@
 <script>
 
 import { required, minLength, alpha } from 'vuelidate/lib/validators'
+import VueSimpleSuggest from 'vue-simple-suggest'
+import 'vue-simple-suggest/dist/styles.css'
 export default {
+  components:{
+    VueSimpleSuggest
+  },
+  data(){
+    return{
+      chosen: '',
+       autoCompleteStyle : {
+          vueSimpleSuggest: "position-relative",
+          inputWrapper: "",
+          defaultInput : "form-control",
+          suggestions: "position-absolute list-group z-1000",
+          suggestItem: "list-group-item"
+        }
+    }
+  },
     
     props:{
       title: String,
@@ -125,6 +156,7 @@ export default {
 
   },
     methods: {
+      
       showThisModal(){
         this.$refs['create_project'].show()
       },
@@ -136,19 +168,23 @@ export default {
       }
     },
         newProject() {
+      var schlagwortarray =this.project.schlagworter.split(",")
+      var keywords = Object.assign({}, schlagwortarray);
+      console.log(keywords)
       var addProj={
             title: this.project.title,
             kurzbeschreibung: this.project.kurzbeschreibung,
             betreuenderDozent: this.project.betreuenderDozent,
             externeMitwirkende: this.project.externeMitwirkende,
-            schlagworter: this.project.schlagworter,
+            schlagworter: keywords,
+            gruppenadmin: this.$store.state.sparky_api.drupalUserID,
             projectIdd: 0
       }
       
       this.$store.dispatch('project/createProject', addProj)
       console.log(this.project.kurzbeschreibung)
       console.log("das hier nach ist addproj")
-      console.log(addProj)
+      console.log(addProj.schlagworter)
       console.log(this.project)
       //this.projectList.push(addProj)
       
@@ -160,6 +196,12 @@ export default {
       //this.projectList.length + 1
       
     },
-    }
+
+    },
+        computed: {
+      simpleSuggestionList(){
+        return this.$store.state.sparky_api.lecturers
+      }
+    },
 }
 </script>

@@ -49,7 +49,7 @@
                 </b-col>
        
             </b-row>
-            <b-modal id="leave_group" title="Bist du dir sicher?">
+            <b-modal id="leave_group" title="Bist du dir sicher?"  cancel-title="Abbrechen">
               <b-row>
             <p>
             Du kannst nicht mehr auf das Projekt zugreifen, wenn du die Gruppe

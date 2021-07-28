@@ -1,59 +1,91 @@
 <template>
   <div id="app">
-    <div v-if="validCredential != false">
-      <div class="mx-auto" style="width: 50rem">
-        <b-container>
-          <b-row align-v="center">
-            <b-col>
-              <b-card class="login">
-                <b-form-group>
-                  <b-tabs content-class="mt-3">
-                    <!-- Tab 1 -->
-                    <b-tab title="Login">
-                      <table>
-                        <tr>
-                          <td>
-                            <label for="zugangsKennung" class="mr-1"
-                              >Zugangskennung</label
-                            >
-                          </td>
-                          <td>
-                            <input
-                              v-model="zugangsKennung"
-                              id="zugangskennung"
-                              type="text"
-                              placeholder=""
-                              class="form-control"
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <label for="password" class="mr-1 mt-1"
-                              >Passwort</label
-                            >
-                          </td>
-                          <td>
-                            <input
-                              v-model="passwort"
-                              id="password"
-                              type="password"
-                              placeholder=""
-                              class="form-control mt-1"
-                            />
-                          </td>
-                        </tr>
-                      </table>
+    <div v-if="validCredential != true">
+      <div class="mx-auto" style="width: 50rem;">
+      <b-container >
+        <b-row align-v="center">
+          <b-col>
+            <b-card  class="login">
+              <b-form-group>
+              <b-tabs>
+                <!-- Tab 1 -->
+                <b-tab title="Login">
+                    <h5>Melde dich hier mit deinem Uni-Account an</h5>
+                      <p>
+                        Wenn du dich noch nicht registriert hast, bitte registriere dich mit deinem Uni-Account
+                      </p>
+                  <table>
+                    <tr>
+                      <td>
+                        <label for="zugangsKennung" class="mr-1">Zugangskennung</label>
+                        
+                      </td>
+                      <td>
+                        <input
+                          v-model="zugangsKennung"
+                          id="zugangskennung"
+                          type="text"
+                          placeholder=""
+                          class="form-control"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="password" class="mr-1 mt-1">Passwort</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="passwort"
+                          id="password"
+                          type="password"
+                          placeholder=""
+                          class="form-control mt-1"
+                        />
+                      </td>
+                    </tr>
+                  </table>
 
                       <b-button @click="login()">Login</b-button>
                     </b-tab>
 
                     <b-tab title="Registrierung">
-                      <h5>Registriere dich hier mit deinem Uni-Account</h5>
+                     <!--  TODO: make new variables for registration -->
+                    <h5>Registriere dich hier mit deinem Uni-Account</h5>
                       <p>
                         Falls du Hilfe benötigst, wende dich an
                         mail@uni-hildesheim.de
                       </p>
+                  <table>
+                    <tr>
+                      <td>
+                        <label for="zugangsKennung" class="mr-1">Zugangskennung</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="zugangsKennung"
+                          id="zugangskennung"
+                          type="text"
+                          placeholder=""
+                          class="form-control"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <label for="password" class="mr-1 mt-1">Passwort</label>
+                      </td>
+                      <td>
+                        <input
+                          v-model="passwort"
+                          id="password"
+                          type="password"
+                          placeholder=""
+                          class="form-control mt-1"
+                        />
+                      </td>
+                    </tr>
+                  </table>
                       <b-button @click="registrieren()">Registrieren</b-button>
                     </b-tab>
                   </b-tabs>
@@ -98,18 +130,21 @@
                 <SeitenNavigation />
               </b-col>
             </b-row>
-
-            <b-row class="chat mb-2">
-              <br />
-              <b-col class="border border-dark">
+            
+            <b-row class="postfach">
+              <br>
+              
+            </b-row> 
+            <b-row class="postfach">
+              <b-col>
+                      
                 <Postfach />
               </b-col>
-            </b-row>
-            <b-row class="postfach">
-              <b-col class="border border-dark">
-                <Chat />
+              <b-col>
+                <ShowChat />
               </b-col>
             </b-row>
+            
           </b-col>
           <b-col v-else> </b-col>
         </b-row>
@@ -127,10 +162,11 @@ import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
-import Chat from "@/components/Chat.vue";
-import Postfach from "@/components/Postfach.vue";
-
+import ShowChat from "@/views/ShowChat.vue";
+import Postfach from "@/views/Postfach.vue";
+//import Chat from "@/components/Chat.vue";
 //import ProjectList from "@/views/ProjectList.vue"
+
 
 export default {
   props: {
@@ -139,18 +175,20 @@ export default {
   name: "App",
   components: {
     SeitenNavigation,
+    
     //ProjectList,
     TodoList,
+    ShowChat,
     MenueLeiste,
     Kalender,
-    Chat,
+    //Chat,
     Postfach,
   },
   data() {
     return {
       zugangsKennung: "",
       passwort: "",
-      validCredential: false,
+      //validCredential: false,
       nameState: null,
       showMenu: true,
       eintragTodo: {
@@ -177,23 +215,32 @@ export default {
     };
   },
   methods: {
+    registrieren(){
+      let username=this.zugangsKennung
+      let password=this.passwort
+      this.$store.dispatch('drupal_api/getSessionToken', {
+        username,
+        password
+      }) 
+    },
+    
     closeMenu() {
       this.showMenu = false;
     },
-
+    /*
     login() {
-      /*     
-      
-      anmeldedaten werden an anmeldeserver gesendet und antwort ist??
-      -> bei fehler kommt fehler message und dann eigene fehlermeldung ausgeben lassen
-      -> wenn korrekt, dann kommt bestimmte antwort -> dann valid=true
-      */
-      //hier abgleich mit daten durch api call an authentifizierungs server - login.js gleicht passwörter ab und gibt nur boolean zurück,
-      // keine pw werden zurückgegeben
-      let antwort; // = this.$store.dispatch('login/validateLoginData', zugangsKennung, passwort)
+         //body.username = this.zugangsKennung;
+         //body.password = this.passwort;
+         body.username = "";
+         body.password = "";
+         
+         
+        api.authenticate(body, callback);
 
-      //der teil ist nur temporär
-      if (this.zugangsKennung == "Max" && this.passwort == "Musterpasswort") {
+
+
+      let antwort; 
+      if (apiResponse.status==200) {
         antwort = true;
       }
 
@@ -204,10 +251,22 @@ export default {
       } else {
         //modal popup, fehlermeldung
       }
-
       console.log(this.validCredential);
     },
-
+    */
+    login() {
+      //this is the real login
+/*      let username=this.zugangsKennung
+      let password=this.passwort
+       this.$store.dispatch('sparky_api/login', {
+        username,
+        password
+      }) 
+      */
+     //this is the fake login without sparky backend 
+      this.$store.dispatch('sparky_api/fakeLogin')
+      //console.log(this.$store.state.sparky_api.account)
+    },
     /* formularTodo(){
                 this.$refs['my-todo-modal'].show()
                 this.eintragTodo.date=""
@@ -236,10 +295,19 @@ export default {
     isChanged() {
       return this.$route.name === "ProjectList";
     },
-  },
+
+    account() {
+      return this.$store.state.sparky_api.account
+    },
+
+    validCredential() {
+     // return true
+      return this.$store.state.sparky_api.validCredential
+    }
+  }  ,
 
   mounted() {
-    this.$store.dispatch("todo/loadToDoFromBackend");
+    //this.$store.dispatch("todo/loadToDoFromBackend");
     this.listOfToDos = this.$store.state.todo.listOfToDos;
     // we need to take some values one time from database.
     // When we take them in cpomponent mounted or created, it brings the values every time we renew the component.
@@ -287,7 +355,7 @@ export default {
 }
 
 .login {
-  margin-top: 30rem;
+  margin-top: 25rem;
 }
 
 .untereLeiste {

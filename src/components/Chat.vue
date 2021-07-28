@@ -2,7 +2,7 @@
     <div>
         <!-- open modal -->
          <!-- https://www.youtube.com/watch?v=2wEcS32MGQc -->
-        <b-button @click="showThisModal()" v-b-modal="'chat_open'">CHAT</b-button>
+        <b-button @click="showThisModal()" v-b-modal="'chat_open'"><b-icon icon="chat"></b-icon></b-button>
         <b-modal ref="chat_open" title="Projekt 1 Chat" hide-footer>
                 
                 <b-tabs content-class="mt-3" pills card vertical>   
@@ -60,7 +60,7 @@
                                                 <!-- shows who sends which content and when -->
                                                 <p >
                                                         
-                                                        Ich(<span>{{timestamp}}</span>): 
+                                                        Ich(<span>{{message.timestamp}}</span>): 
                                                         <span>{{ message.text}}</span>
                                                 </p>
                                                 </li>
@@ -172,11 +172,3 @@ export default {
 }
 </script>
 <style>
-@import "/assets/style.css";
-.chatVerlauf{
-        width: 100%;
-        height: 15em;
-        overflow: scroll;
-        border: 1px solid #333;
-}
-</style>

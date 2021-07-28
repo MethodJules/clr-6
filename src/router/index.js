@@ -5,11 +5,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-    {
-        path: '/',
-        name: 'Projectlist',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectList.vue')
-    },
+   
     {
         path: '/scope',
         name: 'Scope',
@@ -77,6 +73,7 @@ const routes = [
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
+        meta: {requiresAuth: true},
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
     {
@@ -90,13 +87,13 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
     {
-        path: '/phasetemplate/:phase_id',
+        path: '/phasetemplate/:phase_id:project_id',
         name: 'PhaseTemplate',
         //props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {
-        path: '/projectlist',
+        path: '/projectList',
         name: 'ProjectList',
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
     },
@@ -106,44 +103,46 @@ const routes = [
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
     },
     {
-        path: '/project',
+        path: '/projectDescription/:project_id',
         name: 'Projektbeschreibung',
         component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
     },
     {
-        path: '/reflexion',
-        name: 'Reflexion',
+        path: '/reflexion/:reflexionsPhase',
+        name: 'ReflexionView',
         props: true,
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/Reflexion.vue')
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ReflexionView.vue')
     },
 
-    {
+/*     {
         path: '/group',
         name: 'Groupmanagement',
         props: true,
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
-    },
+        component: () => import(webpackChunkName: "begruessung_home"  '../views/Groupmanagement.vue')
+    }, */
     {
-        path: '/home',
+        //path: '/home:user_id',
+        path: '/home/:project_id',
         name: 'Home',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },
     {
-        path: '/projectsearch',
-        name: 'ProjectSearch',
+        path: '/showchat',
+        name: 'ShowChat',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ShowChat.vue')
+    },
+    {
+        path: '/projectsearch/:keyword2',
+        name: 'ProjectSearch', 
+        props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
     },
-
-    
-
-
-
-
-
-
-
-
-
+    {
+        path: '/postfach',
+        name: 'Postfach',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Postfach.vue')
+    },
+ 
 
 ]
 
@@ -152,5 +151,53 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 })
+
+  
+router.beforeEach((to, from, next) => {
+    // check if route requires Login 
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        console.log("in")
+
+        // check if user is logged in 
+        if (localStorage.getItem("userLoggedIn") != null) {  
+            console.log(localStorage.getItem("userLoggedIn"))       
+            next()
+        } else {
+            alert("Login erforderlich")
+            console.log("in")
+
+            next({name: 'App'})
+        }
+
+       
+    } else {
+        next();
+    }
+
+})
+
+
+/* router.beforeEach((to, from, next) => {
+    // check if route requires Login 
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        console.log("in")
+
+        // check if user is logged in 
+        if (localStorage.getItem("userLoggedIn") != null) {  
+            console.log(localStorage.getItem("userLoggedIn"))       
+            next()
+        } else {
+            alert("Login erforderlich")
+            console.log("in")
+
+            next({name: 'App'})
+        }
+
+       
+    } else {
+        next();
+    }
+
+}) */
 
 export default router

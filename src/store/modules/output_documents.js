@@ -3,7 +3,10 @@ import axios from 'axios';
 const state = () => ({
     documentations: null,
 })
-
+/**
+     * 
+     * load document from Backend
+     */
 const actions = {
     async loadOutputDataFromBackend({commit}) {
         await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/outputdateien')
@@ -35,7 +38,12 @@ const actions = {
 }
 
 const mutations = {
-
+     /**
+     * 
+     * @param {*} state we send our state to the method
+     * @param {*} outputData output document that we are going to use
+     * adds a given document to the database
+     */
     ADD_OUTPUTDATA(state, outputData) {
         console.log(outputData.output_datei + "  in add_outputdatra")
         var data = `{"data": {"type": "node--outputdateien", "attributes": {"title": "filename", "field_output_datei": "${outputData.output_datei}" }}}`;
@@ -59,6 +67,12 @@ const mutations = {
                 console.log(error)
             })
     },
+    /**
+     * 
+     * @param {*} state we send our state to the method
+     * @param {*} outputdata output document 
+     * sets the output document in our state
+     */
     SAVE_DOCUMENTATION(state, outputdata) {
         /*
         documentation.forEach(element => {
