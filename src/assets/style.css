@@ -1,4 +1,5 @@
 ﻿@charset "UTF-8";
+
 html {
     margin: 0px;
     width: 100%;
@@ -24,6 +25,7 @@ body {
         font-size: 16px;
         margin: 0px;
         box-sizing: border-box;
+        width: 100%;
     }
 }
 
@@ -32,6 +34,7 @@ body {
         font-size: 14px;
         margin: 0px;
         box-sizing: border-box;
+        width: 100%;
     }
 }
 
@@ -340,19 +343,23 @@ figcaption {
 }
 
 @keyframes shake {
+
     10%,
     90% {
         transform: translate3d(-1px, 0, 0);
     }
+
     20%,
     80% {
         transform: translate3d(2px, 0, 0);
     }
+
     30%,
     50%,
     70% {
         transform: translate3d(-4px, 0, 0);
     }
+
     40%,
     60% {
         transform: translate3d(4px, 0, 0);
@@ -404,15 +411,18 @@ figcaption {
         padding: 5px;
         padding-left: 10px;
     }
+
     .post .user-info .avatar-large {
         height: 35px;
         width: 35px;
         margin-right: 5px;
         order: 1;
     }
+
     .post .user-info .user-name {
         order: 2;
     }
+
     .post .user-info>* {
         margin-right: 5px;
         margin-bottom: 0;
@@ -692,6 +702,7 @@ figcaption {
     .activity-list .activity {
         padding: 10px 15px;
     }
+
     .activity-list .activity .post-content {
         padding-left: 0;
     }
@@ -870,6 +881,7 @@ h2 {
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .text-lead,
     .forum-list .forum-listing .threads-count .count,
     .profile-card .stats span,
@@ -926,6 +938,7 @@ ul.breadcrumbs li,
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .text,
     p,
     .text-xsmall,
@@ -983,6 +996,7 @@ ul.breadcrumbs li:not(:last-of-type)::after {
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .text-xsmall,
     .thread-list .thread .created_at,
     .pagination,
@@ -1010,6 +1024,7 @@ ul.breadcrumbs li {
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .text-small,
     .forum-list .forum-listing .forum-details ul.subforums,
     .post-content blockquote.big .author,
@@ -1032,6 +1047,7 @@ ul.breadcrumbs li {
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .text-large,
     .list-title,
     .forum-stats ul li,
@@ -1048,6 +1064,7 @@ ul.breadcrumbs li {
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .text-xlarge,
     .btn-xlarge {
         font-size: 20px;
@@ -1133,12 +1150,14 @@ ul {
 } */
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .navbar-item,
     .navbar-mobile-item {
         display: block;
         border: none;
         margin: 20px 0;
     }
+
     .navbar {
         display: none;
         position: absolute;
@@ -1148,21 +1167,25 @@ ul {
         width: 100%;
         left: 0;
     }
+
     .navbar-open {
         display: flex;
         transition: all 0.6s ease;
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
     }
+
     .navbar-open .navbar-item,
     .navbar-open .navbar-mobile-item {
         margin: 6px 0;
     }
+
     .navbar-open ul {
         flex: 1;
         justify-content: flex-start;
         flex-direction: column;
     }
+
     /* Navbar item a  */
     .navbar-item a,
     .navbar-mobile-item a {
@@ -1645,6 +1668,7 @@ button {
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .btn,
     .btn-blue,
     .btn-blue-outlined,
@@ -1974,10 +1998,12 @@ button {
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
+
     .form-actions,
     .btn-group {
         flex-wrap: wrap;
     }
+
     .form-actions>*:not(.btn-ghost),
     .btn-group>*:not(.btn-ghost) {
         flex: 1 1;
@@ -2145,6 +2171,7 @@ button {
         margin-top: 118px;
         flex-direction: column;
     }
+
     .sidebar .widget {
         background: white;
         margin-bottom: 10px;
@@ -2278,18 +2305,21 @@ ul.breadcrumbs li a:hover {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }
+
     #moderation ul.toolbar li {
         flex-basis: 100%;
         margin: 0;
         text-align: center;
         border-right: none !important;
     }
+
     #moderation ul.toolbar li a {
         display: block;
         border: none;
         font-size: 18px;
         padding: 7px 0;
     }
+
     #moderation ul.toolbar li.close-toolbar .fa::before {
         content: '\f107';
         font-family: FontAwesome;
@@ -2322,18 +2352,22 @@ ul.breadcrumbs li a:hover {
     #moderation ul.toolbar-collapsed {
         border-radius: 0;
     }
+
     #moderation ul.toolbar-collapsed li.open-toolbar {
         display: inline-block;
         border: none;
     }
+
     #moderation ul.toolbar-collapsed li.open-toolbar a {
         padding: 0;
         font-size: 0;
         line-height: 0.95;
     }
+
     #moderation ul.toolbar-collapsed li.open-toolbar a .fa {
         margin: 0;
     }
+
     #moderation ul.toolbar-collapsed li.open-toolbar a::before {
         content: '\f106';
         font-family: FontAwesome;
@@ -2701,6 +2735,7 @@ figure {
 }
 
 @media (max-width: 820px) {
+
     .desktop-only,
     .forum-list .forum-listing .threads-count,
     .forum-list .forum-listing .last-thread,
@@ -2712,6 +2747,7 @@ figure {
 }
 
 @media (min-width: 820px) {
+
     .mobile-only,
     .navbar-mobile-item {
         display: none;

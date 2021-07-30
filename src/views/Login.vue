@@ -3,7 +3,7 @@
 <b-tabs content-class="mt-3">
             <!-- Tab 1 -->
     <b-tab title="Login">
-         <label for="zugangskennung">Zuganskennung</label>
+         <label for="zugangskennung">Zuganskennung...</label>
      <input v-model="zugangsKennung" id="zugangskennung" type ="text" placeholder="">
     <label for="password">Passwort</label>
     <input v-model="passwort" id="password" type ="text" placeholder="">

@@ -40,7 +40,7 @@ const mutations = {
 const actions = {
 
     /**
- * waits for getWhoamI to finish getting user data from sparky backend. Then makes an api request to clr backend and gets project data of the user with the dispatch to project.js
+* waits for getWhoamI to finish getting user data from sparky backend. Then makes an api request to clr backend and gets project data of the user with the dispatch to project.js
 * @param username username the user gives as input in App.vue
 * @param password password the user gives as input in App.vue
 */
@@ -58,6 +58,7 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
+              
                 //console.log(response.data.data[2].attributes.field_sparky_id)
                 for (var user of response.data.data) {
                     //console.log(user.attributes.field_sparky_id)
@@ -90,6 +91,7 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
+                console.log("Fake login response")
                 console.log(response)
                 state.sparkyUserID = "6ee6aa71-5e18-4db5-b91f-f3faedf5bcb2"
                 for (var user of response.data.data) {
@@ -150,6 +152,9 @@ const actions = {
                     state.sparkyUserID = response.data.id
                     state.sparkyUserObject = response
                     console.log(state.sparkyUserID)
+                    console.log("Who am I")
+                    console.log(response)
+
                 }
             })
             .catch((error) => {

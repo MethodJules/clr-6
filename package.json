@@ -14,7 +14,7 @@
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
     "rocket.chat.realtime.api.rxjs": "^2.1.1",
-    "v-calendar": "^2.3.0",
+    "v-calendar": "^2.3.2",
     "vue": "^2.6.12",
     "vue-advanced-chat": "^0.8.5",
     "vue-avatar": "^2.3.3",
