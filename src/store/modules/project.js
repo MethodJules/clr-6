@@ -4,7 +4,7 @@ import axios from 'axios';
 const state = () => ({
     projectList: [],
     myProjects: [],
-    currentProject: null,
+    currentProject: {},
     currentProject2: null
 
 })
@@ -105,12 +105,117 @@ const actions = {
              
         },
 
-    
-    createProject({commit}, projEntry) {
-        
-        commit('ADD_PROJECT', projEntry)
+        createProject({commit, dispatch, rootState}, projEntry) {
+         const keywords = JSON.stringify(projEntry.schlagworter)
 
-    },
+            projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+            projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+            //"field_schlagworter": `${keywords}`,
+            console.log(keywords)
+
+
+ /*            var data = JSON.stringify({
+                "data": {
+                    'type': 'node--phase_vorgehensmodell',
+                    "attributes": {
+                        "title": `${projEntry.title}`,
+                        "field_kurzbeschreibung": `${projEntry.kurzbeschreibung}`,
+                        "field_schlagworter": keywords,
+                        'field_externe_mitwirkende': `${projEntry.externeMitwirkende}`,
+                        
+                    },
+                    "relationships": {
+                        'field_betreuender_dozent': {
+                            'data': { 'type': 'user--user', 'id': `${projEntry.dozentID}` }
+                        },
+                        'field_gruppenadministrator': {
+                            'data': { 'type': 'user--user', 'id': `${projEntry.gruppenadmin}` },
+                        },
+                        'field_gruppenmitglieder': {
+                            'data': { "0":{
+                                'type': 'user--user', 'id': `${projEntry.gruppenadmin}` }},
+                        },
+                    }
+
+                },
+
+
+
+            }) */
+
+
+            var data = `{
+                "data": {
+                  "type": "node--projekt",
+                  "attributes": {
+                    "title": "${projEntry.title}",
+                    "field_schlagworter": ${keywords},
+                    "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
+                    "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
+                  },
+                  "relationships": {
+                    "field_betreuender_dozent": {
+                      "data": {
+                        "type": "user--user",
+                        "id": "${projEntry.dozentID}"
+                      }
+                    },
+                    "field_gruppenadministrator": {
+                      "data": {
+                        "type": "user--user",
+                        "id": "${projEntry.gruppenadmin}"
+                      }
+                    },
+                    "field_gruppenmitglieder": {
+                      "data": {
+                        "0": {
+                          "type": "user--user",
+                          "id": "${projEntry.gruppenadmin}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }`;
+
+        console.log(projEntry.schlagworter)
+        console.log(data)
+            //const keywords = JSON.stringify(projEntry.schlagworter)
+            //projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+/*             var data = `{"data": {"type": "node--projekt", "attributes": 
+            {"title": "${projEntry.title}"}}}`     */    
+            /* `{"data": {"type": "node--projekt", "attributes": 
+            {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
+            "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
+            "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
+            "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`; */
+            var config = {
+                method: 'post',
+                url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': rootState.drupal_api.authToken,
+                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                },
+                data: data
+            };
+            
+            axios(config)
+                .then(function(response){
+                     console.log(response)
+                     let id_newly_created_project=response.data.data.id
+                     console.log(id_newly_created_project)
+                     dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
+                     commit('ADD_PROJECT', projEntry)
+                })
+                .catch(function(error) {
+                    console.log(error)
+                })
+            
+
+    
+        },
 
     updateProject({commit, rootState}, projEntry) {
         console.log(projEntry)
@@ -155,41 +260,12 @@ const mutations ={
     * @param projEntry project which will be added to the backend
     * @param state state as parameter for access and manipulation of state data
     */
-    ADD_PROJECT({state, rootState}, projEntry) {
+    ADD_PROJECT(state, projEntry) {
         console.log(projEntry)
         console.log(state)
-        projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+        state.myProjects.push(projEntry)
+        console.log(state.myProjects)
 
-        console.log(projEntry.schlagworter)
-        const keywords = JSON.stringify(projEntry.schlagworter)
-        //projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-        var data = `{"data": {"type": "node--projekt", "attributes": 
-        {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
-        "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
-        "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
-        "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`;
-        var config = {
-            method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
-            },
-            data: data
-        };
-        
-        axios(config)
-            .then(function(response){
-                 console.log(response)
-                 let id_newly_created_project=response.data.id
-                 console.log(id_newly_created_project)
-                 //dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
     },
 
 
@@ -207,6 +283,7 @@ const mutations ={
     * @param state state as parameter for access and manipulation of state data
     */
     LOAD_PROJECT(state, {projects}) {
+        state.myProjects=[]
         
         projects.forEach(element => {
             //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
@@ -232,6 +309,7 @@ const mutations ={
             //console.log(projectObject)
 
         });
+        console.log(state.myProjects)
     },
 
 

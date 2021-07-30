@@ -33,7 +33,7 @@
                     <h3>Dokumentation</h3>
                     <p>{{documentationText}}</p>
                 </div>
-                <b-modal id="documentation_edit_modal" title="Bearbeiten">
+                <b-modal id="docold" title="Bearbeiten">
                     <b-form-textarea id="documentation_edit_form_textarea" rows="6" v-model="documentationText"></b-form-textarea>
                 </b-modal>
             </b-col>
@@ -54,7 +54,7 @@
                 <b-button>Zum Dashboard</b-button>
             </b-col>
             <b-col>
-                <b-button v-b-modal.documentation_edit_modal>Dokumentation bearbeiten</b-button>
+                <b-button v-b-modal.docold>Dokumentation bearbeiten</b-button>
             </b-col>
             <b-col>
                 <b-button>Phase abschließen</b-button>

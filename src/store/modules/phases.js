@@ -36,7 +36,7 @@ const state = () => ({
         }
     ],
     phases_this_project: [],
-    current_phase: null
+    current_phase: {}
 
 
 })
@@ -94,6 +94,38 @@ const actions = {
 
     },
 
+        async loadSinglePhaseFromState2({ commit, state, rootState }, { projectId, phaseId }) {
+            console.log(phaseId)
+            console.log(state)
+            var config = {
+                method: 'get',
+                //url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}`,
+                url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': rootState.drupal_api.authToken,
+                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                },
+            };
+            axios(config)
+                .then(function (response) {
+                    console.log(response);
+                    const currentPhase = response.data.data;
+                    commit('LOAD_SINGLE_PHASE', { currentPhase });
+    
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+    
+
+        },
+
+
+
+    
+
 
 
     /**
@@ -102,17 +134,20 @@ const actions = {
 * @param dispatch dispatch is used to call another action from this function
 * @param rootState rootState allows access to states of other modules in store
 */
-     createAllPhasesforNewProject({ state, rootState }, id_newly_created_project) {
+    createAllPhasesforNewProject({ state, rootState }, id_newly_created_project) {
         console.log(state)
         console.log(id_newly_created_project)
+        //field_assistent bekommt die assistent id vom standard assistenten - hier die ID de Assistenten als ein statischer string
         let assistent_id = "a6260ded-71e7-40c0-8e24-bf78caa8746e"
-        id_newly_created_project = "695c2f01-6de9-4456-988f-1fcf5db91dfb"
-        //field_assistent bekommt die assistent id vom standard assistenten - hier ein statischer string
+        //id_newly_created_project = "695c2f01-6de9-4456-988f-1fcf5db91dfb"
+
         //json.stringify hier eigtl nicht nötig
-        for (var i = 0; i <= 4; i++) {
+
+        var phase_array = []
+        for (var i = 0; i <= 7; i++) {
 
 
-            const data = JSON.stringify({
+            let data = JSON.stringify({
                 "data": {
                     'type': 'node--phase_vorgehensmodell',
                     "attributes": {
@@ -135,32 +170,206 @@ const actions = {
 
 
             })
-            console.log(data)
-
-            var config = {
-                method: 'post',
-                url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
-                headers: {
-                    'Accept': 'application/vnd.api+json',
-                    'Content-Type': 'application/vnd.api+json',
-                    'Authorization': rootState.drupal_api.authToken,
-                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
-                },
-                data: data
-            };
-            console.log(config)
-            axios(config)
-                .then((response) => {
-                    console.log(response.data);
-                }).catch(error => {
-                    throw new Error(`API ${error}`);
-                });
-
-
-
+            phase_array.push(data)
 
 
         }
+
+
+        //phase 0
+        var data = phase_array[0]
+        console.log(data)
+
+        var config = {
+            method: 'post',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+            },
+            data: data
+        };
+        console.log(config)
+        axios(config)
+            .then((response) => {
+                console.log(response.data);
+
+                //phase 1
+                data = phase_array[1]
+                console.log(data)
+
+                var config = {
+                    method: 'post',
+                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                    headers: {
+                        'Accept': 'application/vnd.api+json',
+                        'Content-Type': 'application/vnd.api+json',
+                        'Authorization': rootState.drupal_api.authToken,
+                        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                    },
+                    data: data
+                };
+                console.log(config)
+                axios(config)
+                    .then((response) => {
+                        console.log(response.data);
+
+                        //phase 2
+                        data = phase_array[2]
+                        console.log(data)
+
+                        var config = {
+                            method: 'post',
+                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                            headers: {
+                                'Accept': 'application/vnd.api+json',
+                                'Content-Type': 'application/vnd.api+json',
+                                'Authorization': rootState.drupal_api.authToken,
+                                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                            },
+                            data: data
+                        };
+                        console.log(config)
+                        axios(config)
+                            .then((response) => {
+                                console.log(response.data);
+                                //phase 3
+                                data = phase_array[3]
+                                console.log(data)
+
+                                var config = {
+                                    method: 'post',
+                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                    headers: {
+                                        'Accept': 'application/vnd.api+json',
+                                        'Content-Type': 'application/vnd.api+json',
+                                        'Authorization': rootState.drupal_api.authToken,
+                                        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                                    },
+                                    data: data
+                                };
+                                console.log(config)
+                                axios(config)
+                                    .then((response) => {
+                                        console.log(response.data);
+                                        //phase 4
+                                        data = phase_array[4]
+                                        console.log(data)
+
+                                        var config = {
+                                            method: 'post',
+                                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                            headers: {
+                                                'Accept': 'application/vnd.api+json',
+                                                'Content-Type': 'application/vnd.api+json',
+                                                'Authorization': rootState.drupal_api.authToken,
+                                                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                                            },
+                                            data: data
+                                        };
+                                        console.log(config)
+                                        axios(config)
+                                            .then((response) => {
+                                                console.log(response.data);
+                                                //phase 5
+                                                data = phase_array[5]
+                                                console.log(data)
+
+                                                var config = {
+                                                    method: 'post',
+                                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                    headers: {
+                                                        'Accept': 'application/vnd.api+json',
+                                                        'Content-Type': 'application/vnd.api+json',
+                                                        'Authorization': rootState.drupal_api.authToken,
+                                                        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                                                    },
+                                                    data: data
+                                                };
+                                                console.log(config)
+                                                axios(config)
+                                                    .then((response) => {
+                                                        console.log(response.data);
+                                                        //phase 6
+                                                        data = phase_array[6]
+                                                        console.log(data)
+
+                                                        var config = {
+                                                            method: 'post',
+                                                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                            headers: {
+                                                                'Accept': 'application/vnd.api+json',
+                                                                'Content-Type': 'application/vnd.api+json',
+                                                                'Authorization': rootState.drupal_api.authToken,
+                                                                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                                                            },
+                                                            data: data
+                                                        };
+                                                        console.log(config)
+                                                        axios(config)
+                                                            .then((response) => {
+                                                                console.log(response.data);
+                                                                //phase 7
+                                                                data = phase_array[7]
+                                                                console.log(data)
+
+                                                                var config = {
+                                                                    method: 'post',
+                                                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                                    headers: {
+                                                                        'Accept': 'application/vnd.api+json',
+                                                                        'Content-Type': 'application/vnd.api+json',
+                                                                        'Authorization': rootState.drupal_api.authToken,
+                                                                        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                                                                    },
+                                                                    data: data
+                                                                };
+                                                                console.log(config)
+                                                                axios(config)
+                                                                    .then((response) => {
+                                                                        console.log(response.data);
+
+
+                                                                    }).catch(error => {
+                                                                        throw new Error(`API ${error}`);
+                                                                    });
+
+
+                                                            }).catch(error => {
+                                                                throw new Error(`API ${error}`);
+                                                            });
+
+
+                                                    }).catch(error => {
+                                                        throw new Error(`API ${error}`);
+                                                    });
+
+
+                                            }).catch(error => {
+                                                throw new Error(`API ${error}`);
+                                            });
+
+
+                                    }).catch(error => {
+                                        throw new Error(`API ${error}`);
+                                    });
+
+
+                            }).catch(error => {
+                                throw new Error(`API ${error}`);
+                            });
+
+
+                    }).catch(error => {
+                        throw new Error(`API ${error}`);
+                    });
+
+
+            }).catch(error => {
+                throw new Error(`API ${error}`);
+            });
 
 
     },
@@ -210,6 +419,28 @@ const mutations = {
         state.current_phase = currentPhase.currentPhase
         console.log(state.current_phase)
             ;
+    },
+
+    LOAD_SINGLE_PHASE(state, currentPhase) {
+
+        let currentPhaseFlattened = null
+        currentPhase.currentPhase.forEach(element => {
+
+            let phaseObject = {
+                abschluss: element.attributes.field_abschluss,
+                documentationText: element.attributes.field_documentationtext,
+                phase_number: element.attributes.field_phase_number,
+                assistent: element.relationships.field_assistent.data.id,
+                phase_id: element.id,
+                title: element.attributes.title,
+                projektId: element.relationships.field_projektid.data.id
+            }
+            // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
+            currentPhaseFlattened= phaseObject
+        })
+        state.current_phase = currentPhaseFlattened
+        console.log(currentPhaseFlattened)
+            
     }
 }
 
