@@ -18,7 +18,7 @@ const actions = {
    
 
      async loadReflexionFromBackend({commit}) {
-        await  axios.get("https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate?filter[sichten][condition][path]=field_sichten.name&filter[sichten][condition][operator]=IN&filter[sichten][condition][value][1]=Ich&filter[sichten][condition][value][2]=Gruppe&filter[sichten][condition][value][3]=Fachlicher%20Kontext")
+        await  axios.get("https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate")
             .then((response) => {
                 console.log(response);
                 const data = response.data.data;
@@ -60,9 +60,40 @@ const mutations = {
 
     ADD_REFLEXION(state, reflexion) {
         console.log(reflexion.berichten_reagieren)
-        var data = `{"data": {"type": "node--reflexionstemplate", "attributes": {"title": "UserName + Reflexionsphase", "field_berichten_reagieren": "${reflexion.berichten_reagieren}", "field_in_bezug_setzen": "${reflexion.in_bezug_setzen}" , "field_rekonstruieren": "${reflexion.rekonstruieren}", "field_schlussfolgern": "${reflexion.schlussfolgern}"  },
-        "relationships": {"field_phasenid": {"data": {"0": {"type": "node--phase_vorgehensmodell", "id": "8c8614a2-58b9-4e6b-acd7-89f9097e1205" }}}, 
-        "field_sichten" : {"data": {"0": {"type": "taxonomy_term--sichten", "id": "325fd0af-838c-49f5-92d3-2fcc987e6137" }}}, }}}`;
+        var data = `
+        {
+            "data": 
+            {
+                "type": "node--reflexionstemplate", 
+                "attributes":
+                {
+                    "title": "UserName + Reflexionsphase", 
+                    "field_berichten_reagieren": "${reflexion.berichten_reagieren}", 
+                    "field_in_bezug_setzen": "${reflexion.in_bezug_setzen}" , 
+                    "field_rekonstruieren": "${reflexion.rekonstruieren}", 
+                    "field_schlussfolgern": "${reflexion.schlussfolgern}"  
+                },
+                "relationships": 
+                {
+                    "field_phasenid": 
+                    {
+                        "data":  
+                        {
+                            "type": "node--phase_vorgehensmodell", 
+                            "id": "8c8614a2-58b9-4e6b-acd7-89f9097e1205" 
+                        }
+                    }, 
+                    "field_sichten" : 
+                    {
+                        "data": 
+                        {
+                            "type": "taxonomy_term--sichten", 
+                            "id": "325fd0af-838c-49f5-92d3-2fcc987e6137" 
+                        }
+                    } 
+                }
+            }
+        }`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate',

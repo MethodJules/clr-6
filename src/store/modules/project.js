@@ -3,7 +3,9 @@ import axios from 'axios';
 
 const state = () => ({
     projectList: [],
-    myProjects: []
+    myProjects: [],
+    currentProject: {},
+    currentProject2: null
 
 })
 
@@ -29,31 +31,229 @@ const actions = {
     async loadProjectsFromBackend({commit, state, rootState}) {
         console.log(state)
             console.log("hallo")
+        //console.log(rootState.sparky_api.sparkyUserID)
+        //var drupalUserID = rootState.sparky_api.drupalUserID
+                //b0e1c888-6304-4fe0-83fc-255bb4a3cfe3
+        var drupalUserUID = rootState.drupal_api.user.uid
         console.log(rootState.sparky_api.drupalUserID)
-        var drupalUserID = rootState.sparky_api.drupalUserID
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/projekt')
-            .then((response) => {
+        console.log(drupalUserUID)
+
+
+        var config = {
+            method: 'get',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+        };
+
+        axios(config)
+            .then(function(response){
+                console.log(response)
                 console.log(response);
                 console.log("es lfniosdn")
                 /* console.log($store.state.sparky_api.validCredential)
                 console.log($store.state.sparky_api.drupalUserID) */
                 const projects = response.data.data;
-                commit('LOAD_PROJECT', {projects, drupalUserID});
-               
-            }).catch(error =>{
-                throw new Error(`API ${error}`);
-            });         
-            
+                commit('LOAD_PROJECT', {projects});
+
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+         
     },
 
+
+
+        /**
+     * loads all projects from Backend and commits the mutation LOAD_PROJECT
+     * and passes drupal user id gotten from rootstate on
+    * @param state state as parameter for access and manipulation of state data
+    * @param commit commit us used to call a mutation from this function
+    * @param rootState rootState allows access to states of other modules in store
+    */
+         async loadCurrentProject({commit, state, rootState}, projectId) {
+            console.log(state)
+          var config = {
+                method: 'get',
+                url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': rootState.drupal_api.authToken,
+                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                },
+            };
     
-    createProject({commit}, projEntry) {
-        
-        commit('ADD_PROJECT', projEntry)
+            axios(config)
+                .then(function(response){
+                    console.log(response)
+                    console.log("single project")
+                    /* console.log($store.state.sparky_api.validCredential)
+                    console.log($store.state.sparky_api.drupalUserID) */
+                    const projects = response.data.data;
+                    commit('LOAD_CURRENT_PROJECT', {projects});
+    
+                })
+                .catch(function(error) {
+                    console.log(error)
+                })
+             
+        },
+
+        createProject({commit, dispatch, rootState}, projEntry) {
+         const keywords = JSON.stringify(projEntry.schlagworter)
+
+            projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+            projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+            //"field_schlagworter": `${keywords}`,
+            console.log(keywords)
+
+
+ /*            var data = JSON.stringify({
+                "data": {
+                    'type': 'node--phase_vorgehensmodell',
+                    "attributes": {
+                        "title": `${projEntry.title}`,
+                        "field_kurzbeschreibung": `${projEntry.kurzbeschreibung}`,
+                        "field_schlagworter": keywords,
+                        'field_externe_mitwirkende': `${projEntry.externeMitwirkende}`,
+                        
+                    },
+                    "relationships": {
+                        'field_betreuender_dozent': {
+                            'data': { 'type': 'user--user', 'id': `${projEntry.dozentID}` }
+                        },
+                        'field_gruppenadministrator': {
+                            'data': { 'type': 'user--user', 'id': `${projEntry.gruppenadmin}` },
+                        },
+                        'field_gruppenmitglieder': {
+                            'data': { "0":{
+                                'type': 'user--user', 'id': `${projEntry.gruppenadmin}` }},
+                        },
+                    }
+
+                },
+
+
+
+            }) */
+
+
+            var data = `{
+                "data": {
+                  "type": "node--projekt",
+                  "attributes": {
+                    "title": "${projEntry.title}",
+                    "field_schlagworter": ${keywords},
+                    "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
+                    "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
+                  },
+                  "relationships": {
+                    "field_betreuender_dozent": {
+                      "data": {
+                        "type": "user--user",
+                        "id": "${projEntry.dozentID}"
+                      }
+                    },
+                    "field_gruppenadministrator": {
+                      "data": {
+                        "type": "user--user",
+                        "id": "${projEntry.gruppenadmin}"
+                      }
+                    },
+                    "field_gruppenmitglieder": {
+                      "data": {
+                        "0": {
+                          "type": "user--user",
+                          "id": "${projEntry.gruppenadmin}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }`;
+
+        console.log(projEntry.schlagworter)
+        console.log(data)
+            //const keywords = JSON.stringify(projEntry.schlagworter)
+            //projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+/*             var data = `{"data": {"type": "node--projekt", "attributes": 
+            {"title": "${projEntry.title}"}}}`     */    
+            /* `{"data": {"type": "node--projekt", "attributes": 
+            {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
+            "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
+            "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
+            "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`; */
+            var config = {
+                method: 'post',
+                url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': rootState.drupal_api.authToken,
+                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                },
+                data: data
+            };
+            
+            axios(config)
+                .then(function(response){
+                     console.log(response)
+                     let id_newly_created_project=response.data.data.id
+                     console.log(id_newly_created_project)
+                     dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
+                     commit('ADD_PROJECT', projEntry)
+                })
+                .catch(function(error) {
+                    console.log(error)
+                })
+            
+
+    
+        },
+
+    updateProject({commit, rootState}, projEntry) {
+        console.log(projEntry)
+
+        //let index = state.myProjects.indexOf(projEntry);
+        //state.myProjects[index]=projEntry;
+    projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+    const keywords = JSON.stringify(projEntry.schlagworter)
+    var data = `{"data": {"type": "node--projekt", "id": "${projEntry.projectIdd}", "attributes": 
+    {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
+    "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
+    "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
+    "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`;
+    var config = {
+        method: 'patch',
+        url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectIdd}`,
+        headers: {
+            'Accept': 'application/vnd.api+json',
+            'Content-Type': 'application/vnd.api+json',
+            'Authorization': rootState.drupal_api.authToken,
+            'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        },
+        data: data
+    };
+    axios(config)
+    .then(function(response){
+        commit('UPDATE_PROJECT', projEntry);
+        console.log(response)
+    })
+    .catch(function(error) {
+        console.log(error)
+    })
+
 
     },
 }
 const mutations ={
+    //TODO: authorization token ist noch statisch, dynamisch aus state holen
 
         /**
     * saves the new project in the backend
@@ -63,37 +263,17 @@ const mutations ={
     ADD_PROJECT(state, projEntry) {
         console.log(projEntry)
         console.log(state)
-        projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-        projEntry.externeID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+        state.myProjects.push(projEntry)
+        console.log(state.myProjects)
 
-        console.log(projEntry.schlagworter)
-        const keywords = JSON.stringify(projEntry.schlagworter)
-        //projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-        var data = `{"data": {"type": "node--projekt", "attributes": 
-        {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}" }, 
-        "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
-        "field_externe_mitwirkende": {"data": {"0": {"type": "user--user", "id": "${projEntry.externeID}" }}}, 
-        "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
-        "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`;
-        var config = {
-            method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-            data: data
-        };
-        
-        axios(config)
-            .then(function(response){
-                 console.log(response)
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
     },
+
+
+    UPDATE_PROJECT(state, projEntry){
+        console.table(projEntry)
+        console.table(state)
+    },
+
 
         /**
     * takes all projects and puts all relevant data of the project in state.projectList
@@ -102,13 +282,14 @@ const mutations ={
     * @param drupalUserID id of the user in drupal backend
     * @param state state as parameter for access and manipulation of state data
     */
-    LOAD_PROJECT(state, {projects, drupalUserID}) {
+    LOAD_PROJECT(state, {projects}) {
+        state.myProjects=[]
         
         projects.forEach(element => {
             //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
             const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
             //console.log(field_betreuender_dozent)
-            const field_externe_mitwirkende = element.relationships.field_externe_mitwirkende.data.id;
+            const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
             //console.log(field_externe_mitwirkende)
             const field_schlagworter = element.attributes.field_schlagworter;
             //console.log(field_schlagworter)
@@ -118,29 +299,65 @@ const mutations ={
             //console.log(element.id)
             const field_title = element.attributes.title;
             //console.log(element.id)
-            let field_gruppenmitglieder_IDs = []
+            let field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
 
-            //console.log(state)
-            let is_my_project = false
-            for(let mitglied of element.relationships.field_gruppenmitglieder.data )
-            {
-                field_gruppenmitglieder_IDs.push(mitglied.id)
-                if(mitglied.id==drupalUserID){
-                    //state.myProjectList.push({ betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title })
-                    is_my_project= true                  
-                }
-            }
+            console.log(field_gruppenmitglieder_IDs)
             let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
-            state.projectList.push(projectObject)
-            if(is_my_project){
-                state.myProjects.push(projectObject)
-            }
+            // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
+            state.myProjects.push(projectObject)
 
-
-            console.log(projectObject)
+            //console.log(projectObject)
 
         });
-    }
+        console.log(state.myProjects)
+    },
+
+
+            /**
+    * takes all projects and puts all relevant data of the project in state.projectList
+    * filters through all projects and puts all projects of the user in state.myProjects
+    * @param projects all project existing in the backend
+    * @param drupalUserID id of the user in drupal backend
+    * @param state state as parameter for access and manipulation of state data
+    */
+             LOAD_CURRENT_PROJECT(state, {projects}) {
+
+                projects.forEach(element => {
+        
+                    //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
+                    const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
+                    //console.log(field_betreuender_dozent)
+                    const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
+                    //console.log(field_externe_mitwirkende)
+                    const field_schlagworter = element.attributes.field_schlagworter;
+                    //console.log(field_schlagworter)
+                    const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
+                    //console.log(field_kurzbeschreibung)
+                    const field_id = element.id;
+                    //console.log(element.id)
+                    const field_title = element.attributes.title;
+                    //console.log(element.id)
+                    let field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
+                    // TODO: in Action ändern -> response.data.data wird als parameter an diese funktion übergeben aber included user objects sind
+                    // unter response.data.included => also muss das schon in der action geändert werden müssen
+                    //let includedUserObjects
+        
+                    console.log(field_gruppenmitglieder_IDs)
+                    let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
+                    let projectObject2 = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
+
+                    // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
+                    state.currentProject=projectObject
+                    state.currentProject2=projectObject2
+
+                });
+
+                    
+        
+                    //console.log(projectObject)
+        
+                
+            }
 }
 export default {
     namespaced: true,

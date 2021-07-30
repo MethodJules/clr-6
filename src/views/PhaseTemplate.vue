@@ -3,7 +3,6 @@
         <b-container fluid>
             <!-- gibt an in welcher Phase man sich befindet -->
             <h2>{{phaseId}}</h2>
-            <h2>{{projectId}}</h2>  
             <h2>Phase: {{xphase.phase_name}}</h2>
             <b-row>
                 <b-col cols="10">
@@ -49,7 +48,6 @@ import InputDocuments from '@/components/InputDocuments.vue'
 import DocumentationField from '@/components/DocumentationField.vue'
 import UsedTools from '@/components/UsedTools.vue'
 import OutputDocuments from '@/components/OutputDocuments.vue'
-import TemplateButtons from '@/components/TemplateButtons.vue'
 import Assistent from '@/components/Assistent.vue'
 
 
@@ -75,7 +73,6 @@ export default {
         DocumentationField,
         UsedTools,
         OutputDocuments,
-        TemplateButtons,
         Assistent
 
     },
@@ -89,7 +86,8 @@ export default {
     },
 
     async mounted() {
-        this.$store.dispatch('phases/loadSinglePhaseFromState', {phaseId: this.$route.params.phase_id})
+        //this.$store.dispatch('phases/loadSinglePhaseFromState', {phaseId: this.$route.params.phase_id})
+        this.$store.dispatch('phases/loadSinglePhaseFromState2', {phaseId: this.$route.params.phase_id, projectId: this.$route.params.project_id})
 
               console.log(this.$store.state.phases)
   },

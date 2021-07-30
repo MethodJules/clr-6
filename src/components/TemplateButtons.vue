@@ -7,7 +7,7 @@
 
                 <b-col cols="7">
                     <b-modal id="documentation_edit_modal" title="Bearbeiten"  cancel-title="Abbrechen">
-                            <b-form-textarea id= "documentation_edit_form_textarea" rows="6" v-model="inDoku.documentation" placeholder="Dokumentieren Sie ihre Arbeit hier"></b-form-textarea>
+                            <b-form-textarea id= "documentation_edit_form_textarea" rows="6" v-model="inDoku" placeholder="Dokumentieren Sie ihre Arbeit hier"></b-form-textarea>
                             <b-button @click="addTheDocu()">Hinzufügen</b-button>
                             <b-button @click="updateDocu(inDoku)">Update</b-button>
                             

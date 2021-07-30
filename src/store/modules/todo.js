@@ -5,7 +5,8 @@ const state = () => ({
        // array to store users todos with given deadline 
     ],
     todos:[],//array to store only the todo tasks from listOfToDos[] 
-    dates:[]//array to store only the deadlines from listOfToDos[] 
+    dates:[],//array to store only the deadlines from listOfToDos[] 
+    token: ""
     
 })
 /*  
@@ -35,8 +36,41 @@ const actions = {
             });
 
     },
-    createToDo({commit}, todoEntry) {
+    createToDo({commit, rootState}, todoEntry) {
         //console.log(todoEntry.todo)
+        //let token=rootState.drupal_api.csrf_token
+        let token=rootState.drupal_api.authToken
+        console.log(rootState.drupal_api.csrf_token)
+        //todo delete token in diesem state
+        state.token=rootState.drupal_api.csrf_token
+       
+
+
+        //console.log(todoEntry.todo)
+        var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "Todo Titel", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
+        var config = {
+            method: 'post',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/to_dos',
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': token
+            },
+            data: data
+        };
+        //console.log("te")
+        axios(config)
+            .then(function(response){
+                console.log(response)
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+
+
+
+
+
         commit('ADD_TODO_ENTRY', todoEntry)
 
     },
@@ -80,26 +114,8 @@ const mutations = {
      * @param {*} todoEntry is the new todo entry to save given attributes like title, date and task as a new todo 
      */ 
     ADD_TODO_ENTRY(state, todoEntry) {
-        //console.log(todoEntry.todo)
-        var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "Todo Titel", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
-        var config = {
-            method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/to_dos',
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-            data: data
-        };
-        //console.log("te")
-        axios(config)
-            .then(function(response){
-                console.log(response)
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
+        console.log(state + todoEntry)
+
     },
     /* UPDATE_TODO_ENTRY(state, todoEntry) {
     var data = `{"data": {"type": "node--to_dos", "id": "${todoEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date} }}}`;

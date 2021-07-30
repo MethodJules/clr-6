@@ -1,8 +1,13 @@
 import axios from 'axios'
 
 const state = () => ({
-    user: null,
-    session_token: null
+    user: null, //TODO Should we name it current_user? Would be more semantically correct
+    csrf_token: '', //TODO user individual token is to be used in all subsequent api requests instead of the admin token which is used at the moment
+    logout_token: null,
+    validCredential: false,
+    test: null,
+    authToken: null, 
+    
 
 })
 const actions= {
@@ -23,14 +28,17 @@ const actions= {
     * @param state state as parameter for access and manipulation of state data
     * @param dispatch dispatch is used to call another action from this function
     */
-    async getSessionToken({commit, state, dispatch}, { username, password }) {
+    async getSessionToken({commit, state, dispatch}, { username, password, matrikelnummer }) {
+
+        //eigtl csrf token, nicht sessiontoken
         console.log(state)
         await  axios.get('https://clr-backend.x-navi.de/rest/session/token')
             .then((response) => {
                 console.log(response.data);
                 const token = response.data;
                 commit('SAVE_SESSION_TOKEN', token);
-                dispatch('createUser', { username, password })
+                dispatch('createUser', { username, password, matrikelnummer})
+
             }).catch(error =>{
                 throw new Error(`API ${error}`);
             });         
@@ -39,53 +47,49 @@ const actions= {
 
     /**
     * sends a request to sparky api to get user data, which will be saved in the user account for the registration, via getWhoAmI
+    * uses csrf token from getSessionToken()
     * @param username username the user gives as input in App.vue for registration
+    * @see {@link getSessionToken}
     * @param password password the user gives as input in App.vue for registration
     * @param state state as parameter for access and manipulation of state data
     * @param dispatch dispatch is used to call another action from this function
     * @param rootState rootState allows access to states of other modules in store
     */
-    async createUser({ state, dispatch, rootState},{ username, password }) {
-        await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
-        var sparkyUserobject = rootState.sparky_api.sparkyUserObject
-        console.log(sparkyUserobject)
+    async createUser({ state, commit, rootState}, {username, password, matrikelnummer}) {
+        //await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
+        var sparkyUserObject = rootState.sparky_api.sparkyUserObject
+        console.log(rootState.sparky_api.sparkyUserID)
+        console.log(rootState.sparky_api.sparkyUserObject)
+        console.log(username)
+        console.log(sparkyUserObject)
+        //console.log(generatedPassword)
 
-/* 
-TODO: look up which attributes of sparkyuserobject are needed and put in user data dynamically, when sparky backend is not down again
-        const data = JSON.stringify ({ 
-            'name': {'value': `${sparkyUserobject.user}`},
-            'mail': {'value': `${sparkyUserobject.user}`},
-            'pass': {'value': `${sparkyUserobject.user}`},
-            'field_sparky_id': {'value': `${sparkyUserobject.user}`},
-            'field_fullname': {'value': `${sparkyUserobject.user}`},
-            'field_matrikelnummer': {'value': `${sparkyUserobject.user}`},
-            //'roles': {'value': 'sparkyid'}
-
-        })
- */
         
-        const data = JSON.stringify ({ 
-            'name': {'value': 'testname'},
-            'mail': {'value': 'mail@testmail.com'},
-            'pass': {'value': '1234'},
-            'field_sparky_id': {'value': 'sparkyid'},
-            'field_fullname': {'value': 'max mustermann'},
-            'field_matrikelnummer': {'value': '123456'},
-            //'roles': {'value': 'sparkyid'}
-
+//TODO: Fehlerbehandlung: matrikelnummer ist bei mir null -> dann funzt das alles nicht -> wieso ist null, muss man so einen sonderfall normalerweise beachten
+// TODO: unnötige felder sparky_id, evtl. fullname  entfernen
+        const data = JSON.stringify ({      
+            'name': {'value': `${sparkyUserObject.data.username}`},
+            //'name': {'value': `${username}`},
+            'mail': {'value': `${sparkyUserObject.data.email}`},
+            'pass': {'value': `${password}`},
+            //'field_sparky_id': {'value': `${sparkyUserObject.data.id}`},
+            'field_fullname': {'value': `${sparkyUserObject.data.displayName}`},
+            'field_matrikelnummer': {'value': `${matrikelnummer}`},
+            //'field_matrikelnummer': {'value': `12345`},
+            //'field_matrikelnummer': {'value': `${sparkyUserObject.data.matrNr}`},
         })
-        console.log(state)
+  //TODO: state.csrf_token testen und evtl gegen rootState.drupal_api.csrf_token austauschen
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/user/register?_format=json',
             headers: {
-                'X-CSRF-Token': 'km9x0Dj73SxPmewhVM8dd1He-zDrdDnlFDAkshme8f8',
+                'X-CSRF-Token': state.csrf_token,
                 'Content-Type': 'application/json'
             },
             data: data
         };
         console.log(config)
-/*         axios(config)
+       axios(config)
         .then((response) => {
             console.log(response.data);
             const user = response.data;
@@ -93,13 +97,100 @@ TODO: look up which attributes of sparkyuserobject are needed and put in user da
            
         }).catch(error =>{
             throw new Error(`API ${error}`);
-        });   */           
+        });          
     },
-    
+  
+        /**
+     * Connects to the Drupal Backend and request a login
+     * The Backend will give csrf_token a logout token and a current_user object
+     */
+    async loginToDrupal({commit, rootState},{username, password}) {
+        //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
+        const url = 'https://clr-backend.x-navi.de/user/login?_format=json';
+        const data = `{"name": "${username}", "pass": "${password}"}`;
+        const config = {
+            method: 'post',
+            url: url,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type':'application/vnd.api+json'
+            },
+            withCredentials: true,
+            data: data
+        };
+
+        await axios(config).then(
+            (response) => {
+                console.log(rootState.sparky_api.sparkylogin)
+
+                    state.test="ich funktioniere"
+                    commit('SAVE_LOGIN_USER', response.data);
+
+                
+                //console.log(response.data.csrf_token);
+                //console.log(response.data.current_user);
+                //console.log(response.data.logout_token);
+            
+
+            }
+        ).catch((error) => {
+            console.log(error)
+        });
+    },
+
+
+            /**
+     * Connects to the Drupal Backend and request a login
+     * The Backend will give csrf_token a logout token and a current_user object
+     */
+             async logoutDrupal({commit, rootState}) {
+                 console.log(rootState.drupal_api.csrf_token)
+                 console.log(rootState.drupal_api.logout_token)
+                 console.log(state.logout_token)
+                 console.log(rootState.drupal_api.authToken)
+                const url = `https://clr-backend.x-navi.de/user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
+                const config = {
+                    method: 'post',
+                    url: url,
+                    headers: {
+                        'Accept': 'application/vnd.api+json',
+                        'Content-Type':'application/vnd.api+json',
+                        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}` ,
+
+
+                    },
+                    withCredentials: true
+                };
+        
+                await axios(config).then(
+                    (response) => {
+                        console.log(response)
+                        //console.log(response.data.csrf_token);
+                        //console.log(response.data.current_user);
+                        //console.log(response.data.logout_token);
+                        commit('SAVE_LOGOUT_USER')
+                    
+        
+                    }
+                ).catch((error) => {
+                    state.validCredential=false;
+                    console.log(error)
+                });
+            },
+
+            saveBasicAuth({commit}, authorization_token){
+
+                commit('SAVE_BASIC_AUTH_TOKEN', authorization_token)
+
+            }
 
 
 }
 const mutations ={
+
+    SAVE_BASIC_AUTH_TOKEN(state, authorization_token){
+        state.authToken=authorization_token
+    },
 
     /**
     * gets the token from action and puts it in state 
@@ -107,8 +198,8 @@ const mutations ={
     * @param state state as parameter for access and manipulation of state data
     */
     SAVE_SESSION_TOKEN(state, token) {
-        state.session_token=token
-        console.log(state.session_token)
+        state.csrf_token=token
+        console.log(state.csrf_token)
     },
 
     /**
@@ -118,8 +209,33 @@ const mutations ={
     */
     SAVE_CREATED_USER(state, user) {
         state.user=user
+        console.log("jetzt csrf und user")
         console.log(state.user)
+        console.log(state.csrf_token)
     },
+
+        /**
+     * gets the csrf_token, user object and loguttoken from action 
+     * and puts it in the state object
+     * @param {*} state 
+     * @param {*} token 
+     */
+    SAVE_LOGIN_USER(state, login_data) {
+        state.csrf_token = login_data.csrf_token;
+        state.user = login_data.current_user;
+        state.logout_token = login_data.logout_token;
+        console.log(state.csrf_token)
+        console.log(state.user)
+        console.log(state.logout_token)
+        state.validCredential=true;
+    
+        },
+
+        SAVE_LOGOUT_USER(state) {
+
+            state.validCredential=false;
+        
+            },
 
 }
 
