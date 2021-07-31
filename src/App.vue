@@ -138,24 +138,7 @@
             <b-container fluid class="p-0 m-0">
                 <MenueLeiste />
 
-                <b-row class="d-flex flex-wrap">
-                    <!-- <div class="d-flex flex-column" >
-                        <b-button class="mb-1" v-b-toggle.sidebar-1
-                            >To Do</b-button
-                        >
-                        <b-sidebar id="sidebar-1" title="To Do" shadow>
-                            <div class="px-3 py-2">
-                                <TodoList />
-                            </div>
-                        </b-sidebar>
-                        <b-button v-b-toggle.sidebar-2>Calendar</b-button>
-                        <b-sidebar id="sidebar-2" title="Calendar" shadow>
-                            <div class="px-3 py-2">
-                                <Kalender />
-                            </div>
-                        </b-sidebar>
-                    </div> -->
-
+                <b-row class="d-flex flex-wrap mt-3" v-if="!isMobile">
                     <b-col class="linkeSeite m-0 p-0" md="2">
                         <b-row class="m-0 p-0">
                             <b-col class="m-0">
@@ -185,21 +168,54 @@
                             m-0
                             rechtseite
                         "
-                        md="2"
+                        md="1"
                     >
                         <b-row>
-                            <b-col class="m-0">
+                            <b-col class="m-0" v-if="!isMobile">
                                 <SeitenNavigation />
                             </b-col>
                         </b-row>
-
-                        <b-row class="postfach">
-                            <Postfach />
-
-                            <ShowChat />
-                        </b-row>
                     </b-col>
                     <b-col v-else> </b-col>
+                </b-row>
+                <b-row class="d-flex flex-wrap mt-3" v-if="isMobile">
+                    <!-- Left -->
+                    <div v-if="isMobile">
+                        <b-button v-b-toggle.sidebar-1>></b-button>
+                        <b-sidebar id="sidebar-1" title="Sidebar" shadow>
+                            <div class="px-3 py-2">
+                                <b-row class="m-0 p-0">
+                                    <b-col class="m-0">
+                                        <TodoList />
+                                    </b-col>
+                                </b-row>
+
+                                <b-row>
+                                    <b-col class="d-flex m-0">
+                                        <Kalender />
+                                    </b-col>
+                                </b-row>
+                            </div>
+                        </b-sidebar>
+                    </div>
+                    <!-- Main -->
+                    <b-col class="mainContent m-0 p-0">
+                        <router-view :key="$route.path"></router-view>
+                    </b-col>
+                    <!-- Right -->
+                    <div v-if="isMobile">
+                        <b-button v-b-toggle.sidebar-2> ! </b-button>
+                        <b-sidebar
+                            id="sidebar-2"
+                            title="Seiten Navigation"
+                            shadow
+                            right
+                        >
+                            <div class="px-3 py-2">
+                                <SeitenNavigation />
+                            </div>
+                        </b-sidebar>
+                    </div>
                 </b-row>
                 <!-- 
                 <b-row class="untereLeiste p-4 d-flex align-center">
@@ -215,9 +231,6 @@ import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
-import ShowChat from "@/views/ShowChat.vue";
-import Postfach from "@/views/Postfach.vue";
-//import Chat from "@/components/Chat.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
@@ -230,11 +243,8 @@ export default {
 
         //ProjectList,
         TodoList,
-        ShowChat,
         MenueLeiste,
         Kalender,
-        //Chat,
-        Postfach,
     },
     data() {
         return {
@@ -356,6 +366,13 @@ export default {
             return true;
             // return this.$store.state.sparky_api.validCredential;
         },
+        isMobile() {
+            if (window.innerWidth < 1023) {
+                return true;
+            } else {
+                return false;
+            }
+        },
     },
 
     mounted() {
@@ -387,6 +404,8 @@ export default {
 .mainContent {
     padding: 0 !important;
     min-width: 25rem;
+    height: 80vh;
+    width: 100%;
 }
 .postfach {
     text-align: center;

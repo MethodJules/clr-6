@@ -2,11 +2,12 @@
     <div id="phase">
         <b-container fluid>
             <!-- gibt an in welcher Phase man sich befindet -->
-            <b-row>
+            <b-row class="mb-4">
                 <b-col cols="10">
-                    <h2>{{ phaseId }}</h2>
+                    <h2>Gruppe Bilden</h2>
+                    <!-- <h2>{{ phaseId }}</h2>
                     <h2>{{ projectId }}</h2>
-                    <h2>Phase: {{ xphase.phase_name }}</h2>
+                    <h2>Phase: {{ xphase.phase_name }}</h2> -->
                 </b-col>
                 <b-col cols="2" class="d-flex align-center">
                     <!-- Greift auf die Assistent Komponente -->
@@ -85,8 +86,5 @@ export default {
 <style scoped>
 .tabs {
     width: 100%;
-}
-.tabs * {
-    color: black !important;
 }
 </style>
