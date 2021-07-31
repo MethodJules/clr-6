@@ -363,8 +363,8 @@ export default {
         },
 
         validCredential() {
-            return true;
-            // return this.$store.state.sparky_api.validCredential;
+            // return true;
+            return this.$store.state.sparky_api.validCredential;
         },
         isMobile() {
             if (window.innerWidth < 1023) {
