@@ -363,8 +363,10 @@ export default {
         },
 
         validCredential() {
-            // return true;
-            return this.$store.state.sparky_api.validCredential;
+            return true;
+            // When we login, it breaks the z-circle at the main page.
+            // it is hidden when we double click outside of the zcircle
+            // return this.$store.state.sparky_api.validCredential;
         },
         isMobile() {
             if (window.innerWidth < 1023) {

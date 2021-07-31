@@ -7,7 +7,7 @@
         <br />
         <b> Hildesheimer Ansatz </b>
         <!-- TODO: Show text and text 2 insite circles -->
-        <div slot="default">
+        <div slot="extension">
             <z-spot
                 v-for="(el, index) in elements"
                 button
@@ -96,6 +96,7 @@ export default {
             ],
         };
     },
+
     methods: {
         changeStyle(el) {
             var changeColor = true;
