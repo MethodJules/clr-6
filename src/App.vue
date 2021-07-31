@@ -378,15 +378,15 @@ export default {
 }
 
 .linkeSeite {
-    min-width: 20rem;
+    min-width: 25rem;
 }
 
 .rechtseite {
-    min-width: 20rem;
+    min-width: 25rem;
 }
 .mainContent {
     padding: 0 !important;
-    min-width: 20rem;
+    min-width: 25rem;
 }
 .postfach {
     text-align: center;
