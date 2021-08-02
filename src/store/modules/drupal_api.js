@@ -5,7 +5,6 @@ const state = () => ({
     csrf_token: '', //TODO user individual token is to be used in all subsequent api requests instead of the admin token which is used at the moment
     logout_token: null,
     validCredential: false,
-    test: null,
     authToken: null, 
     
 
@@ -105,6 +104,8 @@ const actions= {
      * The Backend will give csrf_token a logout token and a current_user object
      */
     async loginToDrupal({commit, rootState},{username, password}) {
+        //authenticate with sparky_api at sparky backend is commented out for development purposes. thus testaccounts can be used without the need of real user data
+        //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished 
         //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
         const url = 'https://clr-backend.x-navi.de/user/login?_format=json';
         const data = `{"name": "${username}", "pass": "${password}"}`;
@@ -123,7 +124,6 @@ const actions= {
             (response) => {
                 console.log(rootState.sparky_api.sparkylogin)
 
-                    state.test="ich funktioniere"
                     commit('SAVE_LOGIN_USER', response.data);
 
                 

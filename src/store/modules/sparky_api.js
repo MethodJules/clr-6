@@ -20,15 +20,6 @@ const state = () => ({
 
 const mutations = {
 
-        /**
- * validcredential= true allows the user to login and see the real website
-*/
-    dummyCredential(state) {
-
-        state.validCredential = true
-
-    },
-
     setAccount(state, account) {
 
         state.token = account.data.token.token
@@ -87,57 +78,6 @@ const actions = {
             })
     },
 
-    /**
-    * fake Login that skips the request to sparky api, for development purposes
-    */
-    fakeLogin({ commit, state, dispatch }) {
-        console.log(commit)
-        var config = {
-            method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/user/user`,
-            //url: `https://clr-backend.x-navi.de/jsonapi/user/user?filter[roles.id]=141a7b5d-4223-4c52-abef-b33756921ff4`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-        };
-        axios(config)
-            .then(function (response) {
-                console.log(response)
-                state.sparkyUserID = "ac0d76c8-9d7b-439a-b9d7-2f68ea9980fd"
-                for (var user of response.data.data) {
-                    //console.log(user.attributes.field_sparky_id)
-                    if (user.attributes.field_sparky_id == state.sparkyUserID) {
-                        console.log("user daten holen und einloggen")
-                        state.validCredential = true
-                        state.drupalUserID = user.id
-                        state.drupalUserObject = user
-                        dispatch("project/loadProjectsFromBackend", null, { root: true })
-                        //das ist drupalinterne UID
-                        //state.druoalUserID=user.attributes.drupal_internal__uid
-
-                        //map nimmt das array aus response.data.data und macht ein neues array nur mit id und name der person später könnte man hier filtern, wenn das nicht zuvor mit json filter gemacht wurde
-                        console.log(response.data.data)
-                        const users = response.data.data.map((user) =>{
-                            return {id: user.id, user:user.attributes.display_name}
-                        })
-                        state.lecturers=users
-                        console.log(state.lecturers)
-                        const users2 = response.data.data.map((user) =>{
-                            return user.attributes.field_fullname
-                        })
-                        state.lecturers2=users2
-                        console.log(state.lecturers2)
-
-                    }
-                    commit('dummyCredential');
-                }
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-    },
 
     /**
     * waits for authenticate to finish authenticating with sparky backend. Then makes another api request to sparky backend and gets user data.

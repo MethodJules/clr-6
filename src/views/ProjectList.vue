@@ -83,9 +83,6 @@ export default {
 
         idd: "",
         title: "",
-        /* TODO: array in backend dafür machen schlagwörter: [],
-        TODO: array in backend dafür machen betreuenderDozent: [],
-        TODO: array in backend dafür machen externeMitwirkende: [], */
       },
 
       projectList: this.getProjectlist,

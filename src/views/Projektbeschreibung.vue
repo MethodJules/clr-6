@@ -116,20 +116,7 @@ export default({
     data(){
         var rightIndex
         return{
-/*
-                  project: {
-        kurzbeschreibung: "",
-        betreuenderDozent: "",
-        externeMitwirkende: "",
-        schlagworter: [],
 
-        idd: "",
-        title: "",
-         TODO: array in backend dafür machen schlagwörter: [],
-        TODO: array in backend dafür machen betreuenderDozent: [],
-        TODO: array in backend dafür machen externeMitwirkende: [], 
-      },
-      */
             projectId: this.$route.params.project_id,
             
             

@@ -87,7 +87,7 @@ export default {
 
     async mounted() {
         //this.$store.dispatch('phases/loadSinglePhaseFromState', {phaseId: this.$route.params.phase_id})
-        this.$store.dispatch('phases/loadSinglePhaseFromState2', {phaseId: this.$route.params.phase_id, projectId: this.$route.params.project_id})
+        this.$store.dispatch('phases/loadSinglePhaseFromBackend', {phaseId: this.$route.params.phase_id, projectId: this.$route.params.project_id})
 
               console.log(this.$store.state.phases)
   },

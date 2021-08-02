@@ -45,8 +45,7 @@
                       </td>
                     </tr>
                   </table>
-                      <b-button @click="drupalLogin()">Drupal Login</b-button>
-                  <!--<b-button @click="login()">Login</b-button> -->
+                  <b-button @click="login()">Login</b-button>
                     </b-tab>
 
                     <b-tab title="Registrierung">
@@ -246,7 +245,7 @@ export default {
       return res
     },
 
-    drupalLogin() {
+    login() {
       let username = this.zugangsKennung;
       let password = this.passwort;
 
@@ -274,19 +273,11 @@ export default {
         
     },
 
-    login() {
-      //this is the real login
-/*    let username=this.zugangsKennung
-      let password=this.passwort
-       this.$store.dispatch('sparky_api/login', {
-        username,
-        password
-      })  */
-      
+/*     login() {
      //this is the fake login without sparky backend 
       this.$store.dispatch('sparky_api/fakeLogin')
       //console.log(this.$store.state.sparky_api.account)
-    },
+    }, */
 
 
   },

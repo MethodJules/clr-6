@@ -94,12 +94,11 @@ const actions = {
 
     },
 
-        async loadSinglePhaseFromState2({ commit, state, rootState }, { projectId, phaseId }) {
+        async loadSinglePhaseFromBackend({ commit, state, rootState }, { projectId, phaseId }) {
             console.log(phaseId)
             console.log(state)
             var config = {
                 method: 'get',
-                //url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}`,
                 url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
                 headers: {
                     'Accept': 'application/vnd.api+json',

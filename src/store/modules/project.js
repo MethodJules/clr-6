@@ -113,37 +113,6 @@ const actions = {
             //"field_schlagworter": `${keywords}`,
             console.log(keywords)
 
-
- /*            var data = JSON.stringify({
-                "data": {
-                    'type': 'node--phase_vorgehensmodell',
-                    "attributes": {
-                        "title": `${projEntry.title}`,
-                        "field_kurzbeschreibung": `${projEntry.kurzbeschreibung}`,
-                        "field_schlagworter": keywords,
-                        'field_externe_mitwirkende': `${projEntry.externeMitwirkende}`,
-                        
-                    },
-                    "relationships": {
-                        'field_betreuender_dozent': {
-                            'data': { 'type': 'user--user', 'id': `${projEntry.dozentID}` }
-                        },
-                        'field_gruppenadministrator': {
-                            'data': { 'type': 'user--user', 'id': `${projEntry.gruppenadmin}` },
-                        },
-                        'field_gruppenmitglieder': {
-                            'data': { "0":{
-                                'type': 'user--user', 'id': `${projEntry.gruppenadmin}` }},
-                        },
-                    }
-
-                },
-
-
-
-            }) */
-
-
             var data = `{
                 "data": {
                   "type": "node--projekt",
@@ -180,15 +149,6 @@ const actions = {
 
         console.log(projEntry.schlagworter)
         console.log(data)
-            //const keywords = JSON.stringify(projEntry.schlagworter)
-            //projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-/*             var data = `{"data": {"type": "node--projekt", "attributes": 
-            {"title": "${projEntry.title}"}}}`     */    
-            /* `{"data": {"type": "node--projekt", "attributes": 
-            {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
-            "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
-            "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
-            "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`; */
             var config = {
                 method: 'post',
                 url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
@@ -224,11 +184,40 @@ const actions = {
         //state.myProjects[index]=projEntry;
     projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
     const keywords = JSON.stringify(projEntry.schlagworter)
-    var data = `{"data": {"type": "node--projekt", "id": "${projEntry.projectIdd}", "attributes": 
-    {"title": "${projEntry.title}", "field_schlagworter": ${keywords}, "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}", "field_externe_mitwirkende": "${projEntry.externeMitwirkende}" }, 
-    "relationships": {"field_betreuender_dozent": {"data": {"0": {"type": "user--user", "id": "${projEntry.dozentID}" }}}, 
-    "field_gruppenadministrator": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}}, 
-    "field_gruppenmitglieder": {"data": {"0": {"type": "user--user", "id": "${projEntry.gruppenadmin}" }}} }}}`;
+    var data = `{
+        "data": {
+          "type": "node--projekt",
+           "id": "${projEntry.projectIdd}",
+          "attributes": {
+            "title": "${projEntry.title}",
+            "field_schlagworter": ${keywords},
+            "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
+            "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
+          },
+          "relationships": {
+            "field_betreuender_dozent": {
+              "data": {
+                "type": "user--user",
+                "id": "${projEntry.dozentID}"
+              }
+            },
+            "field_gruppenadministrator": {
+              "data": {
+                "type": "user--user",
+                "id": "${projEntry.gruppenadmin}"
+              }
+            },
+            "field_gruppenmitglieder": {
+              "data": {
+                "0": {
+                  "type": "user--user",
+                  "id": "${projEntry.gruppenadmin}"
+                }
+              }
+            }
+          }
+        }
+      }`;
     var config = {
         method: 'patch',
         url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectIdd}`,
