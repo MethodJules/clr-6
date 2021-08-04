@@ -10,21 +10,30 @@
 
   <b-row>
       <b-col> <strong> Name </strong> </b-col>
-      <b-col> </b-col>
+      <b-col> {{getUser.fullname}}</b-col> 
     
   </b-row>
 
   <b-row>
       
+
+      <b-col> <strong> E-Mail </strong> </b-col>
+      <b-col> {{getUser.mail}} </b-col>
+
+      
+  </b-row>
+
+  <b-row>
+      
       <b-col> <strong> Studiengang </strong> </b-col>
-      <b-col> {{getProfileData[0].studiengang}}</b-col>
+      <b-col> {{getProfileData.studiengang}}</b-col>
       
     
   </b-row>
 
   <b-row>
       <b-col> <strong> Durchgeführte Literaturreviews </strong> </b-col>
-      <b-col> {{getProfileData[0].anzahl_literaturreviews}}</b-col>
+      <b-col> {{getProfileData.anzahl_literaturreviews}}</b-col>
 
   <br>
   <br>
@@ -38,19 +47,19 @@
 
   <b-row>
       <b-col> <strong> Datenbanken  </strong> </b-col>
-      <b-col> {{getProfileData[0].datenbanken}}</b-col>
+      <b-col> {{getProfileData.datenbanken}}</b-col>
     
   </b-row>
 
   <b-row>
       <b-col> <strong> Referenzmanagement-Tools </strong> </b-col>
-      <b-col> {{getProfileData[1].referenztool}}</b-col>
+      <b-col> {{getProfileData.referenztool}}</b-col>
     
   </b-row>
 
   <b-row>
       <b-col> <strong> Analysetools </strong> </b-col>
-      <b-col> {{getProfileData[1].analysetool}}</b-col>
+      <b-col> {{getProfileData.analysetool}}</b-col>
     
   </b-row>
 </b-container>
@@ -87,8 +96,12 @@
 
     
 
-    mounted(){
+    async mounted(){
         this.$store.dispatch('profile/loadProfileFromBackend')
+        this.$store.dispatch('profile/loadUserFromBackend')
+
+        //this.profileData = this.$store.state.profile.user;
+
         //this.profile = this.$store.state.profile.myProfile[this.findIndex()]
         //this.myProfile = this.$store.state.profile.myProfile
 
@@ -102,50 +115,19 @@
         getProfileData() {
         // return true
         return this.$store.state.profile.profileData
-    }
-
-
-        /* studiengang: {
-            get() {
-                return this.$store.state.studiengang;
-            },
-            set(value) {
-                this.$store.commit('setStudiengang', value);
-            }
         },
 
-        anzahl_literaturreviews: {
-            get() {
-                return this.$store.state.anzahl_literaturreviews;
-            },
-            set(value) {
-                this.$store.commit('setAnzahl_literaturreviews', value);
-            }
-        },
-        datenbanken: {
-            get() {
-                return this.$store.state.datenbanken;
-            },
-            set(value) {
-                this.$store.commit('setDatenbanken', value);
-            }
-        },
-        referenztool: {
-            get() {
-                return this.$store.state.referenztool;
-            },
-            set(value) {
-                this.$store.commit('setReferenztool', value);
-            }
-        },
-        analysetool: {
-            get() {
-                return this.$store.state.analysetool;
-            },
-            set(value) {
-                this.$store.commit('setAnalysetool', value);
-            }
-        }, */
+        getUser() {
+        return this.$store.state.profile.userData
+
+        } 
+
+
+
+
+      
+       
+        
     }
   }
 </script>

@@ -1,129 +1,245 @@
 import axios from 'axios';
 
 const state = () => ({
-    profileData: [],
-    //myProfiles: []
+   
+    profileData: {} ,
+    userData: {}
 
 })
 
-
-
-
-
 const actions = {
-   
 
-     async loadProfileFromBackend({commit}) {
-        await  axios.get("https://clr-backend.x-navi.de/jsonapi/node/profil")
-            .then((response) => {
+    async loadUserFromBackend({commit, state, rootState}) {
+        console.log(state)
+        console.log("hallo")
+        console.log(rootState.sparky_api.sparkyUserID)
+        var drupalUserUID = rootState.drupal_api.user.uid
+        console.log(rootState.sparky_api.drupalUserID)
+        console.log(drupalUserUID)
+
+
+        var config = {
+            method: 'get',
+            url: `https://clr-backend.x-navi.de/jsonapi/user/user?filter[drupal_internal__uid]=${drupalUserUID}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+        };
+
+        axios(config)
+            .then(function(response){
+                console.log(response)
                 console.log(response);
-                const data = response.data.data;
-                //let dailys = [];
-                commit('SAVE_PROFILE', data);
-                //commit('SAVE_DAILYSCRUM_FEATURE', dailyscrum_feature)
-            }).catch(error =>{
-                throw new Error(`API ${error}`);
-            });         
+                console.log("es lfniosdn") 
+                console.log(rootState.sparky_api.validCredential)
+                console.log(rootState.sparky_api.drupalUserID) 
+                const profiles = response.data.data;
+                commit('SAVE_USER', {profiles});
+
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+    
             
+    },
+
+   
+    async loadProfileFromBackend({commit, state, rootState}) {
+        console.log(state)
+        var drupalUserUID = rootState.drupal_api.user.uid
+
+        var config = {
+            method: 'get',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil?filter[field_user_uid]=${drupalUserUID}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+        };
+
+        axios(config)
+            .then(function(response){
+                console.log(response)
+                console.log(response);
+                console.log("es lfniosdn") 
+                console.log(rootState.sparky_api.validCredential)
+                console.log(rootState.sparky_api.drupalUserID) 
+                const profiles = response.data.data;
+                commit('SAVE_PROFILE', {profiles});
+
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+            
+                       
     }, 
 
-    createProfile({commit}, profile) {
+    createProfile({commit, state, rootState}, profile) {
+
+        console.log(state)
+
+        var title = "Profil"
+        var data = `{
+            "data": {
+                "type": "node--profil", 
+                "attributes": {
+                    "title": "${title}", 
+                    "field_studiengang": "${profile.studiengang}", 
+                    "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}", 
+                    "field_datenbanken": "${profile.datenbanken}", 
+                    "field_referenztool": "${profile.referenztool}", 
+                    "field_analysetool": "${profile.analysetool}", 
+                },
+                "relationships": {
+                    "field_profilbild": {
+                        "data": {
+                            "type": "file--file", 
+                            "id": "6bf272a4-eac9-4c67-84b6-b7ea275b3155" 
+                        }
+                    }
+                } 
+            }
+        }`;
+
+        var config = {
+            method: 'post',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+        };
+
+        axios(config)
+        .then(function(response){
+            console.log(response)
+            console.log(response);
+            console.log("es lfniosdn") 
+            console.log(rootState.sparky_api.validCredential)
+            console.log(rootState.sparky_api.drupalUserID) 
+            commit(data);
+
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+
+
+    },
+
+
+
+
+    updateProfile({commit, state, rootState}, profile) {
+
+        console.log(state)
+
+
+        let index = state.profileData.indexOf(profile);
+        state.profileData[index]=profile;
+        var data = `{
+            "data": {
+                "type": "node--profil", 
+                "id": "${profile.idd}",
+                "attributes": {
+                    "title": "${profile.title}", 
+                    "field_studiengang": "${profile.studiengang}", 
+                    "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}" , 
+                    "field_datenbanken": "${profile.datenbanken}", 
+                    "field_referenztool": "${profile.referenztool}", 
+                    "field_analysetool": "${profile.analysetool}" 
+                },
+                "relationships": {
+                    "field_profilbild": {
+                        "data": {
+                            "type": "file--file", 
+                            "id": "6bf272a4-eac9-4c67-84b6-b7ea275b3155" 
+                        }
+                    }
+                }
+            }
+        }`;
+
+
+        var config = {
+            method: 'post',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.idd}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+
+
+        };
+
+        axios(config)
+        .then(function(response){
+            console.log(response)
+            console.log(response);
+            console.log("es lfniosdn") 
+            console.log(rootState.sparky_api.validCredential)
+            console.log(rootState.sparky_api.drupalUserID) 
+            commit(data);
+
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
         
-        commit('ADD_PROFILE', profile)
-
     },
-
-    updateProfile({commit}, profile) {
-
-        commit('UPDATE_PROFILE', profile);
-    },
-
-    
-
     
 
 }
 
 const mutations = {
 
- 
- 
-
-
-    ADD_PROFILE(state, profile) {
+    SAVE_USER(state, {profiles}) {
         
-        /* var data = `
-        {
-            "data": 
-            {
-                "type": "node--profil", 
-                "attributes":
-                {
-                    "title": "Profil", 
-                    "field_studiengang": "${profile.studiengang}", 
-                    "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}" , 
-                    "field_datenbanken": "${profile.datenbanken}",
-                    "field_referenztool": "${profile.referenztool}", 
-                    "field_analysetool": "${profile.analysetool}"  
-                },
-               
-            }
-        }`; */
-        console.log(profile.studiengang)
-        var title = "Profil"
-        var data = `{"data": {"type": "node--profil", "attributes": {"title": "${title}", "field_studiengang": "${profile.studiengang}", "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}", "field_datenbanken": "${profile.datenbanken}", "field_referenztool": "${profile.referenztool}", 
-        "field_analysetool": "${profile.analysetool}"  }}}`;
-        var config = {
-            method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/profil',
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-            data: data
-        };
+        profiles.forEach(element => {
+            
+            const field_fullname = element.attributes.field_fullname;
+            const field_matrikelnummer = element.attributes.field_matrikelnummer;
+            const field_id = element.id;
+            const field_title = element.attributes.title;
+            const mail = element.attributes.mail;
+            const user_picture = element.relationships.user_picture
+            let userObject =  {fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail, user_picture: user_picture }
 
-        axios(config)
-            .then(function(response){
-                console.log(response)
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
-    },
- 
-UPDATE_PROFILE(state, profile){
-        let index = state.profileData.indexOf(profile);
-        state.profileData[index]=profile;
-    //console.log(dailyEntry.todaydoings)
-    var data = `{"data": {"type": "node--profil", "id": "${profile.idd}" "attributes": {"title": "${profile.title}", "field_studiengang": "${profile.studiengang}", "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}" , "field_datenbanken": "${profile.datenbanken}", "field_referenztool": "${profile.referenztool}", "field_analysetool": "${profile.analysetool}" }}}`;
-    var config = {
-        method: 'patch',
-        url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.idd}`,
-        headers: {
-            'Accept': 'application/vnd.api+json',
-            'Content-Type': 'application/vnd.api+json',
-            'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-        },
-        data: data
-    };
-    axios(config)
-    .then(function(response){
-        console.log(response)
-    })
-    .catch(function(error) {
-        console.log(error)
-    })
+            state.userData = userObject
+            
+            //.push(userObject)
+                    
+        
+            //let profileObject = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title   }
+            //state.projectList.push(projectObject)
+            //state.myProfile.push(profileObject)
+            
+            
+        
+        
+        });
     },
 
 
 
 
     
-    SAVE_PROFILE(state, profile) {
+    SAVE_PROFILE(state, {profiles}) {
         
-        profile.forEach(element => {
+        profiles.forEach(element => {
             console.log(field_studiengang)
             const field_studiengang = element.attributes.field_studiengang;
             console.log(field_anzahl_literaturreviews)
@@ -136,13 +252,18 @@ UPDATE_PROFILE(state, profile){
             const field_referenztool = element.attributes.field_referenztool;
             const field_id = element.id;
             const field_title = element.attributes.title;
-            state.profileData.push( { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title })
+            const field_profilbild = element.relationships.field_profilbild.data
+            //state.profileData.push( { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title })
             //console.log(state)         
         
             //let profileObject = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title   }
             //state.projectList.push(projectObject)
             //state.myProfile.push(profileObject)
-            console.log(state.profileData)
+
+            state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title, profilbild: field_profilbild }
+
+
+            
             
         
         

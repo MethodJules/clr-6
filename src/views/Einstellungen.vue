@@ -1,9 +1,6 @@
 <template>
     <b-col class="border border-dark">  
-
-                
-   
-               
+           
                 <b-container fluid>
 
                 <b-row>    
@@ -14,14 +11,14 @@
                 </b-row>
                         
                         <b-row>
-                            <b-col sm="5"> <strong> Name: </strong>  </b-col>
+                            <b-col sm="5"> <strong> Name: {{getUser.fullname}}</strong>  </b-col>
                         </b-row>
 
                         <b-row>
-                            <b-col sm="5"> <strong> Matrikelnummer: </strong> </b-col>
+                            <b-col sm="5"> <strong> Matrikelnummer: {{getUser.matrikelnummer}} </strong> </b-col>
                         </b-row>
                         <b-row>
-                            <b-col sm="5"> <strong> E-Mail: </strong> </b-col>
+                            <b-col sm="5"> <strong> E-Mail: {{getUser.mail}}</strong> </b-col>
                         </b-row>
                         <br>
 
@@ -43,11 +40,13 @@
                         <b-col sm="10">
                         
                         <b-form-input
-                            v-model="studiengang"
+                            v-model="getProfileData.studiengang"
                             v-on:input="$v.studiengang.$touch"
                             v-bind:class="{error: $v.studiengang.$error, valid: $v.studiengang.$dirty && !$v.studiengang.$invalid}"
                             id="input-1"
+                            
                             > 
+                            
                             </b-form-input>  
                                 
                         <br>
@@ -60,7 +59,7 @@
                         
                         <b-col sm="10">
                         <b-form-input
-                            v-model="anzahl_literaturreviews"
+                            v-model= "getProfileData.anzahl_literaturreviews"
                             v-on:input="$v.anzahl_literaturreviews.$touch"
                             v-bind:class="{error: $v.anzahl_literaturreviews.$error, valid: $v.anzahl_literaturreviews.$dirty && !$v.anzahl_literaturreviews.$invalid}"
                             id="input-2"
@@ -109,7 +108,7 @@
 
                         <b-col sm="10">
                         <b-form-input
-                            v-model="datenbanken"
+                            v-model= "getProfileData.datenbanken"
                             v-on:input="$v.datenbanken.$touch"
                             v-bind:class="{error: $v.datenbanken.$error, valid: $v.datenbanken.$dirty && !$v.datenbanken.$invalid}"
                             id="input-3"
@@ -136,7 +135,7 @@
                         
                         <b-col sm="10">
                         <b-form-input
-                            v-model="referenztool"
+                            v-model="getProfileData.referenztool"
                             v-on:input="$v.referenztool.$touch"
                             v-bind:class="{error: $v.referenztool.$error, valid: $v.referenztool.$dirty && !$v.referenztool.$invalid}"
                             id="input-4"
@@ -158,7 +157,7 @@
                         
                         <b-col sm="10">
                         <b-form-input
-                            v-model="analysetool"
+                            v-model="getProfileData.analysetool"
                             v-on:input="$v.analysetool.$touch"
                             v-bind:class="{error: $v.analysetool.$error, valid: $v.analysetool.$dirty && !$v.analysetool.$invalid}"
                             
@@ -243,7 +242,7 @@
 
     
  
-import { required, minLength } from 'vuelidate/lib/validators'
+import { required } from 'vuelidate/lib/validators'
 import PictureInput from 'vue-picture-input'
 
 export default {
@@ -256,7 +255,6 @@ export default {
     data() {
         return {
             testButClicked: false,
-            reflexionList:[],
             studiengang: '',
             anzahl_literaturreviews: '',
             datenbanken: '',
@@ -273,11 +271,11 @@ export default {
 
     validations: {
 
-        studiengang: { required, minLength: minLength (1) },
-        anzahl_literaturreviews: { required, minLength: minLength (1)},
-        datenbanken: { required, minLength: minLength (1) },
-        referenztool: { required, minLength: minLength (1) },
-        analysetool: { required, minLength: minLength (1) },
+        studiengang: { required },
+        anzahl_literaturreviews: { required},
+        datenbanken: { required },
+        referenztool: { required },
+        analysetool: { required },
 
 
     },
@@ -303,30 +301,19 @@ export default {
                  this.testButClicked = true;
             
             this.$store.dispatch('profile/createProfile', ausgabe)
+            //this.$store.dispatch('profile/updateProfile', ausgabe)
 
-            /* var output = {
-                 
-                studiengang: this.studiengang,
-                anzahl_literaturreviews:  this.anzahl_literaturreviews,
-                datenbanken: this.datenbanken,
-                referenztool: this.referenztool,
-                analysetool: this.analysetool
-
-            };
-
-          
-          this.$store.dispatch('profile/updateProfile', output) */
-         
+           
 
             } else {
                 alert("Bitte alles ausfüllen")
+                this.testButClicked = false;
             }
+
+            this.testButClicked = true;
                 
             }
-          
-            /* To Do: überprüfen ob schon eine reflexion zu dieser phase von dieser person angefertigt wurde 
-            -> kein neuer Eintrag, alte Reflexion kann überschrieben oder aktualisiert werden
-            */          
+                 
            
             
         },
@@ -354,18 +341,30 @@ export default {
         
     /** lädt alle Profile aus dem Backend */
     mounted() {
-    this.$store.dispatch('profile/loadProfileFromBackend')
+    this.$store.dispatch('profile/loadProfileFromBackend'),
+    this.$store.dispatch('profile/loadUserFromBackend')
+    
     
 
     this.profileData = this.$store.state.profile.profileData
+    this.userData =  this.$store.state.profile.userData
    
     
-  },
+    },
 
-  
+    computed: {
 
-  
-       
+        getUser() {
+            return this.$store.state.profile.userData
+
+        },
+
+        getProfileData() {
+             return this.$store.state.profile.profileData
+
+        }
+
+    },      
 
     
 }
