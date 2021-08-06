@@ -1,38 +1,33 @@
 <template>
     <div>
-        <div>
-            <b-button v-b-modal.modal-5
-                ><b-icon icon="envelope"></b-icon
-            ></b-button>
-
-            <b-modal
-                id="modal-5"
-                title="Benachrichtigung"
-                cancel-title="Abbrechen"
+        <b-button id="popover-postfach">
+            <b-icon icon="envelope"></b-icon>
+        </b-button>
+        <b-popover
+            target="popover-postfach"
+            triggers="click"
+            placement="bottom"
+        >
+            <template #title>Benachrichtigung</template>
+            <div
+                class="card"
+                v-for="postfach in listOfPostfach"
+                :key="postfach.date"
             >
-                <p class="my-4"></p>
+                <div class="card-body text-center">
+                    <b-form :id="postfach.date" v-model="status">
+                        {{ postfach.postfach }}
+                        <b-button
+                            @click="deletePostfach(postfach)"
+                            class="btn btn-s"
+                        >
+                            <b-icon icon="trash-fill"> </b-icon></b-button
+                    ></b-form>
 
-                <!-- Liste von Benachrichtigungen  -->
-                <div
-                    class="card"
-                    v-for="postfach in listOfPostfach"
-                    :key="postfach.date"
-                >
-                    <div class="card-body text-center">
-                        <b-form :id="postfach.date" v-model="status">
-                            {{ postfach.postfach }}
-                            <b-button
-                                @click="deletePostfach(postfach)"
-                                class="btn btn-s"
-                            >
-                                <b-icon icon="trash-fill"> </b-icon></b-button
-                        ></b-form>
-
-                        {{ postfach.nachrichten }}
-                    </div>
+                    {{ postfach.nachrichten }}
                 </div>
-            </b-modal>
-        </div>
+            </div>
+        </b-popover>
     </div>
 </template>
 

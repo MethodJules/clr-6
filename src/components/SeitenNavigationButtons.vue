@@ -7,34 +7,15 @@
                         v-for="(phase, i) in phasen"
                         :key="i"
                         v-on:click="phaseAbschliessen(phase.id)"
-                        >"{{ phase.title }}" abschließen
+                        ><b-icon :icon="phase.iconType" class="mr-3"></b-icon>
+                        "{{ phase.title }}" abschließen
                     </b-dropdown-item>
                 </b-dropdown>
             </div>
-            <div>
-                <b-button v-b-modal.modal-seitennavi> ?</b-button>
-            </div>
+
             <Postfach />
             <ShowChat />
         </div>
-
-        <b-modal id="modal-seitennavi" title="Phase abschließen">
-            <p>
-                Der Beendigung von Phase: "Gruppe bilden" haben {{ voted }}, von
-                n Gruppenmitgliedern zugestimmt
-            </p>
-            <b-form-checkbox
-                :id="gruppe"
-                v-model="status"
-                name="checkbox-1"
-                value="1"
-                unchecked-value="0"
-                >Gib deeine Stimme ab: Soll diese Phase abgeschlossen
-                werden?</b-form-checkbox
-            >
-            {{ status }}
-            <p></p>
-        </b-modal>
     </div>
 </template>
 <script>
@@ -49,56 +30,56 @@ export default {
                     title: "Gruppe Bilden",
                     status: true,
                     to: "PhaseTemplate",
-                    iconType: "",
+                    iconType: "people",
                 },
                 {
                     id: "1",
                     title: "Ziel & Umfang definieren",
                     status: true,
                     to: "PhaseTemplate",
-                    iconType: "",
+                    iconType: "signpost-split",
                 },
                 {
                     id: "2",
                     title: "Konzepte & Definitionen identifizieren",
                     status: true,
                     to: "PhaseTemplate",
-                    iconType: "",
+                    iconType: "diagram3",
                 },
                 {
                     id: "3",
                     title: "Literatur Suchen",
                     status: true,
                     to: "PhaseTemplate",
-                    iconType: "",
+                    iconType: "book",
                 },
                 {
                     id: "4",
                     title: "Daten Extrahieren",
                     status: true,
                     to: "PhaseTemplate",
-                    iconType: "",
+                    iconType: "arrow-left-right",
                 },
                 {
                     id: "5",
                     title: "Literatur Analysieren & Syntheisieren",
                     status: true,
                     to: "PhaseTemplate",
-                    iconType: "",
+                    iconType: "vector-pen",
                 },
                 {
                     id: "6",
                     title: "Ergebnisse Kommunizieren",
                     status: true,
                     to: "PhaseTemplate",
-                    iconType: "",
+                    iconType: "card-checklist",
                 },
                 {
                     id: "7",
                     title: "Gruppe Auflösen",
                     status: true,
                     to: "PhaseTemplate",
-                    iconType: "",
+                    iconType: "columns-gap",
                 },
             ],
         };

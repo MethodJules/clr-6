@@ -2,16 +2,18 @@
     <!-- Für extra Informationen über z-view 
     https://zircleui.github.io/docs/api/z-view.html#organize-your-content -->
 
-    <z-view size="xl">
-        <b> Kollaboratives Literarurreview: </b>
-        <br />
-        <b> Hildesheimer Ansatz </b>
+    <z-view size="xxl">
+        <div class="inside">
+            <b> Kollaboratives Literarurreview: </b>
+            <br />
+            <b> Hildesheimer Ansatz </b>
+        </div>
         <!-- TODO: Show text and text 2 insite circles -->
         <div slot="extension">
             <z-spot
                 v-for="(el, index) in elements"
                 button
-                size="xs"
+                size="s"
                 :distance="130"
                 :angle="el.angle"
                 :key="index"
@@ -19,13 +21,20 @@
                 @click.native="changeStyle(el)"
                 :id="el.id"
                 :class="{ isDone: el.done === true, red: el.done !== true }"
-                :label="el.label"
                 :label-pos="el.labelPosition"
+                v-b-popover.hover.top="el.text"
+                :title="el.label"
             >
+                <b-icon
+                    :icon="el.iconType"
+                    color="white"
+                    font-scale="2"
+                ></b-icon>
                 <!-- <div :class="[el.textPos]">{{ el.text }}</div>
                 <div :class="[el.labelPos]">{{ el.label }}</div>
                 <div :class="[el.textPos2]">{{ el.text2 }}</div>
-                <div :class="[el.labelPos2]">{{ el.label2 }}</div> -->
+                <div :class="[el.labelPos2]">{{ el.label2 }}</div>
+                 -->
             </z-spot>
         </div>
     </z-view>
@@ -45,6 +54,8 @@ export default {
                     label2: "Gruppe auflösen",
                     labelPosition: "top",
                     id: "gruppeBilden",
+                    iconType: "people",
+                    iconType2: "columns-gap",
                 },
                 {
                     angle: 321.42,
@@ -52,6 +63,7 @@ export default {
                     text: "Forschungsfrage, Artefakt und Umfang",
                     done: false,
                     labelPosition: "right",
+                    iconType: "signpost-split",
                 },
                 {
                     angle: 12.84,
@@ -59,18 +71,21 @@ export default {
                     text: "Konzepte, Domänen und working definitions",
                     done: false,
                     labelPosition: "right",
+                    iconType: "diagram3",
                 },
                 {
                     angle: 64.26,
                     label: "Literatur suchen",
                     text: "Suchstrategie, Kriterien und Durchführung",
                     done: false,
+                    iconType: "book",
                 },
                 {
                     angle: 115.68,
                     label: "Daten extrahieren",
                     text: "Codingschema und Volltextanalyse",
                     done: false,
+                    iconType: "arrow-left-right",
                 },
                 {
                     angle: 167.1,
@@ -78,6 +93,7 @@ export default {
                     text: "Codingschema und Volltextanalyse",
                     done: false,
                     labelPosition: "left",
+                    iconType: "vector-pen",
                 },
 
                 {
@@ -86,6 +102,7 @@ export default {
                     text: "Ergebnisaufbereitung und -verbreitung",
                     done: false,
                     labelPosition: "left",
+                    iconType: "card-checklist",
                 },
                 /*
                     {
@@ -118,6 +135,8 @@ export default {
                 el.done = true;
                 if (el.label == "Gruppe Bilden") {
                     el.label = "Gruppe Auflösen";
+                    el.text = "Abschluss der Zusammenarbeit";
+                    el.iconType = "columns-gap";
                 }
             }
         },
@@ -149,7 +168,7 @@ export default {
 
 .inside {
     /* background-color: lightgrey !important; */
-    font-size: 1rem;
+    font-size: 1.3rem;
 }
 
 .z-content {

@@ -2,18 +2,17 @@
     <div>
         <!-- open modal -->
         <!-- https://www.youtube.com/watch?v=2wEcS32MGQc -->
-        <b-button @click="showThisModal()" v-b-modal="'chat_open2'"
-            ><b-icon icon="chat"></b-icon
-        ></b-button>
-        <b-modal
-            ref="chat_open2"
-            height="600"
-            width="600"
-            title="Projekt 1 Chat"
-            hide-footer
+        <b-button id="popover-chat">
+            <b-icon icon="chat"></b-icon>
+        </b-button>
+        <b-popover
+            target="popover-chat"
+            triggers="click"
+            placement="bottomleft"
         >
+            <template #title>Projekt 1 Chat</template>
             <ChatAdvanced />
-        </b-modal>
+        </b-popover>
     </div>
 </template>
 <script>
@@ -22,19 +21,8 @@ export default {
     components: {
         ChatAdvanced,
     },
-    methods: {
-        showThisModal() {
-            this.$refs["chat_open2"].show();
-        },
-    },
 };
 </script>
 <style>
 @import "/assets/style.css";
-.chat_open2 {
-    width: 500;
-    height: 35em;
-    overflow: scroll;
-    border: 1px solid #333;
-}
 </style>

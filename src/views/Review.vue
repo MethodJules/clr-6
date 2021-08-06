@@ -9,12 +9,10 @@
 
 <script>
 import ReviewCircle from "@/components/ReviewCircle";
-// import Test from "@/components/test2";
 
 export default {
     components: {
         ReviewCircle,
-        // Test,
     },
     mounted() {
         this.$zircle.config({
