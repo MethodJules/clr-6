@@ -250,108 +250,71 @@ export default {
         return {
             zugangsKennung: "",
             passwort: "",
-            //validCredential: false,
+            registrierungsKennung: "",
+            registrierungsPasswort: "",
+            matrikelnummer: "",
             nameState: null,
             showMenu: true,
             eintragTodo: {
                 todo: "",
             },
-
-            /* listOfToDos [
-                    {todo:"Mein1", date:"20.02.2021"},
-                ], */
-
-            /* selected: null,
-                options: [
-                    { value: null, text: 'Zur Reflexion' },
-                    { value: 'a', text: 'Gruppe bilden' },
-                    { value: 'b', text: 'Ziel & Umfang definieren' },
-                    { value: 'c', text: 'Konzepte & Definitionen' },
-                    { value: 'd', text: 'Literatur suchen' },
-                    { value: 'e', text: 'Daten extrahieren' },
-                    { value: 'f', text: 'Analyse & Synthese' },
-                    { value: 'g', text: 'Ergebnisse kommunizieren' },
-                    { value: 'h', text: 'Gruppe auflösen' },
-                    
-                ], */
         };
     },
     methods: {
         registrieren() {
-            let username = this.zugangsKennung;
-            let password = this.passwort;
-            this.$store.dispatch("drupal_api/getSessionToken", {
-                username,
-                password,
+            this.$store.dispatch("sparky_api/registrate", {
+                username: this.registrierungsKennung,
+                password: this.registrierungsPasswort,
+                matrikelnummer: this.matrikelnummer,
             });
+
+            //remove so username and password arent saved after login
+            this.registrierungsKennung = "";
+            this.registrierungsPasswort = "";
+            this.matrikelnummer = "";
+            /*       this.$store.dispatch('drupal_api/getSessionToken', {
+        username: this.registrierungsKennung,
+        password: this.registrierungsPasswort,
+        generatedPassword: this.generatePassword(this.registrierungsKennung)
+      })  */
         },
 
         closeMenu() {
             this.showMenu = false;
         },
-        /*
-    login() {
-         //body.username = this.zugangsKennung;
-         //body.password = this.passwort;
-         body.username = "";
-         body.password = "";
-         
-         
-        api.authenticate(body, callback);
-
-
-
-      let antwort; 
-      if (apiResponse.status==200) {
-        antwort = true;
-      }
-
-      //wenn rückgabe true, dann wird freigeschaltet, sonst wird fehlermeldung ausgegeben
-      if (antwort) {
-        this.validCredential = false;
-        //modal/popup mit message
-      } else {
-        //modal popup, fehlermeldung
-      }
-      console.log(this.validCredential);
-    },
-    */
-        login() {
-            //this is the real login
-            /*      let username=this.zugangsKennung
-      let password=this.passwort
-       this.$store.dispatch('sparky_api/login', {
-        username,
-        password
-      }) 
-      */
-            //this is the fake login without sparky backend
-            this.$store.dispatch("sparky_api/fakeLogin");
-            //console.log(this.$store.state.sparky_api.account)
+        generatePassword(username) {
+            const crypto = require("crypto");
+            const md5sum = crypto.createHash("md5");
+            let str = username;
+            const res = md5sum.update(str).digest("hex");
+            console.log(res);
+            return res;
         },
-        /* formularTodo(){
-                this.$refs['my-todo-modal'].show()
-                this.eintragTodo.date=""
-                this.eintragTodo.todo= ""
-                this.eintragTodo.buttonAdd= "add"
-
-            },
-            neueToDo(){
-                this.$refs['my-todo-modal'].show() */
-        /* this.eintragTodo.todo= listOfToDos.todo
-                this.eintragTodo.date= listOfToDos.date
-                this.eintragTodo.buttonAdd= "add" */
-        /* var ausgabeToDo ={
-                    date: this.eintragTodo.date,
-                    todo: this.eintragTodo.todo
-                }
-                this.listOfToDos.push(ausgabeToDo)
-                this.date = ''
-                this.todo = '' */
-        // },
-        /* hideModal() {
-                this.$refs['my-todo-modal'].hide()
-            } */
+        login() {
+            let username = this.zugangsKennung;
+            let password = this.passwort;
+            // wenn das hier genutzt wird -> password wird aus namen generiert - die "richtige" anmeldung des nutzers erfolgt beim sparky backend mit rz kennung
+            //password=this.generatePassword(username)
+            let authorization_token = this.encodeBasicAuth(username, password);
+            this.$store.dispatch("drupal_api/loginToDrupal", {
+                username,
+                password,
+            });
+            this.$store.dispatch(
+                "drupal_api/saveBasicAuth",
+                authorization_token
+            );
+            console.log(authorization_token);
+            //remove so username and password arent saved after login
+            this.username = "";
+            this.password = "";
+            return authorization_token;
+        },
+        encodeBasicAuth(user, password) {
+            var creds = user + ":" + password;
+            var base64 = btoa(creds);
+            return "Basic " + base64;
+        },
     },
     computed: {
         isChanged() {
@@ -364,9 +327,9 @@ export default {
 
         validCredential() {
             return true;
+            // return this.$store.state.sparky_api.validCredential;
             // When we login, it breaks the z-circle at the main page.
             // it is hidden when we double click outside of the zcircle
-            // return this.$store.state.sparky_api.validCredential;
         },
         isMobile() {
             if (window.innerWidth < 1023) {
