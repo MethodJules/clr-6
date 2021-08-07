@@ -8,7 +8,7 @@ import Vue from "vue";
 // converts given size in byte to MB or GB
 // Usage: see inputDocuments.vue line 72
 // Usage Example: {{ input.size | convertSize }}
-Vue.filter("convertSize", (value) => {
+const filter = Vue.filter("convertSize", (value) => {
 
     if (value > 100000000) {
         value /= 1073741824;
@@ -21,3 +21,5 @@ Vue.filter("convertSize", (value) => {
     }
     return value;
 });
+
+export default filter;
