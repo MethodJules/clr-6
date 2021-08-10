@@ -52,7 +52,15 @@ const mutations={
     */ 
     ADD_NEW_TOOL(state, toolEntry) {
 
-        var data = `{"data": {"type": "node--tools", "attributes": {"title": "${toolEntry.tool}"}}}`;
+        var data = `
+        {
+            "data": {
+                "type": "node--tools", 
+                "attributes": {
+                    "title": "${toolEntry.tool}"
+                }
+            }
+        }`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/tools',

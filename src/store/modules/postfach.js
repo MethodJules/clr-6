@@ -54,7 +54,16 @@ const mutations = {
     }, 
     ADD_POSTFACH_ENTRY(state, postfachEntry) {
         
-        var data = `{"data": {"type": "node--postfach", "attributes": {"title": "Benachrichtigung", "field_nachrichten": "${postfachEntry.postfach}"}}}`;
+        var data = `
+        {
+            "data": {
+                "type": "node--postfach", 
+                "attributes": {
+                    "title": "Benachrichtigung", 
+                    "field_nachrichten": "${postfachEntry.postfach}"
+                }
+            }
+        }`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/postfach',

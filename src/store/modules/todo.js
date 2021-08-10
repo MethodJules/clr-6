@@ -47,7 +47,17 @@ const actions = {
 
 
         //console.log(todoEntry.todo)
-        var data = `{"data": {"type": "node--to_dos", "attributes": {"title": "Todo Titel", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date}"}}}`;
+        var data = `
+        {
+            "data": {
+                "type": "node--to_dos", 
+                "attributes": {
+                    "title": "Todo Titel", 
+                    "field_aufgaben": "${todoEntry.todo}", 
+                    "field_date": "${todoEntry.date}"
+                }
+            }
+        }`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/to_dos',

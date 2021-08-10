@@ -46,7 +46,16 @@ const mutations = {
      */
     ADD_OUTPUTDATA(state, outputData) {
         console.log(outputData.output_datei + "  in add_outputdatra")
-        var data = `{"data": {"type": "node--outputdateien", "attributes": {"title": "filename", "field_output_datei": "${outputData.output_datei}" }}}`;
+        var data = `
+        {
+            "data": {
+                "type": "node--outputdateien", 
+                "attributes": {
+                    "title": "filename", 
+                    "field_output_datei": "${outputData.output_datei}" 
+                }
+            }
+        }`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/outputdateien',

@@ -88,7 +88,16 @@ const mutations = {
     */
     ADD_DOCUMENTATION(state, docuEntry) {
         console.log(docuEntry.documentation)
-        var data = `{"data": {"type": "node--documentation", "attributes": {"title": "Documentation Gruppe + Phase", "field_documentationtext": "${docuEntry.documentation}" }}}`;
+        var data = `
+        {
+            "data": {
+                "type": "node--documentation", 
+                "attributes": {
+                    "title": "Documentation Gruppe + Phase", 
+                    "field_documentationtext": "${docuEntry.documentation}" 
+                }
+            }
+        }`;
         var config = {
             method: 'post',
             url: 'https://clr-backend.x-navi.de/jsonapi/node/documentation',
@@ -141,7 +150,16 @@ const mutations = {
             //let index = state.rowData.indexOf(dailyEntry);
             //state.rowData[index]=dailyEntry;
         //console.log(dailyEntry.todaydoings)
-        var data = `{"data": {"type": "node--documentation", "id": "${docuEntry.idd}", "attributes": {"title": "${docuEntry.title}", "field_documentationtext": "${docuEntry.documentation}" }}}`;
+        var data = `{
+            "data": {
+                "type": "node--documentation", 
+                "id": "${docuEntry.idd}", 
+                "attributes": {
+                    "title": "${docuEntry.title}", 
+                    "field_documentationtext": "${docuEntry.documentation}" 
+                }
+            }
+        }`;
         var config = {
             method: 'patch',
             url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
