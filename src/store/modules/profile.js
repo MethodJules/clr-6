@@ -1,13 +1,18 @@
 import axios from 'axios';
 
+
 const state = () => ({
    
+    /* Here we initialize an empty dataobject for profileData and userData, because we don't use here arrays for these data.
+    We need only a dataobject for one profile of one user, in order to store it */
     profileData: {} ,
     userData: {}
 
 })
 
 const actions = {
+
+    /* We load the Userdata from backend by filtering the drupalUserUID to get the userdata of the right user */
 
     async loadUserFromBackend({commit, state, rootState}) {
         console.log(state)
@@ -47,6 +52,12 @@ const actions = {
             
     },
 
+    /* We load the Profiledata from backend by filtering the drupalUserUID to get the right profile of the user which belongs to the 
+    userdata
+    
+    In the backend we add an field called field_user_uid for entering the user uid which is 24 for the testacc user and with that, we 
+    can get the right profile data of testacc user filtered by the drupalUserUID = 24 in this case*/
+
    
     async loadProfileFromBackend({commit, state, rootState}) {
         console.log(state)
@@ -81,30 +92,28 @@ const actions = {
                        
     }, 
 
-    createProfile({commit, state, rootState}, profile) {
+    /* saves the profile with the date fields in the backend  */
 
+    createProfile({state, rootState}, profile) {
+        console.log(profile)
         console.log(state)
-
+        var drupalUserUID = rootState.drupal_api.user.uid
+        console.log(drupalUserUID)
         var title = "Profil"
         var data = `{
             "data": {
                 "type": "node--profil", 
                 "attributes": {
-                    "title": "${title}", 
+                    "title": "${title}",
                     "field_studiengang": "${profile.studiengang}", 
                     "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}", 
                     "field_datenbanken": "${profile.datenbanken}", 
                     "field_referenztool": "${profile.referenztool}", 
-                    "field_analysetool": "${profile.analysetool}", 
-                },
-                "relationships": {
-                    "field_profilbild": {
-                        "data": {
-                            "type": "file--file", 
-                            "id": "6bf272a4-eac9-4c67-84b6-b7ea275b3155" 
-                        }
-                    }
-                } 
+                    "field_analysetool": "${profile.analysetool}",
+                    "field_user_uid": "${drupalUserUID}"
+                    
+                }
+                
             }
         }`;
 
@@ -124,10 +133,7 @@ const actions = {
         .then(function(response){
             console.log(response)
             console.log(response);
-            console.log("es lfniosdn") 
-            console.log(rootState.sparky_api.validCredential)
-            console.log(rootState.sparky_api.drupalUserID) 
-            commit(data);
+            
 
         })
         .catch(function(error) {
@@ -138,41 +144,86 @@ const actions = {
     },
 
 
+    uploadImage ({commit, state, rootState}) {
+        const buffer = "abc";
+        /* const buffer = storedFile.Body; */
+        console.log(state)
+        var drupalUserUID = rootState.drupal_api.user.uid
+        var filename = "file"
+        console.log(drupalUserUID)
+        
+
+        var config = {
+            method: 'post',
+            url: `https://clr-backend.x-navi.de/jsonapi/media/image/field_media_image`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/octet-stream',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                'Content-Disposition': 'file; filename="' + filename + '"',
+                
+            },
+            data: Buffer.from(buffer, "binary")
+            
+        };
+        
+
+        axios(config)
+            .then(function(response){
+                console.log(response)
+                console.log(response);
+                const profiles = response.data.data;
+                
+                commit('SAVE_PROFILE_IMAGE', {profiles});
+
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+            
+                       
+    }, 
+
+    
+
+    
+            
+        
 
 
-    updateProfile({commit, state, rootState}, profile) {
+
+    /* makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.idd
+    that the backend knows which profile should be exactly updated/overwritten */
+
+    updateProfile({state, rootState}, profile) {
 
         console.log(state)
+        
 
-
-        let index = state.profileData.indexOf(profile);
-        state.profileData[index]=profile;
+        var drupalUserUID = rootState.drupal_api.user.uid
+        
         var data = `{
             "data": {
                 "type": "node--profil", 
                 "id": "${profile.idd}",
                 "attributes": {
-                    "title": "${profile.title}", 
+                    "title": "Profil", 
                     "field_studiengang": "${profile.studiengang}", 
                     "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}" , 
                     "field_datenbanken": "${profile.datenbanken}", 
                     "field_referenztool": "${profile.referenztool}", 
-                    "field_analysetool": "${profile.analysetool}" 
-                },
-                "relationships": {
-                    "field_profilbild": {
-                        "data": {
-                            "type": "file--file", 
-                            "id": "6bf272a4-eac9-4c67-84b6-b7ea275b3155" 
-                        }
-                    }
+                    "field_analysetool": "${profile.analysetool}",
+                    "field_user_uid": "${drupalUserUID}"
+
                 }
+                
             }
         }`;
 
 
         var config = {
-            method: 'post',
+            method: 'patch',
             url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -189,10 +240,7 @@ const actions = {
         .then(function(response){
             console.log(response)
             console.log(response);
-            console.log("es lfniosdn") 
-            console.log(rootState.sparky_api.validCredential)
-            console.log(rootState.sparky_api.drupalUserID) 
-            commit(data);
+            
 
         })
         .catch(function(error) {
@@ -206,6 +254,11 @@ const actions = {
 
 const mutations = {
 
+   /* takes all user and filters through all user and puts all relevant data of the user in state.userData
+    * @param profiles all profile existing in the backend
+    * @param drupalUserID id of the user in drupal backend
+    * @param state state as parameter for access and manipulation of state data*/
+
     SAVE_USER(state, {profiles}) {
         
         profiles.forEach(element => {
@@ -215,8 +268,7 @@ const mutations = {
             const field_id = element.id;
             const field_title = element.attributes.title;
             const mail = element.attributes.mail;
-            const user_picture = element.relationships.user_picture
-            let userObject =  {fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail, user_picture: user_picture }
+            let userObject =  {fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail }
 
             state.userData = userObject
             
@@ -236,6 +288,12 @@ const mutations = {
 
 
 
+    /* 
+    * takes all profiles and puts all relevant data of the profile in state.profileData
+    * @param profiles all profile existing in the backend
+    * @param drupalUserID id of the user in drupal backend
+    * @param state state as parameter for access and manipulation of state data*/
+    
     
     SAVE_PROFILE(state, {profiles}) {
         
@@ -250,9 +308,14 @@ const mutations = {
             const field_analysetool = element.attributes.field_analysetool;
             console.log(field_referenztool)
             const field_referenztool = element.attributes.field_referenztool;
+            const field_profilbild = element.relationships.field_profilbild;
             const field_id = element.id;
             const field_title = element.attributes.title;
-            const field_profilbild = element.relationships.field_profilbild.data
+            
+
+
+
+           
             //state.profileData.push( { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title })
             //console.log(state)         
         

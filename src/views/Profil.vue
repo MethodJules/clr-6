@@ -1,7 +1,9 @@
 <template>
+<!-- All the profile data of the user, who put his profile data in the input fields in the component "Einstellungen" and the user data,
+are shown here as a profile view and if the user has uploaded a profile picture in the "Einstellungen", it will also be shown here -->
     <b-container >
   <b-row>
-    <b-col><b-img v-bind="user" src="https://www.pngitem.com/pimgs/m/150-1503941_user-windows-10-user-icon-png-transparent-png.png" fluid alt="Fluid image"></b-img></b-col>
+    <b-col><b-img v-bind="user" src="public://pictures/2021-08/Testacc Profile Picture.jpg" fluid alt="Fluid image"></b-img></b-col>
     
     
   </b-row>
@@ -71,49 +73,34 @@
     
     
     data() {
-    //var rightIndex
+    
       return {
         user: { width: 200, height: 200, class: 'm1' },
         //profileId: this.$route.params.profile_id,
-        //rightIndex
+        
       }
     },
 
-    /* methods: {
-
-        findIndex(){
-            let rightIndex = 0
-            for(let i=0; i< this.$store.state.profile.myProfile.length; i++){
-                if(this.$route.params.profile_id === this.$store.state.profile.myProfile[i].idd){
-                    rightIndex = i
-                }
-            }
-           
-            return rightIndex
-        },
-
-    },  */
-
+     
     
+    /** load the profile data and the user data from backend */
 
     async mounted(){
         this.$store.dispatch('profile/loadProfileFromBackend')
         this.$store.dispatch('profile/loadUserFromBackend')
 
-        //this.profileData = this.$store.state.profile.user;
-
-        //this.profile = this.$store.state.profile.myProfile[this.findIndex()]
-        //this.myProfile = this.$store.state.profile.myProfile
 
         
     },
+
+     /* With the getters, we can show the loading data from the backend, that it can be visible in the frontend for the users */
 
     computed: {
 
         
 
         getProfileData() {
-        // return true
+        
         return this.$store.state.profile.profileData
         },
 

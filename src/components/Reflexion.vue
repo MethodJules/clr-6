@@ -5,7 +5,7 @@
                         <div v-if="testButClicked" class="alert" role="alert">
                             Erfolgreich Gespeichert !
                         </div>
-                        </transition> 
+                </transition> 
    
                 <h2>Reflexion zu Phase: {{phaseId}}</h2>
                 <b-container fluid>
