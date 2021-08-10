@@ -51,7 +51,7 @@ export default {
         projectId: this.$route.params.project_id
       })
 
-          //this.$store.dispatch('project/loadCurrentProject', this.projectId)
+          this.$store.dispatch('project/loadCurrentProject', this.projectId)
   //To DO: Load all phases for this project with projectid and put it in state. click on specific phase loads the respective phase from the state
 
   },

@@ -95,7 +95,7 @@ const actions = {
                     console.log("single project")
                     /* console.log($store.state.sparky_api.validCredential)
                     console.log($store.state.sparky_api.drupalUserID) */
-                    const projects = response.data.data;
+                    const projects = response.data;
                     commit('LOAD_CURRENT_PROJECT', {projects});
     
                 })
@@ -108,9 +108,10 @@ const actions = {
         createProject({commit, dispatch, rootState}, projEntry) {
          const keywords = JSON.stringify(projEntry.schlagworter)
 
-            projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+            //projEntry.betreuenderDozent= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
             projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
             //"field_schlagworter": `${keywords}`,
+            //drupal_internal__uid
             console.log(keywords)
 
             var data = `{
@@ -126,7 +127,7 @@ const actions = {
                     "field_betreuender_dozent": {
                       "data": {
                         "type": "user--user",
-                        "id": "${projEntry.dozentID}"
+                        "id": "${projEntry.betreuenderDozent}"
                       }
                     },
                     "field_gruppenadministrator": {
@@ -182,7 +183,8 @@ const actions = {
 
         //let index = state.myProjects.indexOf(projEntry);
         //state.myProjects[index]=projEntry;
-    projEntry.dozentID= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+    projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
+    //projEntry.betreuenderDozent= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
     const keywords = JSON.stringify(projEntry.schlagworter)
     var data = `{
         "data": {
@@ -198,7 +200,7 @@ const actions = {
             "field_betreuender_dozent": {
               "data": {
                 "type": "user--user",
-                "id": "${projEntry.dozentID}"
+                "id": "${projEntry.betreuenderDozent}"
               }
             },
             "field_gruppenadministrator": {
@@ -311,7 +313,19 @@ const mutations ={
     */
              LOAD_CURRENT_PROJECT(state, {projects}) {
 
-                projects.forEach(element => {
+              let included_data = projects.included
+              let user_array = []
+              included_data.forEach(element => {
+         
+               const username = element.attributes.field_fullname;
+               const userid = element.id
+               user_array.push({username: username, userid: userid,})
+         
+         
+         
+              })
+
+                projects.data.forEach(element => {
         
                     //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
                     const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
@@ -326,14 +340,14 @@ const mutations ={
                     //console.log(element.id)
                     const field_title = element.attributes.title;
                     //console.log(element.id)
-                    let field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
+                    let field_gruppenmitglieder = user_array
                     // TODO: in Action ändern -> response.data.data wird als parameter an diese funktion übergeben aber included user objects sind
                     // unter response.data.included => also muss das schon in der action geändert werden müssen
                     //let includedUserObjects
         
-                    console.log(field_gruppenmitglieder_IDs)
-                    let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
-                    let projectObject2 = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs  }
+                    console.log(field_gruppenmitglieder)
+                    let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder  }
+                    let projectObject2 = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder  }
 
                     // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
                     state.currentProject=projectObject

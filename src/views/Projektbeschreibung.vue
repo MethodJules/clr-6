@@ -46,7 +46,7 @@
                 <td> <p style="font-weight: bold" > Gruppenmitglieder </p> </td>
             </tr>
             <tr v-for="mitglied in getCurrentProject.gruppenmitglieder" :key="mitglied.id">
-                <td> {{ mitglied.id }} </td>
+                <td> {{ mitglied.username }} </td>
             </tr>
             <tr>
                 <td>  </td>
