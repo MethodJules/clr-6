@@ -138,7 +138,7 @@
             <b-container fluid class="p-0 m-0">
                 <MenueLeiste />
 
-                <b-row class="d-flex flex-wrap mt-3" v-if="!isMobile">
+                <b-row class="page-container">
                     <b-col class="linkeSeite m-0 p-0" md="2">
                         <b-row class="m-0 p-0">
                             <b-col class="m-0">
@@ -171,51 +171,12 @@
                         md="1"
                     >
                         <b-row>
-                            <b-col class="m-0" v-if="!isMobile">
+                            <b-col class="m-0">
                                 <SeitenNavigation />
                             </b-col>
                         </b-row>
                     </b-col>
                     <b-col v-else> </b-col>
-                </b-row>
-                <b-row class="d-flex flex-wrap mt-3" v-if="isMobile">
-                    <!-- Left -->
-                    <div v-if="isMobile">
-                        <b-button v-b-toggle.sidebar-1>></b-button>
-                        <b-sidebar id="sidebar-1" title="Sidebar" shadow>
-                            <div class="px-3 py-2">
-                                <b-row class="m-0 p-0">
-                                    <b-col class="m-0">
-                                        <TodoList />
-                                    </b-col>
-                                </b-row>
-
-                                <b-row>
-                                    <b-col class="d-flex m-0">
-                                        <Kalender />
-                                    </b-col>
-                                </b-row>
-                            </div>
-                        </b-sidebar>
-                    </div>
-                    <!-- Main -->
-                    <b-col class="mainContent m-0 p-0">
-                        <router-view :key="$route.path"></router-view>
-                    </b-col>
-                    <!-- Right -->
-                    <div v-if="isMobile">
-                        <b-button v-b-toggle.sidebar-2> ! </b-button>
-                        <b-sidebar
-                            id="sidebar-2"
-                            title="Seiten Navigation"
-                            shadow
-                            right
-                        >
-                            <div class="px-3 py-2">
-                                <SeitenNavigation />
-                            </div>
-                        </b-sidebar>
-                    </div>
                 </b-row>
                 <!-- 
                 <b-row class="untereLeiste p-4 d-flex align-center">
@@ -359,6 +320,16 @@ export default {
     width: 100% !important;
     margin: 0 !important;
 }
+.page-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1rem !important;
+}
+@media (max-width: 765px) {
+    .page-container {
+        flex-wrap: wrap-reverse !important;
+    }
+}
 
 .linkeSeite {
     min-width: 25rem;
@@ -370,7 +341,7 @@ export default {
 .mainContent {
     padding: 0 !important;
     min-width: 25rem;
-    height: 80vh;
+    height: 90vh;
     width: 100%;
 }
 .postfach {

@@ -63,9 +63,7 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                console.log(response);
                 const phases = response.data.data;
-                console.log(phases)
                 commit('LOAD_PHASES', phases);
 
             })
@@ -390,9 +388,6 @@ const mutations = {
     */
     LOAD_PHASES(state, phases) {
         //  state.phases_this_project = phases
-        console.log(state.phases_this_project)
-
-        console.log(phases)
         let phaseArray = []
         phases.forEach(element => {
 

@@ -4,7 +4,7 @@
             toggleable="lg"
             variant="secondary"
             type="dark"
-            class="py-4"
+            class="navbar-top"
             sticky
         >
             <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
@@ -18,7 +18,7 @@
                 >
             </b-navbar-nav>
 
-            <b-collapse id="nav-text-collapse" is-nav>
+            <b-collapse id="nav-text-collapse" variant="secondary" is-nav>
                 <b-navbar-nav>
                     <b-nav-item to="/profil">Profil</b-nav-item>
                 </b-navbar-nav>
@@ -89,6 +89,9 @@
 }
 .navbar-dark .navbar-brand {
     font-size: 1.6em !important;
+}
+.navbar-top {
+    padding: 1rem;
 }
 </style>
 <script>
