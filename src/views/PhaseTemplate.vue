@@ -2,7 +2,9 @@
     <div id="phase">
         <b-container fluid>
             <!-- gibt an in welcher Phase man sich befindet -->
+
             <b-row class="mb-4">
+
                 <b-col cols="10">
                     <h2>Gruppe Bilden</h2>
                     <!-- <h2>{{ phaseId }}</h2>
@@ -37,11 +39,13 @@
     </div>
 </template>
 <script>
+
 import InputDocuments from "@/components/InputDocuments.vue";
 import DocumentationField from "@/components/DocumentationField.vue";
 import UsedTools from "@/components/UsedTools.vue";
 import OutputDocuments from "@/components/OutputDocuments.vue";
 import Assistent from "@/components/Assistent.vue";
+
 
 export default {
     //props: {
@@ -63,7 +67,10 @@ export default {
         DocumentationField,
         UsedTools,
         OutputDocuments,
-        Assistent,
+
+        Assistent
+
+
     },
 
     computed: {
@@ -75,9 +82,11 @@ export default {
     },
 
     async mounted() {
+
         this.$store.dispatch("phases/loadSinglePhaseFromState", {
             phaseId: this.$route.params.phase_id,
         });
+
 
         console.log(this.$store.state.phases);
     },

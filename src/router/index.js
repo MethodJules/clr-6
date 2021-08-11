@@ -98,7 +98,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
     },
     {
-        path: '/projectList',
+        path: '/',
         name: 'ProjectList',
         component: () => import(/*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
     },

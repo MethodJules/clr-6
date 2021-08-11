@@ -43,6 +43,7 @@ export default {
             ],
         };
     },
+
     methods: {
         deletePostfach(postfach) {
             //Löschen einer Benachrichtigung
@@ -51,6 +52,7 @@ export default {
 
             this.$store.dispatch("postfach/deletePostfach", postfach);
         },
+
     },
     //Die in der Datenbank gespeicherten Benachrichtigungen werden hiermit aufgelistet
     mounted() {

@@ -1,4 +1,5 @@
 <template>
+
     <div>
         <b-navbar
             toggleable="lg"
@@ -9,6 +10,7 @@
         >
             <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
             <b-navbar-brand>CLR Tool</b-navbar-brand>
+
             <b-navbar-nav>
                 <b-nav-item to="/">
                     <b-icon icon="house-fill" to="/"
@@ -16,6 +18,7 @@
                     </b-icon></b-nav-item
                 >
             </b-navbar-nav>
+
             <b-collapse id="nav-text-collapse" is-nav>
                 <b-navbar-nav>
                     <b-nav-item to="/profil">Profil</b-nav-item>
@@ -49,9 +52,11 @@
                     </b-navbar-nav>
                 </template>
 
+
                 <b-navbar-nav>
                     <b-nav-item to="/settings">Einstellungen</b-nav-item>
                 </b-navbar-nav>
+
 
                 <b-navbar-nav v-if="!startpage">
                     <b-input-group size="sm" class="mb-2">
@@ -80,6 +85,7 @@
             </b-navbar-nav>
         </b-navbar>
     </div>
+
 </template>
 <style scoped>
 .navbar-dark .navbar-nav .nav-link {
@@ -94,6 +100,7 @@
 </style>
 <script>
 export default {
+
     data() {
         return {
             schlagwort: "Hallo",
@@ -111,6 +118,7 @@ export default {
         startpage() {
             return this.$route.name === "ProjectList";
         },
+
     },
 };
 </script>

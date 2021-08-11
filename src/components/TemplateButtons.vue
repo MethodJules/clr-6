@@ -44,6 +44,7 @@
                                 v-model="newTodo"
                                 @keyup.enter="addTodo"
                             />
+
                         </div>
                         <div class="border"></div>
                     </div>

@@ -12,7 +12,7 @@
         <b-row>
           <b-col>
             <table>
-              <tr v-for="project in projectList" :key="project.id">
+              <tr v-for="project in getProjectlist" :key="project.id">
                 <b-card style="max-height: 20rem">
                   <b-col>
                     <b-row>
@@ -83,20 +83,9 @@ export default {
 
         idd: "",
         title: "",
-        /* TODO: array in backend dafür machen schlagwörter: [],
-        TODO: array in backend dafür machen betreuenderDozent: [],
-        TODO: array in backend dafür machen externeMitwirkende: [], */
       },
 
-      projectList: [
-        {
-          title: "Testtitel",
-          kurzbeschreibung: "Dies ist nur eine Kurzbeschreibung",
-          betreuenderDozent: "Julien, Maren",
-          externeMitwirkende: "Nithusha, Aylin",
-          schlagworter: ["test, projektliste, projekte"],
-        },
-      ],
+      projectList: this.getProjectlist,
     };
   },
 
@@ -120,6 +109,9 @@ computed:{
     getUserID() {
      // return true
       return this.$store.state.sparky_api.drupalUserID
+    },
+    getProjectlist(){
+      return this.$store.state.project.myProjects;
     }
 
 },
@@ -131,8 +123,8 @@ computed:{
     
   }, */
   async mounted() {
-    //this.$store.dispatch("project/loadProjectsFromBackend");
-    this.projectList = this.$store.state.project.myProjects;
+    this.$store.dispatch("project/loadProjectsFromBackend");
+    //this.projectList = this.$store.state.project.myProjects;
     console.log(this.projectList);
     console.log("mount projectList");
   },

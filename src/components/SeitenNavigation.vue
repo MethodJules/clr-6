@@ -1,4 +1,5 @@
 <template>
+
     <div>
         <b-link
             v-for="(phase, i) in phasen"
@@ -17,6 +18,7 @@
 
         <SeitenNavigationButtons @statusChange="changeStatus($event)" />
     </div>
+
 </template>
 <script>
 import SeitenNavigationButtons from "@/components/SeitenNavigationButtons.vue";

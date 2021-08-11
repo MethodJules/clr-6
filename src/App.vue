@@ -138,6 +138,7 @@
             <b-container fluid class="p-0 m-0">
                 <MenueLeiste />
 
+
                 <b-row class="d-flex flex-wrap mt-3" v-if="!isMobile">
                     <b-col class="linkeSeite m-0 p-0" md="2">
                         <b-row class="m-0 p-0">
@@ -234,6 +235,7 @@ import Kalender from "@/components/Kalender.vue";
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
+
     props: {
         showRightMenu: Boolean,
     },
@@ -245,6 +247,7 @@ export default {
         TodoList,
         MenueLeiste,
         Kalender,
+
     },
     data() {
         return {
@@ -260,6 +263,7 @@ export default {
             },
         };
     },
+
     methods: {
         registrieren() {
             this.$store.dispatch("sparky_api/registrate", {
@@ -325,6 +329,7 @@ export default {
             return this.$store.state.sparky_api.account;
         },
 
+
         validCredential() {
             // return true;
             // When we login, it breaks the z-circle at the main page.
@@ -340,6 +345,7 @@ export default {
         },
     },
 
+
     mounted() {
         //this.$store.dispatch("todo/loadToDoFromBackend");
         this.listOfToDos = this.$store.state.todo.listOfToDos;
@@ -348,6 +354,7 @@ export default {
         // this problem occurs the commits that we use push in it.
         // When we set values then it brings again but it seems that nothing has changed in the page.
     },
+
 };
 </script>
 <style>

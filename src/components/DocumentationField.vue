@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <b-container>
             <b-row class="#f8f9fa">
                 <!-- <h2><b-badge >Dokumentation</b-badge></h2> -->
@@ -18,6 +19,7 @@
             </b-row>
         </b-container>
     </div>
+
 </template>
 <script>
 import TemplateButtons from "./TemplateButtons.vue";
@@ -40,6 +42,15 @@ export default {
             return true;
         },
     },
+
+  computed:{
+    getDocumentation() {
+      console.warn(this.$store.state.phases.current_phase.documentationText)
+      return this.$store.state.phases.current_phase.documentationText
+    }
+
+  },
+
     async mounted() {
         await this.$store.dispatch("documentation/loadDocusFromBackend");
         const doc = this.$store.state.documentation.documentations;
