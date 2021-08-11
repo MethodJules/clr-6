@@ -1,5 +1,4 @@
 <template>
-
     <div>
         <b-navbar
             toggleable="lg"
@@ -47,16 +46,11 @@
                             >Gruppenmanagement</b-nav-item
                         >
                     </b-navbar-nav>
-                    <b-navbar-nav>
-                        <b-nav-item to="/concept">Concept</b-nav-item>
-                    </b-navbar-nav>
                 </template>
-
 
                 <b-navbar-nav>
                     <b-nav-item to="/settings">Einstellungen</b-nav-item>
                 </b-navbar-nav>
-
 
                 <b-navbar-nav v-if="!startpage">
                     <b-input-group size="sm" class="mb-2">
@@ -85,7 +79,6 @@
             </b-navbar-nav>
         </b-navbar>
     </div>
-
 </template>
 <style scoped>
 .navbar-dark .navbar-nav .nav-link {
@@ -100,7 +93,6 @@
 </style>
 <script>
 export default {
-
     data() {
         return {
             schlagwort: "Hallo",
@@ -118,7 +110,6 @@ export default {
         startpage() {
             return this.$route.name === "ProjectList";
         },
-
     },
 };
 </script>

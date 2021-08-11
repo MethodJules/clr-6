@@ -16,16 +16,7 @@ const routes = [
         name: 'Search',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Search.vue')
     },
-    {
-        path: '/concept',
-        name: 'Concept',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Concept.vue')
-    },
-    {
-        path: '/newconcept',
-        name: 'NewConcept',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewConcept.vue')
-    },
+
     {
         path: '/analysis',
         name: 'Analysis',
@@ -182,28 +173,5 @@ router.beforeEach((to, from, next) => {
 
 })
 
-
-/* router.beforeEach((to, from, next) => {
-    // check if route requires Login 
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        console.log("in")
-
-        // check if user is logged in 
-        if (localStorage.getItem("userLoggedIn") != null) {  
-            console.log(localStorage.getItem("userLoggedIn"))       
-            next()
-        } else {
-            alert("Login erforderlich")
-            console.log("in")
-
-            next({name: 'App'})
-        }
-
-       
-    } else {
-        next();
-    }
-
-}) */
 
 export default router
