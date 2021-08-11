@@ -70,6 +70,11 @@ const routes = [
         name: 'Review',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Review.vue')
     },
+    { // At the begining, it is called
+        path: '/',
+        name: '',
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
+    },
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
@@ -87,7 +92,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
     },
     {
-        path: '/phasetemplate/:phase_id:project_id',
+        path: '/phasetemplate',
         name: 'PhaseTemplate',
         //props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
@@ -160,7 +165,8 @@ router.beforeEach((to, from, next) => {
 
         // check if user is logged in 
         if (localStorage.getItem("userLoggedIn") != null) {  
-            console.log(localStorage.getItem("userLoggedIn"))       
+            console.log(localStorage.getItem("userLoggedIn")) 
+          
             next()
         } else {
             alert("Login erforderlich")

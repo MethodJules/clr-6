@@ -10,8 +10,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Chat from 'vue-beautiful-chat'
 import zircle from 'zircle'
 import 'zircle/dist/zircle.css'
-import Vuelidate from 'vuelidate'
 import Filters from './store/tools/Filters.js'
+import Vuelidate from 'vuelidate'
 import VCalendar from 'v-calendar'
 
 
