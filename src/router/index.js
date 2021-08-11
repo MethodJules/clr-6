@@ -61,11 +61,6 @@ const routes = [
         name: 'Review',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Review.vue')
     },
-    { // At the begining, it is called
-        path: '/',
-        name: '',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
-    },
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
@@ -77,11 +72,7 @@ const routes = [
         name: 'NewMember',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
     },
-    {
-        path: '/dailyscrum',
-        name: 'TabelleDaily',
-        component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/TabelleDaily.vue')
-    },
+  
     {
         path: '/phasetemplate',
         name: 'PhaseTemplate',

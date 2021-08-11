@@ -1,11 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import items from './modules/items'
-import concepts from './modules/concepts'
-import concept_map from './modules/concept_map'
 import sourceData from '@/data.json'
 import members from './modules/members'
-import daily_scrum from './modules/daily_scrum'
 import reflexion from './modules/reflexion'
 import documentation from './modules/documentation'
 import tool from './modules/tool'
@@ -26,11 +23,8 @@ Vue.config.devtools = true
 export default new Vuex.Store({
     modules: {
        items,
-       concepts,
        project,
-       concept_map,
        members,
-       daily_scrum,
        reflexion,
        documentation,
        tool,
