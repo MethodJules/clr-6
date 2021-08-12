@@ -6,7 +6,7 @@
       <ReviewCircle> </ReviewCircle>
     </z-canvas>
     <ReflexionAuswahl />
-    {{getProjectID}}
+    {{ getProjectID }}
   </div>
 </template>
 
@@ -15,27 +15,22 @@ import ReviewCircle from "@/components/ReviewCircle.vue";
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 export default {
   name: "Home",
-  data(){
-    return{
-          projectId: this.$route.params.project_id,
-
-    }
+  data() {
+    return {
+      projectId: this.$route.params.project_id,
+    };
   },
   components: {
     ReviewCircle,
     ReflexionAuswahl,
   },
   computed: {
-    getUserID(){
-      return this.$route.params.user_id
+    getUserID() {
+      return this.$route.params.user_id;
     },
-    getProjectID(){
-      return this.$route.params.project_id
-    }
-
-    
-    
-
+    getProjectID() {
+      return this.$route.params.project_id;
+    },
   },
   mounted() {
     this.$zircle.config({
@@ -47,13 +42,13 @@ export default {
 
     this.$zircle.setView("ReviewCircle");
 
-        this.$store.dispatch('phases/loadPhasesFromBackend', {
-        projectId: this.$route.params.project_id
-      })
+    this.$store.dispatch(
+      "phases/loadPhasesFromBackend",
+      this.$route.params.project_id
+    );
 
-          this.$store.dispatch('project/loadCurrentProject', this.projectId)
-  //To DO: Load all phases for this project with projectid and put it in state. click on specific phase loads the respective phase from the state
-
+    this.$store.dispatch("project/loadCurrentProject", this.projectId);
+    //To DO: Load all phases for this project with projectid and put it in state. click on specific phase loads the respective phase from the state
   },
 };
 </script>

@@ -49,7 +49,7 @@ const actions = {
     * @param commit commit us used to call a mutation from this function
     * @param state state as parameter for access and manipulation of state data
     */
-    async loadPhasesFromBackend({ commit, state, rootState }, { projectId }) {
+    async loadPhasesFromBackend({ commit, state, rootState }, projectId) {
         console.log(state)
         var config = {
             method: 'get',
@@ -94,36 +94,36 @@ const actions = {
 
     },
 
-        async loadSinglePhaseFromBackend({ commit, state, rootState }, { projectId, phaseId }) {
-            console.log(phaseId)
-            console.log(state)
-            var config = {
-                method: 'get',
-                url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
-                headers: {
-                    'Accept': 'application/vnd.api+json',
-                    'Content-Type': 'application/vnd.api+json',
-                    'Authorization': rootState.drupal_api.authToken,
-                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
-                },
-            };
-            axios(config)
-                .then(function (response) {
-                    console.log(response);
-                    const currentPhase = response.data.data;
-                    commit('LOAD_SINGLE_PHASE', { currentPhase });
-    
-                })
-                .catch(function (error) {
-                    console.log(error)
-                })
-    
+    async loadSinglePhaseFromBackend({ commit, state, rootState }, { projectId, phaseId }) {
+        console.log(phaseId)
+        console.log(state)
+        var config = {
+            method: 'get',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+        };
+        axios(config)
+            .then(function (response) {
+                console.log(response);
+                const currentPhase = response.data.data;
+                commit('LOAD_SINGLE_PHASE', { currentPhase });
 
-        },
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
 
 
+    },
 
-    
+
+
+
 
 
 
@@ -435,11 +435,11 @@ const mutations = {
                 projektId: element.relationships.field_projektid.data.id
             }
             // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
-            currentPhaseFlattened= phaseObject
+            currentPhaseFlattened = phaseObject
         })
         state.current_phase = currentPhaseFlattened
         console.log(currentPhaseFlattened)
-            
+
     }
 }
 

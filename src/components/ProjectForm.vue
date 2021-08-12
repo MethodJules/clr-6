@@ -44,26 +44,30 @@
             <tr>
               <td>
                 <div>
-
-
-<!-- simple list instead of simplesuggest -> map name to id 
+                  <!-- simple list instead of simplesuggest -> map name to id 
 TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
 -->
-  
-  <select v-model="project.betreuenderDozent" class="form-control">
-  <option v-for="lecturer in getLecturers" v-bind:value="lecturer.uuid" v-bind:key="lecturer.uuid">
-    {{ lecturer.name }}
-  </option>
-</select>
-<span>Selected: {{ project.betreuenderDozent }}</span>
 
-<!-- <select v-model="selected">
+                  <select
+                    v-model="project.betreuenderDozent"
+                    class="form-control"
+                  >
+                    <option
+                      v-for="lecturer in getLecturers"
+                      v-bind:value="lecturer.uuid"
+                      v-bind:key="lecturer.uuid"
+                    >
+                      {{ lecturer.name }}
+                    </option>
+                  </select>
+                  <span>Selected: {{ project.betreuenderDozent }}</span>
+
+                  <!-- <select v-model="selected">
   <option v-for="option in options" v-bind:value="option.value" v-bind:key="option.value">
     {{ option.text }}
   </option>
 </select>
 <span>Selected: {{ selected }}</span> -->
-
 
                   <span
                     v-if="
@@ -73,7 +77,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                     class="text-danger"
                     >Dozent is required!</span
                   >
-<!--                   <span
+                  <!--                   <span
                     v-if="
                       !$v.project.betreuenderDozent.alpha &&
                       $v.project.betreuenderDozent.$dirty
@@ -179,14 +183,16 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
         >
       </div>
       <div v-else>
-<!--         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>{{getLecturers}}</b-button> -->
-                <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>+</b-button>
+        <!--         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>{{getLecturers}}</b-button> -->
+        <b-button @click="showThisModal()" size="lg" v-b-modal.create_project
+          >+</b-button
+        >
       </div>
     </div>
   </div>
 </template>
 <script>
-import { required, minLength, /* alpha */ } from "vuelidate/lib/validators";
+import { required, minLength /* alpha */ } from "vuelidate/lib/validators";
 import VueSimpleSuggest from "vue-simple-suggest";
 import "vue-simple-suggest/dist/styles.css";
 export default {
@@ -203,11 +209,9 @@ export default {
         suggestions: "position-absolute list-group z-1000",
         suggestItem: "list-group-item",
       },
-      
-      
-      
+
       /*selected and options for list. geht async?*/
-/*       selected: 'A',
+      /*       selected: 'A',
     options: [
       { text: 'One', value: 'A' },
       { text: 'Two', value: 'B' },
@@ -316,44 +320,40 @@ export default {
       return this.$store.state.sparky_api.lecturers;
     },
 
-        simpleSuggestionListLecturers2() {
-          console.log(this.$store.state.user.lecturers)
+    simpleSuggestionListLecturers2() {
+      console.log(this.$store.state.user.lecturers);
       return this.$store.state.user.lecturers;
     },
-    
+
     inProjektbeschreibung() {
       console.log(this.$route.name);
       return this.$route.name === "Projektbeschreibung";
     },
 
+    getLecturers() {
+      console.log(this.$store.getters.getLecturers);
+      console.log(this.$store);
+      console.log(this.$store.getters);
+      console.log(this.$store.getters["user/getLecturers"]);
 
-  getLecturers(){
-    console.log(this.$store.getters.getLecturers)
-    console.log(this.$store)
-    console.log(this.$store.getters)
-    console.log(this.$store.getters['user/getLecturers'])
-    
-    return this.$store.getters['user/getLecturers']
+      return this.$store.getters["user/getLecturers"];
+    },
+
+    getStudents() {
+      console.log(this.$store.getters.getStudents);
+      console.log(this.$store);
+      console.log(this.$store.getters);
+      console.log(this.$store.getters["user/getStudents"]);
+
+      return this.$store.getters["user/getStudents"];
+    },
   },
-
-    getStudents(){
-    console.log(this.$store.getters.getStudents)
-    console.log(this.$store)
-    console.log(this.$store.getters)
-    console.log(this.$store.getters['user/getStudents'])
-    
-    return this.$store.getters['user/getStudents']
-  },
-
-  },
-  mounted(){
-
+  mounted() {
     this.$store.dispatch("user/loadLecturersFromBackend");
     this.$store.dispatch("user/loadStudentsFromBackend");
     this.$store.dispatch("profile/loadUserFromBackend");
-    console.log(this.$store.state.user.lecturers)
-    console.log(this.$store.state.user.students)
-
-  }
+    console.log(this.$store.state.user.lecturers);
+    console.log(this.$store.state.user.students);
+  },
 };
 </script>

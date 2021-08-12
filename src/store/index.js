@@ -19,7 +19,7 @@ import postfach from './modules/postfach'
 import sparky_api from './modules/sparky_api'
 import drupal_api from './modules/drupal_api'
 import user from './modules/user'
-import profile from './modules/profile' 
+import profile from './modules/profile'
 
 
 Vue.use(Vuex)
@@ -27,25 +27,25 @@ Vue.config.devtools = true
 
 export default new Vuex.Store({
     modules: {
-       items,
-       concepts,
-       project,
-       concept_map,
-       members,
-       daily_scrum,
-       reflexion,
-       documentation,
-       tool,
-       todo,
-       assistent,
-       phases,
-       output_documents,
-       postfach,
+        items,
+        concepts,
+        project,
+        concept_map,
+        members,
+        daily_scrum,
+        reflexion,
+        documentation,
+        tool,
+        todo,
+        assistent,
+        phases,
+        output_documents,
+        postfach,
         sparky_api,
-       inputDocuments,
-       drupal_api,
-       user,
-       profile
+        inputDocuments,
+        drupal_api,
+        user,
+        profile
     },
 
     //noch in Datei packen
