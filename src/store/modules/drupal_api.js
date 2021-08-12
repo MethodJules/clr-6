@@ -138,6 +138,11 @@ const actions= {
         });
     },
 
+   async loadTokensfromSessionStorage({commit}){
+
+    commit('LOAD_TOKEN_SESSION_STORAGE')
+   },
+
 
             /**
      * Connects to the Drupal Backend and request a login
@@ -189,6 +194,7 @@ const actions= {
 const mutations ={
 
     SAVE_BASIC_AUTH_TOKEN(state, authorization_token){
+        sessionStorage.setItem("auth_token", authorization_token);
         state.authToken=authorization_token
     },
 
@@ -221,6 +227,11 @@ const mutations ={
      * @param {*} token 
      */
     SAVE_LOGIN_USER(state, login_data) {
+        sessionStorage.setItem("csrf_token", login_data.csrf_token);
+        sessionStorage.setItem("logout_token", login_data.logout_token);
+        sessionStorage.setItem("valid_credentials", "true");
+        sessionStorage.setItem('current_user', JSON.stringify(login_data.current_user));
+        //sessionStorage.setItem("current_user", login_data.current_user);
         state.csrf_token = login_data.csrf_token;
         state.user = login_data.current_user;
         state.logout_token = login_data.logout_token;
@@ -231,9 +242,32 @@ const mutations ={
     
         },
 
-        SAVE_LOGOUT_USER(state) {
+        LOAD_TOKEN_SESSION_STORAGE(state) {
+        if(sessionStorage.getItem("valid_credentials")=="true"){
+            state.validCredential=true;
+            state.csrf_token = sessionStorage.getItem("csrf_token");
+            state.logout_token = sessionStorage.getItem("logout_token");
+            state.authToken = sessionStorage.getItem("auth_token");
+            state.user = JSON.parse(sessionStorage.getItem('current_user'));
+            console.log(state.user)
+            console.log(JSON.parse(sessionStorage.getItem('current_user')))
+           //state.user= sessionStorage.getItem("current_user");
 
+        }
+       // return true
+
+            },
+
+
+
+        SAVE_LOGOUT_USER(state) {
             state.validCredential=false;
+            sessionStorage.removeItem("csrf_token");
+            sessionStorage.removeItem("logout_token");
+            sessionStorage.removeItem("valid_credentials");
+            sessionStorage.removeItem("current_user");
+            sessionStorage.removeItem("auth_token");
+
         
             },
 

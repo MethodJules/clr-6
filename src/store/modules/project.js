@@ -112,6 +112,8 @@ const actions = {
             projEntry.gruppenadmin= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
             //"field_schlagworter": `${keywords}`,
             //drupal_internal__uid
+            //user id of currently logged in user
+            let userID= rootState.profile.userData.idd
             console.log(keywords)
 
             var data = `{
@@ -133,14 +135,14 @@ const actions = {
                     "field_gruppenadministrator": {
                       "data": {
                         "type": "user--user",
-                        "id": "${projEntry.gruppenadmin}"
+                        "id": "${userID}"
                       }
                     },
                     "field_gruppenmitglieder": {
                       "data": {
                         "0": {
                           "type": "user--user",
-                          "id": "${projEntry.gruppenadmin}"
+                          "id": "${userID}"
                         }
                       }
                     }
@@ -179,6 +181,7 @@ const actions = {
         },
 
     updateProject({commit, rootState}, projEntry) {
+      let userID= rootState.profile.userData.idd
         console.log(projEntry)
 
         //let index = state.myProjects.indexOf(projEntry);
@@ -206,14 +209,14 @@ const actions = {
             "field_gruppenadministrator": {
               "data": {
                 "type": "user--user",
-                "id": "${projEntry.gruppenadmin}"
+                "id": "${userID}"
               }
             },
             "field_gruppenmitglieder": {
               "data": {
                 "0": {
                   "type": "user--user",
-                  "id": "${projEntry.gruppenadmin}"
+                  "id": "${userID}"
                 }
               }
             }

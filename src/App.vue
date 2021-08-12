@@ -298,7 +298,9 @@ export default {
 
   mounted() {
     //this.$store.dispatch("todo/loadToDoFromBackend");
+    this.$store.dispatch('drupal_api/loadTokensfromSessionStorage');
     this.listOfToDos = this.$store.state.todo.listOfToDos;
+
     // we need to take some values one time from database.
     // When we take them in cpomponent mounted or created, it brings the values every time we renew the component.
     // this problem occurs the commits that we use push in it.

@@ -350,6 +350,7 @@ export default {
 
     this.$store.dispatch("user/loadLecturersFromBackend");
     this.$store.dispatch("user/loadStudentsFromBackend");
+    this.$store.dispatch("profile/loadUserFromBackend");
     console.log(this.$store.state.user.lecturers)
     console.log(this.$store.state.user.students)
 
