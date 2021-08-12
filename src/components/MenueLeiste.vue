@@ -20,6 +20,7 @@
 
             <b-collapse id="nav-text-collapse" variant="secondary" is-nav>
                 <b-navbar-nav>
+                    <!-- Es gibt kein Profil in router.. -->
                     <b-nav-item to="/profil">Profil</b-nav-item>
                 </b-navbar-nav>
 

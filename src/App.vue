@@ -93,7 +93,7 @@
                                                             v-model="
                                                                 zugangsKennung
                                                             "
-                                                            id="zugangskennung"
+                                                            id="zugangskennung2"
                                                             type="text"
                                                             placeholder=""
                                                             class="form-control"
@@ -111,7 +111,7 @@
                                                     <td>
                                                         <input
                                                             v-model="passwort"
-                                                            id="password"
+                                                            id="password2"
                                                             type="password"
                                                             placeholder=""
                                                             class="
@@ -288,17 +288,11 @@ export default {
         },
 
         validCredential() {
-            return true;
+            // return true;
             // When we login, it breaks the z-circle at the main page.
             // Zircle is hidden when we double click outside of the zcircle
             // return this.$store.state.sparky_api.validCredential;
-        },
-        isMobile() {
-            if (window.innerWidth < 1023) {
-                return true;
-            } else {
-                return false;
-            }
+            return this.$store.state.drupal_api.validCredential;
         },
     },
 
