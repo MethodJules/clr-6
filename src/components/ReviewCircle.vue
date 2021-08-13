@@ -46,19 +46,15 @@ export default {
         return {
             elements: [
                 {
-                    angle: 270,
+                    angle: 295,
                     label: "Gruppe Bilden",
                     text: "Vorbereitung der Zusammenarbeit",
                     done: false,
-                    text2: "Abschluss der Zusammenarbeit",
-                    label2: "Gruppe auflösen",
                     labelPosition: "top",
-                    id: "gruppeBilden",
                     iconType: "people",
-                    iconType2: "columns-gap",
                 },
                 {
-                    angle: 321.42,
+                    angle: 336.42,
                     label: "Ziel und Umfang definieren",
                     text: "Forschungsfrage, Artefakt und Umfang",
                     done: false,
@@ -66,7 +62,7 @@ export default {
                     iconType: "signpost-split",
                 },
                 {
-                    angle: 12.84,
+                    angle: 17.84,
                     label: "Konzepte & Definition identifizieren",
                     text: "Konzepte, Domänen und working definitions",
                     done: false,
@@ -88,7 +84,7 @@ export default {
                     iconType: "arrow-left-right",
                 },
                 {
-                    angle: 167.1,
+                    angle: 162.1,
                     label: "Literatur analysieren & synthetisieren",
                     text: "Codingschema und Volltextanalyse",
                     done: false,
@@ -97,19 +93,21 @@ export default {
                 },
 
                 {
-                    angle: 218.52,
+                    angle: 203.52,
                     label: "Ergebnisse kommunizieren",
                     text: "Ergebnisaufbereitung und -verbreitung",
                     done: false,
                     labelPosition: "left",
                     iconType: "card-checklist",
                 },
-                /*
-                    {
-                        type: 'mode', angle: 270, label: 'Gruppe auflösen', labelPos: 'left4',
-                        text: 'Abschluss der Zusammenarbeit', textPos: 'leftText4', done: false
-                    },
-                    */
+                {
+                    angle: 245,
+                    label: "Gruppe Auflösen",
+                    text: "Abschluss der Zusammenarbeit",
+                    done: false,
+                    labelPosition: "top",
+                    iconType: "columns-gap",
+                },
             ],
         };
     },
@@ -133,11 +131,6 @@ export default {
             if (changeColor) {
                 console.log(changeColor);
                 el.done = true;
-                if (el.label == "Gruppe Bilden") {
-                    el.label = "Gruppe Auflösen";
-                    el.text = "Abschluss der Zusammenarbeit";
-                    el.iconType = "columns-gap";
-                }
             }
         },
     },

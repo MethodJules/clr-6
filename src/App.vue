@@ -284,11 +284,11 @@ export default {
         },
 
         validCredential() {
-            // return true;
+            return true;
             // return this.$store.state.sparky_api.validCredential;
             // When we login, it breaks the z-circle at the main page.
             // Zircle is hidden when we double click outside of the zcircle
-            return this.$store.state.drupal_api.validCredential;
+            // return this.$store.state.drupal_api.validCredential;
         },
     },
 
