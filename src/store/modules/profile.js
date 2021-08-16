@@ -2,10 +2,10 @@ import axios from 'axios';
 
 
 const state = () => ({
-   
+
     /* Here we initialize an empty dataobject for profileData and userData, because we don't use here arrays for these data.
     We need only a dataobject for one profile of one user, in order to store it */
-    profileData: {} ,
+    profileData: {},
     userData: {}
 
 })
@@ -14,7 +14,7 @@ const actions = {
 
     /* We load the Userdata from backend by filtering the drupalUserUID to get the userdata of the right user */
 
-    async loadUserFromBackend({commit, state, rootState}) {
+    async loadUserFromBackend({ commit, state, rootState }) {
         console.log(state)
         console.log("hallo")
         console.log(rootState.sparky_api.sparkyUserID)
@@ -35,21 +35,21 @@ const actions = {
         };
 
         axios(config)
-            .then(function(response){
+            .then(function (response) {
                 console.log(response)
                 console.log(response);
-                console.log("es lfniosdn") 
+                console.log("es lfniosdn")
                 console.log(rootState.sparky_api.validCredential)
-                console.log(rootState.sparky_api.drupalUserID) 
+                console.log(rootState.sparky_api.drupalUserID)
                 const profiles = response.data.data;
-                commit('SAVE_USER', {profiles});
+                commit('SAVE_USER', { profiles });
 
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
-    
-            
+
+
     },
 
     /* We load the Profiledata from backend by filtering the drupalUserUID to get the right profile of the user which belongs to the 
@@ -58,8 +58,8 @@ const actions = {
     In the backend we add an field called field_user_uid for entering the user uid which is 24 for the testacc user and with that, we 
     can get the right profile data of testacc user filtered by the drupalUserUID = 24 in this case*/
 
-   
-    async loadProfileFromBackend({commit, state, rootState}) {
+
+    async loadProfileFromBackend({ commit, state, rootState }) {
         console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
 
@@ -75,26 +75,26 @@ const actions = {
         };
 
         axios(config)
-            .then(function(response){
+            .then(function (response) {
                 console.log(response)
                 console.log(response);
-                console.log("es lfniosdn") 
+                console.log("es lfniosdn")
                 console.log(rootState.sparky_api.validCredential)
-                console.log(rootState.sparky_api.drupalUserID) 
+                console.log(rootState.sparky_api.drupalUserID)
                 const profiles = response.data.data;
-                commit('SAVE_PROFILE', {profiles});
+                commit('SAVE_PROFILE', { profiles });
 
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
-            
-                       
-    }, 
+
+
+    },
 
     /* saves the profile with the date fields in the backend  */
 
-    createProfile({state, rootState}, profile) {
+    createProfile({ state, rootState }, profile) {
         console.log(profile)
         console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
@@ -102,7 +102,7 @@ const actions = {
         var title = "Profil"
         var data = `{
             "data": {
-                "type": "node--profil", 
+                "type": "user--profil", 
                 "attributes": {
                     "title": "${title}",
                     "field_studiengang": "${profile.studiengang}", 
@@ -130,28 +130,31 @@ const actions = {
         };
 
         axios(config)
-        .then(function(response){
-            console.log(response)
-            console.log(response);
-            
+            .then(function (response) {
+                console.log(response)
+                console.log(response);
 
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
+
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
 
 
     },
 
 
-    uploadImage ({commit, state, rootState}) {
-        const buffer = "abc";
+    async uploadImage({ dispatch, state, rootState }, image) {
+        //const buffer = "abc";
+        console.log(image)
+        const base64ImageData = await fetch(image);
+        const binaryImageData = await base64ImageData.blob();
         /* const buffer = storedFile.Body; */
         console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
-        var filename = "file"
+        var filename = "file2.jpg"
         console.log(drupalUserUID)
-        
+
 
         var config = {
             method: 'post',
@@ -162,47 +165,96 @@ const actions = {
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
                 'Content-Disposition': 'file; filename="' + filename + '"',
-                
+
             },
-            data: Buffer.from(buffer, "binary")
-            
+            data: binaryImageData
+
         };
-        
+
 
         axios(config)
-            .then(function(response){
-                console.log(response)
+            .then(function (response) {
                 console.log(response);
-                const profiles = response.data.data;
-                
-                commit('SAVE_PROFILE_IMAGE', {profiles});
+                const imageID = response.data.data.id;
+                console.log(imageID)
+
+                dispatch('updateUserdataWithProfileImage', imageID)
+
+
+
 
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
-            
-                       
-    }, 
 
-    
 
-    
-            
-        
+    },
+
+    updateUserdataWithProfileImage({ state, rootState }, imageID) {
+        var userID = rootState.profile.userData.idd
+        //let user = state.userData.idd
+
+
+
+        console.log(state)
+        console.log(imageID)
+        var data = `{
+            "data": {
+                "type": "user--user", 
+                "id": "${userID}",
+                "relationships": {
+                    "user_picture": {
+                        "data": {
+                            "type": "file--file",
+                            "id": "${imageID}"
+                        }
+                    }
+
+                }
+                
+            }
+        }`;
+
+        var config = {
+            method: 'patch',
+            url: `https://clr-backend.x-navi.de/jsonapi/user/user/${userID}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+
+
+        };
+
+        axios(config)
+            .then(function (response) {
+
+                console.log(response);
+
+
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
+    },
 
 
 
     /* makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.idd
     that the backend knows which profile should be exactly updated/overwritten */
 
-    updateProfile({state, rootState}, profile) {
+    updateProfile({ state, rootState }, profile) {
 
         console.log(state)
-        
+
 
         var drupalUserUID = rootState.drupal_api.user.uid
-        
+
         var data = `{
             "data": {
                 "type": "node--profil", 
@@ -237,51 +289,52 @@ const actions = {
         };
 
         axios(config)
-        .then(function(response){
-            console.log(response)
-            console.log(response);
-            
+            .then(function (response) {
+                console.log(response)
+                console.log(response);
 
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
-        
+
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
     },
-    
+
 
 }
 
 const mutations = {
 
-   /* takes all user and filters through all user and puts all relevant data of the user in state.userData
-    * @param profiles all profile existing in the backend
-    * @param drupalUserID id of the user in drupal backend
-    * @param state state as parameter for access and manipulation of state data*/
+    /* takes all user and filters through all user and puts all relevant data of the user in state.userData
+     * @param profiles all profile existing in the backend
+     * @param drupalUserID id of the user in drupal backend
+     * @param state state as parameter for access and manipulation of state data*/
 
-    SAVE_USER(state, {profiles}) {
-        
+    SAVE_USER(state, { profiles }) {
+
         profiles.forEach(element => {
-            
+
             const field_fullname = element.attributes.field_fullname;
             const field_matrikelnummer = element.attributes.field_matrikelnummer;
             const field_id = element.id;
             const field_title = element.attributes.title;
             const mail = element.attributes.mail;
-            let userObject =  {fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail }
+
+            let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail }
 
             state.userData = userObject
-            
+
             //.push(userObject)
-                    
-        
+
+
             //let profileObject = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title   }
             //state.projectList.push(projectObject)
             //state.myProfile.push(profileObject)
-            
-            
-        
-        
+
+
+
+
         });
     },
 
@@ -293,10 +346,10 @@ const mutations = {
     * @param profiles all profile existing in the backend
     * @param drupalUserID id of the user in drupal backend
     * @param state state as parameter for access and manipulation of state data*/
-    
-    
-    SAVE_PROFILE(state, {profiles}) {
-        
+
+
+    SAVE_PROFILE(state, { profiles }) {
+
         profiles.forEach(element => {
             console.log(field_studiengang)
             const field_studiengang = element.attributes.field_studiengang;
@@ -311,14 +364,14 @@ const mutations = {
             const field_profilbild = element.relationships.field_profilbild;
             const field_id = element.id;
             const field_title = element.attributes.title;
-            
 
 
 
-           
+
+
             //state.profileData.push( { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title })
             //console.log(state)         
-        
+
             //let profileObject = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title   }
             //state.projectList.push(projectObject)
             //state.myProfile.push(profileObject)
@@ -326,16 +379,16 @@ const mutations = {
             state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title, profilbild: field_profilbild }
 
 
-            
-            
-        
-        
+
+
+
+
         });
 
 
-    }      
-    
-    
+    }
+
+
 
 }
 
@@ -344,7 +397,7 @@ export default {
     state,
     mutations,
     actions,
-    
+
 }
 
 

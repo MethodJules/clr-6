@@ -206,7 +206,9 @@
                                 }">
                                 
                             </picture-input>  
-                            <button @click="onUpload">Upload</button>
+                            <!-- <input type="file" @change="onFileChanged" accept="image/jpeg,image/png"> -->
+                            <button @click="onUpload">Upload!</button>
+                            
  
                            
 
@@ -244,13 +246,16 @@
   
 import PictureInput from 'vue-picture-input'
 import { required, minLength } from 'vuelidate/lib/validators'
+//import axios from 'axios';
 
 export default {
             
     data() {
         return {
             testButClicked: false,
-            selectedFile: null
+            selectedFile: null,
+            images: [],
+            image: null
 
             /* getProfileData: {
 
@@ -279,8 +284,6 @@ export default {
 
         }
 
-        
-
 
     },
 
@@ -291,25 +294,36 @@ export default {
     
     methods: {
 
-
-
         onFileChanged(image) {
-            this.selectedFile = image.target.files[0]
-           /*  if (image) {
-                console.log('Picture loaded.')
+            //this.selectedFile = image.target.files[0] 
+            
+            if (image) {
+                console.log(image)
                 this.image = image
-            } 
+            }  
 
-            this.$store.dispatch('profile/uploadImage') */
             
 
 
+            
+            
+            
 
         },
 
         onUpload() {
             // upload file
-            this.$store.dispatch('profile/uploadImage')
+           /*  const fd = new FormData();
+            fd.append = ('image', this.selectedFile, this.selectedFile.name)
+            axios.post('https://clr-backend.x-navi.de/jsonapi//media/image/field_media_image', fd)
+                .then(res => {
+                    console.log(res)
+                }) */
+
+                
+            this.$store.dispatch('profile/uploadImage', this.image) 
+            
+            
         },
 
 
