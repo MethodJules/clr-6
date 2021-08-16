@@ -102,7 +102,7 @@ const actions = {
         var title = "Profil"
         var data = `{
             "data": {
-                "type": "node--profil", 
+                "type": "user--profil", 
                 "attributes": {
                     "title": "${title}",
                     "field_studiengang": "${profile.studiengang}", 
@@ -144,12 +144,15 @@ const actions = {
     },
 
 
-    uploadImage({ commit, state, rootState }) {
-        const buffer = "abc";
+    async uploadImage({ dispatch, state, rootState }, image) {
+        //const buffer = "abc";
+        console.log(image)
+        const base64ImageData = await fetch(image);
+        const binaryImageData = await base64ImageData.blob();
         /* const buffer = storedFile.Body; */
         console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
-        var filename = "file"
+        var filename = "file2.jpg"
         console.log(drupalUserUID)
 
 
@@ -164,18 +167,21 @@ const actions = {
                 'Content-Disposition': 'file; filename="' + filename + '"',
 
             },
-            data: Buffer.from(buffer, "binary")
+            data: binaryImageData
 
         };
 
 
         axios(config)
             .then(function (response) {
-                console.log(response)
                 console.log(response);
-                const profiles = response.data.data;
+                const imageID = response.data.data.id;
+                console.log(imageID)
 
-                commit('SAVE_PROFILE_IMAGE', { profiles });
+                dispatch('updateUserdataWithProfileImage', imageID)
+
+
+
 
             })
             .catch(function (error) {
@@ -185,11 +191,57 @@ const actions = {
 
     },
 
+    updateUserdataWithProfileImage({ state, rootState }, imageID) {
+        var userID = rootState.profile.userData.idd
+        //let user = state.userData.idd
 
 
 
+        console.log(state)
+        console.log(imageID)
+        var data = `{
+            "data": {
+                "type": "user--user", 
+                "id": "${userID}",
+                "relationships": {
+                    "user_picture": {
+                        "data": {
+                            "type": "file--file",
+                            "id": "${imageID}"
+                        }
+                    }
+
+                }
+                
+            }
+        }`;
+
+        var config = {
+            method: 'patch',
+            url: `https://clr-backend.x-navi.de/jsonapi/user/user/${userID}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
 
 
+        };
+
+        axios(config)
+            .then(function (response) {
+
+                console.log(response);
+
+
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
+    },
 
 
 
@@ -268,6 +320,7 @@ const mutations = {
             const field_id = element.id;
             const field_title = element.attributes.title;
             const mail = element.attributes.mail;
+
             let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail }
 
             state.userData = userObject
