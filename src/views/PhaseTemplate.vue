@@ -70,8 +70,14 @@ export default {
 
         Assistent
 
+  computed: {
+    xphase() {
+      return this.$store.state.phases.phases.find(
+        (phase) => phase.phase_id === this.$route.params.phase_id
+      );
 
     },
+  },
 
     computed: {
         xphase() {
@@ -87,6 +93,12 @@ export default {
             phaseId: this.$route.params.phase_id,
         });
 
+  async mounted() {
+    //this.$store.dispatch('phases/loadSinglePhaseFromState', {phaseId: this.$route.params.phase_id})
+    this.$store.dispatch("phases/loadSinglePhaseFromBackend", {
+      phaseId: this.$route.params.phase_id,
+      projectId: this.$route.params.project_id,
+    });
 
         console.log(this.$store.state.phases);
     },

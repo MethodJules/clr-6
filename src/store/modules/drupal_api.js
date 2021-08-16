@@ -9,7 +9,7 @@ const state = () => ({
     
     
 })
-const actions= {
+const actions = {
     //TO DO: Check if a user already exists
     
     /*1. session token von drupal holen
@@ -54,7 +54,7 @@ const actions= {
     * @param dispatch dispatch is used to call another action from this function
     * @param rootState rootState allows access to states of other modules in store
     */
-    async createUser({ state, commit, rootState}, {username, password, matrikelnummer}) {
+    async createUser({ state, commit, rootState }, { username, password, matrikelnummer }) {
         //await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
         var sparkyUserObject = rootState.sparky_api.sparkyUserObject
         console.log(rootState.sparky_api.sparkyUserID)
@@ -69,11 +69,11 @@ const actions= {
         const data = JSON.stringify ({      
             'name': {'value': `${sparkyUserObject.data.username}`},
             //'name': {'value': `${username}`},
-            'mail': {'value': `${sparkyUserObject.data.email}`},
-            'pass': {'value': `${password}`},
+            'mail': { 'value': `${sparkyUserObject.data.email}` },
+            'pass': { 'value': `${password}` },
             //'field_sparky_id': {'value': `${sparkyUserObject.data.id}`},
-            'field_fullname': {'value': `${sparkyUserObject.data.displayName}`},
-            'field_matrikelnummer': {'value': `${matrikelnummer}`},
+            'field_fullname': { 'value': `${sparkyUserObject.data.displayName}` },
+            'field_matrikelnummer': { 'value': `${matrikelnummer}` },
             //'field_matrikelnummer': {'value': `12345`},
             //'field_matrikelnummer': {'value': `${sparkyUserObject.data.matrNr}`},
         })
@@ -114,7 +114,7 @@ const actions= {
             url: url,
             headers: {
                 'Accept': 'application/vnd.api+json',
-                'Content-Type':'application/vnd.api+json'
+                'Content-Type': 'application/vnd.api+json'
             },
             withCredentials: true,
             data: data
@@ -132,13 +132,18 @@ const actions= {
             console.log(error)
         });
     },
-    
-    
+
+    async loadTokensfromSessionStorage({ commit }) {
+
+        commit('LOAD_TOKEN_SESSION_STORAGE')
+    },
+
+
     /**
-    * Connects to the Drupal Backend and request a login
-    * The Backend will give csrf_token a logout token and a current_user object
-    */
-    async logoutDrupal({commit, rootState}) {
+* Connects to the Drupal Backend and request a login
+* The Backend will give csrf_token a logout token and a current_user object
+*/
+    async logoutDrupal({ commit, rootState }) {
         console.log(rootState.drupal_api.csrf_token)
         console.log(rootState.drupal_api.logout_token)
         console.log(state.logout_token)
@@ -149,35 +154,43 @@ const actions= {
             url: url,
             headers: {
                 'Accept': 'application/vnd.api+json',
-                'Content-Type':'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
-            },                    withCredentials: true
+
+
+            },
+            withCredentials: true
         };
-        
-        await axios(config)
-        .then((response) => {
-            console.log(response)
-            //console.log(response.data.csrf_token);
-            //console.log(response.data.current_user);
-            //console.log(response.data.logout_token);
-            commit('SAVE_LOGOUT_USER')        
-        })
-        .catch((error) => {
-            state.validCredential=false;
+
+        await axios(config).then(
+            (response) => {
+                console.log(response)
+                //console.log(response.data.csrf_token);
+                //console.log(response.data.current_user);
+                //console.log(response.data.logout_token);
+                commit('SAVE_LOGOUT_USER')
+
+
+            }
+        ).catch((error) => {
+            state.validCredential = false;
             console.log(error)
         });
     },
-    
-    saveBasicAuth({commit}, authorization_token){
+
+    saveBasicAuth({ commit }, authorization_token) {
+
         commit('SAVE_BASIC_AUTH_TOKEN', authorization_token)
+
     }
-    
-    
+
+
 }
-const mutations ={
-    
-    SAVE_BASIC_AUTH_TOKEN(state, authorization_token){
-        state.authToken=authorization_token
+const mutations = {
+
+    SAVE_BASIC_AUTH_TOKEN(state, authorization_token) {
+        sessionStorage.setItem("auth_token", authorization_token);
+        state.authToken = authorization_token
     },
     
     /**
@@ -186,7 +199,7 @@ const mutations ={
     * @param state state as parameter for access and manipulation of state data
     */
     SAVE_SESSION_TOKEN(state, token) {
-        state.csrf_token=token
+        state.csrf_token = token
         console.log(state.csrf_token)
     },
     
@@ -196,7 +209,7 @@ const mutations ={
     * @param state state as parameter for access and manipulation of state data
     */
     SAVE_CREATED_USER(state, user) {
-        state.user=user
+        state.user = user
         console.log("jetzt csrf und user")
         console.log(state.user)
         console.log(state.csrf_token)
@@ -209,22 +222,50 @@ const mutations ={
     * @param {*} token 
     */
     SAVE_LOGIN_USER(state, login_data) {
+        sessionStorage.setItem("csrf_token", login_data.csrf_token);
+        sessionStorage.setItem("logout_token", login_data.logout_token);
+        sessionStorage.setItem("valid_credentials", "true");
+        sessionStorage.setItem('current_user', JSON.stringify(login_data.current_user));
+        //sessionStorage.setItem("current_user", login_data.current_user);
         state.csrf_token = login_data.csrf_token;
         state.user = login_data.current_user;
         state.logout_token = login_data.logout_token;
         console.log(state.csrf_token)
         console.log(state.user)
         console.log(state.logout_token)
-        state.validCredential=true;
-        
+        state.validCredential = true;
+
     },
-    
+
+    LOAD_TOKEN_SESSION_STORAGE(state) {
+        if (sessionStorage.getItem("valid_credentials") == "true") {
+            state.validCredential = true;
+            state.csrf_token = sessionStorage.getItem("csrf_token");
+            state.logout_token = sessionStorage.getItem("logout_token");
+            state.authToken = sessionStorage.getItem("auth_token");
+            state.user = JSON.parse(sessionStorage.getItem('current_user'));
+            console.log(state.user)
+            console.log(JSON.parse(sessionStorage.getItem('current_user')))
+            //state.user= sessionStorage.getItem("current_user");
+
+        }
+        // return true
+
+    },
+
+
+
     SAVE_LOGOUT_USER(state) {
-        
-        state.validCredential=false;
-        
+        state.validCredential = false;
+        sessionStorage.removeItem("csrf_token");
+        sessionStorage.removeItem("logout_token");
+        sessionStorage.removeItem("valid_credentials");
+        sessionStorage.removeItem("current_user");
+        sessionStorage.removeItem("auth_token");
+
+
     },
-    
+
 }
 
 

@@ -89,10 +89,10 @@ const mutations = {
         };
 
         axios(config)
-            .then(function(response) {
+            .then(function (response) {
                 console.log(response)
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
     },

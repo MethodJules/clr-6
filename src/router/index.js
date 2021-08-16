@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-   
+
     {
         path: '/scope',
         name: 'Scope',
@@ -64,7 +64,7 @@ const routes = [
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
-        meta: {requiresAuth: true},
+        meta: { requiresAuth: true },
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
     {
@@ -101,12 +101,12 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ReflexionView.vue')
     },
 
-/*     {
-        path: '/group',
-        name: 'Groupmanagement',
-        props: true,
-        component: () => import(webpackChunkName: "begruessung_home"  '../views/Groupmanagement.vue')
-    }, */
+    /*     {
+            path: '/group',
+            name: 'Groupmanagement',
+            props: true,
+            component: () => import(webpackChunkName: "begruessung_home"  '../views/Groupmanagement.vue')
+        }, */
     {
         //path: '/home:user_id',
         path: '/home/:project_id',
@@ -120,7 +120,7 @@ const routes = [
     },
     {
         path: '/projectsearch/:keyword2',
-        name: 'ProjectSearch', 
+        name: 'ProjectSearch',
         props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
     },
@@ -129,7 +129,22 @@ const routes = [
         name: 'Postfach',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Postfach.vue')
     },
- 
+
+    {
+        path: '/profil',
+        name: 'Profil',
+        props: true,
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
+    },
+
+    {
+        path: '/einstellungen',
+        name: 'Einstellungen',
+        props: true,
+        component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Einstellungen.vue')
+    },
+
+
 
 ]
 
@@ -139,7 +154,7 @@ const router = new VueRouter({
     routes,
 })
 
-  
+
 router.beforeEach((to, from, next) => {
     // check if route requires Login 
     if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -154,10 +169,10 @@ router.beforeEach((to, from, next) => {
             alert("Login erforderlich")
             console.log("in")
 
-            next({name: 'App'})
+            next({ name: 'App' })
         }
 
-       
+
     } else {
         next();
     }

@@ -15,6 +15,8 @@ import output_documents from './modules/output_documents'
 import postfach from './modules/postfach'
 import sparky_api from './modules/sparky_api'
 import drupal_api from './modules/drupal_api'
+import user from './modules/user'
+import profile from './modules/profile'
 
 
 Vue.use(Vuex)
@@ -34,8 +36,10 @@ export default new Vuex.Store({
        output_documents,
        postfach,
         sparky_api,
-       inputDocuments,
-       drupal_api,
+        inputDocuments,
+        drupal_api,
+        user,
+        profile
     },
 
     //noch in Datei packen
