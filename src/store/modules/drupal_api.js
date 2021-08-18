@@ -5,18 +5,18 @@ const state = () => ({
     csrf_token: '', //TODO user individual token is to be used in all subsequent api requests instead of the admin token which is used at the moment
     logout_token: null,
     validCredential: false,
-    authToken: null, 
-    
-    
+    authToken: null,
+
+
 })
 const actions = {
     //TO DO: Check if a user already exists
-    
+
     /*1. session token von drupal holen
     2. user json bauen -> mit feldern wie namen, sparky id, matrikelnummer etc
     3. user json mit token an drupal um user zu registrierenn -> response ist user objekt mit uuid, namen, felder etc
     */
-    
+
     /**
     * gets a session token which is used for subsequent registration of a user
     * calls the mutation SAVE_SESSION_TOKEN after a token was successfully received
@@ -27,23 +27,23 @@ const actions = {
     * @param state state as parameter for access and manipulation of state data
     * @param dispatch dispatch is used to call another action from this function
     */
-    async getSessionToken({commit, state, dispatch}, { username, password, matrikelnummer }) {
-        
+    async getSessionToken({ commit, state, dispatch }, { username, password, matrikelnummer }) {
+
         //eigtl csrf token, nicht sessiontoken
         console.log(state)
-        await  axios.get('https://clr-backend.x-navi.de/rest/session/token')
-        .then((response) => {
-            console.log(response.data);
-            const token = response.data;
-            commit('SAVE_SESSION_TOKEN', token);
-            dispatch('createUser', { username, password, matrikelnummer})
-            
-        }).catch(error =>{
-            throw new Error(`API ${error}`);
-        });         
-        
+        await axios.get('https://clr-backend.x-navi.de/rest/session/token')
+            .then((response) => {
+                console.log(response.data);
+                const token = response.data;
+                commit('SAVE_SESSION_TOKEN', token);
+                dispatch('createUser', { username, password, matrikelnummer })
+
+            }).catch(error => {
+                throw new Error(`API ${error}`);
+            });
+
     },
-    
+
     /**
     * sends a request to sparky api to get user data, which will be saved in the user account for the registration, via getWhoAmI
     * uses csrf token from getSessionToken()
@@ -62,12 +62,12 @@ const actions = {
         console.log(username)
         console.log(sparkyUserObject)
         //console.log(generatedPassword)
-        
-        
+
+
         //TODO: Fehlerbehandlung: matrikelnummer ist bei mir null -> dann funzt das alles nicht -> wieso ist null, muss man so einen sonderfall normalerweise beachten
         // TODO: unnötige felder sparky_id, evtl. fullname  entfernen
-        const data = JSON.stringify ({      
-            'name': {'value': `${sparkyUserObject.data.username}`},
+        const data = JSON.stringify({
+            'name': { 'value': `${sparkyUserObject.data.username}` },
             //'name': {'value': `${username}`},
             'mail': { 'value': `${sparkyUserObject.data.email}` },
             'pass': { 'value': `${password}` },
@@ -89,21 +89,21 @@ const actions = {
         };
         console.log(config)
         axios(config)
-        .then((response) => {
-            console.log(response.data);
-            const user = response.data;
-            commit('SAVE_CREATED_USER', user);
-            
-        }).catch(error =>{
-            throw new Error(`API ${error}`);
-        });          
+            .then((response) => {
+                console.log(response.data);
+                const user = response.data;
+                commit('SAVE_CREATED_USER', user);
+
+            }).catch(error => {
+                throw new Error(`API ${error}`);
+            });
     },
-    
+
     /**
     * Connects to the Drupal Backend and request a login
     * The Backend will give csrf_token a logout token and a current_user object
     */
-    async loginToDrupal({commit, rootState},{username, password}) {
+    async loginToDrupal({ commit, rootState }, { username, password }) {
         //authenticate with sparky_api at sparky backend is commented out for development purposes. thus testaccounts can be used without the need of real user data
         //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished 
         //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
@@ -119,18 +119,18 @@ const actions = {
             withCredentials: true,
             data: data
         };
-        
+
         await axios(config)
-        .then((response) => {
-            console.log(rootState.sparky_api.sparkylogin)
-            commit('SAVE_LOGIN_USER', response.data); 
-            //console.log(response.data.csrf_token);
-            //console.log(response.data.current_user);
-            //console.log(response.data.logout_token);   
-        })
-        .catch((error) => {
-            console.log(error)
-        });
+            .then((response) => {
+                console.log(rootState.sparky_api.sparkylogin)
+                commit('SAVE_LOGIN_USER', response.data);
+                //console.log(response.data.csrf_token);
+                //console.log(response.data.current_user);
+                //console.log(response.data.logout_token);   
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     },
 
     async loadTokensfromSessionStorage({ commit }) {
@@ -192,7 +192,7 @@ const mutations = {
         sessionStorage.setItem("auth_token", authorization_token);
         state.authToken = authorization_token
     },
-    
+
     /**
     * gets the token from action and puts it in state 
     * @param token token from
@@ -202,7 +202,7 @@ const mutations = {
         state.csrf_token = token
         console.log(state.csrf_token)
     },
-    
+
     /**
     * gets user object from action and puts it in state
     * @param user
@@ -214,7 +214,7 @@ const mutations = {
         console.log(state.user)
         console.log(state.csrf_token)
     },
-    
+
     /**
     * gets the csrf_token, user object and loguttoken from action 
     * and puts it in the state object
