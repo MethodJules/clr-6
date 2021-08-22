@@ -3,9 +3,7 @@
 are shown here as a profile view and if the user has uploaded a profile picture in the "Einstellungen", it will also be shown here -->
   <b-container>
     <b-row>
-      <b-col
-        ><b-img v-bind="user" fluid alt="Fluid image" :src="getImage"> </b-img
-      ></b-col>
+      <b-col><b-img v-bind="user" :src="getImage"> </b-img></b-col>
     </b-row>
 
     <b-row>

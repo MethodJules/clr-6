@@ -333,8 +333,8 @@ const mutations = {
             const field_fullname = element.attributes.field_fullname;
 
             const field_matrikelnummer = element.attributes.field_matrikelnummer;
-            const field_id = element.attributes.field_id;
-            const field_title = element.attributes.field_title;
+            const field_id = element.id;
+            const field_title = element.attributes.title;
             const mail = element.attributes.mail;
 
 
@@ -344,6 +344,8 @@ const mutations = {
 
 
             state.userData = userObject
+
+            console.log(state.userData)
 
 
 
