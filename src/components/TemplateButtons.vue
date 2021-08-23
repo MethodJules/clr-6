@@ -44,7 +44,6 @@
                                 v-model="newTodo"
                                 @keyup.enter="addTodo"
                             />
-
                         </div>
                         <div class="border"></div>
                     </div>
@@ -148,8 +147,13 @@ export default {
             this.newTodo = "";
         },
     },
-    mounted() {
-        //console.log(this.inDoku)
+    async mounted() {
+        await this.$store.dispatch("documentation/loadDocusFromBackend");
+        const doc = this.$store.state.documentation.documentations;
+        //console.log(doc)
+        //console.log(typeof(doc))
+        this.documentationList = doc;
+        console.log(this.documentationList[0].idd + "das ist in dokfield");
     },
 };
 </script>
