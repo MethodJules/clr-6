@@ -9,8 +9,6 @@ export default {
 };
 </script>
 
-
-
 <style>
 @import "assets/style.css";
 @import "assets/loading.css";

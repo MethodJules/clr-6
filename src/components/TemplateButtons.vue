@@ -161,6 +161,7 @@ export default {
 .buttons-container {
     display: flex;
     justify-content: space-between;
+    margin-top: 1rem !important;
 }
 
 footer {

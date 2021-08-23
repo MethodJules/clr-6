@@ -108,7 +108,7 @@ export default {
     },
 };
 </script>
-<style scoped>
+<style>
 .row {
     width: 100% !important;
     margin: 0 !important;
