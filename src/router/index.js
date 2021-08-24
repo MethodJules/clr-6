@@ -1,16 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from "@/store"
-import Login from "@/views/Login"
-import Main from "@/views/MainPage"
+
 
 //import BegruessungPage from '../views/BegruessungPage.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-    { path: "/login", name:"Login", component: Login },
-    {path:"/", name:"MainPage", component:Main, children:[
+    { path: "/login", name:"Login", component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Login.vue') },
+    {path:"/", name:"MainPage",  component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/MainPage.vue'), children:[
         {       
             path: '/scope',
             name: 'Scope',
