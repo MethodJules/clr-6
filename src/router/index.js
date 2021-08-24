@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from "@/store"
 
-
 //import BegruessungPage from '../views/BegruessungPage.vue'
 
 Vue.use(VueRouter)
