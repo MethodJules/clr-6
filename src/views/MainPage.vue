@@ -132,7 +132,7 @@ export default {
 .mainContent {
     padding: 0 !important;
     min-width: 25rem;
-    height: 90vh;
+    height: 100%;
     width: 100%;
 }
 .postfach {

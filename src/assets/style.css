@@ -10,7 +10,7 @@ body {
     background-color: #F6F8FF;
     min-height: 100vh;
     margin: 0px;
-    padding: 0px;
+    padding: 0px !important;
     width: 100%;
 }
 
