@@ -146,7 +146,6 @@ const actions = {
     async logoutDrupal({ commit, rootState }) {
         console.log(rootState.drupal_api.csrf_token)
         console.log(rootState.drupal_api.logout_token)
-        console.log(state.logout_token)
         console.log(rootState.drupal_api.authToken)
         const url = `https://clr-backend.x-navi.de/user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
         const config = {
@@ -165,9 +164,9 @@ const actions = {
         await axios(config).then(
             (response) => {
                 console.log(response)
-                //console.log(response.data.csrf_token);
-                //console.log(response.data.current_user);
-                //console.log(response.data.logout_token);
+                console.log(response.data.csrf_token);
+                console.log(response.data.current_user);
+                console.log(response.data.logout_token);
                 commit('SAVE_LOGOUT_USER')
 
 
