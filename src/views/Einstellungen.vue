@@ -236,8 +236,7 @@ export default {
   data() {
     return {
       testButClicked: false,
-      selectedFile: null,
-      images: [],
+      //images: [],
       image: null,
 
       /* getProfileData: {
@@ -280,14 +279,6 @@ export default {
     },
 
     onUpload() {
-      // upload file
-      /*  const fd = new FormData();
-            fd.append = ('image', this.selectedFile, this.selectedFile.name)
-            axios.post('https://clr-backend.x-navi.de/jsonapi//media/image/field_media_image', fd)
-                .then(res => {
-                    console.log(res)
-                }) */
-
       this.$store.dispatch("profile/uploadImage", this.image);
     },
 
