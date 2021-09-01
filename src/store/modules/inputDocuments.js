@@ -1,3 +1,5 @@
+import axios from "axios"
+
 const state = {
     inputs: [], // we are using this array to store the file names and sizes only
     inputsForDatabase: [] // we are going to use this array in order to upload our files to database
@@ -28,7 +30,8 @@ const mutations = {
      * we need another function to upload the file to the database. We can figure it out when it comes to it. 
      * We have all files at variable files. We can easily send it to the database.
      */
-    uploadFiles(state, files) {
+    uploadFilesToState(state, files) {
+        console.log("files in commit")
        console.log(files)
         // this line uploads the files to inputsForDatabase for database reactions
         state.inputsForDatabase.push(files);
@@ -70,10 +73,52 @@ const actions = {
      * To upload files to database. 
      * Will be written later.... 
      */
-    uploadFilesToDatabase({ state }) {
-        console.log("Files that we are goint upload database");
-        console.log(state.inputsForDatabase);
+    async uploadFilesToDatabase({ commit, rootState }, file) {
+        console.log("files in action")
+        console.log(file);
+        // sende state
+        commit("uploadFilesToState", file);
+
         // Database Reactions....
+        const base64FileData = await fetch(file);
+        const binaryFileData = await base64FileData.blob();
+        /* const buffer = storedFile.Body; */
+        console.log(state)
+        var drupalUserUID = rootState.drupal_api.user.uid
+        var filename = "Testdokument.txt"
+        console.log(drupalUserUID)
+
+        var config = {
+            method: 'post',
+            url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/octet-stream',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                'Content-Disposition': 'file; filename="' + filename + '"',
+
+            },
+            data: binaryFileData
+
+        };
+
+
+        axios(config)
+            .then(function (response) {
+                console.log(response);
+                //commit('SAVE_FILES', { file });
+
+
+
+
+
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
+
     },
 
 
