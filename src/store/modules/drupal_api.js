@@ -33,7 +33,10 @@ const actions = {
         console.log(state)
         await  axios.get('https://clr-backend.x-navi.de/rest/session/token')
         .then((response) => {
-            console.log(response.data);
+            console.log("getSessionToken response")
+            console.log(response);
+            console.log("getSessionToken response...")
+            sessionStorage.setItem("test_token", response.data);
             const token = response.data;
             commit('SAVE_SESSION_TOKEN', token);
             dispatch('createUser', { username, password, matrikelnummer})
@@ -122,6 +125,9 @@ const actions = {
         
         await axios(config)
         .then((response) => {
+            console.log("loginToDrupal")
+            console.log(response)
+            console.log("loginToDrupal")
             console.log(rootState.sparky_api.sparkylogin)
             commit('SAVE_LOGIN_USER', response.data); 
             //console.log(response.data.csrf_token);
@@ -147,6 +153,7 @@ const actions = {
         console.log(rootState.drupal_api.csrf_token)
         console.log(rootState.drupal_api.logout_token)
         console.log(rootState.drupal_api.authToken)
+        console.log(sessionStorage)
         const url = `https://clr-backend.x-navi.de/user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
         const config = {
             method: 'post',
@@ -155,8 +162,6 @@ const actions = {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
-
-
             },
             withCredentials: true
         };
@@ -164,9 +169,6 @@ const actions = {
         await axios(config).then(
             (response) => {
                 console.log(response)
-                console.log(response.data.csrf_token);
-                console.log(response.data.current_user);
-                console.log(response.data.logout_token);
                 commit('SAVE_LOGOUT_USER')
 
 
@@ -199,6 +201,7 @@ const mutations = {
     */
     SAVE_SESSION_TOKEN(state, token) {
         state.csrf_token = token
+        console.log(state.csrf_token)
         console.log(state.csrf_token)
     },
     

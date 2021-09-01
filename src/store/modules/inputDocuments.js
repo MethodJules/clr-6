@@ -29,6 +29,7 @@ const mutations = {
      * We have all files at variable files. We can easily send it to the database.
      */
     uploadFiles(state, files) {
+       console.log(files)
         // this line uploads the files to inputsForDatabase for database reactions
         state.inputsForDatabase.push(files);
         // after here we are storing data to state
