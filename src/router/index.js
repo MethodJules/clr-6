@@ -64,7 +64,7 @@ const routes = [
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
-        meta: { requiresAuth: true },
+        //meta: { requiresAuth: true },
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
     {
@@ -72,7 +72,7 @@ const routes = [
         name: 'NewMember',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
     },
-  
+
     {
         path: '/phasetemplate',
         name: 'PhaseTemplate',
@@ -161,9 +161,9 @@ router.beforeEach((to, from, next) => {
         console.log("in")
 
         // check if user is logged in 
-        if (localStorage.getItem("userLoggedIn") != null) {  
-            console.log(localStorage.getItem("userLoggedIn")) 
-          
+        if (localStorage.getItem("userLoggedIn") != null) {
+            console.log(localStorage.getItem("userLoggedIn"))
+
             next()
         } else {
             alert("Login erforderlich")

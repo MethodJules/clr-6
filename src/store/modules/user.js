@@ -28,13 +28,13 @@ const getters = {
         for (let lecturer of state.lecturers) {
             //lecturer_array.push({name: lecturer.field_fullname, uid: lecturer.uid, uuid: lecturer.uuid })
             //console.log(student[1].field_fullname[0].value)
-            console.log(lecturer)
+            //console.log(lecturer)
             //lecturer_array.push({name: lecturer.field_fullname, uid: lecturer.uid, uuid: lecturer.uuid })
             lecturer_array.push({ name: lecturer[1].field_fullname[0].value, uid: lecturer[1].uid[0].value, uuid: lecturer[1].uuid[0].value })
             //student_array.push(student[1].field_fullname[0].value)
 
         }
-        console.log(lecturer_array)
+        // console.log(lecturer_array)
         return lecturer_array
 
     },
@@ -68,7 +68,7 @@ const getters = {
             //student_array.push(student[1].field_fullname[0].value)
 
         }
-        console.log(student_array)
+        // console.log(student_array)
 
 
         return student_array
@@ -100,14 +100,14 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                console.log(response)
+                //console.log(response)
 
                 let lecturers = response;
-                console.log(response.data.users)
+                //console.log(response.data.users)
                 //das hier ist korrekt
-                console.log(response.data.users[13].field_fullname[0].value)
+                // console.log(response.data.users[13].field_fullname[0].value)
                 lecturers = Object.entries(response.data.users)
-                console.log(lecturers)
+                //console.log(lecturers)
                 commit('LOAD_LECTURERS', lecturers);
 
             })
@@ -132,10 +132,9 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                console.log(response)
+                // console.log(response)
                 //funzt
-                console.log(response.data.users[4].field_fullname[0].value)
-                console.log(Object.entries(response.data.users))
+                // console.log(Object.entries(response.data.users))
                 const students = Object.entries(response.data.users)
                 commit('LOAD_STUDENTS', students);
 

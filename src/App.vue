@@ -117,7 +117,7 @@
                                   $v.registrierungsPasswort.$dirty &&
                                   !$v.registrierungsPasswort.$invalid,
                               }"
-                              type="password2"
+                              type="password"
                               id="password2"
                               placeholder=""
                             >
@@ -216,11 +216,12 @@ import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
 import {
-  //required,
+  requiredIf,
   minLength,
   integer,
   alpha,
   minValue,
+  maxLength,
 } from "vuelidate/lib/validators";
 //import ProjectList from "@/views/ProjectList.vue"
 
@@ -252,26 +253,81 @@ export default {
       },
     };
   },
+  /* 
+  validations for log in input fields
+  input is only valid, when either log in data or registration data is complete
+   */
   validations: {
-    zugangsKennung: { minLength: minLength(1), alpha },
-    passwort: { minLength: minLength(1) },
-    registrierungsKennung: { minLength: minLength(1), alpha },
-    registrierungsPasswort: { minLength: minLength(1) },
-    matrikelnummer: { integer, minLength: minLength(1), minValue: minValue(0) },
+    zugangsKennung: {
+      required: requiredIf(function () {
+        return this.validate_login(this.passwort);
+      }),
+      minLength: minLength(1),
+      alpha,
+    },
+    passwort: {
+      required: requiredIf(function () {
+        return this.validate_login(this.zugangsKennung);
+      }),
+      minLength: minLength(1),
+    },
+    registrierungsKennung: {
+      required: requiredIf(function () {
+        return this.validate_login(this.registrierungsPasswort);
+      }),
+      minLength: minLength(1),
+      alpha,
+    },
+    registrierungsPasswort: {
+      required: requiredIf(function () {
+        return this.validate_login(this.registrierungsKennung);
+      }),
+      minLength: minLength(1),
+    },
+    matrikelnummer: {
+      integer,
+      minLength: minLength(1),
+      minValue: minValue(0),
+      maxLength: maxLength(10),
+    },
   },
 
   methods: {
+    /* function validates log in and registration input
+    returns true, when the associated input field is not empty   */
+    validate_login(dependent_field) {
+      let ausgabe = dependent_field != "";
+      if (
+        (this.passwort == "") &
+        (this.zugangsKennung == "") &
+        (this.registrierungsKennung == "") &
+        (this.registrierungsPasswort == "")
+      ) {
+        ausgabe = true;
+      }
+      return ausgabe;
+    },
+    /* registrates a user first at sparky backend and then uses the data from sparky backend to register/create a new user at clr drupal backend
+     * students have to put in their matrikelnummer, lecturers don't
+     * functions called in sequence: sparky_api/registrate -> sparky_api/getWhoamI -> drupal_api/getSessionToken -> drupal_api/createUser
+     */
     registrieren() {
-      this.$store.dispatch("sparky_api/registrate", {
-        username: this.registrierungsKennung,
-        password: this.registrierungsPasswort,
-        matrikelnummer: this.matrikelnummer,
-      });
+      this.$v.$touch();
 
+      if (!this.$v.$invalid) {
+        this.$store.dispatch("sparky_api/registrate", {
+          username: this.registrierungsKennung,
+          password: this.registrierungsPasswort,
+          matrikelnummer: this.matrikelnummer,
+        });
+        this.registrierungsKennung = "";
+        this.registrierungsPasswort = "";
+        this.matrikelnummer = "";
+      } else {
+        alert("Bitte Registriedungsdaten eingeben");
+      }
       //remove so username and password arent saved after login
-      this.registrierungsKennung = "";
-      this.registrierungsPasswort = "";
-      this.matrikelnummer = "";
+
       /*       this.$store.dispatch('drupal_api/getSessionToken', {
         username: this.registrierungsKennung,
         password: this.registrierungsPasswort,
@@ -282,40 +338,36 @@ export default {
     closeMenu() {
       this.showMenu = false;
     },
-    /*     generatePassword(username) {
-      const crypto = require("crypto");
-      const md5sum = crypto.createHash("md5");
-      let str = username;
-      const res = md5sum.update(str).digest("hex");
-      console.log(res);
-      return res;
-    }, */
+
+    /* logs a user in at drupal backend
+     * then saves the basic Authentication token in the state
+     * login only works if validation is true
+     * a log in message is displayed when user is logged in
+     */
     login() {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
         let username = this.zugangsKennung;
         let password = this.passwort;
-        // wenn das hier genutzt wird -> password wird aus namen generiert - die "richtige" anmeldung des nutzers erfolgt beim sparky backend mit rz kennung
-        //password=this.generatePassword(username)
         let authorization_token = this.encodeBasicAuth(username, password);
         this.$store.dispatch("drupal_api/loginToDrupal", {
           username,
           password,
         });
         this.$store.dispatch("drupal_api/saveBasicAuth", authorization_token);
-        console.log(authorization_token);
-        //remove so username and password arent saved after login
-        this.makeToast();
 
+        this.makeToast();
+        //remove so username and password arent saved after login
         this.zugangsKennung = "";
         this.passwort = "";
         this.testButClicked(true);
       } else {
-        alert("Bitte alles ausfüllen");
+        alert("Bitte Logindaten eingeben");
       }
       return authorization_token;
     },
+    /* creates the basic authentication token */
     encodeBasicAuth(user, password) {
       var creds = user + ":" + password;
       var base64 = btoa(creds);

@@ -168,7 +168,7 @@ export default {
 
     this.project2 = this.$store.state.project.currentProject;
     console.log(this.$store.state.project.currentProject);
-    console.log(this.project2);
+    //console.log(this.project2);
 
     /*     this.$store.dispatch('project/loadProjectsFromBackend')
     //this.projectList = this.$store.state.project.myProjects
@@ -188,7 +188,7 @@ export default {
   },
   computed: {
     getCurrentProject() {
-      console.log(this.$store.state.project.currentProject);
+      //console.log(this.$store.state.project.currentProject);
       return this.$store.state.project.currentProject;
     },
 
