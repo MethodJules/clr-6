@@ -155,7 +155,8 @@
                             width="100"
                             height="100"
                             accept="image/jpeg,image/png"
-                            buttonClass="btn"
+                            buttonClass="btn btn-test"
+                            hideChangeButton="true"
                             :customStrings="{
                                 upload: '<h1>Bild ändern</h1>',
                                 drag: 'Bild hochladen',
@@ -340,13 +341,14 @@ table thead {
 }
 .profilbild-content {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
 }
 .profilbild-content * {
     width: 20%;
 
-    margin: 0 1rem 0 0;
+    margin: 0 0 0.5rem 0;
 }
 body {
     font-family: Helvetica;
