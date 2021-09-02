@@ -164,6 +164,12 @@ export default {
                 "drupal_api/saveBasicAuth",
                 authorization_token
             );
+            this.$store.dispatch(
+                "drupal_api/getSessionToken",
+                username,
+                password,
+                123
+            );
 
             //remove so username and password arent saved after login
             this.username = "";

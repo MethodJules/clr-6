@@ -24,7 +24,6 @@
             <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
             <b-col
-                v-if="!isChanged"
                 class="
                     d-flex
                     flex-column
@@ -41,7 +40,6 @@
                     </b-col>
                 </b-row>
             </b-col>
-            <b-col v-else> </b-col>
         </b-row>
         <!-- 
                 <b-row class="untereLeiste p-4 d-flex align-center">
@@ -132,7 +130,7 @@ export default {
 .mainContent {
     padding: 0 !important;
     min-width: 25rem;
-    height: 100%;
+    min-height: 100vh;
     width: 100%;
 }
 .postfach {

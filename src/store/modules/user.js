@@ -36,7 +36,6 @@ const getters = {
         }
         console.log(lecturer_array)
         return lecturer_array
-
     },
 
     getStudents(state) {

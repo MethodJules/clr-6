@@ -73,12 +73,13 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
+     
 
         axios(config)
             .then(function (response) {
-                console.log(response)
+                console.log("user")
                 console.log(response);
-                console.log("es lfniosdn")
+                console.log("user")
                 console.log(rootState.sparky_api.validCredential)
                 console.log(rootState.sparky_api.drupalUserID)
                 const profiles = response.data.data;
@@ -195,7 +196,7 @@ const actions = {
         var userID = rootState.profile.userData.idd
         //let user = state.userData.idd
 
-
+        console.log(userID)
 
         console.log(state)
         console.log(imageID)

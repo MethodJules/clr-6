@@ -17,7 +17,7 @@
             <!-- For Database upload. This button may be activated later...     -->
             <!-- <b-button @click="uploadToDatabase()">Database Hochladen</b-button> -->
         </b-row>
-
+        <!-- Zeige im Frontend -->
         <b-row>
             <div
                 v-for="(input, i) in getInputs"
@@ -142,9 +142,11 @@ export default {
          */
 
         upload(files) {
+            console.log(files);
             // changing okButtonClicked for loading bar
             this.okButtonClicked = true;
-            this.$store.commit("inputDocuments/uploadFiles", files);
+            this.$store.dispatch("inputDocuments/uploadFilesToDatabase", files);
+            // this.$store.commit("inputDocuments/uploadFiles", files);
             this.uploadedFiles.push(this.inputFiles);
             this.inputFiles = [];
             this.$refs["fileUploadModal"].hide();

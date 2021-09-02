@@ -31,6 +31,7 @@ export default {
 .z-canvas {
     position: relative !important;
     overflow: visible;
+    height: 100%;
 }
 
 .z-outer-circle {

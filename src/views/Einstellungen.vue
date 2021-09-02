@@ -148,30 +148,26 @@
                 <tr>
                     <th scope="row">Profilbild</th>
                     <td class="profilbild-content">
-                        <b-row>
-                            <picture-input
-                                v-model="profilbild"
-                                @change="onFileChanged"
-                                ref="pictureInput"
-                                width="100"
-                                height="100"
-                                accept="image/jpeg,image/png"
-                                buttonClass="btn"
-                                :customStrings="{
-                                    upload: '<h1>Bild ändern</h1>',
-                                    drag: 'Bild hochladen',
-                                }"
-                            >
-                            </picture-input>
-                        </b-row>
-                        <b-row>
-                            <b-button
-                                class="upload-button"
-                                size="sm"
-                                @click="onUpload"
-                                >Upload!</b-button
-                            >
-                        </b-row>
+                        <picture-input
+                            v-model="profilbild"
+                            @change="onFileChanged"
+                            ref="pictureInput"
+                            width="100"
+                            height="100"
+                            accept="image/jpeg,image/png"
+                            buttonClass="btn"
+                            :customStrings="{
+                                upload: '<h1>Bild ändern</h1>',
+                                drag: 'Bild hochladen',
+                            }"
+                        >
+                        </picture-input>
+                        <b-button
+                            class="upload-button"
+                            size="sm"
+                            @click="onUpload"
+                            >Upload!</b-button
+                        >
                     </td>
                 </tr>
             </tbody>
@@ -342,7 +338,16 @@ table thead {
 .buttons * {
     margin-left: 1rem;
 }
+.profilbild-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.profilbild-content * {
+    width: 20%;
 
+    margin: 0 1rem 0 0;
+}
 body {
     font-family: Helvetica;
 }
