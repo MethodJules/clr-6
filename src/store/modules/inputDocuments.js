@@ -75,50 +75,59 @@ const actions = {
      * To upload files to database. 
      * Will be written later.... 
      */
-    async uploadFilesToDatabase({ dispatch, commit, rootState }, file) {
+    async uploadFilesToDatabase({ dispatch, commit, rootState }, files) {
         console.log("files in action")
-        console.log(file);
+       
         // sende state
-        commit("uploadFilesToState", file);
+        commit("uploadFilesToState", files);
 
         // Database Reactions....
-        const base64FileData = await fetch(file);
-        const binaryFileData = await base64FileData.blob();
+
+        let fileDatas = {};
+        // const base64FileData = await fetch(files);
+        // const binaryFileData = await base64FileData.blob();
+
+        files.forEach((file)=>{
+            const binaryFileData =   fetch(file).blob();
+            let fileData = {name:file.name, binaryFileData:binaryFileData};
+            fileDatas.push(fileData);
+        })
+
+        console.log(fileDatas);
         /* const buffer = storedFile.Body; */
-        console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
-        var filename = "Testdokument.txt"
         console.log(drupalUserUID)
 
-        var config = {
-            method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/octet-stream',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
-                'Content-Disposition': 'file; filename="' + filename + '"',
+        // files.forEach((file)=>{
+      
+        //     var config = {
+        //         method: 'post',
+        //         url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
+        //         headers: {
+        //             'Accept': 'application/vnd.api+json',
+        //             'Content-Type': 'application/octet-stream',
+        //             'Authorization': rootState.drupal_api.authToken,
+        //             'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+        //             'Content-Disposition': 'file; filename="' + file.name + '"',
 
-            },
-            data: binaryFileData
+        //         },
+        //         data: fetch(file).blob()
 
-        };
+        //     };
 
+        //     axios(config)
+        //         .then(function (response) {
+        //             console.log(response);
+        //             //commit('SAVE_FILES', { file });
+        //             const documentID = response.data.data.id;
+        //             console.log(documentID)
+        //             dispatch('addInputDocument', documentID)
 
-        axios(config)
-            .then(function (response) {
-                console.log(response);
-                //commit('SAVE_FILES', { file });
-                const documentID = response.data.data.id;
-                console.log(documentID)
-                dispatch('addInputDocument', documentID)
-
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-
+        //         })
+        //         .catch(function (error) {
+        //             console.log(error)
+        //         })
+        // })
 
     },
 
