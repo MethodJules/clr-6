@@ -17,6 +17,27 @@
       <!-- For Database upload. This button may be activated later...     -->
       <!-- <b-button @click="uploadToDatabase()">Database Hochladen</b-button> -->
     </b-row>
+    <!-- Zeige im Frontend -->
+    <b-row>
+      <div v-for="(input, i) in getInputs" :key="i" class="card card-body p-2">
+        <div>
+          <p class="m-0">
+            {{ input.name }}
+          </p>
+          <span class="float-right sizeBox"
+            >{{ input.size | convertSize }}
+          </span>
+
+          <b-button
+            block
+            variant="outline-danger"
+            size="sm"
+            @click="deleteFile(i)"
+            >Löschen</b-button
+          >
+        </div>
+      </div>
+    </b-row>
 
     <!-- Modal, when user click "datei hochladen" button
     The place user adds files. 
@@ -30,11 +51,34 @@
         centered
       >
         <template>
-          <input type="file" @change="onFileChanged" />
+          <!-- https://bootstrap-vue.org/docs/components/form-file
+          Form file input -->
+          <b-form-file
+            v-model="inputFiles"
+            ref="files-input"
+            placeholder="Wählen Sie eine Datei oder legen Sie sie hier ab ..."
+            drop-placeholder="Datei hier ablegen..."
+            multiple
+            class="mb-2"
+          ></b-form-file>
           <hr />
 
+          <span ref="infoBox" class="mt-2">
+            <!-- Ausgewählte Dateien: -->
+            <li v-for="(input, i) in inputFiles" :key="i" class="mb-1">
+              <b>{{ input.name }}</b>
+
+              <span class="ml-2 sizeBox">
+                {{ input.size | convertSize }}
+              </span>
+            </li>
+          </span>
           <b-card-text align="right" class="mt-3">
-            <b-button class="mr-2" variant="primary" size="sm" @click="upload"
+            <b-button
+              class="mr-2"
+              variant="primary"
+              size="sm"
+              @click="upload(inputFiles)"
               >Ok</b-button
             >
             <b-button
@@ -57,15 +101,13 @@
 
 <script>
 import { mapGetters } from "vuex";
-
 export default {
   data() {
     return {
-      //inputFiles: [],
-      //uploadedFiles: [], // this is for database interaction.
-      //noFile: "Keine Datei Ausgewählt",
-      //okButtonClicked: false,
-      file: null,
+      inputFiles: [],
+      uploadedFiles: [], // this is for database interaction.
+      noFile: "Keine Datei Ausgewählt",
+      okButtonClicked: false,
     };
   },
   computed: {
@@ -77,6 +119,9 @@ export default {
         return { display: "none" };
       }
     },
+    getFiles() {
+      return this.$store.state.inputDocuments.file;
+    },
   },
 
   methods: {
@@ -86,27 +131,25 @@ export default {
      * triggers loading bar
      * closes the modal
      */
-
-    onFileChanged(file) {
-      if (file) {
-        console.log(file);
-        this.file = file;
-      }
-    },
-
-    upload() {
+    upload(files) {
+      console.log(files);
       // changing okButtonClicked for loading bar
-      /* this.okButtonClicked = true;
-      this.$store.commit("inputDocuments/uploadFiles", files);
-      this.files.push(this.inputFiles);
+      this.okButtonClicked = true;
+      this.$store.dispatch("inputDocuments/uploadFilesToDatabase", files);
+
+      // this.$store.commit("inputDocuments/uploadFiles", files);
+      this.uploadedFiles.push(this.inputFiles);
       this.inputFiles = [];
-      this.$refs["fileUploadModal"].hide(); */
+      this.$refs["fileUploadModal"].hide();
       // setTimeout is for loading bar. - incomplete
-      //setTimeout(() => (this.okButtonClicked = false), 1000);
-
-      this.$store.dispatch("inputDocuments/uploadFilesToDatabase", this.file);
+      setTimeout(() => (this.okButtonClicked = false), 1000);
     },
-
+    uploadToDatabase() {
+      this.$store.dispatch(
+        "inputDocuments/uploadFilesToDatabase",
+        this.uploadedFiles
+      );
+    },
     //
     /**
      * deletes all of the files that are selected by assigning to
@@ -120,7 +163,6 @@ export default {
      * inputFiles array to the start value
      * and closes the modal
      *  */
-
     closeModal() {
       this.inputFiles = [];
       this.$refs["fileUploadModal"].hide();

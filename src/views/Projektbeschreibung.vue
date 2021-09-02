@@ -17,11 +17,31 @@
         </b-col>
 
         <b-col sm="10">
-          <b-form-input
+          <b-form-select
             v-model="getCurrentProject.betreuenderDozent"
             id="input-1"
           >
-          </b-form-input>
+            <option
+              v-for="lecturer in getLecturers"
+              v-bind:value="lecturer.uuid"
+              v-bind:key="lecturer.uuid"
+            >
+              {{ lecturer.name }}
+            </option></b-form-select
+          >
+
+          <!-- <select v-model="project.betreuenderDozent" class="form-control"> -->
+          <!-- <option
+              v-for="lecturer in getLecturers"
+              v-bind:value="lecturer.uuid"
+              v-bind:key="lecturer.uuid"
+            > -->
+          <!-- {{
+              lecturer.name
+            }} -->
+          <!-- </option> -->
+          <!-- </select>
+          <span>Selected: {{ project.betreuenderDozent }}</span> -->
 
           <br />
         </b-col>
@@ -168,7 +188,7 @@ export default {
       console.log(keywords);
 
       var updatedProj = {
-        title: this.project.title,
+        title: this.title,
         kurzbeschreibung: this.project.kurzbeschreibung,
         betreuenderDozent: this.project.betreuenderDozent,
         externeMitwirkende: this.project.externeMitwirkende,
@@ -188,6 +208,7 @@ export default {
   async created() {
     await this.$store.dispatch("project/loadCurrentProject", this.projectId);
   },
+
   computed: {
     getCurrentProject() {
       console.log(this.$store.state.project.currentProject);
@@ -201,15 +222,22 @@ export default {
       console.log(keywordsInString);
       return keywordsInString;
     },
+    getLecturers() {
+      console.log(this.$store.getters.getLecturers);
+      console.log(this.$store);
+      console.log(this.$store.getters);
+      console.log(this.$store.getters["user/getLecturers"]);
 
-    /* buttonRender() {
-      let exists = false;
-      if (this.$store.state.project.currentProject != null) {
-        exists = true;
-      }
+      return this.$store.getters["user/getLecturers"];
+    },
+  },
 
-      return exists;
-    }, */
+  mounted() {
+    this.$store.dispatch("user/loadLecturersFromBackend");
+    this.$store.dispatch("user/loadStudentsFromBackend");
+    this.$store.dispatch("profile/loadUserFromBackend");
+    console.log(this.$store.state.user.lecturers);
+    console.log(this.$store.state.user.students);
   },
 };
 </script>
