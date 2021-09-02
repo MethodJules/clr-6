@@ -73,47 +73,41 @@ const actions = {
      * To upload files to database. 
      * Will be written later.... 
      */
-    async uploadFilesToDatabase({ commit, rootState }, file) {
+    async uploadFilesToDatabase({ commit, rootState }, files) {
         console.log("files in action")
-        console.log(file);
+        console.log(FileList);
         // sende state
-        commit("uploadFilesToState", file);
+        commit("uploadFilesToState", files);
 
         // Database Reactions....
-        const base64FileData = await fetch(file);
-        const binaryFileData = await base64FileData.blob();
-        /* const buffer = storedFile.Body; */
-        console.log(state)
-        var drupalUserUID = rootState.drupal_api.user.uid
-        var filename = file[0].name
-        console.log(drupalUserUID)
+        
+        files.forEach((file)=>{
 
-        var config = {
-            method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/octet-stream',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
-                'Content-Disposition': 'file; filename="' + filename + '"',
-
-            },
-            data: binaryFileData
-
-        };
-
-
-        axios(config)
+            var config = {
+                method: 'post',
+                url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/octet-stream',
+                    'Authorization': rootState.drupal_api.authToken,
+                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
+                    'Content-Disposition': 'file; filename="' + file.name + '"',
+                    
+                },
+                data: file
+                
+            };
+            
+            
+            axios(config)
             .then(function (response) {
                 console.log(response);
                 //commit('SAVE_FILES', { file });
-           })
+            })
             .catch(function (error) {
                 console.log(error)
             })
-
-
+        })
     },
 
 
