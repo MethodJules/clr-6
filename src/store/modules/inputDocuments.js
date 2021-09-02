@@ -83,24 +83,9 @@ const actions = {
 
         // Database Reactions....
 
-        let fileDatas = {};
-        // const base64FileData = await fetch(files);
-        // const binaryFileData = await base64FileData.blob();
 
         files.forEach((file)=>{
-            const base64FileData = fetch(files);
-            const binaryFileData = base64FileData.blob();
-            let fileData = {name:file.name, binaryFileData:binaryFileData};
-            fileDatas.push(fileData);
-        })
-
-        console.log(fileDatas);
-        /* const buffer = storedFile.Body; */
-        var drupalUserUID = rootState.drupal_api.user.uid
-        console.log(drupalUserUID)
-
-        fileDatas.forEach((fileData)=>{
-      
+            console.log(file);
             var config = {
                 method: 'post',
                 url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
@@ -109,10 +94,10 @@ const actions = {
                     'Content-Type': 'application/octet-stream',
                     'Authorization': rootState.drupal_api.authToken,
                     'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
-                    'Content-Disposition': 'file; filename="' + fileData.name + '"',
+                    'Content-Disposition': 'file; filename="' + file.name + '"',
 
                 },
-                data: fileData.binaryFileData
+                data: file
 
             };
 
