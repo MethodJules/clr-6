@@ -85,7 +85,7 @@ const actions = {
         /* const buffer = storedFile.Body; */
         console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
-        var filename = "Testdokument.txt"
+        var filename = file[0].name
         console.log(drupalUserUID)
 
         var config = {
@@ -108,12 +108,7 @@ const actions = {
             .then(function (response) {
                 console.log(response);
                 //commit('SAVE_FILES', { file });
-
-
-
-
-
-            })
+           })
             .catch(function (error) {
                 console.log(error)
             })
