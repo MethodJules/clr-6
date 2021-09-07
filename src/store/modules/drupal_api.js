@@ -58,10 +58,10 @@ const actions = {
         //Todo: uncomment or delete later, after login and registration process is tested thoroughly
         //await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
         var sparkyUserObject = rootState.sparky_api.sparkyUserObject
-        console.log(rootState.sparky_api.sparkyUserID)
-        console.log(rootState.sparky_api.sparkyUserObject)
-        console.log(username)
-        console.log(sparkyUserObject)
+        /*         console.log(rootState.sparky_api.sparkyUserID)
+                console.log(rootState.sparky_api.sparkyUserObject)
+                console.log(username)
+                console.log(sparkyUserObject) */
         //console.log(generatedPassword)
 
 
@@ -213,7 +213,7 @@ const mutations = {
     */
     SAVE_SESSION_TOKEN(state, token) {
         state.csrf_token = token
-        console.log(state.csrf_token)
+        //console.log(state.csrf_token)
     },
 
     /**
@@ -223,9 +223,9 @@ const mutations = {
     */
     SAVE_CREATED_USER(state, user) {
         state.user = user
-        console.log("jetzt csrf und user")
-        console.log(state.user)
-        console.log(state.csrf_token)
+        /*         console.log("jetzt csrf und user")
+                console.log(state.user)
+                console.log(state.csrf_token) */
     },
 
     /**
@@ -243,9 +243,9 @@ const mutations = {
         state.csrf_token = login_data.csrf_token;
         state.user = login_data.current_user;
         state.logout_token = login_data.logout_token;
-        console.log(state.csrf_token)
+        /* console.log(state.csrf_token)
         console.log(state.user)
-        console.log(state.logout_token)
+        console.log(state.logout_token) */
         state.validCredential = true;
 
     },
@@ -262,8 +262,8 @@ const mutations = {
             state.logout_token = sessionStorage.getItem("logout_token");
             state.authToken = sessionStorage.getItem("auth_token");
             state.user = JSON.parse(sessionStorage.getItem('current_user'));
-            console.log(state.user)
-            console.log(JSON.parse(sessionStorage.getItem('current_user')))
+            /*  console.log(state.user)
+             console.log(JSON.parse(sessionStorage.getItem('current_user'))) */
             //state.user= sessionStorage.getItem("current_user");
 
         }

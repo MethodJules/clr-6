@@ -209,25 +209,6 @@ export default {
         suggestions: "position-absolute list-group z-1000",
         suggestItem: "list-group-item",
       },
-
-      /*selected and options for list. geht async?*/
-      /*       selected: 'A',
-    options: [
-      { text: 'One', value: 'A' },
-      { text: 'Two', value: 'B' },
-      { text: 'Three', value: 'C' }
-    ]  */
-
-      /* project: {
-
-          title: '',
-          betreuenderDozent: '',
-          externeMitwirkende: '',
-          schlagworter: '',
-          kurzbeschreibung: ''
-
-
-        }, */
     };
   },
 
@@ -277,10 +258,6 @@ export default {
       };
 
       this.$store.dispatch("project/createProject", addProj);
-      console.log(this.project.kurzbeschreibung);
-      console.log("das hier nach ist addproj");
-      console.log(addProj.schlagworter);
-      console.log(this.project);
       //this.projectList.push(addProj)
 
       this.title = " ";
@@ -321,29 +298,27 @@ export default {
     },
 
     simpleSuggestionListLecturers2() {
-      console.log(this.$store.state.user.lecturers);
+      // console.log(this.$store.state.user.lecturers);
       return this.$store.state.user.lecturers;
     },
 
     inProjektbeschreibung() {
-      console.log(this.$route.name);
+      // console.log(this.$route.name);
       return this.$route.name === "Projektbeschreibung";
     },
 
     getLecturers() {
-      console.log(this.$store.getters.getLecturers);
-      console.log(this.$store);
+      /*    console.log(this.$store);
       console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getLecturers"]);
+      console.log(this.$store.getters["user/getLecturers"]); */
 
       return this.$store.getters["user/getLecturers"];
     },
 
     getStudents() {
-      console.log(this.$store.getters.getStudents);
-      console.log(this.$store);
+      /*console.log(this.$store);
       console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getStudents"]);
+      console.log(this.$store.getters["user/getStudents"]); */
 
       return this.$store.getters["user/getStudents"];
     },
@@ -352,8 +327,8 @@ export default {
     this.$store.dispatch("user/loadLecturersFromBackend");
     this.$store.dispatch("user/loadStudentsFromBackend");
     this.$store.dispatch("profile/loadUserFromBackend");
-    console.log(this.$store.state.user.lecturers);
-    console.log(this.$store.state.user.students);
+    /*     console.log(this.$store.state.user.lecturers);
+    console.log(this.$store.state.user.students); */
   },
 };
 </script>

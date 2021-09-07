@@ -5,6 +5,8 @@ const state = () => ({
   projectList: [],
   myProjects: [],
   currentProject: {},
+  currentProjectGroupAdmins: [],
+  currentProjectLecturers: [],
   currentProject2: null
 
 })
@@ -16,7 +18,26 @@ const state = () => ({
 
     }
 } */
+/* 
+const getters = {
 
+  getLecturersFromUser(state, rootGetters) {
+    console.log(rootGetters.user.getLecturers)
+    return rootGetters["user/getLecturers"];
+
+
+  },
+
+  getStudentsFromUser(state, rootGetters) {
+    console.log(rootGetters.user.getStudents)
+    return rootGetters.user.getStudents
+
+  }
+
+
+
+
+} */
 
 
 const actions = {
@@ -66,18 +87,18 @@ const actions = {
 
 
   /**
-* loads all projects from Backend and commits the mutation LOAD_PROJECT
+* loads chosen project from backend
 * and passes drupal user id gotten from rootstate on
 * @param state state as parameter for access and manipulation of state data
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
 */
-  async loadCurrentProject({ commit, state, rootState }, projectId) {
+  async loadCurrentProject({ commit, rootState, dispatch, rootGetters }, projectId) {
     //console.log(state)
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenmitglieder,field_betreuender_dozent&filter[id]=${projectId}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -92,7 +113,20 @@ const actions = {
         // console.log("single project")
         /* console.log($store.state.sparky_api.validCredential)
         console.log($store.state.sparky_api.drupalUserID) */
+
+        console.log(rootGetters["user/getLecturers"])
+        let lecturer_array = rootGetters["user/getLecturers"]
+
+        console.log(rootGetters["user/getStudents"])
+        let student_array = rootGetters["user/getStudents"]
+        console.log(response.data.included)
+        var intersection = response.data.included.filter(element => student_array.includes(element));
+        //intersection = lecturer_array.filter(e => response.data.included.indexOf(e) !== -1);
+        console.log(intersection)
+
         const projects = response.data;
+        dispatch('loadCurrentProjectWithGroupAdmins', projectId)
+        dispatch('loadCurrentProjectWithLecturers', projectId)
         commit('LOAD_CURRENT_PROJECT', { projects });
 
       })
@@ -101,6 +135,75 @@ const actions = {
       })
 
   },
+
+  /**
+* @param state state as parameter for access and manipulation of state data
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+*/
+  async loadCurrentProjectWithGroupAdmins({ commit, rootState }, projectId) {
+    //console.log(state)
+    //console.log(projectId)
+    var config = {
+      method: 'get',
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response)
+
+        const groupadmins = response.data.included;
+        commit('LOAD_CURRENT_PROJECT_GROUP_ADMIN', { groupadmins });
+
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+  },
+
+
+  /**
+* @param state state as parameter for access and manipulation of state data
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+*/
+  async loadCurrentProjectWithLecturers({ commit, rootState }, projectId) {
+    //console.log(state)
+    //console.log(projectId)
+    var config = {
+      method: 'get',
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(response)
+
+        const lecturers = response.data.included;
+        commit('LOAD_CURRENT_PROJECT_LECTURERS', { lecturers });
+
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+  },
+
+
 
   createProject({ commit, dispatch, rootState }, projEntry) {
     const keywords = JSON.stringify(projEntry.schlagworter)
@@ -360,12 +463,39 @@ const mutations = {
 
     });
 
+  },
+  LOAD_CURRENT_PROJECT_GROUP_ADMIN(state, { groupadmins }) {
 
+    let included_data = groupadmins
+    let groupadmins_array = []
+    // TODO: error handling, in case there is nothing included?
+    included_data.forEach(element => {
 
-    //console.log(projectObject)
+      const username = element.attributes.field_fullname;
+      const userid = element.id
+      groupadmins_array.push({ username: username, userid: userid, })
 
+    })
+    state.currentProjectGroupAdmins = groupadmins_array
+    console.log(state.currentProjectGroupAdmins)
+  },
 
+  LOAD_CURRENT_PROJECT_LECTURERS(state, { lecturers }) {
+
+    let included_data = lecturers
+    let lecturers_array = []
+    // TODO: error handling, in case there is nothing included?
+    included_data.forEach(element => {
+
+      const username = element.attributes.field_fullname;
+      const userid = element.id
+      lecturers_array.push({ username: username, userid: userid, })
+
+    })
+    state.currentProjectLecturers = lecturers_array
+    console.log(state.currentProjectLecturers)
   }
+
 }
 export default {
   namespaced: true,
