@@ -43,7 +43,10 @@ const mutations = {
                 name: element.name,
                 size: element.size
             };
+            //const field_documentid = element.relationships.field_documentid
             state.inputs.push(file);
+
+            //state.inputs = { documentid: field_documentid }
 
         });
     },
@@ -75,17 +78,41 @@ const actions = {
      * To upload files to database. 
      * Will be written later.... 
      */
-    async uploadFilesToDatabase({ dispatch, commit, rootState }, files) {
+    async uploadFilesToDatabase({ dispatch, commit, rootState }, file) {
         console.log("files in action")
-       
+        console.log(file);
         // sende state
-        commit("uploadFilesToState", files);
+        commit("uploadFilesToState", file);
 
         // Database Reactions....
+        /*  const base64FileData = await fetch(file);
+         const binaryFileData = await base64FileData.blob(); */
+        /* const buffer = storedFile.Body; */
 
+        /*  console.log(state)
+         var drupalUserUID = rootState.drupal_api.user.uid
+         var filename = file[0].name
+         console.log(drupalUserUID)
+         console.log(file[0].name)
+ 
+         
+         */
 
-        files.forEach((file)=>{
-            console.log(file);
+        let fileDatas = {};
+        // const base64FileData = await fetch(files);
+        // const binaryFileData = await base64FileData.blob();
+
+        files.forEach((file) => {
+
+            let fileData = { name: file.name };
+            fileDatas.push(fileData);
+        })
+
+        console.log(fileDatas);
+        /* const buffer = storedFile.Body; */
+        var drupalUserUID = rootState.drupal_api.user.uid
+        console.log(drupalUserUID)
+        fileDatas.forEach((fileData) => {
             var config = {
                 method: 'post',
                 url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
@@ -94,12 +121,14 @@ const actions = {
                     'Content-Type': 'application/octet-stream',
                     'Authorization': rootState.drupal_api.authToken,
                     'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
-                    'Content-Disposition': 'file; filename="' + file.name + '"',
+                    'Content-Disposition': 'file; filename="' + fileData.name + '"',
 
                 },
-                data: file
+                data: fileData
 
             };
+
+
 
             axios(config)
                 .then(function (response) {
@@ -136,7 +165,6 @@ const actions = {
                         }
                         
                     }
-
                 }
                 
             }
@@ -169,8 +197,6 @@ const actions = {
 
     },
 
-    // load data von datenbank (action)
-    // speichere die data/files zu input variable (commit)
 
 }
 
