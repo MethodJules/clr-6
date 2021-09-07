@@ -119,9 +119,9 @@ export default {
         return { display: "none" };
       }
     },
-    getFiles() {
-      return this.$store.state.inputDocuments.file;
-    },
+    /*  getFiles() {
+      return this.$store.state.inputDocuments.inputs;
+    }, */
   },
 
   methods: {
