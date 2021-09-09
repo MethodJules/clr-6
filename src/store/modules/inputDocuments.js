@@ -41,14 +41,24 @@ const mutations = {
         files.forEach(element => {
             let file = {
                 name: element.name,
-                size: element.size
-            };
-            //const field_documentid = element.relationships.field_documentid
-            state.inputs.push(file);
+                size: element.size,
 
-            //state.inputs = { documentid: field_documentid }
+            };
+            // const field_documentid = element.id
+            state.inputs.push(file);
+            // state.inputs = { idd: field_documentid }
 
         });
+
+        /* files.forEach(element => {
+            
+            const name = element.name;
+            const size = element.size;
+
+            state.inputs.push(name, size)
+           
+
+        }); */
     },
     /**
      * 
@@ -57,9 +67,9 @@ const mutations = {
      * 
      * Deletes the file from state
      */
-    deleteInput(state, index) {
+    deleteInput(state, payload) {
 
-        state.inputs.splice(index, 1);
+        state.inputs.splice(payload.index, 1);
 
     },
 
@@ -79,18 +89,18 @@ const actions = {
      * Will be written later.... 
      */
     async uploadFilesToDatabase({ dispatch, commit, rootState }, files) {
- 
+
         // sende state
         commit("uploadFilesToState", files);
         console.log(files);
-     
- 
+
+
         var drupalUserUID = rootState.drupal_api.user.uid
         console.log(drupalUserUID)
         files.forEach((file) => {
             var config = {
                 method: 'post',
-                url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
+                url: `https://clr-backend.ddns.net/jsonapi/media/document/field_media_document`,
                 headers: {
                     'Accept': 'application/vnd.api+json',
                     'Content-Type': 'application/octet-stream',
@@ -100,19 +110,19 @@ const actions = {
 
                 },
                 data: file
-            };   
+            };
             axios(config)
                 .then(function (response) {
                     console.log(response);
                     //commit('SAVE_FILES', { file });
                     const documentID = response.data.data.id;
                     dispatch('addInputDocument', documentID)
-                    
+
                 })
                 .catch(function (error) {
                     console.log(error)
                 })
-            })
+        })
 
     },
 
@@ -142,7 +152,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/inputdateien`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -164,6 +174,31 @@ const actions = {
             .catch(function (error) {
                 console.log(error)
             })
+
+    },
+
+    deleteInputDocuments({ commit }, payload) {
+        commit('deleteInput', payload);
+
+        console.log(payload.input)
+
+        /* var config = {
+            method: 'delete',
+            url: `https://clr-backend.ddns.net/jsonapi/node/inputdateien/${documentID}`,
+
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+        };
+        axios(config)
+            .then((response) => {
+                console.log(response);
+            }).catch(function (error) {
+                console.log(error);
+            }); */
 
     },
 

@@ -72,7 +72,7 @@ const routes = [
         name: 'NewMember',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
     },
-  
+
     {
         path: '/phasetemplate',
         name: 'PhaseTemplate',
@@ -109,7 +109,7 @@ const routes = [
         }, */
     {
         //path: '/home:user_id',
-        path: '/home/:project_id',
+        path: '/home',
         name: 'Home',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },
@@ -161,9 +161,9 @@ router.beforeEach((to, from, next) => {
         console.log("in")
 
         // check if user is logged in 
-        if (localStorage.getItem("userLoggedIn") != null) {  
-            console.log(localStorage.getItem("userLoggedIn")) 
-          
+        if (localStorage.getItem("userLoggedIn") != null) {
+            console.log(localStorage.getItem("userLoggedIn"))
+
             next()
         } else {
             alert("Login erforderlich")
