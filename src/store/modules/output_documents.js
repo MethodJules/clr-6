@@ -9,7 +9,7 @@ const state = () => ({
      */
 const actions = {
     async loadOutputDataFromBackend({commit}) {
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/outputdateien')
+        await  axios.get('https://clr-backend.ddns.net/jsonapi/node/outputdateien')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data; //TODO: Anpassen wie bei concepts.js so dass hier das Array mit Objekten aufgebaut wird, s. concepts.js Zeile 53
@@ -58,7 +58,7 @@ const mutations = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/outputdateien',
+            url: 'https://clr-backend.ddns.net/jsonapi/node/outputdateien',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'multipart/form-data',

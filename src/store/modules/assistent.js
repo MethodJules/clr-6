@@ -18,7 +18,7 @@ const getters = {
 
 const actions = {
     async loadAssistentArrayFromBackend({ commit }) {
-        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/assistententext/')
+        await axios.get('https://clr-backend.ddns.net/jsonapi/node/assistententext/')
             .then((response) => {
 
                 const newData = response.data.data;
@@ -33,7 +33,7 @@ const actions = {
 
     },
     async loadAssistentFromBackend({ commit }) {
-        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/assistententext/595f3448-168d-4979-80b3-b96e9ef84885?resourceVersion=id%3A191')
+        await axios.get('https://clr-backend.ddns.net/jsonapi/node/assistententext/595f3448-168d-4979-80b3-b96e9ef84885?resourceVersion=id%3A191')
             .then((response) => {
 
 
@@ -79,7 +79,7 @@ const mutations = {
         var data = `{"data": {"type": "node--assistent", "attributes": {"title": "Assistent Titel", "field_hilfstext": "${assistentEntry.hilfstext}"}}}`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/assistent',
+            url: 'https://clr-backend.ddns.net/jsonapi/node/assistent',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

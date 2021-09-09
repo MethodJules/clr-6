@@ -32,33 +32,24 @@ const mutations = {
      * We have all files at variable files. We can easily send it to the database.
      */
 
-    uploadFilesToState(state, files) {
+    uploadFilesToState(state, payload) {
         console.log("files in commit")
-        console.log(files)
         // this line uploads the files to inputsForDatabase for database reactions
-        state.inputsForDatabase.push(files);
+        state.inputsForDatabase.push(payload);
         // after here we are storing data to state
-        files.forEach(element => {
-            let file = {
-                name: element.name,
-                size: element.size,
+        // files.forEach(element => {
+        //     let file = {
+        //         id: element.id,
+        //         name: element.name,
+        //         size: element.size,
 
-            };
-            // const field_documentid = element.id
-            state.inputs.push(file);
-            // state.inputs = { idd: field_documentid }
-
-        });
-
-        /* files.forEach(element => {
-            
-            const name = element.name;
-            const size = element.size;
-
-            state.inputs.push(name, size)
-           
-
-        }); */
+        //     };
+        //     state.inputs.push(file);
+        
+        // });
+        
+            state.inputs.push(payload);
+      
     },
     /**
      * 
@@ -88,10 +79,10 @@ const actions = {
      * To upload files to database. 
      * Will be written later.... 
      */
-    async uploadFilesToDatabase({ dispatch, commit, rootState }, files) {
+    async uploadFilesToDatabase({ dispatch,  rootState }, files) {
 
         // sende state
-        commit("uploadFilesToState", files);
+        // commit("uploadFilesToState", files);
         console.log(files);
 
 
@@ -115,8 +106,11 @@ const actions = {
                 .then(function (response) {
                     console.log(response);
                     //commit('SAVE_FILES', { file });
-                    const documentID = response.data.data.id;
-                    dispatch('addInputDocument', documentID)
+                    let payload = {
+                       file:file,
+                        id: response.data.data.id
+                    }
+                    dispatch('addInputDocument', payload);
 
                 })
                 .catch(function (error) {
@@ -126,10 +120,9 @@ const actions = {
 
     },
 
-    addInputDocument({ state, rootState }, documentID) {
+    addInputDocument({ state, rootState, commit }, payload) {
 
         console.log(state)
-        console.log(documentID)
         var title = "Test Document"
         var data = `{
             "data": {
@@ -141,7 +134,7 @@ const actions = {
                     "field_documentid": {
                         "data": {
                             "type": "file--file",
-                            "id": "${documentID}"
+                            "id": "${payload.id}"
                         }
                         
                     }
@@ -166,10 +159,12 @@ const actions = {
 
         axios(config)
             .then(function (response) {
-
-                console.log(response);
-
-
+                let file = {
+                    name: payload.file.name,
+                    size: payload.file.size,
+                    id: response.data.data.id
+                }
+                commit("uploadFilesToState", file);
             })
             .catch(function (error) {
                 console.log(error)
@@ -177,20 +172,20 @@ const actions = {
 
     },
 
-    deleteInputDocuments({ commit }, payload) {
+    deleteInputDocuments({ rootState, commit }, payload) {
         commit('deleteInput', payload);
 
-        console.log(payload.input)
+        console.log(payload.input.id);
 
-        /* var config = {
+         var config = {
             method: 'delete',
-            url: `https://clr-backend.ddns.net/jsonapi/node/inputdateien/${documentID}`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/inputdateien/${payload.input.id}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+                // 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
         axios(config)
@@ -198,7 +193,7 @@ const actions = {
                 console.log(response);
             }).catch(function (error) {
                 console.log(error);
-            }); */
+            });
 
     },
 

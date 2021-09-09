@@ -12,7 +12,7 @@ const actions = {
     * @param commit commit is used to call a mutation from this function
     */
     async loadDocusFromBackend({commit}) {
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/documentation')
+        await  axios.get('https://clr-backend.ddns.net/jsonapi/node/documentation')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data; //TODO: Anpassen wie bei concepts.js so dass hier das Array mit Objekten aufgebaut wird, s. concepts.js Zeile 53
@@ -36,7 +36,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/documentation/${docuEntry.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -100,7 +100,7 @@ const mutations = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/documentation',
+            url: 'https://clr-backend.ddns.net/jsonapi/node/documentation',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -162,7 +162,7 @@ const mutations = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/documentation/${docuEntry.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

@@ -14,7 +14,7 @@ const actions={
     async loadToolsFromBackend({commit, rootState}, {projectId}) {
 
  
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/tools')
+        await  axios.get('https://clr-backend.ddns.net/jsonapi/node/tools')
             .then((response) => {
                 console.log(response);                                                                                                                                                                         
                 //if one of the tools has null in tool.relationships.field_phasenid.data.id -> breaks and no tools displayed
@@ -63,7 +63,7 @@ const mutations={
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/tools',
+            url: 'https://clr-backend.ddns.net/jsonapi/node/tools',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

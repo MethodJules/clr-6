@@ -9,7 +9,7 @@ const state = () => ({
 const actions = {
 
     async loadPostfachFromBackend({commit}) {
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/postfach')
+        await  axios.get('https://clr-backend.ddns.net/jsonapi/node/postfach')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data;
@@ -29,7 +29,7 @@ const actions = {
      deletePostfach({commit}, postfachEntry) {
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/postfach/${postfachEntry.idd}`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/postfach/${postfachEntry.idd}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -66,7 +66,7 @@ const mutations = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/postfach',
+            url: 'https://clr-backend.ddns.net/jsonapi/node/postfach',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

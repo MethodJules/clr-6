@@ -53,7 +53,7 @@ const actions = {
         console.log(commit)
         var config = {
             method: 'get',
-            url: 'https://clr-backend.x-navi.de/jsonapi/user/user',
+            url: 'https://clr-backend.ddns.net/jsonapi/user/user',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

@@ -43,7 +43,7 @@ const actions = {
 
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -83,7 +83,7 @@ const actions = {
     console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -157,7 +157,7 @@ const actions = {
     console.log(data)
     var config = {
       method: 'post',
-      url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
+      url: 'https://clr-backend.ddns.net/jsonapi/node/projekt',
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -228,7 +228,7 @@ const actions = {
       }`;
     var config = {
       method: 'patch',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectIdd}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${projEntry.projectIdd}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
