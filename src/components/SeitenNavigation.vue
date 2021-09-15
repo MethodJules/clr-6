@@ -1,31 +1,28 @@
 <template>
-            <b-icon :icon="phase.iconType" class="mr-3"></b-icon>
   <div>
-    <template v-if="!startpage">
-      <template v-if="!profil">
-        <template v-if="!einstellungen">
-      v-for="(phase, i) in phasen"
-      :key="i"
-      :disabled="!phase.status"
-      :to="{
-        name: 'PhaseTemplate',
-        params: { phase_id: i, project_id: getProjectID },
-      }"
-      class="btn btn-danger mb-2 btn-block text-left"
-    >
-      <b-icon :icon="phase.iconType" class="mr-3"></b-icon>
-      {{ phase.title }}
-    </b-link>
-
-    <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
-    <b-link
+    <div v-if="!startpage">
+      <div v-if="!profil">
+        <div v-if="!einstellungen">
+          <b-link
+            v-for="(phase, i) in phasen"
+            :key="i"
+            :disabled="!phase.status"
+            :to="{
+              name: 'PhaseTemplate',
+              params: { phase_id: i, project_id: getProjectID },
+            }"
+            class="btn btn-danger mb-2 btn-block text-left"
+          >
+            <b-icon :icon="phase.iconType" class="mr-3"></b-icon>
+            {{ phase.title }}
+          </b-link>
 
           <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
 
           <SeitenNavigationButtons @statusChange="changeStatus($event)" />
-        </template>
-      </template>
-    </template>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -155,7 +152,6 @@ export default {
       console.log(this.$route);
       return this.$route.params.project_id;
     },
-
     startpage() {
       return this.$route.name === "ProjectList";
     },
