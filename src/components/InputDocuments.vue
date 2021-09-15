@@ -34,7 +34,7 @@
                         >{{ input.size | convertSize }}
                         {{ getFileData.filesize | convertSize }}
                     </span>
-                    <a size="sm" :href="input.url"> Show file</a>
+                    <a size="sm" :href="input.url"> Dokument ansehen</a>
                     <!-- <b-button variant="success" size="sm" @click="input.url">
                         Show File button
                     </b-button> -->

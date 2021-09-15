@@ -77,13 +77,14 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
+                const urlBackend = "https://clr-backend.x-navi.de";
                 let files = response.data.included;
                 files.forEach(file => {
                     let payload = {
                         id: file.id,
                         name: file.attributes.filename,
                         size: file.attributes.filesize,
-                        url: file.attributes.uri.url,
+                        url: urlBackend + file.attributes.uri.url,
                     }
                     commit('LOAD_FILES_TO_STATE_FROM_BACKEND', payload);
 

@@ -72,11 +72,11 @@ export default {
     data() {
         return {
             file: "",
-            listOfOutputs: [
+            /* listOfOutputs: [
                 { file: "Outputdatei 1" },
                 { file: "Outputdatei 2" },
                 { file: "Outputdatei 3" },
-            ],
+            ], */
         };
     },
 
