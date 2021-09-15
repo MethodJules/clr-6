@@ -200,6 +200,10 @@ export default {
             );
         },
     },
+
+    mounted() {
+        this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
+    },
 };
 </script>
 <style scoped>

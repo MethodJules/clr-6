@@ -415,18 +415,18 @@ const mutations = {
 
 
     SAVE_PROFILE(state, { profiles }) {
-
+        console.log(profiles);
         profiles.forEach(element => {
-            console.log(field_studiengang)
             const field_studiengang = element.attributes.field_studiengang;
-            console.log(field_anzahl_literaturreviews)
+            console.log(field_studiengang)
             const field_anzahl_literaturreviews = element.attributes.field_anzahl_literaturreviews;
-            console.log(field_datenbanken)
+            console.log(field_anzahl_literaturreviews)
             const field_datenbanken = element.attributes.field_datenbanken;
-            console.log(field_analysetool)
+            console.log(field_datenbanken)
             const field_analysetool = element.attributes.field_analysetool;
-            console.log(field_referenztool)
+            console.log(field_analysetool)
             const field_referenztool = element.attributes.field_referenztool;
+            console.log(field_referenztool)
             const field_profilbild = element.relationships.field_profilbild;
             const field_id = element.id;
             const field_title = element.attributes.title;

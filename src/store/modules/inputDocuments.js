@@ -58,13 +58,14 @@ const mutations = {
 
 const actions = {
 
-    async loadInputdocumentsFromBackend({ commit, state, rootState }, payload) {
-        console.log(state)
-        var drupalUserUID = rootState.drupal_api.user.uid
+    async loadInputdocumentsFromBackend({ rootState }) {
+        var drupalUserUID = rootState.drupal_api.user.uid;
+        console.log(rootState.drupal_api);
+        console.log(drupalUserUID);
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien?filter[field_user_uid]=${drupalUserUID}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien?include=field_documentid`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -76,8 +77,8 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
-
-                commit('LOAD_FILES_TO_STATE_FROM_BACKEND', payload);
+                // let payload = {}
+                // commit('LOAD_FILES_TO_STATE_FROM_BACKEND', payload);
 
             })
             .catch(function (error) {
