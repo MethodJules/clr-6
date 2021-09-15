@@ -1,11 +1,9 @@
 import axios from "axios"
-const urlBackend = "https://clr-backend.x-navi.de"
+// const urlBackend = "https://clr-backend.x-navi.de"
 
 const state = {
     inputs: [], // we are using this array to store the file names and sizes only
     inputsForDatabase: [], // we are going to use this array in order to upload our files to database
-    file: '',
-    fileData: '',
 }
 
 const getters = {
@@ -27,7 +25,7 @@ const mutations = {
     /**
      * 
      * @param state we send our state to the method
-     * @param files files that we are going to use 
+     * @param {objekt} payload files that we are going to use 
      * 
      * uploads the name of the file to the state. 
      * we need another function to upload the file to the database. We can figure it out when it comes to it. 
@@ -35,79 +33,19 @@ const mutations = {
      */
 
     LOAD_FILES_TO_STATE_FROM_BACKEND(state, payload) {
-        console.log("files in commit")
-        // this line uploads the files to inputsForDatabase for database reactions
-        //state.inputsForDatabase.push(payload);
-        // after here we are storing data to state
-        // files.forEach(element => {
-        //     let file = {
-        //         id: element.id,
-        //         name: element.name,
-        //         size: element.size,
-
-        //     };
-        //     state.inputs.push(file);
-
-        // });
-
-        //state.inputs.push(payload);
-
-        console.log(payload)
-
-        payload.forEach(element => {
-
-
-            const url = element.attributes.uri.url;
-
-
-            let fullUrl = urlBackend + url;
-
-
-
-
-
-
-            state.fileData = fullUrl
-        });
-
-        payload.forEach(element => {
-
-
-            const filename = element.attributes.filename;
-            const filesize = element.attributes.filesize;
-            const field_id = element.id
-
-            let inputdocumentsObject = { filename: filename, filesize: filesize, idd: field_id }
-            state.inputs = inputdocumentsObject
-            console.log(state.inputs)
-
-
-
-
-
-
-            state.fileData = fullUrl
-        });
-
-
-
-
-
-
+        state.inputs.push(payload);
     },
 
 
     /**
      * 
      * @param state we send our state to the method
-     * @param index index of the file that we are going to delete
+     * @param payload file that we are going to delete
      * 
      * Deletes the file from state
      */
     deleteInput(state, payload) {
-
         state.inputs.splice(payload.index, 1);
-
     },
 
     setOkButtonClicked(state, isClicked) {
@@ -236,12 +174,12 @@ const actions = {
 
         axios(config)
             .then(function (response) {
-                console.log(response)
+                const urlBackend = "https://clr-backend.x-navi.de";
                 let file = {
                     name: payload.file.name,
                     size: payload.file.size,
                     id: response.data.data.id,
-                    url: response.data.included[0].attributes.uri.url
+                    url: urlBackend + response.data.included[0].attributes.uri.url
                 }
                 commit("LOAD_FILES_TO_STATE_FROM_BACKEND", file);
             })
