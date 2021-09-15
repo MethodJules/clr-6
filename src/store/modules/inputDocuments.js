@@ -58,7 +58,7 @@ const mutations = {
 
 const actions = {
 
-    async loadInputdocumentsFromBackend({ rootState }) {
+    async loadInputdocumentsFromBackend({ rootState, commit }) {
         var drupalUserUID = rootState.drupal_api.user.uid;
         console.log(rootState.drupal_api);
         console.log(drupalUserUID);
@@ -77,8 +77,17 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
-                // let payload = {}
-                // commit('LOAD_FILES_TO_STATE_FROM_BACKEND', payload);
+                let files = response.data.included;
+                files.forEach(file => {
+                    let payload = {
+                        id: file.id,
+                        name: file.attributes.filename,
+                        size: file.attributes.filesize,
+                        url: file.attributes.uri.url,
+                    }
+                    commit('LOAD_FILES_TO_STATE_FROM_BACKEND', payload);
+
+                });
 
             })
             .catch(function (error) {
