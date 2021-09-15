@@ -22,7 +22,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/user/user?filter[drupal_internal__uid]=${drupalUserUID}`,
+            url: `https://clr-backend.ddns.net/jsonapi/user/user?filter[drupal_internal__uid]=${drupalUserUID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -60,7 +60,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil?filter[field_user_uid]=${drupalUserUID}`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/profil?filter[field_user_uid]=${drupalUserUID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -131,7 +131,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/profil`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -169,7 +169,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/media/image/field_media_image`,
+            url: `https://clr-backend.ddns.net/jsonapi/media/image/field_media_image`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/octet-stream',
@@ -229,7 +229,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/user/user/${userID}`,
+            url: `https://clr-backend.ddns.net/jsonapi/user/user/${userID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -287,7 +287,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.idd}`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/profil/${profile.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

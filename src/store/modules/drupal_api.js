@@ -31,7 +31,7 @@ const actions = {
 
         //eigtl csrf token, nicht sessiontoken
         console.log(state)
-        await axios.get('https://clr-backend.x-navi.de/rest/session/token')
+        await axios.get('https://clr-backend.ddns.net/rest/session/token')
             .then((response) => {
                 console.log(response.data);
                 const token = response.data;
@@ -88,7 +88,7 @@ const actions = {
         //TODO: state.csrf_token testen und evtl gegen rootState.drupal_api.csrf_token austauschen
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/user/register?_format=json',
+            url: 'https://clr-backend.ddns.net/user/register?_format=json',
             headers: {
                 'X-CSRF-Token': state.csrf_token,
                 'Content-Type': 'application/json'
@@ -120,7 +120,7 @@ const actions = {
         //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished
         //maybe change both functions -> sparky_api/authenticate calls loginToDrupal when it is finished, and App/Login.vue calls sparky_api/authenticate first
         //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
-        const url = 'https://clr-backend.x-navi.de/user/login?_format=json';
+        const url = 'https://clr-backend.ddns.net/user/login?_format=json';
         const data = `{"name": "${username}", "pass": "${password}"}`;
         const config = {
             method: 'post',
@@ -161,7 +161,7 @@ const actions = {
         console.log(rootState.drupal_api.logout_token)
         console.log(state.logout_token)
         console.log(rootState.drupal_api.authToken)
-        const url = `https://clr-backend.x-navi.de/user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
+        const url = `https://clr-backend.ddns.net/user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
         const config = {
             method: 'post',
             url: url,

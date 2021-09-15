@@ -12,7 +12,7 @@ const actions = {
    
     /* TODO: We load the Reflexiondata from backend by filtering the drupalUserUID to get the reflexionData of the right user */
     async loadReflexionFromBackend({commit}) {
-        await  axios.get("https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate")
+        await  axios.get("https://clr-backend.ddns.net/jsonapi/node/reflexionstemplate")
             .then((response) => {
                 console.log(response);
                 const data = response.data.data;
@@ -80,7 +80,7 @@ const mutations = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate',
+            url: 'https://clr-backend.ddns.net/jsonapi/node/reflexionstemplate',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -119,7 +119,7 @@ const mutations = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

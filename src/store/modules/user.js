@@ -27,13 +27,7 @@ const getters = {
         return student_array
 
     }
-
-
-
-
 }
-
-
 
 const actions = {
 
@@ -43,7 +37,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/clr/clr_resource/lecturer?_format=json`,
+            url: `https://clr-backend.ddns.net/clr/clr_resource/lecturer?_format=json`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -75,7 +69,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/clr/clr_resource/student?_format=json`,
+            url: `https://clr-backend.ddns.net/clr/clr_resource/student?_format=json`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

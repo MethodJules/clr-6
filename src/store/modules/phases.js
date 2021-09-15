@@ -53,7 +53,7 @@ const actions = {
         console.log(state)
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -97,7 +97,7 @@ const actions = {
         console.log(state)
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
+            url: `https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -179,7 +179,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+            url: 'https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -199,7 +199,7 @@ const actions = {
 
                 var config = {
                     method: 'post',
-                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                    url: 'https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell',
                     headers: {
                         'Accept': 'application/vnd.api+json',
                         'Content-Type': 'application/vnd.api+json',
@@ -219,7 +219,7 @@ const actions = {
 
                         var config = {
                             method: 'post',
-                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                            url: 'https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell',
                             headers: {
                                 'Accept': 'application/vnd.api+json',
                                 'Content-Type': 'application/vnd.api+json',
@@ -238,7 +238,7 @@ const actions = {
 
                                 var config = {
                                     method: 'post',
-                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                    url: 'https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell',
                                     headers: {
                                         'Accept': 'application/vnd.api+json',
                                         'Content-Type': 'application/vnd.api+json',
@@ -257,7 +257,7 @@ const actions = {
 
                                         var config = {
                                             method: 'post',
-                                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                            url: 'https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell',
                                             headers: {
                                                 'Accept': 'application/vnd.api+json',
                                                 'Content-Type': 'application/vnd.api+json',
@@ -276,7 +276,7 @@ const actions = {
 
                                                 var config = {
                                                     method: 'post',
-                                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                    url: 'https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell',
                                                     headers: {
                                                         'Accept': 'application/vnd.api+json',
                                                         'Content-Type': 'application/vnd.api+json',
@@ -295,7 +295,7 @@ const actions = {
 
                                                         var config = {
                                                             method: 'post',
-                                                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                            url: 'https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell',
                                                             headers: {
                                                                 'Accept': 'application/vnd.api+json',
                                                                 'Content-Type': 'application/vnd.api+json',
@@ -314,7 +314,7 @@ const actions = {
 
                                                                 var config = {
                                                                     method: 'post',
-                                                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                                    url: 'https://clr-backend.ddns.net/jsonapi/node/phase_vorgehensmodell',
                                                                     headers: {
                                                                         'Accept': 'application/vnd.api+json',
                                                                         'Content-Type': 'application/vnd.api+json',

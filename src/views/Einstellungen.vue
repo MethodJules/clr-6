@@ -283,7 +283,7 @@ export default {
       // upload file
       /*  const fd = new FormData();
             fd.append = ('image', this.selectedFile, this.selectedFile.name)
-            axios.post('https://clr-backend.x-navi.de/jsonapi//media/image/field_media_image', fd)
+            axios.post('https://clr-backend.ddns.net/jsonapi//media/image/field_media_image', fd)
                 .then(res => {
                     console.log(res)
                 }) */

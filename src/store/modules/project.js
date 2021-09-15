@@ -60,7 +60,7 @@ const actions = {
 
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -98,7 +98,7 @@ const actions = {
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -114,15 +114,15 @@ const actions = {
         /* console.log($store.state.sparky_api.validCredential)
         console.log($store.state.sparky_api.drupalUserID) */
 
-        console.log(rootGetters["user/getLecturers"])
-        let lecturer_array = rootGetters["user/getLecturers"]
-
-        console.log(rootGetters["user/getStudents"])
-        let student_array = rootGetters["user/getStudents"]
-        console.log(response.data.included)
-        var intersection = response.data.included.filter(element => student_array.includes(element));
-        //intersection = lecturer_array.filter(e => response.data.included.indexOf(e) !== -1);
-        console.log(intersection)
+        /*         console.log(rootGetters["user/getLecturers"])
+                let lecturer_array = rootGetters["user/getLecturers"]
+        
+                console.log(rootGetters["user/getStudents"])
+                let student_array = rootGetters["user/getStudents"]
+                console.log(response.data.included)
+                var intersection = response.data.included.filter(element => student_array.includes(element));
+                //intersection = lecturer_array.filter(e => response.data.included.indexOf(e) !== -1);
+                console.log(intersection) */
 
         const projects = response.data;
         dispatch('loadCurrentProjectWithGroupAdmins', projectId)
@@ -146,7 +146,7 @@ const actions = {
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -180,7 +180,7 @@ const actions = {
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -255,7 +255,7 @@ const actions = {
     console.log(data)
     var config = {
       method: 'post',
-      url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
+      url: 'https://clr-backend.ddns.net/jsonapi/node/projekt',
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -327,7 +327,7 @@ const actions = {
       }`;
     var config = {
       method: 'patch',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectIdd}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${projEntry.projectIdd}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -347,7 +347,64 @@ const actions = {
 
 
   },
+
+  deleteMembers({ rootState, state }, mitglied) {
+    let userID = rootState.profile.userData.idd
+    //let index = state.mitglied.indexOf(mitglied);
+    //state.mitglied.splice(index, 1);
+    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
+    state.currentProject.gruppenmitglieder.splice(index, 1);
+    //console.log(state.currentProject.gruppenmitglieder);
+    //console.log(JSON.stringify(state.currentProject.gruppenmitglieder))
+    let gruppenmitglieder_array = []
+    state.currentProject.gruppenmitglieder.forEach(element => {
+      gruppenmitglieder_array.push({ type: "user--user", id: element.userid })
+
+    })
+    console.log(gruppenmitglieder_array)
+    console.log(JSON.stringify(gruppenmitglieder_array))
+    let gruppenmitglieder_array_string = JSON.stringify(gruppenmitglieder_array)
+
+
+
+    var data = `{
+          "data": {
+            "type": "node--projekt",
+             "id": "${state.currentProject.idd}",
+            "relationships": {
+              "field_gruppenmitglieder": {
+                "data": {
+                  ${gruppenmitglieder_array_string}
+                }
+              }
+            }
+          }
+        }`;
+
+    var config = {
+      method: 'patch',
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${state.currentProject.idd}`,
+
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+      data: data
+    };
+    axios(config)
+      .then((response) => {
+        console.log(response);
+        // commit('deleteMemberFrontend', payload);
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+  },
 }
+
+
 const mutations = {
   //TODO: authorization token ist noch statisch, dynamisch aus state holen
 
@@ -494,6 +551,7 @@ const mutations = {
     })
     state.currentProjectLecturers = lecturers_array
     console.log(state.currentProjectLecturers)
+    //console.log(lecturers_array)
   }
 
 }

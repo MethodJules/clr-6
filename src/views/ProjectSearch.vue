@@ -126,7 +126,7 @@ name: "ProjectList",
         this.project.titel=proj.titel
     },
     getProjectTitles: function(){
-      this.$http.get('https://clr-backend.x-navi.de/jsonapi/node/projekt', function(titel){
+      this.$http.get('https://clr-backend.ddns.net/jsonapi/node/projekt', function(titel){
         this.$set('titel', titel);
         console.log(titel);
       })

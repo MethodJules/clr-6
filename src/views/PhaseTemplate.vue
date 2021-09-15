@@ -82,6 +82,7 @@ export default {
     });
 
     console.log(this.$store.state.phases);
+    console.log(this.$route.params.phase_id);
   },
 };
 </script>

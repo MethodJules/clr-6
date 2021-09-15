@@ -8,7 +8,7 @@
     <div>
       <div
         v-for="mitglied in getCurrentProject.gruppenmitglieder"
-        :key="mitglied.id"
+        :key="mitglied.userid"
       >
         <b-row>
           <b-col>
@@ -16,6 +16,21 @@
           </b-col>
           <b-col>
             <h5>{{ mitglied.username }}</h5>
+          </b-col>
+          <b-col>
+            <b-button @click="deleteMember(mitglied)"> X </b-button>
+            <br />
+          </b-col>
+        </b-row>
+      </div>
+
+      <div v-for="admin in getGroupAdmins" :key="admin.userid">
+        <b-row>
+          <b-col>
+            <h5>Gruppenadmin</h5>
+          </b-col>
+          <b-col>
+            <h5>{{ admin.username }}</h5>
           </b-col>
           <b-col>
             <b-button @click="deleteMember(member)"> X </b-button>
@@ -75,8 +90,9 @@ export default {
     return {};
   },
   methods: {
-    deleteMember: function (member) {
-      this.$store.dispatch("members/deleteMembers", member);
+    deleteMember: function (mitglied) {
+      //this.$store.dispatch("members/deleteMembers", mitglied);
+      this.$store.dispatch("project/deleteMembers", mitglied);
     },
   },
   computed: {
@@ -85,6 +101,23 @@ export default {
     }),
     getCurrentProject() {
       return this.$store.state.project.currentProject;
+    },
+    getGroupAdmins() {
+      /*    console.log(this.$store);
+      console.log(this.$store.getters);
+      console.log(this.$store.getters["user/getLecturers"]); */
+      //console.log(this.$store.getters["project/currentProjectGroupAdmins"])
+
+      //return this.$store.getters["project/currentProjectGroupAdmins"];
+      return this.$store.state.project.currentProjectGroupAdmins;
+    },
+    getProjectLecturers() {
+      /*    console.log(this.$store);
+      console.log(this.$store.getters);
+      console.log(this.$store.getters["user/getLecturers"]); */
+
+      //return this.$store.getters["project/currentProjectLecturers"];
+      return this.$store.state.project.currentProjectLecturers;
     },
   },
 };

@@ -22,14 +22,17 @@
                     </b-row>
                     <b-row>
                       <b-col>
-<!--                         <b-link
+                        <!--                         <b-link
                           :to="{ name: 'Home', params: { user_id: getUserID } }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
                         >
                       </b-col> -->
                         <b-link
-                          :to="{ name: 'Home', params: { project_id: project.idd } }"
+                          :to="{
+                            name: 'Home',
+                            params: { project_id: project.idd },
+                          }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
                         >
@@ -95,7 +98,7 @@ export default {
     },
     getProjectTitles: function () {
       this.$http.get(
-        "https://clr-backend.x-navi.de/jsonapi/node/projekt",
+        "https://clr-backend.ddns.net/jsonapi/node/projekt",
         function (title) {
           this.$set("title", title);
           console.log(title);
@@ -104,17 +107,15 @@ export default {
     },
   },
 
-computed:{
-
+  computed: {
     getUserID() {
-     // return true
-      return this.$store.state.sparky_api.drupalUserID
+      // return true
+      return this.$store.state.sparky_api.drupalUserID;
     },
-    getProjectlist(){
+    getProjectlist() {
       return this.$store.state.project.myProjects;
-    }
-
-},
+    },
+  },
   ready: function () {
     this.getProjectTitles();
   },
