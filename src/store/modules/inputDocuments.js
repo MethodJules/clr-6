@@ -1,9 +1,11 @@
 import axios from "axios"
+const urlBackend = "https://clr-backend.x-navi.de"
 
 const state = {
     inputs: [], // we are using this array to store the file names and sizes only
     inputsForDatabase: [], // we are going to use this array in order to upload our files to database
-    file: ''
+    file: '',
+    fileData: '',
 }
 
 const getters = {
@@ -32,10 +34,10 @@ const mutations = {
      * We have all files at variable files. We can easily send it to the database.
      */
 
-    uploadFilesToState(state, payload) {
+    LOAD_FILES_TO_STATE_FROM_BACKEND(state, payload) {
         console.log("files in commit")
         // this line uploads the files to inputsForDatabase for database reactions
-        state.inputsForDatabase.push(payload);
+        //state.inputsForDatabase.push(payload);
         // after here we are storing data to state
         // files.forEach(element => {
         //     let file = {
@@ -45,12 +47,56 @@ const mutations = {
 
         //     };
         //     state.inputs.push(file);
-        
+
         // });
-        
-            state.inputs.push(payload);
-      
+
+        //state.inputs.push(payload);
+
+        console.log(payload)
+
+        payload.forEach(element => {
+
+
+            const url = element.attributes.uri.url;
+
+
+            let fullUrl = urlBackend + url;
+
+
+
+
+
+
+            state.fileData = fullUrl
+        });
+
+        payload.forEach(element => {
+
+
+            const filename = element.attributes.filename;
+            const filesize = element.attributes.filesize;
+            const field_id = element.id
+
+            let inputdocumentsObject = { filename: filename, filesize: filesize, idd: field_id }
+            state.inputs = inputdocumentsObject
+            console.log(state.inputs)
+
+
+
+
+
+
+            state.fileData = fullUrl
+        });
+
+
+
+
+
+
     },
+
+
     /**
      * 
      * @param state we send our state to the method
@@ -73,13 +119,42 @@ const mutations = {
 }
 
 const actions = {
+
+    async loadInputdocumentsFromBackend({ commit, state, rootState }, payload) {
+        console.log(state)
+        var drupalUserUID = rootState.drupal_api.user.uid
+
+        var config = {
+            method: 'get',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien?filter[field_user_uid]=${drupalUserUID}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(response)
+
+                commit('LOAD_FILES_TO_STATE_FROM_BACKEND', payload);
+
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
+
+    },
     /**
      * 
      * @param state we send our state to method
      * To upload files to database. 
      * Will be written later.... 
      */
-    async uploadFilesToDatabase({ dispatch,  rootState }, files) {
+    async uploadFilesToDatabase({ dispatch, rootState }, files) {
 
         // sende state
         // commit("uploadFilesToState", files);
@@ -88,10 +163,11 @@ const actions = {
 
         var drupalUserUID = rootState.drupal_api.user.uid
         console.log(drupalUserUID)
-        files.forEach((file) => {
+        for (const file of files) {
+
             var config = {
                 method: 'post',
-                url: `https://clr-backend.ddns.net/jsonapi/media/document/field_media_document`,
+                url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
                 headers: {
                     'Accept': 'application/vnd.api+json',
                     'Content-Type': 'application/octet-stream',
@@ -102,12 +178,13 @@ const actions = {
                 },
                 data: file
             };
-            axios(config)
+            await axios(config)
                 .then(function (response) {
                     console.log(response);
+                    console.log(file.name)
                     //commit('SAVE_FILES', { file });
                     let payload = {
-                       file:file,
+                        file: file,
                         id: response.data.data.id
                     }
                     dispatch('addInputDocument', payload);
@@ -116,14 +193,14 @@ const actions = {
                 .catch(function (error) {
                     console.log(error)
                 })
-        })
+        }
 
     },
 
     addInputDocument({ state, rootState, commit }, payload) {
 
         console.log(state)
-        var title = "Test Document"
+        var title = payload.file.name
         var data = `{
             "data": {
                 "type": "node--inputdateien", 
@@ -145,7 +222,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.ddns.net/jsonapi/node/inputdateien`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien?include=field_documentid`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -159,12 +236,14 @@ const actions = {
 
         axios(config)
             .then(function (response) {
+                console.log(response)
                 let file = {
                     name: payload.file.name,
                     size: payload.file.size,
-                    id: response.data.data.id
+                    id: response.data.data.id,
+                    url: response.data.included[0].attributes.uri.url
                 }
-                commit("uploadFilesToState", file);
+                commit("LOAD_FILES_TO_STATE_FROM_BACKEND", file);
             })
             .catch(function (error) {
                 console.log(error)
@@ -177,15 +256,17 @@ const actions = {
 
         console.log(payload.input.id);
 
-         var config = {
+        var config = {
             method: 'delete',
-            url: `https://clr-backend.ddns.net/jsonapi/node/inputdateien/${payload.input.id}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien/${payload.input.id}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+                //'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
                 // 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
         axios(config)

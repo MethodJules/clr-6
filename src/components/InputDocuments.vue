@@ -25,11 +25,14 @@
         class="card card-body p-2"
       >
         <div>
-          <p class="m-0">
+          <p class="m-0" :href= "getFile">
             {{ input.name }}
+            {{getFileData.filename}}
+
           </p>
           <span class="float-right sizeBox"
             >{{ input.size | convertSize }}
+            {{getFileData.filesize | convertSize }}
           </span>
 
           <b-button
@@ -123,6 +126,16 @@ export default {
         return { display: "none" };
       }
     },
+
+    getFile() {
+      console.log()
+      return this.$store.state.inputDocuments.fileData;
+      
+    },
+
+    getFileData() {
+      return this.$store.state.inputDocuments.inputs;
+    }
   },
   methods: {
     /**

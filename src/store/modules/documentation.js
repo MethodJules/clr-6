@@ -6,13 +6,13 @@ const state = () => ({
 })
 //TO DO: commetns
 const actions = {
-    
+
     /**
     * loads all documentations of all phases from the backend and calls mutation and passes on the documentation array
     * @param commit commit is used to call a mutation from this function
     */
-    async loadDocusFromBackend({commit}) {
-        await  axios.get('https://clr-backend.ddns.net/jsonapi/node/documentation')
+    async loadDocusFromBackend({ commit }) {
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/documentation')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data; //TODO: Anpassen wie bei concepts.js so dass hier das Array mit Objekten aufgebaut wird, s. concepts.js Zeile 53
@@ -20,38 +20,38 @@ const actions = {
                 let documentations = [];
                 for (var i in data) {
                     //console.log(i)
-                    documentations.push({idd: data[i].id, title: data[i].attributes.title, documentation: data[i].attributes.field_documentationtext})
+                    documentations.push({ idd: data[i].id, title: data[i].attributes.title, documentation: data[i].attributes.field_documentationtext })
                 }
 
                 //console.log(documentations)
                 commit('SAVE_DOCUMENTATION', documentations);
                 //commit('SAVE_DOCUMENTATION', documentation)
-            }).catch(error =>{
+            }).catch(error => {
                 throw new Error(`API ${error}`);
             });
 
     },
 
-/*     async loadSingleDocuFromBackend({commit}, documentID) {
-
-        var config = {
-            method: 'get',
-            url: `https://clr-backend.ddns.net/jsonapi/node/documentation/${docuEntry.idd}`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-        };
-        axios(config)
-        .then(function(response){
-            console.log("dies ist einzelne doku")
-            console.log(response)
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
-        }, */
+    /*     async loadSingleDocuFromBackend({commit}, documentID) {
+    
+            var config = {
+                method: 'get',
+                url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+                },
+            };
+            axios(config)
+            .then(function(response){
+                console.log("dies ist einzelne doku")
+                console.log(response)
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+            }, */
 
 
 
@@ -61,18 +61,18 @@ const actions = {
     * @param commit commit is used to call a mutation from this function
     * @param docuEntry newly created documentation
     */
-    createDocumentation({commit}, docuEntry) {
+    createDocumentation({ commit }, docuEntry) {
 
         commit('ADD_DOCUMENTATION', docuEntry)
 
     },
 
-        /**
-    * takes existing documentation as param and passes it on to mutation 
-    * @param commit commit is used to call a mutation from this function
-    * @param docuEntry newly created documentation
-    */
-    updateDocumentation({commit}, docuEntry) {
+    /**
+* takes existing documentation as param and passes it on to mutation 
+* @param commit commit is used to call a mutation from this function
+* @param docuEntry newly created documentation
+*/
+    updateDocumentation({ commit }, docuEntry) {
 
         commit('UPDATE_DOCUMENTATION', docuEntry);
     },
@@ -100,7 +100,7 @@ const mutations = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.ddns.net/jsonapi/node/documentation',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/documentation',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -111,19 +111,19 @@ const mutations = {
         };
         console.log("text");
         axios(config)
-            .then(function(response){
+            .then(function (response) {
                 console.log(response)
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
     },
 
-        /**
-    * saves loaded documentation in state
-    * @param state state as parameter for access and manipulation of state data
-    * @param documentations newly created documentation
-    */
+    /**
+* saves loaded documentation in state
+* @param state state as parameter for access and manipulation of state data
+* @param documentations newly created documentation
+*/
     SAVE_DOCUMENTATION(state, documentations) {
         /*
         documentation.forEach(element => {
@@ -141,14 +141,14 @@ const mutations = {
         state.documentations = documentations
     },
 
-            /**
-    * update existing documentation in drupal backend
-    * @param state state as parameter for access and manipulation of state data
-    * @param docuEntry existing documentation, which is about to get updated
-    */
-    UPDATE_DOCUMENTATION(state, docuEntry){
-            //let index = state.rowData.indexOf(dailyEntry);
-            //state.rowData[index]=dailyEntry;
+    /**
+* update existing documentation in drupal backend
+* @param state state as parameter for access and manipulation of state data
+* @param docuEntry existing documentation, which is about to get updated
+*/
+    UPDATE_DOCUMENTATION(state, docuEntry) {
+        //let index = state.rowData.indexOf(dailyEntry);
+        //state.rowData[index]=dailyEntry;
         //console.log(dailyEntry.todaydoings)
         var data = `{
             "data": {
@@ -162,7 +162,7 @@ const mutations = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.ddns.net/jsonapi/node/documentation/${docuEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -171,13 +171,13 @@ const mutations = {
             data: data
         };
         axios(config)
-        .then(function(response){
-            console.log(response)
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
-        },
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    },
 }
 
 export default {

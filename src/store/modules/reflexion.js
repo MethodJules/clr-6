@@ -9,32 +9,32 @@ const state = () => ({
 
 
 const actions = {
-   
+
     /* TODO: We load the Reflexiondata from backend by filtering the drupalUserUID to get the reflexionData of the right user */
-    async loadReflexionFromBackend({commit}) {
-        await  axios.get("https://clr-backend.ddns.net/jsonapi/node/reflexionstemplate")
+    async loadReflexionFromBackend({ commit }) {
+        await axios.get("https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate")
             .then((response) => {
                 console.log(response);
                 const data = response.data.data;
                 commit('SAVE_REFLEXION', data);
-            }).catch(error =>{
+            }).catch(error => {
                 throw new Error(`API ${error}`);
-            });         
-            
-    }, 
+            });
 
-    createReflexion({commit}, reflexion) {
+    },
+
+    createReflexion({ commit }, reflexion) {
         console.log("hello")
         console.log(reflexion.berichten_reagieren)
         commit('ADD_REFLEXION', reflexion)
 
     },
 
-    updateReflexion({commit}, reflexion) {
+    updateReflexion({ commit }, reflexion) {
 
         commit('UPDATE_REFLEXION', reflexion);
     },
- 
+
 
 }
 
@@ -80,7 +80,7 @@ const mutations = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.ddns.net/jsonapi/node/reflexionstemplate',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -90,19 +90,19 @@ const mutations = {
         };
 
         axios(config)
-            .then(function(response){
+            .then(function (response) {
                 console.log(response)
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
     },
- 
+
     /* makes changes of the existing reflexion in the backend and overwrites the existing reflexionstemplate. Herefore we need the reflexionstemplate.idd
     that the backend knows which reflexionstemplate should be exactly updated/overwritten */
-    UPDATE_REFLEXION(state, reflexion){
-            let index = state.rowData.indexOf(reflexion);
-            state.rowData[index]=reflexion;
+    UPDATE_REFLEXION(state, reflexion) {
+        let index = state.rowData.indexOf(reflexion);
+        state.rowData[index] = reflexion;
         var data = `
         {
             "data": {
@@ -119,7 +119,7 @@ const mutations = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.ddns.net/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -128,18 +128,18 @@ const mutations = {
             data: data
         };
         axios(config)
-            .then(function(response){
+            .then(function (response) {
                 console.log(response)
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
     },
-        
-   
+
+
 
     SAVE_REFLEXION(state, reflexion) {
-        
+
         reflexion.forEach(element => {
             const field_berichten_reagieren = element.attributes.field_berichten_reagieren;
             const field_in_bezug_setzen = element.attributes.field_in_bezug_setzen;
@@ -147,10 +147,10 @@ const mutations = {
             const field_schlussfolgern = element.attributes.field_schlussfolgern;
             const field_id = element.id;
             const field_title = element.attributes.title;
-            state.rowData.push( { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title })
-                   
+            state.rowData.push({ berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title })
+
         });
-    }      
+    }
 
 }
 
@@ -159,7 +159,7 @@ export default {
     state,
     mutations,
     actions,
-    
+
 }
 
 
