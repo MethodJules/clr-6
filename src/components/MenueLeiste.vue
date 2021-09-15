@@ -35,7 +35,7 @@
             >
           </b-navbar-nav>
           <b-navbar-nav>
-            <b-nav-item to="/home:project_id">Dashboard</b-nav-item>
+            <b-nav-item to="/home">Dashboard</b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav>
             <b-nav-item to="/forum">Projektforum</b-nav-item>

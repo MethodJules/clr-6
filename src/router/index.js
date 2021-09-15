@@ -109,7 +109,7 @@ const routes = [
         }, */
     {
         //path: '/home:user_id',
-        path: '/home/:project_id',
+        path: '/home',
         name: 'Home',
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
     },

@@ -1,72 +1,111 @@
 <template>
   <div>
-    <table>
-      <tr>
-        <td><p style="font-weight: bold">Projekttitel</p></td>
-      </tr>
-      <tr>
-        <!-- <td> {{project[findIndex()].title}} </td>  -->
-        <td>{{ getCurrentProject.title }}</td>
-      </tr>
-      <br />
-      <tr>
-        <td><p style="font-weight: bold">Betreuer*in</p></td>
-      </tr>
-      <tr>
-        <!--  <td> {{project[findIndex()].betreuenderDozent}} </td> -->
-        <td>{{ getCurrentProject.betreuenderDozent }}</td>
-      </tr>
-      <br />
-      <tr>
-        <td><p style="font-weight: bold">Externe Partner</p></td>
-      </tr>
-      <tr>
-        <td>{{ getCurrentProject.externeMitwirkende }}</td>
-      </tr>
-      <br />
-      <tr>
-        <td><p style="font-weight: bold">Schlagwörter</p></td>
-      </tr>
-      <tr
-        v-for="(schlagwort, index) in getCurrentProject.schlagworter"
-        :key="`schlagwort-${index}`"
-      >
-        <!-- <tr v-for = "project in myProjects" :key="project.id">  -->
-        <!--  <td> {{projectList[findIndex()].schlagworter}} </td> -->
-        <td>{{ schlagwort }}</td>
-      </tr>
-      <br />
-      <tr>
-        <td><p style="font-weight: bold">Kurzbeschreibung</p></td>
-      </tr>
-      <tr>
-        <td>{{ getCurrentProject.kurzbeschreibung }}</td>
-      </tr>
-      <br />
-      <tr>
-        <td><p style="font-weight: bold">Gruppenmitglieder</p></td>
-      </tr>
-      <tr
-        v-for="mitglied in getCurrentProject.gruppenmitglieder"
-        :key="mitglied.id"
-      >
-        <td>{{ mitglied.username }}</td>
-      </tr>
-      <tr>
-        <td></td>
-      </tr>
-      <br />
-    </table>
+    <b-container fluid>
+      <b-row>
+        <b-col sm="5">
+          <label for="input-1"> <strong> Projekttitel </strong> </label>
+        </b-col>
 
-    <b-row>
-      <!-- <div
-                class="border border-dark"
-                v-for="member in projectGroup.member"
-                :key="member.index"
+        <b-col sm="10">
+          <b-form-input v-model="getCurrentProject.title" id="input-1">
+          </b-form-input>
+
+          <br />
+        </b-col>
+        <b-col sm="5">
+          <label for="input-1"> <strong> Betreuer*in </strong> </label>
+        </b-col>
+
+        <b-col sm="10">
+          <b-form-select
+            v-model="getCurrentProject.betreuenderDozent"
+            id="input-1"
+          >
+            <option
+              v-for="lecturer in getLecturers"
+              v-bind:value="lecturer.uuid"
+              v-bind:key="lecturer.uuid"
             >
-            <p>{{ member }}</p>
-            </div> -->
-    </b-row>
+              {{ lecturer.name }}
+            </option></b-form-select
+          >
+
+          <!-- <select v-model="project.betreuenderDozent" class="form-control"> -->
+          <!-- <option
+              v-for="lecturer in getLecturers"
+              v-bind:value="lecturer.uuid"
+              v-bind:key="lecturer.uuid"
+            > -->
+          <!-- {{
+              lecturer.name
+            }} -->
+          <!-- </option> -->
+          <!-- </select>
+          <span>Selected: {{ project.betreuenderDozent }}</span> -->
+
+          <br />
+        </b-col>
+
+        <b-col sm="5">
+          <label for="input-1">
+            <strong> Externe Partner*innnen </strong>
+          </label>
+        </b-col>
+
+        <b-col sm="10">
+          <b-form-input
+            v-model="getCurrentProject.externeMitwirkende"
+            id="input-1"
+          >
+          </b-form-input>
+
+          <br />
+        </b-col>
+
+        <b-col sm="5">
+          <label for="input-1"> <strong> Schlagwörter </strong> </label>
+          <b-row>
+            <b-form-input v-model="getKeywords"> </b-form-input>
+          </b-row>
+        </b-col>
+
+        <b-col sm="10">
+          <br />
+        </b-col>
+
+        <b-col sm="5">
+          <label for="input-1"> <strong> Projektbeschreibung </strong> </label>
+        </b-col>
+
+        <b-col sm="10">
+          <b-form-textarea
+            v-model="getCurrentProject.kurzbeschreibung"
+            id="input-1"
+          >
+          </b-form-textarea>
+
+          <br />
+        </b-col>
+
+        <b-col sm="5">
+          <label for="input-1"> <strong> Gruppenmitglieder </strong> </label>
+          <b-row
+            v-for="mitglied in getCurrentProject.gruppenmitglieder"
+            :key="mitglied.id"
+          >
+            <b-form-input
+              v-model="mitglied.username"
+              id="input-1"
+            ></b-form-input>
+          </b-row>
+        </b-col>
+
+        <b-col sm="10">
+          <br />
+        </b-col>
+      </b-row>
+    </b-container>
+
     <div>
       <b-row>
         <b-col cols="2"> </b-col>
@@ -79,10 +118,10 @@
         </b-col>
         <b-col cols="3">
           <b-row>
-            <div v-if="buttonRender">
-              <ProjectForm :project="project2">
-                Beschreibung bearbeiten
-              </ProjectForm>
+            <div>
+              <b-button @click="updateProject()"
+                >Beschreibung bearbeiten</b-button
+              >
             </div>
           </b-row>
         </b-col>
@@ -101,14 +140,12 @@
 </template>
 
 <script>
-//import ProjectList from '@/views/ProjectList.vue'
 import ProjectForm from "@/components/ProjectForm.vue";
 
 export default {
   name: "Projektbeschreibung",
 
   components: {
-    //ProjectList,
     ProjectForm,
   },
   data() {
@@ -131,9 +168,6 @@ export default {
     };
   },
   methods: {
-    openThisModal() {
-      this.$refs["create_project"].show();
-    },
     findIndex() {
       let rightIndex = 0;
       for (let i = 0; i < this.$store.state.project.myProjects.length; i++) {
@@ -148,94 +182,62 @@ export default {
       return rightIndex;
     },
 
-    /* showEntry(){
-            var projectId = this.$store.state.project.myProjects.idd
-            var rightIndex = 0;
-            if(projectId === 'ab00a160-7179-4915-bffe-d4586bfc5477'){
-                rightIndex = 0
-            }else if(projectId === 'a7dfaf1f-119a-4a35-a971-9d4a9d8b8070' ){
-                rightIndex = 1
-            }else if(projectId === 'c93deffc-ef26-406c-a3c1-f83d76eddbd0'){
-                rightIndex = 2
-            }else{
-                rightIndex= 3
-            }
-            return rightIndex
-        }, */
+    updateProject() {
+      var schlagwortarray = this.project.schlagworter.split(",");
+      var keywords = Object.assign({}, schlagwortarray);
+      console.log(keywords);
+
+      var updatedProj = {
+        title: this.title,
+        kurzbeschreibung: this.project.kurzbeschreibung,
+        betreuenderDozent: this.project.betreuenderDozent,
+        externeMitwirkende: this.project.externeMitwirkende,
+        schlagworter: keywords,
+        gruppenadmin: this.$store.state.sparky_api.drupalUserID,
+        projectIdd: this.$route.params.project_id,
+      };
+
+      this.$store.dispatch("project/updateProject", updatedProj);
+    },
   },
   async mounted() {
-    //this.projectList = this.$store.state.project.myProjects
-
     this.project2 = this.$store.state.project.currentProject;
     console.log(this.$store.state.project.currentProject);
-    //console.log(this.project2);
-
-    /*     this.$store.dispatch('project/loadProjectsFromBackend')
-    //this.projectList = this.$store.state.project.myProjects
-    this.project = this.$store.state.project.myProjects[this.findIndex()]
-    this.myProjects = this.$store.state.project.myProjects
-     */
+    console.log(this.project2);
   },
   async created() {
-    //this.projectList = this.$store.state.project.myProjects
     await this.$store.dispatch("project/loadCurrentProject", this.projectId);
-
-    /*     this.$store.dispatch('project/loadProjectsFromBackend')
-    //this.projectList = this.$store.state.project.myProjects
-    this.project = this.$store.state.project.myProjects[this.findIndex()]
-    this.myProjects = this.$store.state.project.myProjects
-     */
   },
+
   computed: {
     getCurrentProject() {
       //console.log(this.$store.state.project.currentProject);
       return this.$store.state.project.currentProject;
     },
 
-    buttonRender() {
-      let exists = false;
-      if (this.$store.state.project.currentProject != null) {
-        exists = true;
-      }
+    getKeywords() {
+      let keywords = this.$store.state.project.currentProject.schlagworter;
+      console.log(keywords);
+      let keywordsInString = keywords.join();
+      console.log(keywordsInString);
+      return keywordsInString;
+    },
+    getLecturers() {
+      console.log(this.$store.getters.getLecturers);
+      console.log(this.$store);
+      console.log(this.$store.getters);
+      console.log(this.$store.getters["user/getLecturers"]);
 
-      return exists;
+      return this.$store.getters["user/getLecturers"];
     },
+  },
 
-    title: {
-      get() {
-        return this.$store.state.title;
-      },
-      set(value) {
-        this.$store.commit("setTitel", value);
-      },
-    },
-    betreuenderDozent: {
-      get() {
-        return this.$store.state.betreuenderDozent;
-      },
-      set(value) {
-        this.$store.commit("setBetreuenderDozent", value);
-      },
-    },
-
-    /*  giveID(){
-          var projectId = this.$store.state.project.projectList.idd
-          return projectId
-      }, */
-    /*  ausgabeProjekt:{
-        get: function(){
-            return this.projectList[0].schlagworter
-            
-        },
-        getProjectID(){
-      return this.$route.params.project_id
-    },
-    projectSelection(){
-        return this.$store.state.project.projectList.find(
-                project => project.project_id === this.$route.params.project_id
-            );
-    }
-    }, */
+  mounted() {
+    this.$store.dispatch("user/loadLecturersFromBackend");
+    this.$store.dispatch("user/loadStudentsFromBackend");
+    this.$store.dispatch("profile/loadUserFromBackend");
+    console.log(this.$store.state.user.lecturers);
+    console.log(this.$store.state.user.students);
   },
 };
 </script>

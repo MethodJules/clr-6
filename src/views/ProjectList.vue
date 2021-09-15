@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <h1>Meine Projekte</h1>
-    <br />
-    <b-row>
-      <!-- <b-card class="m-2"
+    <div>
+        <h1>Meine Projekte</h1>
+        <br />
+        <b-row>
+            <!-- <b-card class="m-2"
         v-for="proj in projectList"
         :key="proj.projectId"
         :title="proj.titel"
@@ -52,17 +52,17 @@
       </div>
       <!-- </b-card> -->
 
-      <b-card title="Neues Projekt" style="max-height: 10rem" class="m-2">
-        <b-row>
-          <b-col cols="3">
-            <ProjectForm :project="project"></ProjectForm>
+            <b-card title="Neues Projekt" style="max-height: 10rem" class="m-2">
+                <b-row>
+                    <b-col cols="3">
+                        <ProjectForm :project="project"></ProjectForm>
 
-            <!-- <b-link class=" btn btn-outline-dark mt-5">Neues Projekt</b-link> -->
-          </b-col>
+                        <!-- <b-link class=" btn btn-outline-dark mt-5">Neues Projekt</b-link> -->
+                    </b-col>
+                </b-row>
+            </b-card>
         </b-row>
-      </b-card>
-    </b-row>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -70,42 +70,42 @@ import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 import ProjectForm from "@/components/ProjectForm";
 
 export default {
-  name: "ProjectList",
+    name: "ProjectList",
 
-  components: {
-    ReflexionAuswahl,
-    ProjectForm,
-  },
-  data() {
-    return {
-      project: {
-        kurzbeschreibung: "",
-        betreuenderDozent: "",
-        externeMitwirkende: "",
-        schlagworter: [],
-
-        idd: "",
-        title: "",
-      },
-
-      projectList: this.getProjectlist,
-    };
-  },
-
-  methods: {
-    fetchData(proj) {
-      this.project.title = proj.title;
+    components: {
+        ReflexionAuswahl,
+        ProjectForm,
     },
-    getProjectTitles: function () {
-      this.$http.get(
-        "https://clr-backend.ddns.net/jsonapi/node/projekt",
-        function (title) {
-          this.$set("title", title);
-          console.log(title);
-        }
-      );
+    data() {
+        return {
+            project: {
+                kurzbeschreibung: "",
+                betreuenderDozent: "",
+                externeMitwirkende: "",
+                schlagworter: [],
+
+                idd: "",
+                title: "",
+            },
+
+            projectList: this.getProjectlist,
+        };
     },
-  },
+
+    methods: {
+        fetchData(proj) {
+            this.project.title = proj.title;
+        },
+        getProjectTitles: function () {
+            this.$http.get(
+                "https://clr-backend.ddns.net/jsonapi/node/projekt",
+                function (title) {
+                    this.$set("title", title);
+                    console.log(title);
+                }
+            );
+        },
+    },
 
   computed: {
     getUserID() {

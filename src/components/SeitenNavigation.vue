@@ -1,6 +1,9 @@
 <template>
+            <b-icon :icon="phase.iconType" class="mr-3"></b-icon>
   <div>
-    <b-link
+    <template v-if="!startpage">
+      <template v-if="!profil">
+        <template v-if="!einstellungen">
       v-for="(phase, i) in phasen"
       :key="i"
       :disabled="!phase.status"
@@ -15,8 +18,14 @@
     </b-link>
 
     <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
+    <b-link
 
-    <SeitenNavigationButtons @statusChange="changeStatus($event)" />
+          <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
+
+          <SeitenNavigationButtons @statusChange="changeStatus($event)" />
+        </template>
+      </template>
+    </template>
   </div>
 </template>
 <script>
@@ -145,6 +154,17 @@ export default {
       console.log("Bu ne yav:");
       console.log(this.$route);
       return this.$route.params.project_id;
+    },
+
+    startpage() {
+      return this.$route.name === "ProjectList";
+    },
+    profil() {
+      return this.$route.name === "Profil";
+    },
+
+    einstellungen() {
+      return this.$route.name === "Einstellungen";
     },
   },
   /* watch:{
