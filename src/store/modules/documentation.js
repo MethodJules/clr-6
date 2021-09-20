@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const state = () => ({
     documentations: [],
-    documentation: null,
+    documentation: '',
 })
 //TO DO: commetns
 const actions = {
@@ -125,18 +125,18 @@ const mutations = {
 * @param documentations newly created documentation
 */
     SAVE_DOCUMENTATION(state, documentations) {
-        /*
-        documentation.forEach(element => {
-            const field_documentationtext = element.attributes.field_documentationtext;
-            //console.log(field_documentationtext)
-            const field_id = element.id;
-            //console.log(element.id)
-            const field_title = element.attributes.title;
-            //console.log(element.id)
-            state.rowData.push( { documentation: field_documentationtext, idd: field_id, title: field_title })
-            //console.log(state)
-        });
-        */
+
+        /*  documentations.forEach(element => {
+             const field_documentationtext = element.attributes.field_documentationtext;
+             //console.log(field_documentationtext)
+             const field_id = element.id;
+             //console.log(element.id)
+             const field_title = element.attributes.title;
+             //console.log(element.id)
+             state.rowData.push({ documentation: field_documentationtext, idd: field_id, title: field_title })
+             //console.log(state)
+         }); */
+
         //console.log(documentations)
         state.documentations = documentations
     },

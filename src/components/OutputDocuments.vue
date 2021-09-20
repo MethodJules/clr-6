@@ -1,136 +1,231 @@
 <template>
     <div>
-        <!-- <b-row class="title d-flex justify-content-center p-1">
+        <div class="loading" :style="isLoading">
+            <div class="lds-ripple">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <!-- Output Box 
+    The uploaded files shown in here.  -->
+        <!-- <b-row class="title">
             <h3>Output</h3>
         </b-row> -->
+        <b-row class="d-flex justify-content-end">
+            <b-button v-b-modal.outputfileUpload>+</b-button>
+            <!-- For Database upload. This button may be activated later...     -->
+            <!-- <b-button @click="uploadToDatabase()">Database Hochladen</b-button> -->
+        </b-row>
+        <!-- Zeige im Frontend -->
         <b-row>
             <div
-                class="card card-body text-center"
-                v-for="outputDocs in listOfOutputs"
-                :key="outputDocs.file"
+                v-for="(output, index) in getOutputs"
+                :key="index"
+                class="card card-body p-2"
             >
-                <div class="text-center">
-                    {{ outputDocs.file }}
+                <div>
+                    <p class="m-0">
+                        <!-- <p class="m-0"> -->
+                        {{ output.name }}
+                       
+                    </p>
+                    <span class="float-right sizeBox"
+                        >{{ output.size | convertSize }}
+                       
+                    </span>
+                    <a size="sm" :href="output.url"> Dokument ansehen</a>
+                    
+                    <b-button
+                        block
+                        variant="outline-danger"
+                        size="sm"
+                        @click="deleteFile(output, index)"
+                        >Löschen</b-button
+                    >
                 </div>
             </div>
         </b-row>
+
+        <!-- Modal, when user click "datei hochladen" button
+    The place user adds files. 
+     -->
         <b-row>
-            <b-col cols="6"> </b-col>
-            <b-col>
-                <b-modal
-                    id="output_edit_modal"
-                    title="Output"
-                    cancel-title="Abbrechen"
-                >
-                    <b-form-textarea
-                        id="output_edit_form_textarea"
-                        rows="6"
-                        v-model="outputFile"
-                    ></b-form-textarea>
-                    <!-- https://www.raymondcamden.com/2019/08/08/drag-and-drop-file-upload-in-vuejs -->
-                    <div
-                        id="output"
-                        v-cloak
-                        @drop.prevent="addFile"
-                        @dragover.prevent
-                    >
-                        <h2>Files to Upload (Drag them over)</h2>
-                        <ul>
-                            <li v-for="file in files" :key="file">
-                                {{ file.name }} ({{ file.size | kb }} kb)
-                                <button
-                                    @click="removeFile(file)"
-                                    title="Remove"
-                                >
-                                    X
-                                </button>
-                            </li>
-                        </ul>
-                        <label
-                            >File
-                            <input
-                                type="file"
-                                id="file"
-                                ref="file"
-                                @change="handleFileUpload()"
-                            />
-                        </label>
-                        <button :disabled="uploadDisabled" @click="upload">
-                            Hochladen
-                        </button>
-                    </div>
-                </b-modal>
-                <b-row class="d-flex justify-content-end p-2">
-                    <b-button v-b-modal.output_edit_modal>+</b-button>
-                </b-row>
-            </b-col>
+            <b-modal
+                id="outputfileUpload"
+                title="OUTPUT"
+                ref="outputfileUploadModal"
+                hide-footer
+                centered
+            >
+                <template>
+                    <!-- https://bootstrap-vue.org/docs/components/form-file
+          Form file input -->
+                    <b-form-file
+                        v-model="outputFiles"
+                        ref="files-output"
+                        placeholder="Wählen Sie eine Datei oder legen Sie sie hier ab ..."
+                        drop-placeholder="Datei hier ablegen..."
+                        multiple
+                        class="mb-2"
+                    ></b-form-file>
+                    <hr />
+
+                    <span ref="infoBox" class="mt-2">
+                        <!-- Ausgewählte Dateien: -->
+                        <li
+                            v-for="(output, i) in outputFiles"
+                            :key="i"
+                            class="mb-1"
+                        >
+                            <b>{{ output.name }}</b>
+
+                            <span class="ml-2 sizeBox">
+                                {{ output.size | convertSize }}
+                            </span>
+                        </li>
+                    </span>
+                    <b-card-text align="right" class="mt-4">
+                        <b-button
+                            class="mr-2"
+                            variant="primary"
+                            size="sm"
+                            @click="upload(outputFiles)"
+                            >Ok</b-button
+                        >
+                        <b-button
+                            class="mr-2"
+                            variant="secondary"
+                            size="sm"
+                            @click="clear()"
+                            >Leeren</b-button
+                        >
+                        <b-button
+                            variant="danger"
+                            size="sm"
+                            @click="closeModal()"
+                            >Abbrechen</b-button
+                        >
+                    </b-card-text>
+                </template>
+            </b-modal>
         </b-row>
     </div>
 </template>
+
+
 <script>
+import { mapGetters } from "vuex";
 export default {
     data() {
         return {
-            file: "",
-            /* listOfOutputs: [
-                { file: "Outputdatei 1" },
-                { file: "Outputdatei 2" },
-                { file: "Outputdatei 3" },
-            ], */
+            outputFiles: [],
+            uploadedFiles: [], // this is for database interaction.
+            noFile: "Keine Datei Ausgewählt",
+            okButtonClicked: false,
         };
     },
+    computed: {
+        ...mapGetters({ getOutputs: "output_documents/getOutputs" }),
+        isLoading() {
+            if (this.okButtonClicked) {
+                return { display: "block" };
+            } else {
+                return { display: "none" };
+            }
+        },
 
+       
+    },
     methods: {
-        handleFileUpload() {
-            this.file = this.$refs.file.files[0];
-            console.log("heyyy");
-            console.log(this.file);
-        },
+        /**
+         * @param files files that we are going to use
+         * uploads the file
+         * triggers loading bar
+         * closes the modal
+         */
+        upload(files) {
+            console.log(files);
+            // changing okButtonClicked for loading bar
+            this.okButtonClicked = true;
+            this.$store.dispatch("output_documents/uploadFilesToDatabase", files);
 
-        upload() {
-            var fileausgabe = new FormData();
-            var output_datei = this.file;
-            fileausgabe.append(output_datei, "titel");
+            this.uploadedFiles.push(this.outputFiles);
+            this.outputFiles = [];
+            this.$refs["outputfileUploadModal"].hide();
+            // setTimeout is for loading bar. - incomplete
+            setTimeout(() => (this.okButtonClicked = false), 1000);
+        },
+        uploadToDatabase() {
             this.$store.dispatch(
-                "output_documents/createOutputData",
-                fileausgabe
-            );
-
-            console.log(this.file + "  in upload this.file");
-            console.log(
-                fileausgabe.output_datei + "  in upload fileausgabeoutputdatei"
+                "output_documents/uploadFilesToDatabase",
+                this.uploadedFiles
             );
         },
+        //
+        /**
+         * deletes all of the files that are selected by assigning to
+         * outputFiles array to the start value
+         */
+        clear() {
+            this.outputFiles = [];
+        },
+        /**
+         * deletes all of the files that are selected by assigning to
+         * outputFiles array to the start value
+         * and closes the modal
+         *  */
+        closeModal() {
+            this.outputFiles = [];
+            this.$refs["outputfileUploadModal"].hide();
+        },
+        /**
+         * @param index, index of the file that will be deleted
+         * Deletes the file from state
+         */
+        deleteFile(output, index) {
+            let payload = { output: output, index: index };
+            this.$store.dispatch(
+                "output_documents/deleteOutputDocuments",
+                payload
+            );
+        },
+    },
 
-        /*          var ausgabe = {
-
-            output_datei: this.file,
-         }
-      this.$store.dispatch('output_document/createOutputData', ausgabe) */
-
-        /*       
-      let formData = new FormData();
-      this.files.forEach((f, x) => {
-        formData.append("file" + (x + 1), f);
-      });
-
-      fetch("https://httpbin.org/post", {
-        method: "POST",
-        body: formData,
-      })
-      .catch(e => {
-        console.error(JSON.stringify(e.message));
-      }); */
+    mounted() {
+        this.$store.dispatch("output_documents/loadOutputdocumentsFromBackend");
     },
 };
 </script>
 <style scoped>
 .title {
-    width: auto;
-    /* height: 1em; */
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 1rem;
     background-color: rgb(78, 78, 78);
+    width: 100px;
 }
 .title h3 {
     color: white;
+    font-size: 1.5rem;
+    width: 100%;
+}
+hr {
+    background-color: #e9ecef;
+    border-radius: 0.1px;
+}
+.sizeBox {
+    font-size: 0.8rem;
+    color: white;
+    background: rgb(49, 180, 167);
+    padding: 0.3rem;
+    margin-bottom: 0.4rem;
+    border-radius: 10%;
+}
+.sizeBox:hover {
+    background: rgb(39, 146, 135);
+}
+.card:hover {
+    cursor: pointer;
 }
 </style>

@@ -214,7 +214,8 @@ export default {
     },
 
     computed: {
-        ...mapGetters({ rowData: "reflexion/getRowData" }),
+       /*  ...mapGetters({ rowData: "reflexion/getRowData" }), */
+       
     },
 };
 </script>

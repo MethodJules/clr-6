@@ -79,6 +79,7 @@ const actions = {
                 console.log(response)
                 const urlBackend = "https://clr-backend.x-navi.de";
                 let files = response.data.included;
+
                 files.forEach(file => {
                     let payload = {
                         id: file.id,
@@ -86,9 +87,13 @@ const actions = {
                         size: file.attributes.filesize,
                         url: urlBackend + file.attributes.uri.url,
                     }
+                    console.log(payload)
                     commit('LOAD_FILES_TO_STATE_FROM_BACKEND', payload);
 
+
                 });
+
+
 
             })
             .catch(function (error) {
