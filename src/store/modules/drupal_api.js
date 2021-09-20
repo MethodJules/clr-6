@@ -55,17 +55,19 @@ const actions = {
     * @param rootState rootState allows access to states of other modules in store
     */
     async createUser({ state, commit, rootState }, { username, password, matrikelnummer }) {
+        //Todo: uncomment or delete later, after login and registration process is tested thoroughly
         //await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
         var sparkyUserObject = rootState.sparky_api.sparkyUserObject
-        console.log(rootState.sparky_api.sparkyUserID)
-        console.log(rootState.sparky_api.sparkyUserObject)
-        console.log(username)
-        console.log(sparkyUserObject)
+        /*         console.log(rootState.sparky_api.sparkyUserID)
+                console.log(rootState.sparky_api.sparkyUserObject)
+                console.log(username)
+                console.log(sparkyUserObject) */
         //console.log(generatedPassword)
 
 
         //TODO: Fehlerbehandlung: matrikelnummer ist bei mir null -> dann funzt das alles nicht -> wieso ist null, muss man so einen sonderfall normalerweise beachten
         // TODO: unnötige felder sparky_id, evtl. fullname  entfernen
+        // when a user is created his user picture is the same. it can be changed later on with other profiledata
         const data = JSON.stringify({
             'name': { 'value': `${sparkyUserObject.data.username}` },
             //'name': {'value': `${username}`},
@@ -74,6 +76,12 @@ const actions = {
             //'field_sparky_id': {'value': `${sparkyUserObject.data.id}`},
             'field_fullname': { 'value': `${sparkyUserObject.data.displayName}` },
             'field_matrikelnummer': { 'value': `${matrikelnummer}` },
+            "user_picture": {
+                "data": {
+                    "type": "file--file",
+                    "id": "dc9ea37b-5e91-4450-8d7c-91b8b84b5fad"
+                }
+            }
             //'field_matrikelnummer': {'value': `12345`},
             //'field_matrikelnummer': {'value': `${sparkyUserObject.data.matrNr}`},
         })
@@ -93,6 +101,10 @@ const actions = {
                 console.log(response.data);
                 const user = response.data;
                 commit('SAVE_CREATED_USER', user);
+                //creates empty profile when user is created
+                //test if userdata (user.uid) is saved by SAVE_CREATED_USER before createProfile is called (it needs uid)
+                dispatch("profil/createProfile", { root: true })
+                //TODO: dispatch userdata update profileimage or put in image url in const data above, so it is linked  with the user creation
 
             }).catch(error => {
                 throw new Error(`API ${error}`);
@@ -105,7 +117,8 @@ const actions = {
     */
     async loginToDrupal({ commit, rootState }, { username, password }) {
         //authenticate with sparky_api at sparky backend is commented out for development purposes. thus testaccounts can be used without the need of real user data
-        //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished 
+        //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished
+        //maybe change both functions -> sparky_api/authenticate calls loginToDrupal when it is finished, and App/Login.vue calls sparky_api/authenticate first
         //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
         const url = 'https://clr-backend.x-navi.de/user/login?_format=json';
         const data = `{"name": "${username}", "pass": "${password}"}`;
@@ -168,7 +181,7 @@ const actions = {
                 //console.log(response.data.csrf_token);
                 //console.log(response.data.current_user);
                 //console.log(response.data.logout_token);
-                commit('SAVE_LOGOUT_USER')
+                commit('REMOVE_SESSIONTOKENS_OF_USER')
 
 
             }
@@ -200,7 +213,7 @@ const mutations = {
     */
     SAVE_SESSION_TOKEN(state, token) {
         state.csrf_token = token
-        console.log(state.csrf_token)
+        //console.log(state.csrf_token)
     },
 
     /**
@@ -210,16 +223,16 @@ const mutations = {
     */
     SAVE_CREATED_USER(state, user) {
         state.user = user
-        console.log("jetzt csrf und user")
-        console.log(state.user)
-        console.log(state.csrf_token)
+        /*         console.log("jetzt csrf und user")
+                console.log(state.user)
+                console.log(state.csrf_token) */
     },
 
     /**
     * gets the csrf_token, user object and loguttoken from action 
-    * and puts it in the state object
+    * and puts it in 3 state objects and in sessionstorage
     * @param {*} state 
-    * @param {*} token 
+    * @param {*} login_data 
     */
     SAVE_LOGIN_USER(state, login_data) {
         sessionStorage.setItem("csrf_token", login_data.csrf_token);
@@ -230,13 +243,18 @@ const mutations = {
         state.csrf_token = login_data.csrf_token;
         state.user = login_data.current_user;
         state.logout_token = login_data.logout_token;
-        console.log(state.csrf_token)
+        /* console.log(state.csrf_token)
         console.log(state.user)
-        console.log(state.logout_token)
+        console.log(state.logout_token) */
         state.validCredential = true;
 
     },
 
+    /**
+* loads csrf_token, logout_token and autthentication token from session storage, so a user is still logged in after refreshing the site
+* is called on mounted lifecycle hook from App.vue so it is alwas loaded when the site is refreshed
+* @param {*} state 
+*/
     LOAD_TOKEN_SESSION_STORAGE(state) {
         if (sessionStorage.getItem("valid_credentials") == "true") {
             state.validCredential = true;
@@ -244,8 +262,8 @@ const mutations = {
             state.logout_token = sessionStorage.getItem("logout_token");
             state.authToken = sessionStorage.getItem("auth_token");
             state.user = JSON.parse(sessionStorage.getItem('current_user'));
-            console.log(state.user)
-            console.log(JSON.parse(sessionStorage.getItem('current_user')))
+            /*  console.log(state.user)
+             console.log(JSON.parse(sessionStorage.getItem('current_user'))) */
             //state.user= sessionStorage.getItem("current_user");
 
         }
@@ -254,8 +272,11 @@ const mutations = {
     },
 
 
-
-    SAVE_LOGOUT_USER(state) {
+    /**
+* deletes csrf_token, logout_token and autthentication token from session storage
+* @param {*} state 
+*/
+    REMOVE_SESSIONTOKENS_OF_USER(state) {
         state.validCredential = false;
         sessionStorage.removeItem("csrf_token");
         sessionStorage.removeItem("logout_token");

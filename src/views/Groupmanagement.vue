@@ -1,137 +1,157 @@
 <template>
-    <div class="home">
-    
-        <b-row>
-        <h2> Projektgruppe "Projekt x" </h2>
-        </b-row>
-        <br />
+  <div class="home">
+    <b-row>
+      <h2>{{ getCurrentProject.title }}</h2>
+    </b-row>
+    <br />
 
-        <div>
-            <div
-            v-for="(member, index) in members.members" :key="index">
-                
-            <b-row>
-                <b-col>  
-                <h5>{{member.role}}</h5>
-                </b-col>
-                <b-col>
-                <h5>{{member.name}}</h5>
-                </b-col>
-                <b-col>
-                <b-button @click="deleteMember(member)"> X </b-button>
-                <br>
-                </b-col>
-                
-                
-            </b-row>
-                
-                
-                
-                
-            </div>
-            
-            <b-container>
-            <b-row>
-                <b-col>
-                <b-button>
-                <router-link to="newMember" tag="div">
-                    
-                        Neues Mitglied hinzufügen
-                  
-                </router-link>
-                </b-button>
-                </b-col>
-                <b-col>
-                <b-button>Admin-Rechte entfernen</b-button>
-                </b-col>
-                <b-col>
-                <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>
-                </b-col>
-       
-            </b-row>
-            <b-modal id="leave_group" title="Bist du dir sicher?"  cancel-title="Abbrechen">
-              <b-row>
+    <div>
+      <div
+        v-for="mitglied in getCurrentProject.gruppenmitglieder"
+        :key="mitglied.userid"
+      >
+        <b-row>
+          <b-col>
+            <h5>Gruppenmitglied</h5>
+          </b-col>
+          <b-col>
+            <h5>{{ mitglied.username }}</h5>
+          </b-col>
+          <b-col>
+            <b-button @click="deleteMember(mitglied)"> X </b-button>
+            <br />
+          </b-col>
+        </b-row>
+      </div>
+
+      <div v-for="admin in getGroupAdmins" :key="admin.userid">
+        <b-row>
+          <b-col>
+            <h5>Gruppenadmin</h5>
+          </b-col>
+          <b-col>
+            <h5>{{ admin.username }}</h5>
+          </b-col>
+          <b-col>
+            <b-button @click="deleteMember(member)"> X </b-button>
+            <br />
+          </b-col>
+        </b-row>
+      </div>
+
+      <b-container>
+        <b-row>
+          <b-col>
+            <b-button>
+              <router-link to="newMember" tag="div">
+                Neues Mitglied hinzufügen
+              </router-link>
+            </b-button>
+          </b-col>
+          <b-col>
+            <b-button>Admin-Rechte entfernen</b-button>
+          </b-col>
+          <b-col>
+            <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>
+          </b-col>
+        </b-row>
+        <b-modal
+          id="leave_group"
+          title="Bist du dir sicher?"
+          cancel-title="Abbrechen"
+        >
+          <b-row>
             <p>
-            Du kannst nicht mehr auf das Projekt zugreifen, wenn du die Gruppe
-            verlaesst.
+              Du kannst nicht mehr auf das Projekt zugreifen, wenn du die Gruppe
+              verlaesst.
             </p>
-            </b-row>
-                <b-row>
-                  <b-col>
-                    <b-button>Nein</b-button>
-                  </b-col>
-                  <b-col>
-                    <b-button>Ja</b-button>
-                  </b-col>
-                </b-row>
-            </b-modal>
-            </b-container>
-        </div>
-    
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-button>Nein</b-button>
+            </b-col>
+            <b-col>
+              <b-button>Ja</b-button>
+            </b-col>
+          </b-row>
+        </b-modal>
+      </b-container>
     </div>
+  </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 
-import { mapState } from 'vuex';
-
-    export default {
-    name: 'Home',
-    components: {},
-    data() {
-        return {
-        }
+export default {
+  name: "Home",
+  components: {},
+  data() {
+    return {};
+  },
+  methods: {
+    deleteMember: function (mitglied) {
+      //this.$store.dispatch("members/deleteMembers", mitglied);
+      this.$store.dispatch("project/deleteMembers", mitglied);
     },
-    methods: {
-        deleteMember: function (member) {
-            this.$store.dispatch('members/deleteMembers', member)
+  },
+  computed: {
+    ...mapState({
+      members: (state) => state.members,
+    }),
+    getCurrentProject() {
+      return this.$store.state.project.currentProject;
+    },
+    getGroupAdmins() {
+      /*    console.log(this.$store);
+      console.log(this.$store.getters);
+      console.log(this.$store.getters["user/getLecturers"]); */
+      //console.log(this.$store.getters["project/currentProjectGroupAdmins"])
 
-        }
-        },
-        computed: {
-            ...mapState({
-                members: state => state.members,
-            })
-        }
+      //return this.$store.getters["project/currentProjectGroupAdmins"];
+      return this.$store.state.project.currentProjectGroupAdmins;
+    },
+    getProjectLecturers() {
+      /*    console.log(this.$store);
+      console.log(this.$store.getters);
+      console.log(this.$store.getters["user/getLecturers"]); */
 
-}
+      //return this.$store.getters["project/currentProjectLecturers"];
+      return this.$store.state.project.currentProjectLecturers;
+    },
+  },
+};
 </script>
 
 <style scoped>
+h1 {
+  text-align: right;
+}
 
-    h1 {
-        text-align: right;
-    }
+h5 {
+  text-align: right;
+  float: left;
+  margin: 3px;
+  margin-left: 10%;
+  display: inline-block;
+}
 
-    
-    h5 {
-        text-align: right;
-        float:left;
-        margin: 3px;
-        margin-left: 10%;
-        display: inline-block; 
-    }
+button {
+  float: right;
+}
 
-    button {
-        
-       
-        float: right;
-    }
+.groupCard {
+  color: black;
+  margin: 5px;
+  width: 30%;
+  text-align: center;
+}
 
-    .groupCard {
-        
-        color: black;
-        margin: 5px;
-        width: 30%;
-        text-align: center;
-    }
+.card {
+  display: inline-block;
+}
 
-    .card {
-        display: inline-block;
-    }
-
-    img {
-        width: 60%;
-    }
-
+img {
+  width: 60%;
+}
 </style>

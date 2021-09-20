@@ -31,9 +31,7 @@
                         <b-link
                           :to="{
                             name: 'Home',
-                            params: {
-                              project_id: project.idd,
-                            },
+                            params: { project_id: project.idd },
                           }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
@@ -128,7 +126,7 @@ export default {
   async mounted() {
     this.$store.dispatch("project/loadProjectsFromBackend");
     //this.projectList = this.$store.state.project.myProjects;
-    console.log(this.projectList);
+    //console.log(this.projectList);
     console.log("mount projectList");
   },
 };

@@ -17,12 +17,9 @@ const actions = {
     /* We load the Userdata from backend by filtering the drupalUserUID to get the userdata of the right user */
 
     async loadUserFromBackend({ commit, state, rootState }) {
-        console.log(state)
-        console.log("hallo")
-        console.log(rootState.sparky_api.sparkyUserID)
         var drupalUserUID = rootState.drupal_api.user.uid
-        console.log(rootState.sparky_api.drupalUserID)
-        console.log(drupalUserUID)
+        // console.log(rootState.sparky_api.drupalUserID)
+        // console.log(drupalUserUID)
 
 
         var config = {
@@ -75,10 +72,8 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
-                console.log(response);
-                console.log("es lfniosdn")
-                console.log(rootState.sparky_api.validCredential)
-                console.log(rootState.sparky_api.drupalUserID)
+                //console.log(rootState.sparky_api.validCredential)
+                //console.log(rootState.sparky_api.drupalUserID)
                 const profiles = response.data.data;
                 commit('SAVE_PROFILE', { profiles });
 
@@ -93,22 +88,41 @@ const actions = {
     /* saves the profile with the date fields in the backend  */
 
     createProfile({ state, rootState }, profile) {
+
         console.log(profile)
-        console.log(state)
+        //console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
         console.log(drupalUserUID)
         var title = "Profil"
+        //commented out, because a new profile is created when a user is created
+        /*         var data = `{
+                    "data": {
+                        "type": "user--profil", 
+                        "attributes": {
+                            "title": "${title}",
+                            "field_studiengang": "${profile.studiengang}", 
+                            "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}", 
+                            "field_datenbanken": "${profile.datenbanken}", 
+                            "field_referenztool": "${profile.referenztool}", 
+                            "field_analysetool": "${profile.analysetool}",
+                            "field_user_uid": "${drupalUserUID}"
+                            
+                        }
+                        
+                    }
+                }`; */
+
         var data = `{
             "data": {
                 "type": "user--profil", 
                 "attributes": {
                     "title": "${title}",
-                    "field_studiengang": "${profile.studiengang}", 
-                    "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}", 
-                    "field_datenbanken": "${profile.datenbanken}", 
-                    "field_referenztool": "${profile.referenztool}", 
-                    "field_analysetool": "${profile.analysetool}",
-                    "field_user_uid": "${drupalUserUID}"
+                    "field_studiengang": "", 
+                    "field_anzahl_literaturreviews": "", 
+                    "field_datenbanken": "", 
+                    "field_referenztool": "", 
+                    "field_analysetool": "",
+                    "field_user_uid": ""
                     
                 }
                 
@@ -130,7 +144,6 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
-                console.log(response);
 
 
             })
@@ -289,7 +302,6 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
-                console.log(response);
 
 
             })

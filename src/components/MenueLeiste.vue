@@ -104,8 +104,20 @@ export default {
       //wieso ist state.csrf_token bei aufruf von logout in drupal_api undefined
       //in dieser Komponente den csrf_token aus drupal_api state zu holen funktioniert aber wiederum
       this.$store.dispatch("drupal_api/logoutDrupal");
+      this.makeToast();
+    },
+    makeToast() {
+      this.$root.$bvToast.toast(
+        `Auf Wiedersehen ${this.$store.state.drupal_api.user.name}`,
+        {
+          title: "Bis zum nächsten Mal",
+          autoHideDelay: 4000,
+          variant: "info",
+        }
+      );
     },
   },
+
   computed: {
     startpage() {
       return this.$route.name === "ProjectList";

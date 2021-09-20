@@ -211,7 +211,7 @@ export default {
 
   computed: {
     getCurrentProject() {
-      console.log(this.$store.state.project.currentProject);
+      //console.log(this.$store.state.project.currentProject);
       return this.$store.state.project.currentProject;
     },
 

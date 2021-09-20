@@ -1,6 +1,11 @@
 <template>
   <div id="app">
     <div v-if="validCredential != true">
+      <transition name="fade" mode="out-in">
+        <div v-if="testButClicked" class="alert" role="alert">
+          Erfolgreich Gespeichert !
+        </div>
+      </transition>
       <div class="mx-auto" style="width: 50rem">
         <b-container>
           <b-row align-v="center">
@@ -23,13 +28,19 @@
                             >
                           </td>
                           <td>
-                            <input
+                            <b-form-input
                               v-model="zugangsKennung"
-                              id="zugangskennung"
-                              type="text"
+                              v-on:input="$v.zugangsKennung.$touch"
+                              v-bind:class="{
+                                error: $v.zugangsKennung.$error,
+                                valid:
+                                  $v.zugangsKennung.$dirty &&
+                                  !$v.zugangsKennung.$invalid,
+                              }"
+                              id="zugangsKennung"
                               placeholder=""
-                              class="form-control"
-                            />
+                            >
+                            </b-form-input>
                           </td>
                         </tr>
                         <tr>
@@ -39,13 +50,19 @@
                             >
                           </td>
                           <td>
-                            <input
+                            <b-form-input
                               v-model="passwort"
-                              id="password"
+                              v-on:input="$v.passwort.$touch"
+                              v-bind:class="{
+                                error: $v.passwort.$error,
+                                valid:
+                                  $v.passwort.$dirty && !$v.passwort.$invalid,
+                              }"
                               type="password"
+                              id="password"
                               placeholder=""
-                              class="form-control mt-1"
-                            />
+                            >
+                            </b-form-input>
                           </td>
                         </tr>
                       </table>
@@ -68,13 +85,20 @@
                             >
                           </td>
                           <td>
-                            <input
-                              v-model="zugangsKennung"
+                            <b-form-input
+                              v-model="registrierungsKennung"
+                              v-on:input="$v.registrierungsKennung.$touch"
+                              v-bind:class="{
+                                error: $v.registrierungsKennung.$error,
+                                valid:
+                                  $v.registrierungsKennung.$dirty &&
+                                  !$v.registrierungsKennung.$invalid,
+                              }"
                               id="zugangskennung2"
                               type="text"
                               placeholder=""
-                              class="form-control"
-                            />
+                            >
+                            </b-form-input>
                           </td>
                         </tr>
                         <tr>
@@ -84,13 +108,42 @@
                             >
                           </td>
                           <td>
-                            <input
-                              v-model="passwort"
-                              id="password2"
+                            <b-form-input
+                              v-model="registrierungsPasswort"
+                              v-on:input="$v.registrierungsPasswort.$touch"
+                              v-bind:class="{
+                                error: $v.registrierungsPasswort.$error,
+                                valid:
+                                  $v.registrierungsPasswort.$dirty &&
+                                  !$v.registrierungsPasswort.$invalid,
+                              }"
                               type="password"
+                              id="password2"
                               placeholder=""
-                              class="form-control mt-1"
-                            />
+                            >
+                            </b-form-input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label for="Matrikelnummer" class="mr-1 mt-1"
+                              >Matrikelnummer</label
+                            >
+                          </td>
+                          <td>
+                            <b-form-input
+                              v-model="matrikelnummer"
+                              v-on:input="$v.matrikelnummer.$touch"
+                              v-bind:class="{
+                                error: $v.matrikelnummer.$error,
+                                valid:
+                                  $v.matrikelnummer.$dirty &&
+                                  !$v.matrikelnummer.$invalid,
+                              }"
+                              id="matrikelnummer"
+                              placeholder=""
+                            >
+                            </b-form-input>
                           </td>
                         </tr>
                       </table>
@@ -162,6 +215,14 @@ import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
+import {
+  requiredIf,
+  minLength,
+  integer,
+  alpha,
+  minValue,
+  maxLength,
+} from "vuelidate/lib/validators";
 //import ProjectList from "@/views/ProjectList.vue"
 
 export default {
@@ -171,12 +232,12 @@ export default {
   name: "App",
   components: {
     SeitenNavigation,
-
     //ProjectList,
     TodoList,
     MenueLeiste,
     Kalender,
   },
+
   data() {
     return {
       zugangsKennung: "",
@@ -186,24 +247,87 @@ export default {
       matrikelnummer: "",
       nameState: null,
       showMenu: true,
+      testButClicked: false,
       eintragTodo: {
         todo: "",
       },
     };
   },
+  /* 
+  validations for log in input fields
+  input is only valid, when either log in data or registration data is complete
+   */
+  validations: {
+    zugangsKennung: {
+      required: requiredIf(function () {
+        return this.validate_login(this.passwort);
+      }),
+      minLength: minLength(1),
+      alpha,
+    },
+    passwort: {
+      required: requiredIf(function () {
+        return this.validate_login(this.zugangsKennung);
+      }),
+      minLength: minLength(1),
+    },
+    registrierungsKennung: {
+      required: requiredIf(function () {
+        return this.validate_login(this.registrierungsPasswort);
+      }),
+      minLength: minLength(1),
+      alpha,
+    },
+    registrierungsPasswort: {
+      required: requiredIf(function () {
+        return this.validate_login(this.registrierungsKennung);
+      }),
+      minLength: minLength(1),
+    },
+    matrikelnummer: {
+      integer,
+      minLength: minLength(1),
+      minValue: minValue(0),
+      maxLength: maxLength(10),
+    },
+  },
 
   methods: {
+    /* function validates log in and registration input
+    returns true, when the associated input field is not empty   */
+    validate_login(dependent_field) {
+      let ausgabe = dependent_field != "";
+      if (
+        (this.passwort == "") &
+        (this.zugangsKennung == "") &
+        (this.registrierungsKennung == "") &
+        (this.registrierungsPasswort == "")
+      ) {
+        ausgabe = true;
+      }
+      return ausgabe;
+    },
+    /* registrates a user first at sparky backend and then uses the data from sparky backend to register/create a new user at clr drupal backend
+     * students have to put in their matrikelnummer, lecturers don't
+     * functions called in sequence: sparky_api/registrate -> sparky_api/getWhoamI -> drupal_api/getSessionToken -> drupal_api/createUser
+     */
     registrieren() {
-      this.$store.dispatch("sparky_api/registrate", {
-        username: this.registrierungsKennung,
-        password: this.registrierungsPasswort,
-        matrikelnummer: this.matrikelnummer,
-      });
+      this.$v.$touch();
 
+      if (!this.$v.$invalid) {
+        this.$store.dispatch("sparky_api/registrate", {
+          username: this.registrierungsKennung,
+          password: this.registrierungsPasswort,
+          matrikelnummer: this.matrikelnummer,
+        });
+        this.registrierungsKennung = "";
+        this.registrierungsPasswort = "";
+        this.matrikelnummer = "";
+      } else {
+        alert("Bitte Registriedungsdaten eingeben");
+      }
       //remove so username and password arent saved after login
-      this.registrierungsKennung = "";
-      this.registrierungsPasswort = "";
-      this.matrikelnummer = "";
+
       /*       this.$store.dispatch('drupal_api/getSessionToken', {
         username: this.registrierungsKennung,
         password: this.registrierungsPasswort,
@@ -214,35 +338,51 @@ export default {
     closeMenu() {
       this.showMenu = false;
     },
-    generatePassword(username) {
-      const crypto = require("crypto");
-      const md5sum = crypto.createHash("md5");
-      let str = username;
-      const res = md5sum.update(str).digest("hex");
-      console.log(res);
-      return res;
-    },
+
+    /* logs a user in at drupal backend
+     * then saves the basic Authentication token in the state
+     * login only works if validation is true
+     * a log in message is displayed when user is logged in
+     */
     login() {
-      let username = this.zugangsKennung;
-      let password = this.passwort;
-      // wenn das hier genutzt wird -> password wird aus namen generiert - die "richtige" anmeldung des nutzers erfolgt beim sparky backend mit rz kennung
-      //password=this.generatePassword(username)
-      let authorization_token = this.encodeBasicAuth(username, password);
-      this.$store.dispatch("drupal_api/loginToDrupal", {
-        username,
-        password,
-      });
-      this.$store.dispatch("drupal_api/saveBasicAuth", authorization_token);
-      console.log(authorization_token);
-      //remove so username and password arent saved after login
-      this.username = "";
-      this.password = "";
+      this.$v.$touch();
+
+      if (!this.$v.$invalid) {
+        let username = this.zugangsKennung;
+        let password = this.passwort;
+        let authorization_token = this.encodeBasicAuth(username, password);
+        this.$store.dispatch("drupal_api/loginToDrupal", {
+          username,
+          password,
+        });
+        this.$store.dispatch("drupal_api/saveBasicAuth", authorization_token);
+
+        this.makeToast();
+        //remove so username and password arent saved after login
+        this.zugangsKennung = "";
+        this.passwort = "";
+        this.testButClicked(true);
+      } else {
+        alert("Bitte Logindaten eingeben");
+      }
       return authorization_token;
     },
+    /* creates the basic authentication token */
     encodeBasicAuth(user, password) {
       var creds = user + ":" + password;
       var base64 = btoa(creds);
       return "Basic " + base64;
+    },
+    // welcome message with toast
+    makeToast() {
+      this.$bvToast.toast(
+        `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.name}`,
+        {
+          title: "Willkommen",
+          autoHideDelay: 4000,
+          variant: "info",
+        }
+      );
     },
   },
   computed: {
@@ -259,6 +399,13 @@ export default {
     },
   },
 
+  watch: {
+    testButClicked(val) {
+      if (val) {
+        setTimeout(() => (this.testButClicked = false), 1000);
+      }
+    },
+  },
   mounted() {
     //this.$store.dispatch("todo/loadToDoFromBackend");
     this.$store.dispatch("drupal_api/loadTokensfromSessionStorage");
@@ -313,15 +460,53 @@ export default {
 .chat {
   text-align: center;
 }
-
 .login {
   margin-top: 25rem;
 }
-
 .untereLeiste {
   height: 100%;
   border: 1px solid black;
   margin: 0;
 }
 </style>
+<style scoped>
+.error {
+  border-color: red;
+  background: #fdd;
+}
 
+.error:focus {
+  outline-color: #f99;
+}
+
+.valid {
+  border-color: #5a5;
+  background: #efe;
+}
+
+.valid:focus {
+  outline-color: #8e8;
+}
+
+.alert {
+  background-color: lightgreen;
+  padding: 15px;
+}
+input {
+  border: 1px solid silver;
+  border-radius: 4px;
+  background: white;
+  padding: 5px 10px;
+  margin-bottom: 0.3em;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1.3s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

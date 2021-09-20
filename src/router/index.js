@@ -64,7 +64,7 @@ const routes = [
     {
         path: '/groupmanagement',
         name: 'Groupmanagement',
-        meta: { requiresAuth: true },
+        //meta: { requiresAuth: true },
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
     },
     {
@@ -74,7 +74,7 @@ const routes = [
     },
 
     {
-        path: '/phasetemplate',
+        path: '/phasetemplate/:phase_id:project_id',
         name: 'PhaseTemplate',
         //props: true,
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
