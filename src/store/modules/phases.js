@@ -92,7 +92,7 @@ const actions = {
 
     },
 
-    async loadSinglePhaseFromBackend({ commit, state, rootState }, { projectId, phaseId }) {
+    async loadSinglePhaseFromBackend({ commit, state, rootState, dispatch }, { projectId, phaseId }) {
         console.log(phaseId)
         console.log(state)
         var config = {
@@ -110,6 +110,8 @@ const actions = {
                 console.log(response);
                 const currentPhase = response.data.data;
                 commit('LOAD_SINGLE_PHASE', { currentPhase });
+                dispatch("inputDocuments/loadInputdocumentsFromBackend", null, { root: true })
+                dispatch("output_documents/loadOutputdocumentsFromBackend", null, { root: true })
 
             })
             .catch(function (error) {

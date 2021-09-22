@@ -77,6 +77,7 @@ const actions = {
                 const profiles = response.data.data;
                 commit('SAVE_PROFILE', { profiles });
 
+
             })
             .catch(function (error) {
                 console.log(error)

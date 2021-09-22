@@ -1,10 +1,11 @@
 import axios from "axios"
 // const urlBackend = "https://clr-backend.x-navi.de"
 
-const state = {
+const state = () => ({
     inputs: [], // we are using this array to store the file names and sizes only
     inputsForDatabase: [], // we are going to use this array in order to upload our files to database
-}
+
+})
 
 const getters = {
     /**
@@ -14,7 +15,8 @@ const getters = {
      * we send them reversed in order to see the last uploaded on top.
      */
     getInputs(state) {
-        let files = state.inputs.reverse();
+
+        let files = state.inputs;
         return files;
     },
 
@@ -25,15 +27,22 @@ const mutations = {
     /**
      * 
      * @param state we send our state to the method
-     * @param {objekt} payload files that we are going to use 
+     * @param {array} inputarrayPayload array with the fileobjects(payload) that we are going to use 
      * 
-     * uploads the name of the file to the state. 
-     * we need another function to upload the file to the database. We can figure it out when it comes to it. 
-     * We have all files at variable files. We can easily send it to the database.
+     * uploads the name, size and url of the fileobject (payload) in the array to the state. 
+     * 'inputs' array from the state is exchanged with the 'inputarrayPayload' array from the action method 'loadInputdocumentsFromBackend' 
+     * 
      */
 
-    LOAD_FILES_TO_STATE_FROM_BACKEND(state, payload) {
-        state.inputs.push(payload);
+    LOAD_FILES_TO_STATE_FROM_BACKEND(state, inputarrayPayload) {
+        state.inputs = inputarrayPayload;
+        //state.inputs = payload
+        /* if (state.inputs.includes(payload)) {
+            console.log(payload)
+
+        } else {
+            state.inputs.push(payload);
+        } */
     },
 
 
@@ -60,12 +69,14 @@ const actions = {
 
     async loadInputdocumentsFromBackend({ rootState, commit }) {
         var drupalUserUID = rootState.drupal_api.user.uid;
+        var phaseId = rootState.phases.current_phase.phase_id
+        console.log(phaseId);
         console.log(rootState.drupal_api);
         console.log(drupalUserUID);
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien?include=field_documentid`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien?include=field_documentid&filter[field_phasenid.id]=${phaseId}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -79,7 +90,13 @@ const actions = {
                 console.log(response)
                 const urlBackend = "https://clr-backend.x-navi.de";
                 let files = response.data.included;
-
+                /* 
+                
+                We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend 
+                with the foreach loop are pushed one after the other in the initialized array 'inputarrayPayload'. This means that the 
+                array does not remain empty. The array consists of the file objects, from the backend.
+                */
+                let inputarrayPayload = []
                 files.forEach(file => {
                     let payload = {
                         id: file.id,
@@ -88,10 +105,15 @@ const actions = {
                         url: urlBackend + file.attributes.uri.url,
                     }
                     console.log(payload)
-                    commit('LOAD_FILES_TO_STATE_FROM_BACKEND', payload);
+                    inputarrayPayload.push(payload)
+
+
+
 
 
                 });
+                //this array 'inputarrayPayload' is passed as a parameter in the mutation method
+                commit('LOAD_FILES_TO_STATE_FROM_BACKEND', inputarrayPayload);
 
 
 
@@ -106,7 +128,7 @@ const actions = {
      * 
      * @param state we send our state to method
      * To upload files to database. 
-     * Will be written later.... 
+     * 
      */
     async uploadFilesToDatabase({ dispatch, rootState }, files) {
 
@@ -154,6 +176,7 @@ const actions = {
     addInputDocument({ state, rootState, commit }, payload) {
 
         console.log(state)
+        var phaseId = rootState.phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
             "data": {
@@ -168,6 +191,12 @@ const actions = {
                             "id": "${payload.id}"
                         }
                         
+                    },
+                    "field_phasenid": {
+                        "data": {
+                            "type": "node--phase_vorgehensmodell",
+                            "id": "${phaseId}"
+                        }
                     }
                 }
                 
@@ -196,6 +225,7 @@ const actions = {
                     size: payload.file.size,
                     id: response.data.data.id,
                     url: urlBackend + response.data.included[0].attributes.uri.url
+
                 }
                 commit("LOAD_FILES_TO_STATE_FROM_BACKEND", file);
             })

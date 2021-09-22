@@ -127,15 +127,9 @@ export default {
         return { display: "none" };
       }
     },
-
-    getFile() {
-      console.log();
-      return this.$store.state.inputDocuments.fileData;
-    },
-
-    getFileData() {
-      return this.$store.state.inputDocuments.inputs;
-    },
+    /* getInputs() {
+      this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
+    }, */
   },
   methods: {
     /**
@@ -149,7 +143,6 @@ export default {
       // changing okButtonClicked for loading bar
       this.okButtonClicked = true;
       this.$store.dispatch("inputDocuments/uploadFilesToDatabase", files);
-
       this.uploadedFiles.push(this.inputFiles);
       this.inputFiles = [];
       this.$refs["fileUploadModal"].hide();
@@ -190,7 +183,13 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
+    /* Because of the loading issues, we doesn't use the mounted function. We had the issue, that 
+    the inputdocuments from backend to state could not be loaded, the state was always empty, where the inputarray of Documents are stored
+    
+    PLEASE NOTE: 
+    Therefore we did not use the get request in mounted(), but in phases.js with (line 113), so that the input documents of the respective phases 
+    are loaded easily after the individual phases are loaded */
+    //this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
   },
 };
 </script>

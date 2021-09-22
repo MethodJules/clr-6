@@ -5,10 +5,11 @@
 
       <b-row class="mb-4">
         <b-col cols="10">
-          <h2>Gruppe Bilden</h2>
-          <!-- <h2>{{ phaseId }}</h2>
-                    <h2>{{ projectId }}</h2>
-                    <h2>Phase: {{ xphase.phase_name }}</h2> -->
+          <!-- <h2>Gruppe Bilden</h2> -->
+          <!-- <h2>{{ getPhaseName }}</h2> -->
+          <h2>Phase: {{ phaseId }}</h2>
+          <!--  <h2>{{ projectId }}</h2>
+                    <h2>Phase: {{ xphase.phase_name }}</h2>  -->
         </b-col>
         <b-col cols="2" class="d-flex align-center">
           <!-- Greift auf die Assistent Komponente -->
@@ -67,10 +68,14 @@ export default {
   },
 
   computed: {
-    xphase() {
+    /* xphase() {
       return this.$store.state.phases.phases.find(
         (phase) => phase.phase_id === this.$route.params.phase_id
-      );
+      ); */
+    //},
+
+    getPhaseName() {
+      return this.$store.state.phases.current_phase.phase_name;
     },
   },
 
@@ -81,7 +86,11 @@ export default {
       projectId: this.$route.params.project_id,
     });
 
-    console.log(this.$store.state.phases);
+    //this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
+
+    this.$store.state.phases.current_phase.phase_name;
+    console.log(this.$store.state.phases.current_phase.phase_name);
+    console.log(this.$store.state.phases.current_phase);
     console.log(this.$route.params.phase_id);
   },
 };
