@@ -47,7 +47,6 @@ const mutations = {
     },
 
     UPDATE_INPUTS(state, file) {
-        console.log(file)
         state.inputs.push(file);
     },
 
@@ -96,6 +95,7 @@ const actions = {
                 console.log(response)
                 const urlBackend = "https://clr-backend.x-navi.de";
                 let files = response.data.included;
+                let fileData = response.data.data;
                 /* 
                 
                 We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend 
@@ -103,21 +103,20 @@ const actions = {
                 array does not remain empty. The array consists of the file objects, from the backend.
                 */
                 let inputarrayPayload = []
-                files.forEach(file => {
+                for (let index = 0; index < files.length; index++) {
                     let payload = {
-                        id: file.id,
-                        name: file.attributes.filename,
-                        size: file.attributes.filesize,
-                        url: urlBackend + file.attributes.uri.url,
+                        dataId: fileData[index].id,
+                        id: files[index].id,
+                        name: files[index].attributes.filename,
+                        size: files[index].attributes.filesize,
+                        url: urlBackend + files[index].attributes.uri.url,
                     }
-                    console.log(payload)
+
                     inputarrayPayload.push(payload)
+                }
 
 
 
-
-
-                });
                 //this array 'inputarrayPayload' is passed as a parameter in the mutation method
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', inputarrayPayload);
 
@@ -249,11 +248,11 @@ const actions = {
     deleteInputDocuments({ rootState, commit }, payload) {
         commit('deleteInput', payload);
 
-        console.log(payload.input.id);
+        console.log(payload.input.dataId);
 
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien/${payload.input.id}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien/${payload.input.dataId}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
