@@ -24,7 +24,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.ddns.net/jsonapi/user/user?filter[drupal_internal__uid]=${drupalUserUID}&include=user_picture`,
+            url: `https://clr-backend.x-navi.de/jsonapi/user/user?filter[drupal_internal__uid]=${drupalUserUID}&include=user_picture`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -60,7 +60,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.ddns.net/jsonapi/node/profil?filter[field_user_uid]=${drupalUserUID}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil?filter[field_user_uid]=${drupalUserUID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -76,6 +76,7 @@ const actions = {
                 //console.log(rootState.sparky_api.drupalUserID)
                 const profiles = response.data.data;
                 commit('SAVE_PROFILE', { profiles });
+
 
             })
             .catch(function (error) {
@@ -131,7 +132,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.ddns.net/jsonapi/node/profil`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -169,7 +170,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.ddns.net/jsonapi/media/image/field_media_image`,
+            url: `https://clr-backend.x-navi.de/jsonapi/media/image/field_media_image`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/octet-stream',
@@ -229,7 +230,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.ddns.net/jsonapi/user/user/${userID}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/user/user/${userID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -287,7 +288,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.ddns.net/jsonapi/node/profil/${profile.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -427,18 +428,18 @@ const mutations = {
 
 
     SAVE_PROFILE(state, { profiles }) {
-
+        console.log(profiles);
         profiles.forEach(element => {
-            console.log(field_studiengang)
             const field_studiengang = element.attributes.field_studiengang;
-            console.log(field_anzahl_literaturreviews)
+            console.log(field_studiengang)
             const field_anzahl_literaturreviews = element.attributes.field_anzahl_literaturreviews;
-            console.log(field_datenbanken)
+            console.log(field_anzahl_literaturreviews)
             const field_datenbanken = element.attributes.field_datenbanken;
-            console.log(field_analysetool)
+            console.log(field_datenbanken)
             const field_analysetool = element.attributes.field_analysetool;
-            console.log(field_referenztool)
+            console.log(field_analysetool)
             const field_referenztool = element.attributes.field_referenztool;
+            console.log(field_referenztool)
             const field_profilbild = element.relationships.field_profilbild;
             const field_id = element.id;
             const field_title = element.attributes.title;

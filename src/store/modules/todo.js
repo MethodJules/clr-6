@@ -24,7 +24,7 @@ const getters = {
 const actions = {
 
     async loadToDoFromBackend({ commit }) {
-        await axios.get('https://clr-backend.ddns.net/jsonapi/node/to_dos')
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/to_dos')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data;
@@ -60,7 +60,7 @@ const actions = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.ddns.net/jsonapi/node/to_dos',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/to_dos',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -90,7 +90,7 @@ const actions = {
     deleteTodo({ commit }, todoEntry) {
         var config = {
             method: 'delete',
-            url: `https://clr-backend.ddns.net/jsonapi/node/to_dos/${todoEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -131,7 +131,7 @@ const mutations = {
     var data = `{"data": {"type": "node--to_dos", "id": "${todoEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date} }}}`;
     var config = {
         method: 'patch',
-        url: `https://clr-backend.ddns.net/jsonapi/node/to_dos/${todoEntry.idd}`,
+        url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
         headers: {
             'Accept': 'application/vnd.api+json',
             'Content-Type': 'application/vnd.api+json',

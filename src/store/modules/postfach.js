@@ -2,34 +2,34 @@ import axios from 'axios';
 
 const state = () => ({
     listOfPostfach: [
-      
+
     ]
 })
 
 const actions = {
 
-    async loadPostfachFromBackend({commit}) {
-        await  axios.get('https://clr-backend.ddns.net/jsonapi/node/postfach')
+    async loadPostfachFromBackend({ commit }) {
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/postfach')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data;
                 //let to-dos = [];
                 commit('SAVE_POSTFACH', data);
 
-            }).catch(error =>{
+            }).catch(error => {
                 throw new Error(`API ${error}`);
             });
 
     },
-    createPostfach({commit}, postfachEntry) {
-        
+    createPostfach({ commit }, postfachEntry) {
+
         commit('ADD_POSTFACH_ENTRY', postfachEntry)
 
     },
-     deletePostfach({commit}, postfachEntry) {
+    deletePostfach({ commit }, postfachEntry) {
         var config = {
             method: 'delete',
-            url: `https://clr-backend.ddns.net/jsonapi/node/postfach/${postfachEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/postfach/${postfachEntry.idd}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -40,20 +40,20 @@ const actions = {
         axios(config)
             .then((response) => {
                 console.log(response);
-            }).catch(function(error) {
+            }).catch(function (error) {
                 console.log(error);
             });
         commit('DELETE_POSTFACH_ENTRY', postfachEntry);
     },
-   
+
 }
 const mutations = {
     DELETE_POSTFACH_ENTRY(state, postfachEntry) {
         let index = state.listOfPostfach.indexOf(postfachEntry);
         state.listOfPostfach.splice(index, 1);
-    }, 
+    },
     ADD_POSTFACH_ENTRY(state, postfachEntry) {
-        
+
         var data = `
         {
             "data": {
@@ -66,7 +66,7 @@ const mutations = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.ddns.net/jsonapi/node/postfach',
+            url: 'https://clr-backend.x-navi.de/jsonapi/node/postfach',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -74,27 +74,27 @@ const mutations = {
             },
             data: data
         };
-        
+
         axios(config)
-            .then(function(response){
+            .then(function (response) {
                 console.log(response)
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
     },
-    
+
     SAVE_POSTFACH(state, postfach) {
 
         postfach.forEach(element => {
             const field_nachrichten = element.attributes.field_nachrichten;
-            
+
             const field_id = element.id;
-           
+
             const field_title = element.attributes.title;
-           
-            state.listOfPostfach.push( { postfach: field_nachrichten, idd: field_id, title: field_title })
-            
+
+            state.listOfPostfach.push({ postfach: field_nachrichten, idd: field_id, title: field_title })
+
         });
     }
 }

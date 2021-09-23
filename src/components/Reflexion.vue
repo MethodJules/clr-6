@@ -16,7 +16,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="berichten_reagieren"
+            v-model="getRowData.berichten_reagieren"
             v-on:input="$v.berichten_reagieren.$touch"
             v-bind:class="{
               error: $v.berichten_reagieren.$error,
@@ -39,7 +39,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="in_bezug_setzen"
+            v-model="getRowData.in_bezug_setzen"
             v-on:input="$v.in_bezug_setzen.$touch"
             v-bind:class="{
               error: $v.in_bezug_setzen.$error,
@@ -60,7 +60,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="schlussfolgern"
+            v-model="getRowData.schlussfolgern"
             v-on:input="$v.schlussfolgern.$touch"
             v-bind:class="{
               error: $v.schlussfolgern.$error,
@@ -81,7 +81,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="rekonstruieren"
+            v-model="getRowData.rekonstruieren"
             v-on:input="$v.rekonstruieren.$touch"
             v-bind:class="{
               error: $v.rekonstruieren.$error,
@@ -119,6 +119,8 @@ export default {
 
   data() {
     return {
+      phaseId: this.$route.params.phase_id,
+      projectId: this.$route.params.project_id,
       testButClicked: false,
       reflexionList: [],
       berichten_reagieren: "",
@@ -195,7 +197,7 @@ export default {
   },
 
   /** lädt alle Reflexionen aus dem Backend */
-  mounted() {
+  async mounted() {
     this.$store.dispatch("reflexion/loadReflexionFromBackend", {
       phaseId: this.$route.params.reflexionsPhase,
     });
@@ -208,7 +210,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters({ rowData: "reflexion/getRowData" }),
+    /*  ...mapGetters({ rowData: "reflexion/getRowData" }), */
+    getRowData() {
+      return this.$store.state.reflexion.rowData;
+    },
   },
 };
 </script>
