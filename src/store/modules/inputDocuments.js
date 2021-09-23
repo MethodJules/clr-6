@@ -35,6 +35,7 @@ const mutations = {
      */
 
     LOAD_FILES_TO_STATE_FROM_BACKEND(state, inputarrayPayload) {
+        console.log(inputarrayPayload)
         state.inputs = inputarrayPayload;
         //state.inputs = payload
         /* if (state.inputs.includes(payload)) {
@@ -43,6 +44,11 @@ const mutations = {
         } else {
             state.inputs.push(payload);
         } */
+    },
+
+    UPDATE_INPUTS(state, file) {
+        console.log(file)
+        state.inputs.push(file);
     },
 
 
@@ -176,6 +182,9 @@ const actions = {
     addInputDocument({ state, rootState, commit }, payload) {
 
         console.log(state)
+        console.log(rootState)
+        console.log(rootState.phases)
+        console.log(this.$route)
         var phaseId = rootState.phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
@@ -219,6 +228,7 @@ const actions = {
 
         axios(config)
             .then(function (response) {
+                console.log(response)
                 const urlBackend = "https://clr-backend.x-navi.de";
                 let file = {
                     name: payload.file.name,
@@ -227,7 +237,8 @@ const actions = {
                     url: urlBackend + response.data.included[0].attributes.uri.url
 
                 }
-                commit("LOAD_FILES_TO_STATE_FROM_BACKEND", file);
+                // commit("LOAD_FILES_TO_STATE_FROM_BACKEND", file);
+                commit("UPDATE_INPUTS", file);
             })
             .catch(function (error) {
                 console.log(error)
