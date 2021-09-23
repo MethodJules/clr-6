@@ -33,11 +33,12 @@
             <h5>{{ admin.username }}</h5>
           </b-col>
           <b-col>
-            <b-button @click="deleteMember(member)"> X </b-button>
+            <b-button @click="deleteAdmin(member)"> X </b-button>
             <br />
           </b-col>
         </b-row>
       </div>
+      <br />
 
       <b-container>
         <b-row>
@@ -55,25 +56,26 @@
             <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>
           </b-col>
         </b-row>
-        <b-modal
+        <!--         <b-modal
           id="leave_group"
           title="Bist du dir sicher?"
           cancel-title="Abbrechen"
         >
-          <b-row>
-            <p>
-              Du kannst nicht mehr auf das Projekt zugreifen, wenn du die Gruppe
-              verlaesst.
-            </p>
-          </b-row>
-          <b-row>
-            <b-col>
-              <b-button>Nein</b-button>
-            </b-col>
-            <b-col>
-              <b-button>Ja</b-button>
-            </b-col>
-          </b-row>
+        </b-modal> -->
+
+        <b-button @click="$bvModal.show('modal-scoped')"
+          >Gruppe verlassen
+        </b-button>
+        <b-modal id="modal-scoped" title="Bist du dir sicher?">
+          <template #modal-footer="{ cancel }">
+            <!-- Emulate built in modal footer ok and cancel button actions -->
+            <b-button size="sm" variant="danger" @click="cancel()">
+              Cancel
+            </b-button>
+            <b-button size="sm" variant="success" @click="leaveGroup()">
+              OK
+            </b-button>
+          </template>
         </b-modal>
       </b-container>
     </div>
@@ -90,9 +92,95 @@ export default {
     return {};
   },
   methods: {
+    addMember: function (mitglied) {
+      //let role_field = "field_gruppenmitglieder";
+      this.$store.dispatch("project/addMembers", mitglied);
+      //this.$store.dispatch("project/deleteMembers", { mitglied, role_field });
+    },
     deleteMember: function (mitglied) {
+      //let role_field = "field_gruppenmitglieder";
+      if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
+        console.log("Member gelöscht popup");
+        this.$store.dispatch("project/deleteMembers", mitglied);
+      } else {
+        console.log(
+          "Du musst Gruppenadministrator sein, um Gruppenmitglieder zu entfernen"
+        );
+      }
+
+      //this.$store.dispatch("project/deleteMembers", { mitglied, role_field });
+    },
+
+    deleteAdmin: function (mitglied) {
+      //if(me=gruppenadministrator AND nicht selbst letzte admin)
+      if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
+        console.log("Member gelöscht popup");
+        this.$store.dispatch("project/deleteMembers", mitglied);
+      } else {
+        console.log(
+          "Du musst Gruppenadministrator sein, um Gruppenmitglieder zu entfernen"
+        );
+      }
+    },
+
+    filter(memberId, memberList) {
+      //filters the current user by id - is used in a function for leaving the group
+      console.log("test");
+      let filteredCollection = memberList.filter((item) => {
+        console.log(item);
+        if (item.userid == memberId) {
+          return true;
+        }
+        return false;
+      });
+      //console.log(filteredCollection);
+      //a user should exist only once, so first index should return the user correctly
+      return filteredCollection[0];
+    },
+
+    /* checks first if current user is an group admin or group member with getGroup__.some. is a user in one of those arrays
+the filter function will filter out the correct member out of the array
+then the appropriate dispatch will be sent */
+    leaveGroup() {
+      //if(me=gruppenadministrator AND nicht selbst letzte admin)
       //this.$store.dispatch("members/deleteMembers", mitglied);
-      this.$store.dispatch("project/deleteMembers", mitglied);
+      //put logic in project.js?
+
+      let member;
+
+      if (
+        this.getGroupMembers.some(
+          (member) => member.userid === this.getCurrentUserID
+        )
+      ) {
+        console.log("member funzt");
+        member = this.filter(this.getCurrentUserID, this.getGroupMembers);
+        console.log(member);
+        this.$store.dispatch("project/deleteMembers", member);
+      }
+
+      if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
+        console.log("admin funzt");
+        member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
+        //this.$store.dispatch("project/deleteMembers", member);
+      }
+      //this.$store.dispatch("project/deleteMembers", userID);
+
+      //go to Projectlist
+    },
+
+    giveAdminRights: function (mitglied) {
+      //if(me=gruppenadministrator AND nicht selbst letzte admin)
+      let role_field = "field_gruppenadministrator";
+      //this.$store.dispatch("members/deleteMembers", mitglied);
+      this.$store.dispatch("project/deleteMembers", { mitglied, role_field });
+    },
+
+    removeOwnAdminRights: function (mitglied) {
+      //if(me=gruppenadministrator AND nicht selbst letzte admin)
+      let role_field = "field_gruppenadministrator";
+      //this.$store.dispatch("members/deleteMembers", mitglied);
+      this.$store.dispatch("project/deleteMembers", { mitglied, role_field });
     },
   },
   computed: {
@@ -102,22 +190,17 @@ export default {
     getCurrentProject() {
       return this.$store.state.project.currentProject;
     },
+    getGroupMembers() {
+      return this.$store.state.project.currentProject.gruppenmitglieder;
+    },
     getGroupAdmins() {
-      /*    console.log(this.$store);
-      console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getLecturers"]); */
-      //console.log(this.$store.getters["project/currentProjectGroupAdmins"])
-
-      //return this.$store.getters["project/currentProjectGroupAdmins"];
       return this.$store.state.project.currentProjectGroupAdmins;
     },
     getProjectLecturers() {
-      /*    console.log(this.$store);
-      console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getLecturers"]); */
-
-      //return this.$store.getters["project/currentProjectLecturers"];
       return this.$store.state.project.currentProjectLecturers;
+    },
+    getCurrentUserID() {
+      return this.$store.state.profile.userData.idd;
     },
   },
 };

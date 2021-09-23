@@ -52,17 +52,26 @@ const actions = {
   * @param rootState rootState allows access to states of other modules in store
   */
   async loadProjectsFromBackend({ commit, state, rootState }) {
-    //console.log(state)
-    //console.log(rootState.sparky_api.sparkyUserID)
     //var drupalUserID = rootState.sparky_api.drupalUserID
-    //b0e1c888-6304-4fe0-83fc-255bb4a3cfe3
     var drupalUserUID = rootState.drupal_api.user.uid
     //console.log(drupalUserUID)
 
+    /*https://clr-backend.ddns.net/jsonapi/node/projekt?
+  
+  
+?filter[rock-group][group][conjunction]=OR
+&filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}
+&filter[memberOf]=rock-group
+
+?filter[rock-group][group][conjunction]=OR
+&filter[field_gruppenadministrator.drupal_internal__uid][operator]=IN&filter[field_gruppenadministrator.drupal_internal__uid]=${drupalUserUID}
+&filter[memberOf]=rock-group`*/
+    //TODO: make group_admin_field an array and change the filtering method here from equals to IN
+    const filter = `?filter[or-group][group][conjunction]=OR&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
 
     var config = {
       method: 'get',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${filter}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -205,8 +214,13 @@ const actions = {
 
   },
 
-
-
+  /**
+* @param state state as parameter for access and manipulation of state data
+* @param dispatch calls another action
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+* creates a project and makes the person who created it a group admin and a group member. then creates all 8 phases for the project
+*/
   createProject({ commit, dispatch, rootState }, projEntry) {
     const keywords = JSON.stringify(projEntry.schlagworter)
 
@@ -272,6 +286,7 @@ const actions = {
         console.log(response)
         let id_newly_created_project = response.data.data.id
         console.log(id_newly_created_project)
+        //createAllPhasesforNewProject creates all 8 Phases for this project, is in phases.js
         dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
         commit('ADD_PROJECT', projEntry)
       })
@@ -350,43 +365,57 @@ const actions = {
 
   },
 
-  deleteMembers({ rootState, state }, mitglied) {
-    let userID = rootState.profile.userData.idd
-    //let index = state.mitglied.indexOf(mitglied);
-    //state.mitglied.splice(index, 1);
-    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
-    state.currentProject.gruppenmitglieder.splice(index, 1);
-    //console.log(state.currentProject.gruppenmitglieder);
-    //console.log(JSON.stringify(state.currentProject.gruppenmitglieder))
-    let gruppenmitglieder_array = []
-    state.currentProject.gruppenmitglieder.forEach(element => {
-      gruppenmitglieder_array.push({ type: "user--user", id: element.userid })
 
-    })
-    console.log(gruppenmitglieder_array)
-    console.log(JSON.stringify(gruppenmitglieder_array))
-    let gruppenmitglieder_array_string = JSON.stringify(gruppenmitglieder_array)
+  addMember({ state, rootState, commit }, { mitglied, role }) {
+
+    /*     let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
+        state.currentProject.gruppenmitglieder.splice(index, 1); */
+    console.log(mitglied)
 
 
-
-    var data = `{
-          "data": {
-            "type": "node--projekt",
-             "id": "${state.currentProject.idd}",
-            "relationships": {
-              "field_gruppenmitglieder": {
-                "data": {
-                  ${gruppenmitglieder_array_string}
-                }
-              }
-            }
-          }
-        }`;
+    var data = `{ "data": [{
+            "type": "user--user",
+             "id": "${mitglied.userid}"
+          }]}`;
 
     var config = {
-      method: 'patch',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${state.currentProject.idd}`,
+      method: 'post',
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${state.currentProject.idd}/relationships/${role}`,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+      data: data
+    };
+    axios(config)
+      .then((response) => {
+        console.log(response);
+        console.log(mitglied)
 
+        commit('ADD_MEMBER', mitglied);
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+  },
+
+
+
+  deleteMembers({ rootState, state }, mitglied) {
+
+    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
+    state.currentProject.gruppenmitglieder.splice(index, 1);
+
+    var data = `{ "data": [{
+            "type": "user--user",
+             "id": "${mitglied.userid}"
+          }]}`;
+
+    var config = {
+      method: 'delete',
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenmitglieder`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -404,6 +433,39 @@ const actions = {
       });
 
   },
+
+  /*works not before groupadmins is an array in the backend*/
+  deleteAdmin({ rootState, state }, mitglied) {
+
+    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
+    state.currentProject.gruppenmitglieder.splice(index, 1);
+
+    var data = `{ "data": [{
+            "type": "user--user",
+             "id": "${mitglied.userid}"
+          }]}`;
+
+    var config = {
+      method: 'delete',
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenadministrator`,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+      data: data
+    };
+    axios(config)
+      .then((response) => {
+        console.log(response);
+        // commit('deleteMemberFrontend', payload);
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+  },
+
 }
 
 
@@ -518,6 +580,7 @@ const mutations = {
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
 
       state.currentProject = projectObject
+      console.log(state.currentProject)
       state.currentProject2 = projectObject2
 
     });
@@ -554,6 +617,13 @@ const mutations = {
     state.currentProjectLecturers = lecturers_array
     console.log(state.currentProjectLecturers)
     //console.log(lecturers_array)
+  },
+
+  ADD_MEMBER(state, mitglied) {
+
+    console.log(mitglied)
+    state.currentProject.gruppenmitglieder.push(mitglied)
+    console.log(state.currentProject.gruppenmitglieder)
   }
 
 }

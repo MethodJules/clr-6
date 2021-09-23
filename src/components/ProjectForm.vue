@@ -60,7 +60,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                       {{ lecturer.name }}
                     </option>
                   </select>
-                  <span>Selected: {{ project.betreuenderDozent }}</span>
+                  <!--  <span>Selected: {{ project.betreuenderDozent }}</span> -->
 
                   <!-- <select v-model="selected">
   <option v-for="option in options" v-bind:value="option.value" v-bind:key="option.value">
