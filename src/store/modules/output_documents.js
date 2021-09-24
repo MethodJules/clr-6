@@ -35,6 +35,10 @@ const mutations = {
         state.outputs = outputarrayPayload;
     },
 
+    UPDATE_OUTPUTS(state, file) {
+        state.outputs.push(file);
+    },
+
 
     /**
      * 
@@ -78,7 +82,8 @@ const actions = {
             .then(function (response) {
                 console.log(response)
                 const urlBackend = "https://clr-backend.x-navi.de";
-                let files = response.data.included;
+                let files = response.data.included; // id, name, size and url of file from node file-file
+                let fileDataId = response.data.data; // the fileDataId from node --outputdateien
                 /* 
                
                We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend 
@@ -87,17 +92,17 @@ const actions = {
 
                */
                 var outputarrayPayload = []
-                files.forEach(file => {
+                for (let index = 0; index < files.length; index++) {
                     let payload = {
-                        id: file.id,
-                        name: file.attributes.filename,
-                        size: file.attributes.filesize,
-                        url: urlBackend + file.attributes.uri.url,
+                        dataId: fileDataId[index].id, // id of document from node outputdateien
+                        id: files[index].id, // included data --> file-file
+                        name: files[index].attributes.filename, // included data --> file-file
+                        size: files[index].attributes.filesize, // included data --> file-file
+                        url: urlBackend + files[index].attributes.uri.url, // included data --> file-file
                     }
+
                     outputarrayPayload.push(payload)
-
-
-                });
+                }
                 //this array 'outputarrayPayload' is passed as a parameter in the mutation method
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', outputarrayPayload);
 
@@ -210,7 +215,7 @@ const actions = {
                     id: response.data.data.id,
                     url: urlBackend + response.data.included[0].attributes.uri.url
                 }
-                commit("LOAD_FILES_TO_STATE_FROM_BACKEND", file);
+                commit("UPDATE_OUTPUTS", file);
             })
             .catch(function (error) {
                 console.log(error)
@@ -225,7 +230,7 @@ const actions = {
 
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/outputdateien/${payload.output.id}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/outputdateien/${payload.output.dataId}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
