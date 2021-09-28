@@ -22,8 +22,8 @@ describe('Login', () => {
         cy.get('#zugangsKennung').type('testacc');
         cy.get('#password').type('test');
         cy.get('.btn').first().click().then(() => {
-            cy.wait(500);
-            cy.contains('Meine Projekte');
+            cy.wait(1000);
+            cy.contains('Meine Projekte').should('exist');
             // cy.contains('greeting');
         });
     });
@@ -44,8 +44,8 @@ describe('Login', () => {
 describe('Logout', () => {
     it('allows a logged in user to log out and receive a logout message - TS_US1_005', () => {
         cy.get('.navbar-nav').eq(3).click().then(() => {
-            cy.wait(500);
-            cy.contains('Bis zum nächsten Mal');
+            cy.wait(1000);
+            cy.contains('Bis zum nächsten Mal').should('exist');
         });
     });
 });
