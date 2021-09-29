@@ -54,7 +54,7 @@ const actions = {
     * @param dispatch dispatch is used to call another action from this function
     * @param rootState rootState allows access to states of other modules in store
     */
-    async createUser({ state, commit, rootState }, { username, password, matrikelnummer }) {
+    async createUser({ state, commit, rootState, dispatch }, { username, password, matrikelnummer }) {
         //Todo: uncomment or delete later, after login and registration process is tested thoroughly
         //await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
         var sparkyUserObject = rootState.sparky_api.sparkyUserObject
@@ -103,7 +103,11 @@ const actions = {
                 commit('SAVE_CREATED_USER', user);
                 //creates empty profile when user is created
                 //test if userdata (user.uid) is saved by SAVE_CREATED_USER before createProfile is called (it needs uid)
-                dispatch("profil/createProfile", { root: true })
+                //build auth token
+                var creds = username + ":" + password;
+                var base64 = btoa(creds);
+                let authorization_token = "Basic " + base64;
+                dispatch("profile/createProfile", authorization_token, { root: true })
                 //TODO: dispatch userdata update profileimage or put in image url in const data above, so it is linked  with the user creation
 
             }).catch(error => {

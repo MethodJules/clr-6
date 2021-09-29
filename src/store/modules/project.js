@@ -7,7 +7,8 @@ const state = () => ({
   currentProject: {},
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
-  currentProject2: null
+  currentProject2: null,
+  keywordsInString: ""
 
 
 
@@ -36,10 +37,11 @@ const getters = {
 
   }
 
-
-
-
 } */
+
+const setters = {
+
+}
 
 
 const actions = {
@@ -324,20 +326,6 @@ const actions = {
                 "type": "user--user",
                 "id": "${projEntry.betreuenderDozent}"
               }
-            },
-            "field_gruppenadministrator": {
-              "data": {
-                "type": "user--user",
-                "id": "${userID}"
-              }
-            },
-            "field_gruppenmitglieder": {
-              "data": {
-                "0": {
-                  "type": "user--user",
-                  "id": "${userID}"
-                }
-              }
             }
           }
         }
@@ -367,6 +355,7 @@ const actions = {
 
 
   addMember({ state, rootState, commit }, { mitglied, role }) {
+    //TODO: Gruppenadministrator in Backend zu array ändern
 
     /*     let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
         state.currentProject.gruppenmitglieder.splice(index, 1); */
@@ -486,6 +475,15 @@ const mutations = {
   },
 
 
+  UPDATE_KEYWORDS(state, keywords) {
+    console.log(keywords)
+    console.log(state.keywordsInString)
+
+    state.keywordsInString = keywords
+    console.log(state.keywordsInString)
+  },
+
+
   UPDATE_PROJECT(state, projEntry) {
     console.table(projEntry)
     console.table(state)
@@ -583,8 +581,14 @@ const mutations = {
       console.log(state.currentProject)
       state.currentProject2 = projectObject2
 
-    });
 
+
+    });
+    let keywords = state.currentProject.schlagworter;
+    console.log(keywords);
+    let keywordsInString = keywords.join();
+    console.log(keywordsInString);
+    state.keywordsInString = keywordsInString
   },
   LOAD_CURRENT_PROJECT_GROUP_ADMIN(state, { groupadmins }) {
 
@@ -631,5 +635,6 @@ export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
+  setters
 }

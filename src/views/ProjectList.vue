@@ -12,7 +12,7 @@
         <b-row>
           <b-col>
             <table>
-              <tr v-for="project in getProjectlist" :key="project.id">
+              <tr v-for="project in getProjectlist" :key="project.idd">
                 <b-card style="max-height: 20rem">
                   <b-col>
                     <b-row>

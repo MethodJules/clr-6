@@ -53,19 +53,20 @@
             <b-button>Admin-Rechte entfernen</b-button>
           </b-col>
           <b-col>
-            <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>
+            <b-button @click="$bvModal.show('modal-scoped')"
+              >Gruppe verlassen
+            </b-button>
           </b-col>
         </b-row>
-        <!--         <b-modal
+
+        <!--  <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>       
+        <b-modal
           id="leave_group"
           title="Bist du dir sicher?"
           cancel-title="Abbrechen"
         >
         </b-modal> -->
 
-        <b-button @click="$bvModal.show('modal-scoped')"
-          >Gruppe verlassen
-        </b-button>
         <b-modal id="modal-scoped" title="Bist du dir sicher?">
           <template #modal-footer="{ cancel }">
             <!-- Emulate built in modal footer ok and cancel button actions -->

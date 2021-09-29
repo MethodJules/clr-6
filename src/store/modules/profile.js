@@ -88,9 +88,7 @@ const actions = {
 
     /* saves the profile with the date fields in the backend  */
 
-    createProfile({ state, rootState }, profile) {
-
-        console.log(profile)
+    createProfile({ state, rootState }, authorization_token) {
         //console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
         console.log(drupalUserUID)
@@ -136,7 +134,7 @@ const actions = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
+                'Authorization': authorization_token,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data

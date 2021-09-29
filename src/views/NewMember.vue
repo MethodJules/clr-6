@@ -102,8 +102,7 @@ export default {
       ) {
         this.$store.dispatch("project/addMember", {
           mitglied: member,
-          //role: this.role,
-          role: "field_gruppenmitglieder",
+          role: this.role,
         });
         console.log("Nutzer hinzugefügt popup machen");
         this.$router.push({ name: "Groupmanagement" });

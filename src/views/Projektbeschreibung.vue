@@ -63,9 +63,9 @@
         </b-col>
 
         <b-col sm="5">
-          <label for="input-1"> <strong> Schlagwörter </strong> </label>
+          <label for="input-2"> <strong> Schlagwörter </strong> </label>
           <b-row>
-            <b-form-input v-model="getKeywords"> </b-form-input>
+            <b-form-input v-model="getKeywords" id="input-2"> </b-form-input>
           </b-row>
         </b-col>
 
@@ -183,15 +183,18 @@ export default {
     },
 
     updateProject() {
-      var schlagwortarray = this.project.schlagworter.split(",");
+      console.log(this.$store.state.project.keywordsInString);
+      console.log(this.getKeywords);
+      var schlagworter = this.$store.state.project.keywordsInString;
+      var schlagwortarray = schlagworter.split(",");
       var keywords = Object.assign({}, schlagwortarray);
       console.log(keywords);
 
       var updatedProj = {
-        title: this.title,
-        kurzbeschreibung: this.project.kurzbeschreibung,
-        betreuenderDozent: this.project.betreuenderDozent,
-        externeMitwirkende: this.project.externeMitwirkende,
+        title: this.getCurrentProject.title,
+        kurzbeschreibung: this.getCurrentProject.kurzbeschreibung,
+        betreuenderDozent: this.getCurrentProject.betreuenderDozent,
+        externeMitwirkende: this.getCurrentProject.externeMitwirkende,
         schlagworter: keywords,
         gruppenadmin: this.$store.state.sparky_api.drupalUserID,
         projectIdd: this.$route.params.project_id,
@@ -215,12 +218,13 @@ export default {
       return this.$store.state.project.currentProject;
     },
 
-    getKeywords() {
-      let keywords = this.$store.state.project.currentProject.schlagworter;
-      console.log(keywords);
-      let keywordsInString = keywords.join();
-      console.log(keywordsInString);
-      return keywordsInString;
+    getKeywords: {
+      get() {
+        return this.$store.state.project.keywordsInString;
+      },
+      set(value) {
+        this.$store.commit("project/UPDATE_KEYWORDS", value);
+      },
     },
     getLecturers() {
       console.log(this.$store.getters.getLecturers);
