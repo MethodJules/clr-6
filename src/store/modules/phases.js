@@ -110,12 +110,19 @@ const actions = {
                 console.log(response);
                 const currentPhase = response.data.data;
                 commit('LOAD_SINGLE_PHASE', { currentPhase });
+                console.log(state.current_phase)
                 dispatch("inputDocuments/loadInputdocumentsFromBackend", null, { root: true })
                 dispatch("output_documents/loadOutputdocumentsFromBackend", null, { root: true })
+                dispatch("reflexion/loadReflexionFromBackend", null, { root: true })
 
             })
+            // Leeres Array gepackt, damit keine alte Phase im State ist; TODO/Vllt: Route zur Startseite
+
             .catch(function (error) {
+                let leeresPhaseArray = []
                 console.log(error)
+                commit('LOAD_SINGLE_PHASE', leeresPhaseArray);
+
             })
 
 

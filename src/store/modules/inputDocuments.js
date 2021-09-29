@@ -35,8 +35,10 @@ const mutations = {
      */
 
     LOAD_FILES_TO_STATE_FROM_BACKEND(state, inputarrayPayload) {
+        console.log(state.inputs)
         state.inputs = inputarrayPayload;
         console.log(state.inputs)
+
         //state.inputs = payload
         /* if (state.inputs.includes(payload)) {
             console.log(payload)
@@ -114,6 +116,7 @@ const actions = {
                     }
 
                     inputarrayPayload.push(payload)
+
                 }
 
 
@@ -126,6 +129,8 @@ const actions = {
             })
             .catch(function (error) {
                 console.log(error)
+                let leeresInputArray = []
+                commit('LOAD_FILES_TO_STATE_FROM_BACKEND', leeresInputArray);
             })
 
 

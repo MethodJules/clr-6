@@ -11,12 +11,14 @@
       <b-row>
         <b-col sm="2">
           <!-- Textfeld 1 -->
+          <!-- v-model="getReflexionData.berichten_reagieren" -->
+          <!-- v-model="getReflexionData.in_bezug_setzen" -->
           <label for="textfeld-1">Berichten / Reagieren </label>
         </b-col>
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="getRowData.berichten_reagieren"
+            v-model="berichten_reagieren"
             v-on:input="$v.berichten_reagieren.$touch"
             v-bind:class="{
               error: $v.berichten_reagieren.$error,
@@ -39,7 +41,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="getRowData.in_bezug_setzen"
+            v-model="in_bezug_setzen"
             v-on:input="$v.in_bezug_setzen.$touch"
             v-bind:class="{
               error: $v.in_bezug_setzen.$error,
@@ -60,7 +62,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="getRowData.schlussfolgern"
+            v-model="schlussfolgern"
             v-on:input="$v.schlussfolgern.$touch"
             v-bind:class="{
               error: $v.schlussfolgern.$error,
@@ -81,7 +83,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="getRowData.rekonstruieren"
+            v-model="rekonstruieren"
             v-on:input="$v.rekonstruieren.$touch"
             v-bind:class="{
               error: $v.rekonstruieren.$error,
@@ -115,6 +117,7 @@ import { mapGetters } from "vuex";
 export default {
   props: {
     reflexionsPhase: String,
+    sicht: String,
   },
 
   data() {
@@ -146,6 +149,7 @@ export default {
         console.log("title: ${this.titela}");
 
         var ausgabe = {
+          sichten: this.sicht,
           berichten_reagieren: this.berichten_reagieren,
           in_bezug_setzen: this.in_bezug_setzen,
           schlussfolgern: this.schlussfolgern,
@@ -156,7 +160,7 @@ export default {
 
         this.$store.dispatch("reflexion/createReflexion", ausgabe);
 
-        var output = {
+        /* var output = {
           idd: this.reflexionList[1].idd,
           title: this.reflexionList[1].title,
           berichten_reagieren: this.berichten_reagieren,
@@ -165,7 +169,7 @@ export default {
           rekonstruieren: this.rekonstruieren,
         };
 
-        this.$store.dispatch("reflexion/updateReflexion", output);
+        this.$store.dispatch("reflexion/updateReflexion", output); */
       } else {
         alert("Bitte alles ausfüllen");
       }
@@ -177,7 +181,7 @@ export default {
   },
 
   /**Reflexion wird manuell aus dem Backend geladen */
-  loadReflexion() {
+  /* loadReflexion() {
     //daten werden hier nur in felder geladen, aus dem backend wurden die inhalte schon bei mounted geladen ->
     // daher lädt der button nur die alten daten, außer es wurde neu aus dem backend geladen (bisher nicht möglich)
     //To Do: dynamisch machen - oder wie bei tabelledaily etc unten während der mount phase in die felder laden
@@ -186,7 +190,7 @@ export default {
     this.schlussfolgern = this.reflexionList[1].schlussfolgern;
     this.rekonstruieren = this.reflexionList[1].rekonstruieren;
     console.log(this.test);
-  },
+  }, */
 
   watch: {
     testButClicked(val) {
@@ -198,11 +202,9 @@ export default {
 
   /** lädt alle Reflexionen aus dem Backend */
   async mounted() {
-    this.$store.dispatch("reflexion/loadReflexionFromBackend", {
-      phaseId: this.$route.params.reflexionsPhase,
-    });
+    //this.$store.dispatch("reflexion/loadReflexionFromBackend");
 
-    this.rowData = this.$store.state.reflexion.rowData;
+    this.reflexionData = this.$store.state.reflexion.reflexionData;
     /*  this.reflexionList=this.rowData */
     // TO DO: nur die Daten laden die der Phase und der Nutzer ID entsprechen
     //console.log(this.reflexionList)
@@ -211,8 +213,8 @@ export default {
 
   computed: {
     /*  ...mapGetters({ rowData: "reflexion/getRowData" }), */
-    getRowData() {
-      return this.$store.state.reflexion.rowData;
+    getReflexionData() {
+      return this.$store.state.reflexion.reflexionData;
     },
   },
 };

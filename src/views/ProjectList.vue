@@ -40,7 +40,7 @@
                     </b-row>
                     <b-row>
                       <b-col>
-                        <ReflexionAuswahl />
+                        <ReflexionAuswahl :projectId="project.idd" />
                       </b-col>
                     </b-row>
                   </b-col>
@@ -125,6 +125,7 @@ export default {
   }, */
   async mounted() {
     this.$store.dispatch("project/loadProjectsFromBackend");
+
     //this.projectList = this.$store.state.project.myProjects;
     //console.log(this.projectList);
     console.log("mount projectList");

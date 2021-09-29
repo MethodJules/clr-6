@@ -109,6 +109,8 @@ const actions = {
             })
             .catch(function (error) {
                 console.log(error)
+                let leeresOutputArray = []
+                commit('LOAD_FILES_TO_STATE_FROM_BACKEND', leeresOutputArray);
             })
 
 
