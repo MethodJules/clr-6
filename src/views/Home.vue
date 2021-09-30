@@ -15,9 +15,15 @@
 import ReviewCircle from "@/components/ReviewCircle.vue";
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 export default {
-  data() {
-    return {
-      myViews: {
+    data() {
+        return {
+            myViews: {
+                ReviewCircle,
+            },
+        };
+    },
+    name: "Home",
+    components: {
         ReviewCircle,
       },
     };

@@ -163,8 +163,8 @@ const actions = {
     async logoutDrupal({ commit, rootState }) {
         console.log(rootState.drupal_api.csrf_token)
         console.log(rootState.drupal_api.logout_token)
-        console.log(state.logout_token)
         console.log(rootState.drupal_api.authToken)
+        console.log(sessionStorage)
         const url = `https://clr-backend.x-navi.de/user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
         const config = {
             method: 'post',
@@ -173,8 +173,6 @@ const actions = {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
-
-
             },
             withCredentials: true
         };

@@ -68,6 +68,7 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
+     
 
         axios(config)
             .then(function (response) {
@@ -205,7 +206,7 @@ const actions = {
         var userID = rootState.profile.userData.idd
         //let user = state.userData.idd
 
-
+        console.log(userID)
 
         console.log(state)
         console.log(imageID)
