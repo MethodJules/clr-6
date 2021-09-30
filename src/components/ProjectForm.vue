@@ -48,18 +48,26 @@
 TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
 -->
 
-                  <select
-                    v-model="project.betreuenderDozent"
-                    class="form-control"
+                  <div
+                    v-for="(betreuenderDozent, i) in project.betreuenderDozent"
+                    :key="i"
                   >
-                    <option
-                      v-for="lecturer in getLecturers"
-                      v-bind:value="lecturer.uuid"
-                      v-bind:key="lecturer.uuid"
+                    <select
+                      v-model="project.betreuenderDozent[i]"
+                      class="form-control"
                     >
-                      {{ lecturer.name }}
-                    </option>
-                  </select>
+                      <option
+                        v-for="lecturer in getLecturers"
+                        v-bind:value="lecturer.uuid"
+                        v-bind:key="lecturer.uuid"
+                      >
+                        {{ lecturer.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <b-button @click="addLecturer('')"
+                    >Weiteren Dozenten hinzufügen</b-button
+                  >
                   <!--  <span>Selected: {{ project.betreuenderDozent }}</span> -->
 
                   <!-- <select v-model="selected">
@@ -98,15 +106,12 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             <tr>
               <td>
                 <div class="form-group">
-                  <vue-simple-suggest
+                  <input
+                    id="title"
                     v-model="project.externeMitwirkende"
-                    :styles="autoCompleteStyle"
                     type="text"
-                    display-attribute="user"
-                    value-attribute="id"
-                    :list="getStudents"
-                    :filter-by-query="true"
                     placeholder="externe Mitwirkende eingeben"
+                    class="form-control"
                   />
                 </div>
               </td>
@@ -201,6 +206,7 @@ export default {
   },
   data() {
     return {
+      lecturer_array: [this.project.betreuenderDozent],
       chosen: "",
       autoCompleteStyle: {
         vueSimpleSuggest: "position-relative",
@@ -235,12 +241,17 @@ export default {
     showThisModal() {
       this.$refs["create_project"].show();
     },
+    addLecturer(betreuenderDozent) {
+      this.project.betreuenderDozent.push(betreuenderDozent);
+    },
 
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         console.log("title: ${this.titela}");
-        this.newProject();
+        //this.newProject();
+        console.log(this.project.betreuenderDozent);
+        console.log(this.project);
       }
     },
     newProject() {

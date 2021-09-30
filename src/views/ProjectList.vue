@@ -80,7 +80,7 @@ export default {
     return {
       project: {
         kurzbeschreibung: "",
-        betreuenderDozent: "",
+        betreuenderDozent: [""],
         externeMitwirkende: "",
         schlagworter: [],
 

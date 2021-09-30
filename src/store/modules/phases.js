@@ -74,23 +74,23 @@ const actions = {
 
     },
 
-    async loadSinglePhaseFromState({ commit, state }, { phaseId }) {
-        let currentPhase = null
-
-        for (let phase of state.phases_this_project) {
-            if (phase.attributes.field_phase_number == phaseId) {
-                console.log(phase)
-                console.log(phase.attributes.title)
-                console.log(phase.relationships.field_projektid.data.id)
-                currentPhase = phase
+    /*     async loadSinglePhaseFromState({ commit, state }, { phaseId }) {
+            let currentPhase = null
+    
+            for (let phase of state.phases_this_project) {
+                if (phase.attributes.field_phase_number == phaseId) {
+                    console.log(phase)
+                    console.log(phase.attributes.title)
+                    console.log(phase.relationships.field_projektid.data.id)
+                    currentPhase = phase
+                }
+    
             }
-
-        }
-        console.log(currentPhase)
-
-        commit('LOAD_PHASE', { currentPhase });
-
-    },
+            console.log(currentPhase)
+    
+            commit('LOAD_PHASE', { currentPhase });
+    
+        }, */
 
     async loadSinglePhaseFromBackend({ commit, state, rootState, dispatch }, { projectId, phaseId }) {
         console.log(phaseId)

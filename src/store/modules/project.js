@@ -56,6 +56,7 @@ const actions = {
   async loadProjectsFromBackend({ commit, state, rootState }) {
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
+    console.log(rootState.drupal_api.user)
     //console.log(drupalUserUID)
 
     /*https://clr-backend.ddns.net/jsonapi/node/projekt?
@@ -68,12 +69,19 @@ const actions = {
 ?filter[rock-group][group][conjunction]=OR
 &filter[field_gruppenadministrator.drupal_internal__uid][operator]=IN&filter[field_gruppenadministrator.drupal_internal__uid]=${drupalUserUID}
 &filter[memberOf]=rock-group`*/
+    //BUG: filter does not find projects where user is group admin, but no group member can be found -> afterwards createproject() can be changed so that the creating user only is groupadmin and not both member and admin
     //TODO: make group_admin_field an array and change the filtering method here from equals to IN
-    const filter = `?filter[or-group][group][conjunction]=OR&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
+
+    const filter_or_group = `?filter[or-group][group][conjunction]=OR`
+    const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
+    const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
+    // after changing to array -> //const filter_gruppenadministrator `&filter[gruppenadministrator][condition][path]=gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
+    const filter_joined = filter_or_group + filter_gruppenmitglieder + filter_gruppenadministrator
+
 
     var config = {
       method: 'get',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${filter}`,
+      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${filter_joined}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
