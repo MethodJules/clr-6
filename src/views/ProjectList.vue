@@ -12,7 +12,7 @@
         <b-row>
           <b-col>
             <table>
-              <tr v-for="project in getProjectlist" :key="project.id">
+              <tr v-for="project in getProjectlist" :key="project.idd">
                 <b-card style="max-height: 20rem">
                   <b-col>
                     <b-row>
@@ -22,14 +22,17 @@
                     </b-row>
                     <b-row>
                       <b-col>
-<!--                         <b-link
+                        <!--                         <b-link
                           :to="{ name: 'Home', params: { user_id: getUserID } }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
                         >
                       </b-col> -->
                         <b-link
-                          :to="{ name: 'Home', params: { project_id: project.idd } }"
+                          :to="{
+                            name: 'Home',
+                            params: { project_id: project.idd },
+                          }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
                         >
@@ -37,7 +40,7 @@
                     </b-row>
                     <b-row>
                       <b-col>
-                        <ReflexionAuswahl />
+                        <ReflexionAuswahl :projectId="project.idd" />
                       </b-col>
                     </b-row>
                   </b-col>
@@ -77,7 +80,7 @@ export default {
     return {
       project: {
         kurzbeschreibung: "",
-        betreuenderDozent: "",
+        betreuenderDozent: [""],
         externeMitwirkende: "",
         schlagworter: [],
 
@@ -104,17 +107,15 @@ export default {
     },
   },
 
-computed:{
-
+  computed: {
     getUserID() {
-     // return true
-      return this.$store.state.sparky_api.drupalUserID
+      // return true
+      return this.$store.state.sparky_api.drupalUserID;
     },
-    getProjectlist(){
+    getProjectlist() {
       return this.$store.state.project.myProjects;
-    }
-
-},
+    },
+  },
   ready: function () {
     this.getProjectTitles();
   },
@@ -124,8 +125,9 @@ computed:{
   }, */
   async mounted() {
     this.$store.dispatch("project/loadProjectsFromBackend");
+
     //this.projectList = this.$store.state.project.myProjects;
-    console.log(this.projectList);
+    //console.log(this.projectList);
     console.log("mount projectList");
   },
 };

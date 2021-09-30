@@ -7,6 +7,7 @@
             <b-row>
                 <div class="card-body">
                     {{ this.documentationList[0].documentation }}
+                    
                 </div>
                 <!--TODO: Bug hier wird der 6. Eintrag zwar aufgerufen, aber die eckigen Klammern sind da siehe http://localhost:8080/phasetemplate-->
                 <!-- <b-form-textarea @paste="onPaste" v-model="documentationText" debounce="500" rows="3" max-rows="5"></b-form-textarea> -->

@@ -1,24 +1,31 @@
 <template>
-
     <div>
-        <b-link
-            v-for="(phase, i) in phasen"
-            :key="i"
-            :disabled="!phase.status"
-            :to="{
-                name: 'PhaseTemplate',
-            }"
-            class="btn btn-danger mb-2 btn-block text-left"
-        >
-            <b-icon :icon="phase.iconType" class="mr-3"></b-icon>
-            {{ phase.title }}
-        </b-link>
+        <div v-if="!startpage">
+            <div v-if="!profil">
+                <div v-if="!einstellungen">
+                    <b-link
+                        v-for="(phase, i) in phasen"
+                        :key="i"
+                        :disabled="!phase.status"
+                        :to="{
+                            name: 'PhaseTemplate',
+                            params: { phase_id: i, project_id: getProjectID },
+                        }"
+                        class="btn btn-danger mb-2 btn-block text-left"
+                    >
+                        <b-icon :icon="phase.iconType" class="mr-3"></b-icon>
+                        {{ phase.title }}
+                    </b-link>
 
-        <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
+                    <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
 
-        <SeitenNavigationButtons @statusChange="changeStatus($event)" />
+                    <SeitenNavigationButtons
+                        @statusChange="changeStatus($event)"
+                    />
+                </div>
+            </div>
+        </div>
     </div>
-
 </template>
 <script>
 import SeitenNavigationButtons from "@/components/SeitenNavigationButtons.vue";
@@ -146,6 +153,16 @@ export default {
             console.log("Bu ne yav:");
             console.log(this.$route);
             return this.$route.params.project_id;
+        },
+        startpage() {
+            return this.$route.name === "ProjectList";
+        },
+        profil() {
+            return this.$route.name === "Profil";
+        },
+
+        einstellungen() {
+            return this.$route.name === "Einstellungen";
         },
     },
     /* watch:{

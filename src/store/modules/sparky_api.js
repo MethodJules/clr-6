@@ -48,43 +48,46 @@ const actions = {
 * @param username username the user gives as input in App.vue
 * @param password password the user gives as input in App.vue
 */
-    async login({ commit, dispatch }, { username, password }) {
-        await dispatch('getWhoamI', { username, password })
-        console.log(commit)
-        var config = {
-            method: 'get',
-            url: 'https://clr-backend.x-navi.de/jsonapi/user/user',
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-        };
-        axios(config)
-            .then(function (response) {
-                //console.log(response.data.data[2].attributes.field_sparky_id)
-                for (var user of response.data.data) {
-                    //console.log(user.attributes.field_sparky_id)
-                    if (user.attributes.field_sparky_id == state.sparkyUserID) {
-                        state.drupalUserID = user.id
-                        state.drupalUserObject = user
-                        dispatch("project/loadProjectsFromBackend", null, { root: true })
-                        state.validCredential = true
+    /*     async login({ commit, dispatch }, { username, password }) {
+            await dispatch('getWhoamI', { username, password })
+            console.log(commit)
+            var config = {
+                method: 'get',
+                url: 'https://clr-backend.x-navi.de/jsonapi/user/user',
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+                },
+            };
+            axios(config)
+                .then(function (response) {
+                    //console.log(response.data.data[2].attributes.field_sparky_id)
+                    for (var user of response.data.data) {
+                        //console.log(user.attributes.field_sparky_id)
+                        if (user.attributes.field_sparky_id == state.sparkyUserID) {
+                            state.drupalUserID = user.id
+                            state.drupalUserObject = user
+                            dispatch("project/loadProjectsFromBackend", null, { root: true })
+                            state.validCredential = true
+                        }
                     }
-                }
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-    },
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        }, 
 
 
     /**
-    * waits for authenticate to finish authenticating with sparky backend. Then makes another api request to sparky backend and gets user data.
+    * is called from drupal_api/create_user.
+    * makes  api request to sparky backend and gets user data. which is then saved in state with setSparkyObject and calls getSessionToken
     * @param username input from login
     * @param password input from login
+    * @param matrikelnummer input from registrate
     */
     async getWhoamI({ dispatch, commit }, { username, password, matrikelnummer }) {
+        console.log(state.responsestate.data.token.token)
         //state.sparkyUserID = " response.data.id"
         axios.get(
             "http://147.172.178.30:3000/auth/whoAmI",
@@ -114,8 +117,9 @@ const actions = {
 
     /**
     * makes api request to sparky backend, authenticates user, gets user token and saves it in state.
-    * @param username input from getWhoamI
-    * @param password input from getWhoamI
+    * TODO: maybe call this function from Login.vue component first and let it call drupal_login when sparky login is successful
+    * @param username input from Login.vue
+    * @param password input from Login.vue
     */
     async authenticate({ commit }, { username, password }) {
         let dynamicUrl = "api/v1/authenticate"
@@ -153,7 +157,7 @@ const actions = {
 * @param username input from getWhoamI
 * @param password input from getWhoamI
 */
-    async registrate({ commit, dispatch }, { username, password, matrikelnummer }) {
+    async registrate({ dispatch }, { username, password, matrikelnummer }) {
         let dynamicUrl = "api/v1/authenticate"
         let fullUrl = baseUrl + dynamicUrl
         let data = await axios.post(
@@ -178,7 +182,7 @@ const actions = {
                 }
             })
             .catch((error) => {
-                commit('setAccount', error);
+                console.log(error);
             });
         //console.log(data)
     },

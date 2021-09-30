@@ -48,19 +48,27 @@
 TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
 -->
 
-                  <select
-                    v-model="project.betreuenderDozent"
-                    class="form-control"
+                  <div
+                    v-for="(betreuenderDozent, i) in project.betreuenderDozent"
+                    :key="i"
                   >
-                    <option
-                      v-for="lecturer in getLecturers"
-                      v-bind:value="lecturer.uuid"
-                      v-bind:key="lecturer.uuid"
+                    <select
+                      v-model="project.betreuenderDozent[i]"
+                      class="form-control"
                     >
-                      {{ lecturer.name }}
-                    </option>
-                  </select>
-                  <span>Selected: {{ project.betreuenderDozent }}</span>
+                      <option
+                        v-for="lecturer in getLecturers"
+                        v-bind:value="lecturer.uuid"
+                        v-bind:key="lecturer.uuid"
+                      >
+                        {{ lecturer.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <b-button @click="addLecturer('')"
+                    >Weiteren Dozenten hinzufügen</b-button
+                  >
+                  <!--  <span>Selected: {{ project.betreuenderDozent }}</span> -->
 
                   <!-- <select v-model="selected">
   <option v-for="option in options" v-bind:value="option.value" v-bind:key="option.value">
@@ -98,15 +106,12 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             <tr>
               <td>
                 <div class="form-group">
-                  <vue-simple-suggest
+                  <input
+                    id="title"
                     v-model="project.externeMitwirkende"
-                    :styles="autoCompleteStyle"
                     type="text"
-                    display-attribute="user"
-                    value-attribute="id"
-                    :list="getStudents"
-                    :filter-by-query="true"
                     placeholder="externe Mitwirkende eingeben"
+                    class="form-control"
                   />
                 </div>
               </td>
@@ -201,6 +206,7 @@ export default {
   },
   data() {
     return {
+      lecturer_array: [this.project.betreuenderDozent],
       chosen: "",
       autoCompleteStyle: {
         vueSimpleSuggest: "position-relative",
@@ -209,25 +215,6 @@ export default {
         suggestions: "position-absolute list-group z-1000",
         suggestItem: "list-group-item",
       },
-
-      /*selected and options for list. geht async?*/
-      /*       selected: 'A',
-    options: [
-      { text: 'One', value: 'A' },
-      { text: 'Two', value: 'B' },
-      { text: 'Three', value: 'C' }
-    ]  */
-
-      /* project: {
-
-          title: '',
-          betreuenderDozent: '',
-          externeMitwirkende: '',
-          schlagworter: '',
-          kurzbeschreibung: ''
-
-
-        }, */
     };
   },
 
@@ -254,12 +241,17 @@ export default {
     showThisModal() {
       this.$refs["create_project"].show();
     },
+    addLecturer(betreuenderDozent) {
+      this.project.betreuenderDozent.push(betreuenderDozent);
+    },
 
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         console.log("title: ${this.titela}");
-        this.newProject();
+        //this.newProject();
+        console.log(this.project.betreuenderDozent);
+        console.log(this.project);
       }
     },
     newProject() {
@@ -277,10 +269,6 @@ export default {
       };
 
       this.$store.dispatch("project/createProject", addProj);
-      console.log(this.project.kurzbeschreibung);
-      console.log("das hier nach ist addproj");
-      console.log(addProj.schlagworter);
-      console.log(this.project);
       //this.projectList.push(addProj)
 
       this.title = " ";
@@ -321,29 +309,27 @@ export default {
     },
 
     simpleSuggestionListLecturers2() {
-      console.log(this.$store.state.user.lecturers);
+      // console.log(this.$store.state.user.lecturers);
       return this.$store.state.user.lecturers;
     },
 
     inProjektbeschreibung() {
-      console.log(this.$route.name);
+      // console.log(this.$route.name);
       return this.$route.name === "Projektbeschreibung";
     },
 
     getLecturers() {
-      console.log(this.$store.getters.getLecturers);
-      console.log(this.$store);
+      /*    console.log(this.$store);
       console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getLecturers"]);
+      console.log(this.$store.getters["user/getLecturers"]); */
 
       return this.$store.getters["user/getLecturers"];
     },
 
     getStudents() {
-      console.log(this.$store.getters.getStudents);
-      console.log(this.$store);
+      /*console.log(this.$store);
       console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getStudents"]);
+      console.log(this.$store.getters["user/getStudents"]); */
 
       return this.$store.getters["user/getStudents"];
     },
@@ -352,8 +338,8 @@ export default {
     this.$store.dispatch("user/loadLecturersFromBackend");
     this.$store.dispatch("user/loadStudentsFromBackend");
     this.$store.dispatch("profile/loadUserFromBackend");
-    console.log(this.$store.state.user.lecturers);
-    console.log(this.$store.state.user.students);
+    /*     console.log(this.$store.state.user.lecturers);
+    console.log(this.$store.state.user.students); */
   },
 };
 </script>

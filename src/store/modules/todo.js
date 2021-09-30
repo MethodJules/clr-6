@@ -2,17 +2,17 @@ import axios from 'axios';
 
 const state = () => ({
     listOfToDos: [
-       // array to store users todos with given deadline 
+        // array to store users todos with given deadline 
     ],
-    todos:[],//array to store only the todo tasks from listOfToDos[] 
-    dates:[],//array to store only the deadlines from listOfToDos[] 
+    todos: [],//array to store only the todo tasks from listOfToDos[] 
+    dates: [],//array to store only the deadlines from listOfToDos[] 
     token: ""
-    
+
 })
 /*  
 getter to call the arrays todos[] and dates[] 
-*/ 
-const getters={
+*/
+const getters = {
     getTodo: state => {
         return state.listOfToDos.todo
     },
@@ -23,27 +23,27 @@ const getters={
 
 const actions = {
 
-    async loadToDoFromBackend({commit}) {
-        await  axios.get('https://clr-backend.x-navi.de/jsonapi/node/to_dos')
+    async loadToDoFromBackend({ commit }) {
+        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/to_dos')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data;
                 //let to-dos = [];
                 commit('SAVE_TODO', data);
 
-            }).catch(error =>{
+            }).catch(error => {
                 throw new Error(`API ${error}`);
             });
 
     },
-    createToDo({commit, rootState}, todoEntry) {
+    createToDo({ commit, rootState }, todoEntry) {
         //console.log(todoEntry.todo)
         //let token=rootState.drupal_api.csrf_token
-        let token=rootState.drupal_api.authToken
+        let token = rootState.drupal_api.authToken
         console.log(rootState.drupal_api.csrf_token)
         //todo delete token in diesem state
-        state.token=rootState.drupal_api.csrf_token
-       
+        state.token = rootState.drupal_api.csrf_token
+
 
 
         //console.log(todoEntry.todo)
@@ -70,10 +70,10 @@ const actions = {
         };
         //console.log("te")
         axios(config)
-            .then(function(response){
+            .then(function (response) {
                 console.log(response)
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error)
             })
 
@@ -86,8 +86,8 @@ const actions = {
     },
     /*  
     calls function to delete tool from Backend 
-    */ 
-     deleteTodo({commit}, todoEntry) {
+    */
+    deleteTodo({ commit }, todoEntry) {
         var config = {
             method: 'delete',
             url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
@@ -101,7 +101,7 @@ const actions = {
         axios(config)
             .then((response) => {
                 console.log(response);
-            }).catch(function(error) {
+            }).catch(function (error) {
                 console.log(error);
             });
         commit('DELETE_TODO_ENTRY', todoEntry);
@@ -113,16 +113,16 @@ const actions = {
     }, */
 }
 const mutations = {
-     /* delete one entry from state list OfToDos */ 
+    /* delete one entry from state list OfToDos */
     DELETE_TODO_ENTRY(state, todoEntry) {
         let index = state.listOfToDos.indexOf(todoEntry);
         state.listOfToDos.splice(index, 1);
-    }, 
-     /** 
-     * adds a new todo by user input 
-     * @param {*} state we send our state to the method 
-     * @param {*} todoEntry is the new todo entry to save given attributes like title, date and task as a new todo 
-     */ 
+    },
+    /** 
+    * adds a new todo by user input 
+    * @param {*} state we send our state to the method 
+    * @param {*} todoEntry is the new todo entry to save given attributes like title, date and task as a new todo 
+    */
     ADD_TODO_ENTRY(state, todoEntry) {
         console.log(state + todoEntry)
 
@@ -153,7 +153,7 @@ const mutations = {
      * @param {*} state we send our state to the method 
      * @param {*} todo element to go through the array 
      *  
-     */ 
+     */
     SAVE_TODO(state, todo) {
 
         todo.forEach(element => {
@@ -165,12 +165,12 @@ const mutations = {
             //console.log(element.id)
             const field_title = element.attributes.title;
             //console.log(element.id)
-            state.listOfToDos.push( { date: field_date, todo: field_aufgaben, idd: field_id, title: field_title })
+            state.listOfToDos.push({ date: field_date, todo: field_aufgaben, idd: field_id, title: field_title })
             //console.log(state)
             state.todos.push(element.attributes.field_aufgaben)
             state.dates.push(element.attributes.field_date)
         });
-        
+
     }
 }
 export default {

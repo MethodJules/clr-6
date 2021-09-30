@@ -74,25 +74,25 @@ const actions = {
 
     },
 
-    async loadSinglePhaseFromState({ commit, state }, { phaseId }) {
-        let currentPhase = null
-
-        for (let phase of state.phases_this_project) {
-            if (phase.attributes.field_phase_number == phaseId) {
-                console.log(phase)
-                console.log(phase.attributes.title)
-                console.log(phase.relationships.field_projektid.data.id)
-                currentPhase = phase
+    /*     async loadSinglePhaseFromState({ commit, state }, { phaseId }) {
+            let currentPhase = null
+    
+            for (let phase of state.phases_this_project) {
+                if (phase.attributes.field_phase_number == phaseId) {
+                    console.log(phase)
+                    console.log(phase.attributes.title)
+                    console.log(phase.relationships.field_projektid.data.id)
+                    currentPhase = phase
+                }
+    
             }
+            console.log(currentPhase)
+    
+            commit('LOAD_PHASE', { currentPhase });
+    
+        }, */
 
-        }
-        console.log(currentPhase)
-
-        commit('LOAD_PHASE', { currentPhase });
-
-    },
-
-    async loadSinglePhaseFromBackend({ commit, state, rootState }, { projectId, phaseId }) {
+    async loadSinglePhaseFromBackend({ commit, state, rootState, dispatch }, { projectId, phaseId }) {
         console.log(phaseId)
         console.log(state)
         var config = {
@@ -110,10 +110,19 @@ const actions = {
                 console.log(response);
                 const currentPhase = response.data.data;
                 commit('LOAD_SINGLE_PHASE', { currentPhase });
+                console.log(state.current_phase)
+                dispatch("inputDocuments/loadInputdocumentsFromBackend", null, { root: true })
+                dispatch("output_documents/loadOutputdocumentsFromBackend", null, { root: true })
+                dispatch("reflexion/loadReflexionFromBackend", null, { root: true })
 
             })
+            // Leeres Array gepackt, damit keine alte Phase im State ist; TODO/Vllt: Route zur Startseite
+
             .catch(function (error) {
+                let leeresPhaseArray = []
                 console.log(error)
+                commit('LOAD_SINGLE_PHASE', leeresPhaseArray);
+
             })
 
 
