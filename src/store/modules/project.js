@@ -74,8 +74,8 @@ const actions = {
 
     const filter_or_group = `?filter[or-group][group][conjunction]=OR`
     const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
-    const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
-    // after changing to array -> //const filter_gruppenadministrator `&filter[gruppenadministrator][condition][path]=gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
+    //const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
+    const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
     const filter_joined = filter_or_group + filter_gruppenmitglieder + filter_gruppenadministrator
 
 
@@ -240,6 +240,7 @@ const actions = {
     //drupal_internal__uid
     //user id of currently logged in user
     //TODO: when a project is created the user is groupadmin and member nobody else - but it should be possible to include multiple dozenten
+    //remove groupmember - only admin needed when filter works correctly with admin only
     let userID = rootState.profile.userData.idd
     console.log(keywords)
 
@@ -253,16 +254,13 @@ const actions = {
                     "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
                   },
                   "relationships": {
-                    "field_betreuender_dozent": {
-                      "data": {
-                        "type": "user--user",
-                        "id": "${projEntry.betreuenderDozent}"
-                      }
-                    },
+
                     "field_gruppenadministrator": {
                       "data": {
-                        "type": "user--user",
-                        "id": "${userID}"
+                        "0": {
+                          "type": "user--user",
+                          "id": "${userID}"
+                        }
                       }
                     },
                     "field_gruppenmitglieder": {
@@ -298,6 +296,13 @@ const actions = {
         console.log(id_newly_created_project)
         //createAllPhasesforNewProject creates all 8 Phases for this project, is in phases.js
         dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
+
+        //addLecturer does not push one lecturer after the other. array of 3 lecturers -> only 1 lecturer is saved. maybe the quick sequence of post requests leads to a replacement instead of additrion
+        for (let gruppenadmin of projEntry.betreuenderDozent) {
+          console.log(gruppenadmin)
+          dispatch('addLecturer', { gruppenadmin, id_newly_created_project })
+        }
+        //is the id for new project in frontend when pushing from frontend only? is it needed?
         commit('ADD_PROJECT', projEntry)
       })
       .catch(function (error) {
@@ -361,6 +366,41 @@ const actions = {
 
   },
 
+  addLecturer({ state, rootState, commit }, { gruppenadmin, id_newly_created_project }) {
+    //TODO: Gruppenadministrator in Backend zu array ändern
+
+    /*     let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
+        state.currentProject.gruppenmitglieder.splice(index, 1); */
+    console.log(gruppenadmin)
+    console.log(id_newly_created_project)
+
+
+    var data = `{ "data": [{
+            "type": "user--user",
+             "id": "${gruppenadmin}"
+          }]}`;
+
+    var config = {
+      method: 'post',
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${id_newly_created_project}/relationships/field_betreuender_dozent`,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+      data: data
+    };
+    axios(config)
+      .then((response) => {
+        console.log(response);
+
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+  },
+
 
   addMember({ state, rootState, commit }, { mitglied, role }) {
     //TODO: Gruppenadministrator in Backend zu array ändern
@@ -390,8 +430,12 @@ const actions = {
       .then((response) => {
         console.log(response);
         console.log(mitglied)
+        if (role == "field_gruppenmitglieder") {
+          commit('ADD_GROUPMEMBER', mitglied);
+        } else {
+          commit('ADD_GROUPADMIN', mitglied);
+        }
 
-        commit('ADD_MEMBER', mitglied);
       }).catch(function (error) {
         console.log(error);
       });
@@ -631,11 +675,13 @@ const mutations = {
     //console.log(lecturers_array)
   },
 
-  ADD_MEMBER(state, mitglied) {
-
-    console.log(mitglied)
+  ADD_GROUPMEMBER(state, mitglied) {
     state.currentProject.gruppenmitglieder.push(mitglied)
-    console.log(state.currentProject.gruppenmitglieder)
+  },
+
+  ADD_GROUPADMIN(state, mitglied) {
+    state.currentProjectGroupAdmins.push(mitglied)
+
   }
 
 }

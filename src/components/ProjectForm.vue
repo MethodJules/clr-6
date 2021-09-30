@@ -249,7 +249,7 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         console.log("title: ${this.titela}");
-        //this.newProject();
+        this.newProject();
         console.log(this.project.betreuenderDozent);
         console.log(this.project);
       }
