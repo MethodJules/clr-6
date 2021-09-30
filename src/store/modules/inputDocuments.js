@@ -35,8 +35,10 @@ const mutations = {
      */
 
     LOAD_FILES_TO_STATE_FROM_BACKEND(state, inputarrayPayload) {
-        console.log(inputarrayPayload)
+        console.log(state.inputs)
         state.inputs = inputarrayPayload;
+        console.log(state.inputs)
+
         //state.inputs = payload
         /* if (state.inputs.includes(payload)) {
             console.log(payload)
@@ -47,6 +49,7 @@ const mutations = {
     },
 
     UPDATE_INPUTS(state, file) {
+        console.log(file)
         state.inputs.push(file);
     },
 
@@ -94,8 +97,8 @@ const actions = {
             .then(function (response) {
                 console.log(response)
                 const urlBackend = "https://clr-backend.x-navi.de";
-                let files = response.data.included;
-                let fileData = response.data.data;
+                let files = response.data.included; // id, name, size and url of file from node file-file
+                let fileId = response.data.data; // the dataId of document from node --inputdateien
                 /* 
                 
                 We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend 
@@ -105,14 +108,15 @@ const actions = {
                 let inputarrayPayload = []
                 for (let index = 0; index < files.length; index++) {
                     let payload = {
-                        dataId: fileData[index].id,
-                        id: files[index].id,
-                        name: files[index].attributes.filename,
-                        size: files[index].attributes.filesize,
-                        url: urlBackend + files[index].attributes.uri.url,
+                        dataId: fileId[index].id, // id of document from node inputdateien
+                        id: files[index].id, // included data --> file-file
+                        name: files[index].attributes.filename, // included data --> file-file
+                        size: files[index].attributes.filesize, // included data --> file-file
+                        url: urlBackend + files[index].attributes.uri.url, // included data --> file-file
                     }
 
                     inputarrayPayload.push(payload)
+
                 }
 
 
@@ -125,6 +129,8 @@ const actions = {
             })
             .catch(function (error) {
                 console.log(error)
+                let leeresInputArray = []
+                commit('LOAD_FILES_TO_STATE_FROM_BACKEND', leeresInputArray);
             })
 
 
@@ -181,9 +187,6 @@ const actions = {
     addInputDocument({ state, rootState, commit }, payload) {
 
         console.log(state)
-        console.log(rootState)
-        console.log(rootState.phases)
-        console.log(this.$route)
         var phaseId = rootState.phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
@@ -227,7 +230,6 @@ const actions = {
 
         axios(config)
             .then(function (response) {
-                console.log(response)
                 const urlBackend = "https://clr-backend.x-navi.de";
                 let file = {
                     name: payload.file.name,
@@ -236,7 +238,6 @@ const actions = {
                     url: urlBackend + response.data.included[0].attributes.uri.url
 
                 }
-                // commit("LOAD_FILES_TO_STATE_FROM_BACKEND", file);
                 commit("UPDATE_INPUTS", file);
             })
             .catch(function (error) {

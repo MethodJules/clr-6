@@ -1,43 +1,33 @@
 <template>
-    
-        <b-tabs content-class="mt-3">
+  <b-tabs content-class="mt-3">
+    <b-tab title="Ich">
+      <Reflexion :sicht="ichSicht"> </Reflexion>
+    </b-tab>
 
-            <b-tab title="Ich">
+    <b-tab title="Gruppe & Zusammenarbeit">
+      <Reflexion :sicht="gruppeSicht"> </Reflexion>
+    </b-tab>
 
-            <Reflexion> </Reflexion>
-
-            </b-tab>
-
-            <b-tab title="Gruppe & Zusammenarbeit">
-
-            <Reflexion> </Reflexion>
-
-            </b-tab>
-
-            <b-tab title="Fachlicher Kontext">
-
-            <Reflexion> </Reflexion>
-
-            </b-tab> 
-        </b-tabs>
-
-
-
-        
-
-    
+    <b-tab title="Fachlicher Kontext">
+      <Reflexion :sicht="kontextSicht"> </Reflexion>
+    </b-tab>
+  </b-tabs>
 </template>
 
 <script>
+import Reflexion from "@/components/Reflexion.vue";
 
-import Reflexion from "@/components/Reflexion.vue"
-
-    export default {
-        components: {
-            Reflexion
-        },
-        
-
-    }
+export default {
+  components: {
+    Reflexion,
+  },
+  data() {
+    return {
+      ichSicht: "325fd0af-838c-49f5-92d3-2fcc987e6137",
+      gruppeSicht: "141a144e-9db2-4257-9fbf-36e77bc63119",
+      kontextSicht: "e7b2630b-0f87-44d0-8dfb-f04f6f1c21ee",
+    };
+  },
+};
 </script>
 
