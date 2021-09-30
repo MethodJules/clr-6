@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../../router';
 
 const state = () => ({
     user: null, //TODO Should we name it current_user? Would be more semantically correct
@@ -150,10 +151,19 @@ const actions = {
             });
     },
 
-    async loadTokensfromSessionStorage({ commit }) {
-
-        commit('LOAD_TOKEN_SESSION_STORAGE')
+    async loadTokensfromSessionStorage({ commit, dispatch }) {
+        if (sessionStorage.getItem("valid_credentials") == "true") {
+            console.log("from loadTokensfromSessionStorage")
+            await commit('LOAD_TOKEN_SESSION_STORAGE');
+            //await dispatch('loadUserFromBackend');
+            await router.push("/")
+        } else {
+            console.log("session token")
+            router.push("/Login");
+            return false
+        }
     },
+
 
 
     /**
@@ -183,6 +193,7 @@ const actions = {
                 //console.log(response.data.csrf_token);
                 //console.log(response.data.current_user);
                 //console.log(response.data.logout_token);
+                router.go('login')
                 commit('REMOVE_SESSIONTOKENS_OF_USER')
 
 
@@ -258,6 +269,7 @@ const mutations = {
 * @param {*} state 
 */
     LOAD_TOKEN_SESSION_STORAGE(state) {
+        console.log("testsessions")
         if (sessionStorage.getItem("valid_credentials") == "true") {
             state.validCredential = true;
             state.csrf_token = sessionStorage.getItem("csrf_token");

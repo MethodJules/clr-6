@@ -60,7 +60,7 @@ const actions = {
 
         var config = {
             method: 'delete',
-            url: `https://clr-backend.ddns.net/jsonapi/node/project/${mitglied.userid}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/project/${mitglied.userid}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',

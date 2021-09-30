@@ -59,7 +59,7 @@ const actions = {
     console.log(rootState.drupal_api.user)
     //console.log(drupalUserUID)
 
-    /*https://clr-backend.ddns.net/jsonapi/node/projekt?
+    /*https://clr-backend.x-navi.de/jsonapi/node/projekt?
   
   
 ?filter[rock-group][group][conjunction]=OR
@@ -81,7 +81,7 @@ const actions = {
 
     var config = {
       method: 'get',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${filter_joined}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${filter_joined}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -167,7 +167,7 @@ const actions = {
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -201,7 +201,7 @@ const actions = {
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -377,7 +377,7 @@ const actions = {
 
     var config = {
       method: 'post',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${state.currentProject.idd}/relationships/${role}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/${role}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -412,7 +412,7 @@ const actions = {
 
     var config = {
       method: 'delete',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenmitglieder`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenmitglieder`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -444,7 +444,7 @@ const actions = {
 
     var config = {
       method: 'delete',
-      url: `https://clr-backend.ddns.net/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenadministrator`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenadministrator`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
