@@ -18,11 +18,11 @@
           <td>{{ getUser.fullname }}</td>
         </tr>
         <tr>
-          <th scope="row">Matrikelnummer:</th>
+          <th scope="row">Matrikelnummer</th>
           <td>{{ getUser.matrikelnummer }}</td>
         </tr>
         <tr>
-          <th scope="row">E-Mail:</th>
+          <th scope="row">E-Mail</th>
           <td>{{ getUser.mail }}</td>
         </tr>
 

@@ -1,5 +1,9 @@
 // Test scenario ID TS_US1_LOG, includes test cases TS_US1_004-004: login of an existing user
 
+// read in test data
+const userLoginName = 'testacc';
+const userPassword = 'test';
+
 describe('Login', () => {
     beforeEach(() => {
         cy.wait(1000); // this is necessary in case the server is slow; otherwise logout won't work properly
@@ -8,8 +12,8 @@ describe('Login', () => {
 
     // TODO I think greeting should be implemented already?
     it('allows a registered user, using correct account name and password, to log in and access their internal start page - TS_US1_001', () => {
-        cy.get('#zugangsKennung').type('testacc');
-        cy.get('#password').type('test');
+        cy.get('#zugangskennung').type(userLoginName);
+        cy.get('#password').type(userPassword);
         cy.get('.btn').first().click().then(() => {
             cy.wait(1000);
             cy.contains('Meine Projekte').should('exist');
@@ -21,7 +25,7 @@ describe('Login', () => {
     
     // TODO a popup for informing a user of a non-successful login would be nice
     it('does not allow a registered user, using correct account name and incorrect password, to log in and access their internal start page - TS_US1_002', () => {
-        cy.get('#zugangsKennung').type('testacc');
+        cy.get('#zugangskennung').type(userLoginName);
         cy.get('#password').type('falsch');
         cy.get('.btn').first().click().then(() => {
             cy.wait(1000);
@@ -30,8 +34,8 @@ describe('Login', () => {
     });
 
     it('does not allow a registered user, using incorrect account name and correct password, to log in and access their internal start page - TS_US1_003', () => {
-        cy.get('#zugangsKennung').type('falsch');
-        cy.get('#password').type('test');
+        cy.get('#zugangskennung').type('falsch');
+        cy.get('#password').type(userPassword);
         cy.get('.btn').first().click().then(() => {
             cy.wait(1000);
             cy.contains('Meine Projekte').should('not.exist');
@@ -39,7 +43,7 @@ describe('Login', () => {
     });
 
     it('does not allow a registered user, using incorrect account name and incorrect password, to log in and access their internal start page - TS_US1_004', () => {
-        cy.get('#zugangsKennung').type('falsch');
+        cy.get('#zugangskennung').type('falsch');
         cy.get('#password').type('falsch');
         cy.get('.btn').first().click().then(() => {
             cy.wait(1000);
