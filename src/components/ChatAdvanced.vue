@@ -1,10 +1,10 @@
 <template>
     <!-- binding iframe -->
-    <!-- To fit the popover, Width and height is changed to 100% 
+    <!-- To fit the popover, Width and height is changed to 100%
     It is fit to the modal now and better to manage-->
     <div>
         <iframe
-            src="http://localhost:3000/channel/general/?layout=embedded"
+            src="https://chat-clrbackend.ddns.net/channel/general/?layout=embedded"
             title="myframe"
             width="100%"
             height="100%"
