@@ -43,7 +43,7 @@ describe('Login', () => {
 
 describe('Logout', () => {
     it('allows a logged in user to log out and receive a logout message - TS_US1_005', () => {
-        cy.get('.navbar-nav').eq(3).click().then(() => {
+        cy.get('.navbar-nav').eq(4).click().then(() => {
             cy.wait(1000);
             cy.contains('Bis zum nächsten Mal').should('exist');
         });

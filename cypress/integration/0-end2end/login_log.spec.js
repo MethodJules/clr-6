@@ -15,7 +15,7 @@ describe('Login', () => {
             cy.contains('Meine Projekte').should('exist');
             // cy.contains('greeting');
         });
-        cy.get('.navbar-nav').eq(3).click(); // necessary because otherwise the other tests will fail (still logged in)
+        cy.get('.navbar-nav').eq(4).click(); // necessary because otherwise the other tests will fail (still logged in)
     });
 
     

@@ -1,3 +1,5 @@
+// TODO is this currently in use? I think you're using MenueLeiste.vue instead. If not in use, please remove.
+
 <template>
 
     <div class="navigation">

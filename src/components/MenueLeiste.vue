@@ -8,7 +8,7 @@
       sticky
     >
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
-      <b-navbar-brand>CLR Tool</b-navbar-brand>
+      <b-navbar-brand>eCLR Tool</b-navbar-brand>
 
       <b-navbar-nav>
         <b-nav-item to="/">
@@ -17,12 +17,10 @@
       </b-navbar-nav>
 
       <b-collapse id="nav-text-collapse" variant="secondary" is-nav>
-        <b-navbar-nav>
-          <!-- Es gibt kein Profil in router.. -->
-          <b-nav-item to="/profil">Profil</b-nav-item>
-        </b-navbar-nav>
-
         <template v-if="!startpage">
+          <b-navbar-nav>
+            <b-nav-item to="/home">Dashboard</b-nav-item>
+          </b-navbar-nav>
           <b-navbar-nav>
             <b-nav-item
               :to="{
@@ -35,21 +33,22 @@
             >
           </b-navbar-nav>
           <b-navbar-nav>
-            <b-nav-item to="/home">Dashboard</b-nav-item>
-          </b-navbar-nav>
-          <b-navbar-nav>
             <b-nav-item to="/forum">Projektforum</b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav>
             <b-nav-item to="/groupmanagement">Gruppenmanagement</b-nav-item>
           </b-navbar-nav>
         </template>
+        
+        <b-navbar-nav>
+          <b-nav-item to="/profil">Profil</b-nav-item>
+        </b-navbar-nav>
 
         <b-navbar-nav>
           <b-nav-item to="/einstellungen">Einstellungen</b-nav-item>
         </b-navbar-nav>
 
-        <b-navbar-nav v-if="!startpage">
+        <b-navbar-nav>
           <b-input-group size="sm" class="mb-2">
             <b-input-group-prepend is-text>
               <b-link
