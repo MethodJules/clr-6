@@ -69,6 +69,7 @@ const actions = {
         //TODO: Fehlerbehandlung: matrikelnummer ist bei mir null -> dann funzt das alles nicht -> wieso ist null, muss man so einen sonderfall normalerweise beachten
         // TODO: unnötige felder sparky_id, evtl. fullname  entfernen
         // when a user is created his user picture is the same. it can be changed later on with other profiledata
+        //the same user picture is used for all new accounts. it is linked to, directly from the backend
         const data = JSON.stringify({
             'name': { 'value': `${sparkyUserObject.data.username}` },
             //'name': {'value': `${username}`},
@@ -120,7 +121,7 @@ const actions = {
     * Connects to the Drupal Backend and request a login
     * The Backend will give csrf_token a logout token and a current_user object
     */
-    async loginToDrupal({ commit, rootState }, { username, password }) {
+    async loginToDrupal({ commit, rootState, dispatch }, { username, password }) {
         //authenticate with sparky_api at sparky backend is commented out for development purposes. thus testaccounts can be used without the need of real user data
         //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished
         //maybe change both functions -> sparky_api/authenticate calls loginToDrupal when it is finished, and App/Login.vue calls sparky_api/authenticate first

@@ -121,7 +121,7 @@ const actions = {
     * @param username input from Login.vue
     * @param password input from Login.vue
     */
-    async authenticate({ commit }, { username, password }) {
+    async authenticate({ state, commit }, { username, password }) {
         let dynamicUrl = "api/v1/authenticate"
         let fullUrl = baseUrl + dynamicUrl
         let data = await axios.post(
@@ -140,7 +140,6 @@ const actions = {
                 if (response.status === 200) {
                     commit('sparkyLogin');
                     state.responsestate = response
-                    console.log(data)
                     console.log(response)
                     //dispatch ist hier störend, wenn nur authenticate benötigt wird, vorher mit await dispatch besser gewesen
                     //dispatch('getWhoamI', { username, password })
