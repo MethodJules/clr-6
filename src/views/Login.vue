@@ -1,102 +1,121 @@
 <template>
-    <div class="container">
-        <b-card class="container-form">
-            <b-form-group>
-                <b-tabs>
-                    <!-- Class name is automatically "tabs" -->
-                    <!-- Tab 1 -->
-                    <b-tab title="Login">
-                        <div class="login-header">
-                            <h5>Melde dich hier mit deinem Uni-Account an</h5>
-                            <p>
-                                Wenn du dich noch nicht registriert hast, bitte
-                                registriere dich mit deinem Uni-Account
-                            </p>
-                        </div>
-                        <table>
-                            <tr>
-                                <td>
-                                    <label for="zugangsKennung"
-                                        >Zugangskennung</label
-                                    >
-                                </td>
-                                <td>
-                                    <input
-                                        v-model="zugangsKennung"
-                                        id="zugangskennung"
-                                        type="text"
-                                        placeholder=""
-                                        class="form-control"
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="password">Passwort</label>
-                                </td>
-                                <td>
-                                    <input
-                                        v-model="passwort"
-                                        id="password"
-                                        type="password"
-                                        placeholder=""
-                                        class="form-control"
-                                    />
-                                </td>
-                            </tr>
-                        </table>
+    <div class="w-background">
+        <div class="container">
+            <b-card class="container-form">
+                <b-form-group>
+                    <b-tabs>
+                        <!-- Class name is automatically "tabs" -->
+                        <!-- Tab 1 -->
+                        <b-tab title="Login">
+                            <div class="login-header">
+                                <h5>Melde dich hier mit deinem Uni-Account an</h5>
+                                <p>
+                                    Wenn du dich noch nicht registriert hast, bitte
+                                    registriere dich mit deinem Uni-Account
+                                </p>
+                            </div>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label for="zugangsKennung"
+                                            >Zugangskennung</label
+                                        >
+                                    </td>
+                                    <td>
+                                        <input
+                                            v-model="zugangsKennung"
+                                            id="zugangskennung"
+                                            type="text"
+                                            placeholder=""
+                                            class="form-control"
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="password">Passwort</label>
+                                    </td>
+                                    <td>
+                                        <input
+                                            v-model="passwort"
+                                            id="password"
+                                            type="password"
+                                            placeholder=""
+                                            class="form-control"
+                                        />
+                                    </td>
+                                </tr>
+                            </table>
 
-                        <b-button @click="login()">Login</b-button>
-                    </b-tab>
-                    <b-tab title="Registrierung">
-                        <div class="registrierung-header">
-                            <h5>
-                                Registriere dich hier mit deinem Uni-Account
-                            </h5>
-                            <p>
-                                Falls du Hilfe benötigst, wende dich an
-                                mail@uni-hildesheim.de
-                            </p>
-                        </div>
-                        <table>
-                            <tr>
-                                <td>
-                                    <label for="zugangsKennung"
-                                        >Zugangskennung</label
-                                    >
-                                </td>
-                                <td>
-                                    <input
-                                        v-model="zugangsKennung"
-                                        id="zugangskennung2"
-                                        type="text"
-                                        placeholder=""
-                                        class="form-control"
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="password">Passwort</label>
-                                </td>
-                                <td>
-                                    <input
-                                        v-model="passwort"
-                                        id="password2"
-                                        type="password"
-                                        placeholder=""
-                                        class="form-control"
-                                    />
-                                </td>
-                            </tr>
-                        </table>
-                        <b-button @click="registrieren()"
-                            >Registrieren</b-button
-                        >
-                    </b-tab>
-                </b-tabs>
-            </b-form-group>
-        </b-card>
+                            <b-button @click="login()">Login</b-button>
+                        </b-tab>
+                        <b-tab title="Registrierung">
+                            <div class="registrierung-header">
+                                <h5>
+                                    Registriere dich hier mit deinem Uni-Account
+                                </h5>
+                                <p>
+                                    Falls du Hilfe benötigst, wende dich an
+                                    mail@uni-hildesheim.de
+                                </p>
+                            </div>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label for="zugangsKennung"
+                                            >Zugangskennung</label
+                                        >
+                                    </td>
+                                    <td>
+                                        <input
+                                            v-model="zugangsKennung"
+                                            id="zugangskennung2"
+                                            type="text"
+                                            placeholder=""
+                                            class="form-control"
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="password">Passwort</label>
+                                    </td>
+                                    <td>
+                                        <input
+                                            v-model="passwort"
+                                            id="password2"
+                                            type="password"
+                                            placeholder=""
+                                            class="form-control"
+                                        />
+                                    </td>
+                                </tr>
+                            </table>
+                            <b-button @click="registrieren()"
+                                >Registrieren</b-button
+                            >
+                        </b-tab>
+                    </b-tabs>
+                </b-form-group>
+            </b-card>
+        </div>
+        <div>
+            <v-footer padless>
+                <v-card class="flat tile text-center" color="#6c757d">
+                    <v-card-title>
+                        eCLR Tool - Das Tool für kollaborative Literaturreviews in der Lehre
+                    </v-card-title>
+                    <v-card-subtitle>
+                        Dieses OpenSource-Projekt wurde im Rahmen der Ausschreibung "Qualität Plus" des MWK Niedersachsen erstellt.
+                        Näheres dazu finden Sie <a href="https://www.uni-hildesheim.de/fb4/institute/bwl/informationssysteme-und-unternehmensmodellierung/projekte/qualitaet-plus/">hier</a>
+                    </v-card-subtitle>
+                    <v-divider></v-divider>
+                    <v-card-text class="pb-3">
+                        <img src="../assets/logo.svg" width="24px" height="24px"> Universität Hildesheim - {{ new Date().getFullYear() }}
+                    </v-card-text>
+                </v-card>
+            </v-footer>
+        </div>
     </div>
 </template>
 <script>
@@ -189,6 +208,17 @@ export default {
 };
 </script>
 <style scoped>
+.w-background {
+    background-image: url('../assets/background2.jpg');
+    background-size: cover;
+}
+
+.v-card__title,
+.v-card__subtitle,
+.v-card__text {
+    color: white;
+}
+
 .container {
     display: grid;
     grid-template-rows: repeat(3, 1fr);
