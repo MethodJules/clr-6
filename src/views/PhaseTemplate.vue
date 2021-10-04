@@ -7,7 +7,7 @@
         <b-col cols="10">
           <!-- <h2>Gruppe Bilden</h2> -->
           <!-- <h2>{{ getPhaseName }}</h2> -->
-          <h2>Phase: {{ phaseId }}</h2>
+          <h2>{{ this.getPhaseName }}</h2>
           <!--  <h2>{{ projectId }}</h2>
                     <h2>Phase: {{ xphase.phase_name }}</h2>  -->
         </b-col>
@@ -74,7 +74,7 @@ export default {
     //},
 
     getPhaseName() {
-      return this.$store.state.phases.current_phase.phase_name;
+      return this.$store.state.phases.current_phase.title;
     },
   },
   async mounted() {
@@ -84,7 +84,7 @@ export default {
       projectId: this.$route.params.project_id,
     });
 
-    //this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
+    this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
 
     this.$store.state.phases.current_phase.phase_name;
     console.log(this.$store.state.phases.current_phase.phase_name);

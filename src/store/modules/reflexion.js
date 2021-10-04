@@ -53,7 +53,7 @@ const actions = {
         console.log(phaseId)
 
 
-        var title = "Reflexion"
+        var title = rootState.phases.current_phase.phase_name;
 
 
         var data = `

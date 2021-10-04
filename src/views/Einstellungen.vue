@@ -161,8 +161,9 @@
     <b-row>
       <b-row class="buttons">
         <!-- <input type="file" @change="onFileChanged" accept="image/jpeg,image/png"> -->
-        <b-button @click="addProfile()">Profil erstellen </b-button>
-        <b-button @click="updateProfile()">Änderung Speichern</b-button>
+        <b-button @click="addProfile()">Profil erstellen</b-button>
+        <b-button @click="updateProfile()">Änderungen speichern</b-button>
+        <b-button @click="cancelUpdate()">Änderungen verwerfen</b-button>
         <!-- TODO: Abbrechen Funktion clear 
                                     <b-col lg="4" class="pb-2"><b-button to="/einstellungen">Abbrechen</b-button> </b-col> -->
       </b-row>
@@ -278,6 +279,10 @@ export default {
       } else {
         alert("Bitte alles ausfüllen");
       }
+    },
+
+    cancelUpdate() {
+      this.$store.dispatch("profile/loadProfileFromBackend");
     },
   },
   watch: {

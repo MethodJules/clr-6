@@ -130,7 +130,7 @@ export default {
       in_bezug_setzen: "",
       schlussfolgern: "",
       rekonstruieren: "",
-      phaseId: this.$route.params.reflexionsPhase,
+      phaseId: this.$route.params.reflexionsPhase, // TODO check: phaseId is used twice!
     };
   },
 
@@ -146,7 +146,6 @@ export default {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        console.log("title: ${this.titela}");
 
         var ausgabe = {
           sichten: this.sicht,

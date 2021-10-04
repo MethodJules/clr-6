@@ -28,7 +28,7 @@
             Es wird nur die zu erledigende Aufgabe angezeigt -->
             <b-modal id="to_do_edit_modal" title="Neue Aufgabe" cancel-title="Abbrechen" @ok="saveTodo">
                 <div>
-                <label for="neueTodo">Zu erledigende Aufgabe:</label>
+                <label for="neueTodo">Zu erledigende Aufgabe: </label>
                 <input
                     v-model="todoNeu"
                     type="text"
@@ -91,7 +91,7 @@ export default {
         deleteTodo(todo) {
             //Löschen eines Todos
             //this.listOfToDos.splice(this.listOfToDos.indexOf(todo), 1)
-            alert("Delete");
+            alert("Das To Do wurde erfolgreich gelöscht.");
 
             this.$store.dispatch("todo/deleteTodo", todo);
         },

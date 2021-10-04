@@ -107,7 +107,6 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                console.log(response);
                 const currentPhase = response.data.data;
                 commit('LOAD_SINGLE_PHASE', { currentPhase });
                 console.log(state.current_phase)

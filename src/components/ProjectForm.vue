@@ -1,12 +1,12 @@
 <template>
   <div class="projektAnlegen">
     <div>
-      <b-modal ref="create_project" title="Projekt anlegen">
+      <b-modal ref="create_project" title="Projekt anlegen" @ok="submitForm()" cancel-title="Abbrechen">
         <form @submit.prevent="submitForm">
           <table>
             <tr>
               <td>
-                <label for="title">Projekttitel: </label>
+                <label for="title">Projekttitel</label>
               </td>
             </tr>
             <tr>
@@ -22,14 +22,14 @@
                   <span
                     v-if="!$v.project.title.required && $v.project.title.$dirty"
                     class="text-danger"
-                    >Title is required!</span
+                    >Bitte trage einen Titel ein!</span
                   >
                   <span
                     v-if="
                       !$v.project.title.minLength && $v.project.title.$dirty
                     "
                     class="text-danger"
-                    >Title should be at least 4 letters long</span
+                    >Der Titel sollte mindestens 4 Zeichen lang sein.</span
                   >
                 </div>
               </td>
@@ -37,7 +37,7 @@
             <tr>
               <td>
                 <label for="betreuenderDozent"
-                  >Betreuer: mehrere eingeben möglich</label
+                  >Betreuer*innen (Mehrfachauswahl möglich)</label
                 >
               </td>
             </tr>
@@ -66,7 +66,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                     </select>
                   </div>
                   <b-button @click="addLecturer('')"
-                    >Weiteren Dozenten hinzufügen</b-button
+                    >Weitere Dozent*innen hinzufügen</b-button
                   >
                   <!--  <span>Selected: {{ project.betreuenderDozent }}</span> -->
 
@@ -83,7 +83,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                       $v.project.betreuenderDozent.$dirty
                     "
                     class="text-danger"
-                    >Dozent is required!</span
+                    >Bitte füge einen Betreuer oder eine Betreuerin hinzu.</span
                   >
                   <!--                   <span
                     v-if="
@@ -99,7 +99,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             <tr>
               <td>
                 <label for="externeMitwirkende"
-                  >Externe Partner*innen(bitte mit Komma trennen)
+                  >Externe Partner*innen (bitte mit Komma trennen)
                 </label>
               </td>
             </tr>
@@ -119,7 +119,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             <tr>
               <td>
                 <label for="schlagworter"
-                  >Schlagwörter(bitte mit Komma trennen)
+                  >Schlagwörter (bitte mit Komma trennen)
                 </label>
               </td>
             </tr>
@@ -137,7 +137,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             </tr>
             <tr>
               <td>
-                <label for="kurzbeschreibung">Projektbeschreibung: </label>
+                <label for="kurzbeschreibung">Projektbeschreibung</label>
               </td>
             </tr>
             <tr>
@@ -156,7 +156,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                       $v.project.kurzbeschreibung.$dirty
                     "
                     class="text-danger"
-                    >Kurzbeschreibung is required!</span
+                    >Bitte gebe deinem Projekt eine kurze Beschreibung.</span
                   >
                   <span
                     v-if="
@@ -164,21 +164,12 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                       $v.project.kurzbeschreibung.$dirty
                     "
                     class="text-danger"
-                    >A Kurzbeschreibung must be at least 4 letters long</span
+                    >Die Beschreibung sollte mindestens 4 Zeichen lang sein.</span
                   >
                 </div>
               </td>
             </tr>
           </table>
-          <div v-if="inProjektbeschreibung">
-            <b-button @click="updateProject()"
-              >Projektbeschreibung bearbeiten</b-button
-            >
-          </div>
-          <div v-else>
-            <b-button @click="submitForm()">Projekt anlegen</b-button>
-            <!-- <b-button @click="newProject()">Projekt anlegen</b-button> -->
-          </div>
         </form>
       </b-modal>
 

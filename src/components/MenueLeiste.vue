@@ -7,17 +7,52 @@
       class="navbar-top"
       sticky
     >
+
+      <!-- Always show branding and Home button. -->
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
       <b-navbar-brand>eCLR Tool</b-navbar-brand>
 
       <b-navbar-nav>
         <b-nav-item to="/">
-          <b-icon icon="house-fill" to="/">Startseite </b-icon></b-nav-item
+          <b-icon icon="house-fill" to="/">Startseite</b-icon></b-nav-item
         >
       </b-navbar-nav>
 
+      <!-- If on startpage/profile page/settings: Show links to profile and settings and project search -->
       <b-collapse id="nav-text-collapse" variant="secondary" is-nav>
-        <template v-if="!startpage">
+
+        <template v-if="(showProfileSettingsLinks)">
+          <b-navbar-nav>
+            <b-nav-item to="/profil">Profil</b-nav-item>
+          </b-navbar-nav>
+
+          <b-navbar-nav>
+            <b-nav-item to="/einstellungen">Einstellungen</b-nav-item>
+          </b-navbar-nav>
+
+                  <b-navbar-nav>
+          <b-input-group size="sm" class="mb-2">
+            <b-input-group-prepend is-text>
+              <b-link
+                :to="{
+                  name: 'ProjectSearch',
+                  params: { keyword2: keyword2 },
+                }"
+              >
+                <b-icon icon="search"></b-icon>
+              </b-link>
+            </b-input-group-prepend>
+            <b-form-input
+              type="search"
+              placeholder="Projekte durchsuchen"
+              v-model="keyword2"
+            ></b-form-input>
+          </b-input-group>
+        </b-navbar-nav>
+        </template>
+        
+        <!-- If in a project: Show links to project-related pages, but not to profile and settings and project search (workaround for Bug 8). -->
+        <template v-if="(showProjectLinks)">
           <b-navbar-nav>
             <b-nav-item to="/home">Dashboard</b-nav-item>
           </b-navbar-nav>
@@ -39,35 +74,11 @@
             <b-nav-item to="/groupmanagement">Gruppenmanagement</b-nav-item>
           </b-navbar-nav>
         </template>
-        
-        <b-navbar-nav>
-          <b-nav-item to="/profil">Profil</b-nav-item>
-        </b-navbar-nav>
 
-        <b-navbar-nav>
-          <b-nav-item to="/einstellungen">Einstellungen</b-nav-item>
-        </b-navbar-nav>
-
-        <b-navbar-nav>
-          <b-input-group size="sm" class="mb-2">
-            <b-input-group-prepend is-text>
-              <b-link
-                :to="{
-                  name: 'ProjectSearch',
-                  params: { keyword2: keyword2 },
-                }"
-              >
-                <b-icon icon="search"></b-icon>
-              </b-link>
-            </b-input-group-prepend>
-            <b-form-input
-              type="search"
-              placeholder="Projekte durchsuchen"
-              v-model="keyword2"
-            ></b-form-input>
-          </b-input-group>
-        </b-navbar-nav>
       </b-collapse>
+        <!-- Always show logout. -->
+
+
       <b-navbar-nav>
         <b-button @click="logout()">
           <b-icon icon="box-arrow-right"></b-icon
@@ -118,9 +129,13 @@ export default {
   },
 
   computed: {
-    startpage() {
-      return this.$route.name === "ProjectList";
+    showProfileSettingsLinks() {
+      return (this.$route.name === "ProjectList" || this.$route.name === "Profil" || this.$route.name === "Einstellungen");
     },
+
+    showProjectLinks() {
+      return (this.$route.name !== "ProjectList" && this.$route.name !== "Profil" && this.$route.name !== "Einstellungen");
+    }
   },
 };
 </script>
