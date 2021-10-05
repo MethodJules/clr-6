@@ -6,6 +6,21 @@ const state = () => ({
     ]//we are using this array to store the used tools and upload the titles of the tools to database 
 })
 
+const getters = {
+    /**
+     * Getter to bringuploaded files in inputs array. 
+     * @param state our state
+     * @returns files, uploaded files in state
+     * we send them reversed in order to see the last uploaded on top.
+     */
+    getTools(state) {
+
+        let tools = state.listOfTools;
+        return tools;
+    },
+
+}
+
 
 /*  
     * to load the saved tools in database 
@@ -48,13 +63,15 @@ const actions = {
     // method to add a new tool to database 
     createTool({ state, rootState }, toolEntry) {
         var phaseId = rootState.phases.current_phase.phase_id
+        console.log(phaseId)
+        console.log(toolEntry)
         var data = `
         {
             "data": {
                 "type": "node--tools", 
                 "attributes": {
                     "title": "Tool",
-                    "field_tool": "${toolEntry.tool}"
+                    "field_tool": "${toolEntry.usedTool}"
                 },
                 "relationships": {
                     "field_phasenid": {

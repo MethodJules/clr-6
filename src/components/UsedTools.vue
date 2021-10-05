@@ -32,16 +32,9 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
-  data() {
-    return {
-      listOfTools: [
-        { usedTool: "Tool 1" },
-        { usedTool: "Tool 2" },
-        { usedTool: "Tool 3" },
-      ],
-    };
-  },
+  data() {},
   methods: {
     ok() {
       var neueEingabe = {
@@ -54,7 +47,9 @@ export default {
   },
   mounted() {
     this.$store.dispatch("tool/loadToolFromBackend");
-    this.listOfTools = this.$store.state.tool.listOfTools;
+  },
+  computed: {
+    ...mapGetters({ listOfTools: "tool/getTools" }),
   },
 };
 </script>
