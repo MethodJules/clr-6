@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const state = () => ({
     listOfTools: [
+        { idd: "1", title: "1", tool: "1" }
 
     ]//we are using this array to store the used tools and upload the titles of the tools to database 
 })
@@ -27,6 +28,7 @@ const getters = {
     */
 const actions = {
     async loadToolsFromBackend({ commit, rootState }, { projectId }) {
+        var phaseId = rootState.phases.current_phase.phase_id
         var config = {
             method: 'get',
             url: `https://clr-backend.x-navi.de/jsonapi/node/tools?filter[field_phasenid.id]=${phaseId}`,
@@ -41,18 +43,19 @@ const actions = {
             .then(function (response) {
                 console.log(response)
                 //if one of the tools has null in tool.relationships.field_phasenid.data.id -> breaks and no tools displayed
-                const tool = response.data.data;
+                const toolsFromBackend = response.data.data;
                 console.log(response.data.data)
                 let tools = []
                 let current_phase_ID = rootState.phases.current_phase
                 let current_project_ID = rootState.phases.current_phase.relationships.field_projektid.data.id
                 console.log(current_phase_ID)
-                for (let tool of data) {
+                for (let tool of toolsFromBackend) {
                     if (tool.relationships.field_phasenid.data.id == current_phase_ID.id && current_project_ID == projectId) {
                         tools.push(tool)
                     }
                 }
-                commit('SAVE_TOOLS', tool);
+                console.log(tools)
+                commit('SAVE_TOOLS', tools);
             })
             .catch(function (error) {
                 console.log(error)
@@ -61,7 +64,7 @@ const actions = {
     },
 
     // method to add a new tool to database 
-    createTool({ state, rootState }, toolEntry) {
+    createTool({ rootState }, toolEntry) {
         var phaseId = rootState.phases.current_phase.phase_id
         console.log(phaseId)
         console.log(toolEntry)
@@ -113,9 +116,9 @@ const mutations = {
     /*  
     uploads the tools to the state for displaying the tools to Frontend
     */
-    SAVE_TOOLS(state, tool) {
+    SAVE_TOOLS(state, tools) {
 
-        tool.forEach(element => {
+        tools.forEach(element => {
             //console.log(field_tool)
             const field_tool = element.attributes.field_tool;
             const field_id = element.id;
@@ -134,6 +137,7 @@ const mutations = {
 }
 export default {
     namespaced: true,
+    getters,
     state,
     mutations,
     actions
