@@ -15,7 +15,6 @@ const actions = {
     async loadReflexionFromBackend({ commit, state, rootState }) {
         var drupalUserUID = rootState.drupal_api.user.uid;
         var phaseId = rootState.phases.current_phase.phase_id;
-        //var sichtenReflexion = rootstate.reflexion.
         console.log(state);
         console.log(phaseId);
         console.log(rootState.drupal_api);
@@ -44,7 +43,7 @@ const actions = {
     },
 
     /* saves the reflexiondata in the backend  */
-    // sichten: "id": "325fd0af-838c-49f5-92d3-2fcc987e6137" Zeile 82
+
 
     createReflexion({ state, rootState }, reflexion) {
 
@@ -115,13 +114,14 @@ const actions = {
     that the backend knows which reflexionstemplate should be exactly updated/overwritten */
 
     updateReflexion({ state, rootState }, reflexion) {
+        var reflexionIdd = rootState.reflexion.reflexionData.idd
         let index = state.reflexionData.indexOf(reflexion);
         state.reflexionData[index] = reflexion;
         var data = `
         {
             "data": {
                 "type": "node--reflexionstemplate", 
-                "id": "${reflexion.idd}", 
+                "id": "${reflexionIdd}", 
                 "attributes": {
                     "title": "${reflexion.title}", 
                     "field_berichten_reagieren": "${reflexion.berichten_reagieren}", 
@@ -133,7 +133,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexionIdd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

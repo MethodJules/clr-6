@@ -107,7 +107,7 @@ const routes = [
                 component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
             },
             {
-                path: '/reflexion/:reflexionsPhase',
+                path: '/reflexion/:reflexionsPhase:project_id',
                 name: 'ReflexionView',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ReflexionView.vue')

@@ -12,13 +12,21 @@ const state = () => ({
     */
 const actions = {
     async loadToolsFromBackend({ commit, rootState }, { projectId }) {
-
-
-        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/tools')
-            .then((response) => {
-                console.log(response);
+        var config = {
+            method: 'get',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/tools?filter[field_phasenid.id]=${phaseId}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+        };
+        axios(config)
+            .then(function (response) {
+                console.log(response)
                 //if one of the tools has null in tool.relationships.field_phasenid.data.id -> breaks and no tools displayed
-                const data = response.data.data;
+                const tool = response.data.data;
                 console.log(response.data.data)
                 let tools = []
                 let current_phase_ID = rootState.phases.current_phase
@@ -29,35 +37,32 @@ const actions = {
                         tools.push(tool)
                     }
                 }
-
-
-                commit('SAVE_TOOLS', tools);
-                //commit('SAVE_NEW_TOOL', tool)
-            }).catch(error => {
-                throw new Error(`API ${error}`);
-            });
-
-    },
-    createTool({ commit }, toolEntry) {
-        //console.log(toolEntry.tool)
-        commit('ADD_NEW_TOOL', toolEntry)
+                commit('SAVE_TOOLS', tool);
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
 
     },
 
-}
-const mutations = {
-    /*  
-    *  
-    * method to add a new tool to database 
-    */
-    ADD_NEW_TOOL(state, toolEntry) {
-
+    // method to add a new tool to database 
+    createTool({ state, rootState }, toolEntry) {
+        var phaseId = rootState.phases.current_phase.phase_id
         var data = `
         {
             "data": {
                 "type": "node--tools", 
                 "attributes": {
-                    "title": "${toolEntry.tool}"
+                    "title": "Tool",
+                    "field_tool": "${toolEntry.tool}"
+                },
+                "relationships": {
+                    "field_phasenid": {
+                        "data": {
+                            "type": "node--phase_vorgehensmodell",
+                            "id": "${phaseId}"
+                        }
+                    }
                 }
             }
         }`;
@@ -67,32 +72,40 @@ const mutations = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data
 
         };
-
         axios(config)
-            .then(function (response) {
-                console.log(response)
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-    },
-    /*  
-    uploads the title of the tools to the state 
-    */
-    SAVE_TOOLS(state, tools) {
+            .then((response) => {
+                console.log(response);
+            }).catch(function (error) {
+                console.log(error);
+            });
 
-        tools.forEach(element => {
+
+
+    },
+
+}
+const mutations = {
+
+
+    /*  
+    uploads the tools to the state for displaying the tools to Frontend
+    */
+    SAVE_TOOLS(state, tool) {
+
+        tool.forEach(element => {
             //console.log(field_tool)
+            const field_tool = element.attributes.field_tool;
             const field_id = element.id;
             //console.log(element.id)
             const field_title = element.attributes.title;
             //console.log(element.id)
-            state.listOfTools.push({ idd: field_id, title: field_title })
+            state.listOfTools.push({ idd: field_id, title: field_title, tool: field_tool })
             //console.log(state)
 
 
