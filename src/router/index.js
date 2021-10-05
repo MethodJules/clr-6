@@ -40,7 +40,7 @@ const routes = [
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Agenda.vue')
             },
             {
-                path: '/forum',
+                path: '/forum/:project_id',
                 name: 'Forum',
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Forum.vue')
             },
@@ -74,7 +74,7 @@ const routes = [
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Review.vue')
             },
             {
-                path: '/groupmanagement',
+                path: '/groupmanagement/:project_id',
                 name: 'Groupmanagement',
                 meta: { requiresAuth: true },
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
@@ -137,14 +137,14 @@ const routes = [
             },
 
             {
-                path: '/profil',
+                path: '/profil/:project_id',
                 name: 'Profil',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
             },
 
             {
-                path: '/einstellungen',
+                path: '/einstellungen/:project_id',
                 name: 'Einstellungen',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Einstellungen.vue')

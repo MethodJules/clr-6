@@ -19,10 +19,20 @@
       <b-collapse id="nav-text-collapse" variant="secondary" is-nav>
         <b-navbar-nav>
           <!-- Es gibt kein Profil in router.. -->
-          <b-nav-item to="/profil">Profil</b-nav-item>
+          <b-nav-item
+            :to="{
+              name: 'Profil',
+              params: {
+                project_id: this.$route.params.project_id,
+              },
+            }"
+            >Profil</b-nav-item
+          >
         </b-navbar-nav>
 
-        <template v-if="!startpage">
+        <template
+          v-if="!startpage & !(this.$route.params.project_id == undefined)"
+        >
           <b-navbar-nav>
             <b-nav-item
               :to="{
@@ -35,18 +45,50 @@
             >
           </b-navbar-nav>
           <b-navbar-nav>
-            <b-nav-item to="/home">Dashboard</b-nav-item>
+            <b-nav-item
+              :to="{
+                name: 'Home',
+                params: {
+                  project_id: this.$route.params.project_id,
+                },
+              }"
+              >Dashboard</b-nav-item
+            >
           </b-navbar-nav>
           <b-navbar-nav>
-            <b-nav-item to="/forum">Projektforum</b-nav-item>
+            <b-nav-item
+              :to="{
+                name: 'Forum',
+                params: {
+                  project_id: this.$route.params.project_id,
+                },
+              }"
+              >Projektforum</b-nav-item
+            >
           </b-navbar-nav>
           <b-navbar-nav>
-            <b-nav-item to="/groupmanagement">Gruppenmanagement</b-nav-item>
+            <b-nav-item
+              :to="{
+                name: 'Groupmanagement',
+                params: {
+                  project_id: this.$route.params.project_id,
+                },
+              }"
+              >Gruppenmanagement</b-nav-item
+            >
           </b-navbar-nav>
         </template>
 
         <b-navbar-nav>
-          <b-nav-item to="/einstellungen">Einstellungen</b-nav-item>
+          <b-nav-item
+            :to="{
+              name: 'Einstellungen',
+              params: {
+                project_id: this.$route.params.project_id,
+              },
+            }"
+            >Einstellungen</b-nav-item
+          >
         </b-navbar-nav>
 
         <b-navbar-nav v-if="!startpage">
@@ -97,6 +139,7 @@ export default {
     return {
       schlagwort: "Hallo",
       keyword2: "",
+      projectId: this.$route.params.project_id,
     };
   },
   methods: {

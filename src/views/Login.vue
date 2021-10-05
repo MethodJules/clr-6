@@ -287,7 +287,7 @@ export default {
         //remove so username and password arent saved after login
         this.zugangsKennung = "";
         this.passwort = "";
-        this.testButClicked(true);
+        //this.testButClicked(true);
       } else {
         alert("Bitte Logindaten eingeben");
       }
