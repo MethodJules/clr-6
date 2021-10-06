@@ -114,6 +114,8 @@ const actions = {
                 dispatch("inputDocuments/loadInputdocumentsFromBackend", null, { root: true })
                 dispatch("output_documents/loadOutputdocumentsFromBackend", null, { root: true })
                 dispatch("reflexion/loadReflexionFromBackend", null, { root: true })
+                dispatch("tool/loadToolsFromBackend", null, { root: true })
+
 
             })
             // Leeres Array gepackt, damit keine alte Phase im State ist; TODO/Vllt: Route zur Startseite

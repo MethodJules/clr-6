@@ -33,6 +33,7 @@
           </b-tab>
         </b-tabs>
       </b-row>
+      <TemplateButtons :inDoku="documentationList[0]"></TemplateButtons>
     </b-container>
   </div>
 </template>
@@ -42,6 +43,7 @@ import DocumentationField from "@/components/DocumentationField.vue";
 import UsedTools from "@/components/UsedTools.vue";
 import OutputDocuments from "@/components/OutputDocuments.vue";
 import Assistent from "@/components/Assistent.vue";
+import TemplateButtons from "@/components/TemplateButtons.vue";
 
 export default {
   //props: {
@@ -52,6 +54,7 @@ export default {
     return {
       phaseId: this.$route.params.phase_id,
       projectId: this.$route.params.project_id,
+      documentationList: ["test"],
     };
   },
 
@@ -64,6 +67,7 @@ export default {
     UsedTools,
     OutputDocuments,
     Assistent,
+    TemplateButtons,
   },
 
   computed: {
@@ -90,6 +94,11 @@ export default {
     console.log(this.$store.state.phases.current_phase.phase_name);
     console.log(this.$store.state.phases.current_phase);
     console.log(this.$route.params.phase_id);
+    //put back in so that phasetemplate buttons are shown again
+    const doc = this.$store.state.documentation.documentations;
+    //console.log(doc)
+    //console.log(typeof(doc))
+    this.documentationList = doc;
   },
 };
 </script>
