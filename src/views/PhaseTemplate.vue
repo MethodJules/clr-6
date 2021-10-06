@@ -94,6 +94,7 @@ export default {
     console.log(this.$store.state.phases.current_phase.phase_name);
     console.log(this.$store.state.phases.current_phase);
     console.log(this.$route.params.phase_id);
+
     //put back in so that phasetemplate buttons are shown again
     const doc = this.$store.state.documentation.documentations;
     //console.log(doc)

@@ -182,6 +182,7 @@ export default {
       selectedFile: null,
       images: [],
       image: null,
+      profilbild: null,
 
       /* getProfileData: {
 
@@ -230,12 +231,15 @@ export default {
                 .then(res => {
                     console.log(res)
                 }) */
-
-      this.$store.dispatch("profile/uploadImage", this.image);
+      console.log(this.$refs.pictureInput.file);
+      this.$store.dispatch("profile/uploadImage", {
+        image: this.image,
+        filename: this.$refs.pictureInput.file.name,
+      });
     },
 
     /** In this method, we create an profile with all the profile data to the backend */
-    addProfile() {
+    /*    addProfile() {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
@@ -253,7 +257,7 @@ export default {
         this.$store.dispatch("profile/createProfile", ausgabe),
           this.$store.dispatch("profile/uploadImage", ausgabe);
       }
-    },
+    }, */
 
     /** In this method, we update the existing profile to the backend */
 
