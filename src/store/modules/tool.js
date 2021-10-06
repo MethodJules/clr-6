@@ -2,16 +2,33 @@ import axios from 'axios';
 
 const state = () => ({
     listOfTools: [
+        { idd: "1", title: "1", tool: "1" }
 
     ]//we are using this array to store the used tools and upload the titles of the tools to database 
 })
+
+const getters = {
+    /**
+     * Getter to bringuploaded files in inputs array. 
+     * @param state our state
+     * @returns files, uploaded files in state
+     * we send them reversed in order to see the last uploaded on top.
+     */
+    getTools(state) {
+
+        let tools = state.listOfTools;
+        return tools;
+    },
+
+}
 
 
 /*  
     * to load the saved tools in database 
     */
 const actions = {
-    async loadToolsFromBackend({ commit, rootState }, { projectId }) {
+    async loadToolsFromBackend({ commit, rootState }) {
+        var phaseId = rootState.phases.current_phase.phase_id
         var config = {
             method: 'get',
             url: `https://clr-backend.x-navi.de/jsonapi/node/tools?filter[field_phasenid.id]=${phaseId}`,
@@ -26,18 +43,10 @@ const actions = {
             .then(function (response) {
                 console.log(response)
                 //if one of the tools has null in tool.relationships.field_phasenid.data.id -> breaks and no tools displayed
-                const tool = response.data.data;
+                const toolsFromBackend = response.data.data;
                 console.log(response.data.data)
-                let tools = []
-                let current_phase_ID = rootState.phases.current_phase
-                let current_project_ID = rootState.phases.current_phase.relationships.field_projektid.data.id
-                console.log(current_phase_ID)
-                for (let tool of data) {
-                    if (tool.relationships.field_phasenid.data.id == current_phase_ID.id && current_project_ID == projectId) {
-                        tools.push(tool)
-                    }
-                }
-                commit('SAVE_TOOLS', tool);
+
+                commit('SAVE_TOOLS', toolsFromBackend);
             })
             .catch(function (error) {
                 console.log(error)
@@ -46,15 +55,17 @@ const actions = {
     },
 
     // method to add a new tool to database 
-    createTool({ state, rootState }, toolEntry) {
+    createTool({ commit, rootState }, toolEntry) {
         var phaseId = rootState.phases.current_phase.phase_id
+        console.log(phaseId)
+        console.log(toolEntry)
         var data = `
         {
             "data": {
                 "type": "node--tools", 
                 "attributes": {
-                    "title": "Tool",
-                    "field_tool": "${toolEntry.tool}"
+                    "title": "${toolEntry.usedTool}"
+                    
                 },
                 "relationships": {
                     "field_phasenid": {
@@ -81,6 +92,8 @@ const actions = {
         axios(config)
             .then((response) => {
                 console.log(response);
+                commit('SAVE_NEW_TOOL_IN_FRONTEND', response.data.data);
+
             }).catch(function (error) {
                 console.log(error);
             });
@@ -93,30 +106,41 @@ const actions = {
 const mutations = {
 
 
+    SAVE_NEW_TOOL_IN_FRONTEND(state, singleTool) {
+        state.listOfTools.push({ idd: singleTool.id, title: singleTool.attributes.title })
+
+    },
+
     /*  
     uploads the tools to the state for displaying the tools to Frontend
     */
-    SAVE_TOOLS(state, tool) {
+    SAVE_TOOLS(state, tools) {
 
-        tool.forEach(element => {
+        var leeresToolArray = [];
+        tools.forEach(element => {
             //console.log(field_tool)
-            const field_tool = element.attributes.field_tool;
+
             const field_id = element.id;
             //console.log(element.id)
             const field_title = element.attributes.title;
             //console.log(element.id)
-            state.listOfTools.push({ idd: field_id, title: field_title, tool: field_tool })
+            leeresToolArray.push({ idd: field_id, title: field_title })
             //console.log(state)
 
 
 
 
+
         });
+
+
+        state.listOfTools = leeresToolArray
     }
 
 }
 export default {
     namespaced: true,
+    getters,
     state,
     mutations,
     actions

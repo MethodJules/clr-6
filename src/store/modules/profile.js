@@ -68,7 +68,7 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
-     
+
 
         axios(config)
             .then(function (response) {
@@ -92,8 +92,9 @@ const actions = {
     createProfile({ state, rootState }, authorization_token) {
         //console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
+        let username = rootState.drupal_api.user.username
         console.log(drupalUserUID)
-        var title = "Profil"
+        var title = `Profil ${username}`
         //commented out, because a new profile is created when a user is created
         /*         var data = `{
                     "data": {
@@ -122,7 +123,7 @@ const actions = {
                     "field_datenbanken": "", 
                     "field_referenztool": "", 
                     "field_analysetool": "",
-                    "field_user_uid": ""
+                    "field_user_uid": "${drupalUserUID}"
                     
                 }
                 
@@ -155,16 +156,15 @@ const actions = {
     },
 
 
-    async uploadImage({ dispatch, state, rootState }, image) {
+    async uploadImage({ dispatch, state, rootState }, { image, filename }) {
         //const buffer = "abc";
-        console.log(image)
         const base64ImageData = await fetch(image);
         const binaryImageData = await base64ImageData.blob();
         /* const buffer = storedFile.Body; */
-        console.log(state)
+
         var drupalUserUID = rootState.drupal_api.user.uid
-        var filename = "file2.jpg"
-        console.log(drupalUserUID)
+        //var filename = "file2.jpg"
+
 
 
         var config = {
