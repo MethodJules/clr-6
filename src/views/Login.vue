@@ -279,14 +279,28 @@ export default {
             password,
           })
           .then(() => {
-            this.$router.push("/");
+            if (this.$store.state.drupal_api.validCredential) {
+              this.$router.push("/");
+              this.makeToast();
+              console.log(this.$store.state.drupal_api.validCredential);
+              this.zugangsKennung = "";
+              this.passwort = "";
+            } else {
+              this.$bvToast.toast(
+                // removed because of new routing this is not available at login at this point of time `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.name}`,
+                `Login Daten falsch`,
+                {
+                  title: "Error",
+                  autoHideDelay: 4000,
+                  variant: "warning",
+                }
+              );
+            }
           });
         this.$store.dispatch("drupal_api/saveBasicAuth", authorization_token);
 
-        this.makeToast();
         //remove so username and password arent saved after login
-        this.zugangsKennung = "";
-        this.passwort = "";
+
         //this.testButClicked(true);
       } else {
         alert("Bitte Logindaten eingeben");

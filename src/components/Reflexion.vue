@@ -18,7 +18,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="berichten_reagieren"
+            v-model="getReflexionData.berichten_reagieren"
             v-on:input="$v.berichten_reagieren.$touch"
             v-bind:class="{
               error: $v.berichten_reagieren.$error,
@@ -41,7 +41,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="in_bezug_setzen"
+            v-model="getReflexionData.in_bezug_setzen"
             v-on:input="$v.in_bezug_setzen.$touch"
             v-bind:class="{
               error: $v.in_bezug_setzen.$error,
@@ -62,7 +62,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="schlussfolgern"
+            v-model="getReflexionData.schlussfolgern"
             v-on:input="$v.schlussfolgern.$touch"
             v-bind:class="{
               error: $v.schlussfolgern.$error,
@@ -83,7 +83,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            v-model="rekonstruieren"
+            v-model="getReflexionData.rekonstruieren"
             v-on:input="$v.rekonstruieren.$touch"
             v-bind:class="{
               error: $v.rekonstruieren.$error,
