@@ -97,7 +97,7 @@ const actions = {
             },
             data: data
         };
-        console.log(config)
+        //console.log(config)
         axios(config)
             .then((response) => {
                 console.log(response.data);
@@ -236,7 +236,8 @@ const mutations = {
     * @param state state as parameter for access and manipulation of state data
     */
     SAVE_CREATED_USER(state, user) {
-        state.user = user
+        //TODO: maybe log user in after registration?
+        state.user = { uid: user.uid[0].value, username: user.field_fullname[0].value }
         /*         console.log("jetzt csrf und user")
                 console.log(state.user)
                 console.log(state.csrf_token) */

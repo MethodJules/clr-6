@@ -98,6 +98,16 @@
               id="input-1"
             ></b-form-input>
           </b-row>
+          <!-- gruppenmitglieder und gruppenadmins werden in eine liste ausgegeben - Fehler in filter führt dazu, dass 1 Gruppenmitglied immer vorhanden sein muss -> Gruppenadmin kann auch Gruppenmitglied sein und ist dann hier doppelt -->
+          <b-row
+            v-for="mitglied in getCurrentProjectGroupAdmins"
+            :key="mitglied.id"
+          >
+            <b-form-input
+              v-model="mitglied.username"
+              id="input-2"
+            ></b-form-input>
+          </b-row>
         </b-col>
 
         <b-col sm="10">
@@ -217,6 +227,10 @@ export default {
       //console.log(this.$store.state.project.currentProject);
       return this.$store.state.project.currentProject;
     },
+    getCurrentProjectGroupAdmins() {
+      //console.log(this.$store.state.project.currentProject);
+      return this.$store.state.project.currentProjectGroupAdmins;
+    },
 
     getKeywords: {
       get() {
@@ -227,9 +241,6 @@ export default {
       },
     },
     getLecturers() {
-      console.log(this.$store.getters.getLecturers);
-      console.log(this.$store);
-      console.log(this.$store.getters);
       console.log(this.$store.getters["user/getLecturers"]);
 
       return this.$store.getters["user/getLecturers"];
@@ -238,7 +249,7 @@ export default {
 
   mounted() {
     this.$store.dispatch("user/loadLecturersFromBackend");
-    this.$store.dispatch("user/loadStudentsFromBackend");
+    //this.$store.dispatch("user/loadStudentsFromBackend");
     this.$store.dispatch("profile/loadUserFromBackend");
     console.log(this.$store.state.user.lecturers);
     console.log(this.$store.state.user.students);

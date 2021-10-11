@@ -44,7 +44,7 @@
         <b-row>
           <b-col>
             <b-button>
-              <router-link to="newMember" tag="div">
+              <router-link :to="{ name: 'NewMember' }" tag="div">
                 Neues Mitglied hinzufügen
               </router-link>
             </b-button>
