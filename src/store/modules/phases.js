@@ -220,7 +220,7 @@ const actions = {
         console.log(phase.id);
         console.log(rootState.project.currentProject.idd)
         // DATABASE REACTIONS
-        var data = `{"data":{"type":"node--phase_vorgehensmodell", "id": "${phase.id}", "attributes": {"field_abschluss": ${true}}}}`;
+        var data = `{"data":{"type":"node--phase_vorgehensmodell", "id": "${phase.id}", "attributes": { "title":"${phase.title}", "field_abschluss": ${true}}}}`;
 
         var config = {
             method: 'patch',
