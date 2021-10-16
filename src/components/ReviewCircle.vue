@@ -9,7 +9,6 @@
             <b> Hildesheimer Ansatz </b>
             <br />
         </div>
-        <!-- TODO: Show text and text 2 insite circles -->
         <div slot="extension">
             <z-spot
                 v-for="(el, index) in phases"
@@ -40,28 +39,30 @@
 import { mapGetters } from "vuex";
 export default {
     data() {
-        return {
-            // elements are coming from getter. We are using now phases in ...mapGetters
-        };
+        return {};
     },
     computed: {
-        //sorts phases array from backend to let it go from 0 to 7 like the elements above
-        //infinite update loop? -> put sort in load method so it is sorted to begin with and then just get it here
-        //then call method to change phases to true before mount -> in button which leads to dashboard or in home? weiterreichen als prop von home an circle?
-
         ...mapGetters({
             phases: "phases/getPhasesOfProject",
         }),
     },
     methods: {
         changeStyle(el) {
-            this.$store.dispatch("phases/closePhase", el);
-
-            // rest of this method MOVED TO CLOSE_PHASE mutation:
-            // we are doing this part in phase.js file
+            let changeColor = true;
+            for (let element of this.phases) {
+                if (element !== el) {
+                    if (element.done == false) {
+                        changeColor = false;
+                    }
+                } else {
+                    console.log("Ende erreicht");
+                    break;
+                }
+            }
+            if (changeColor) {
+                this.$store.dispatch("phases/closePhase", el);
+            }
         },
-        // getPhaseAbschluss, this soting part is done by getter in phase.js
-        // look getPhasesOfProject
     },
 };
 </script>

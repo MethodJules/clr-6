@@ -1,6 +1,11 @@
-import axios from 'axios';
+import axios from '@/config/custom_axios';
 //TODO: comments
 const state = () => ({
+    // We are using it just when we create a new project I think. 
+    // we can merge this array with phasesAdditionalInfo and use only one of them. 
+    // I am not doing it because I dont know actually how you use it. 
+    // If it would be ok you can do it or ask me to do it. 
+    // It would be easier to read the code. 
     phases: [
         {
             phase_id: 0,
@@ -93,10 +98,8 @@ const state = () => ({
 
 const getters = {
     getPhasesOfProject(state) {
-        console.log(state.phases_this_project);
         let sorted_array = [];
         let phases = [];
-        console.log(state.phases_this_project)
         sorted_array = state.phases_this_project.sort(function (a, b) {
             return a.phase_number - b.phase_number;
         });
@@ -117,7 +120,6 @@ const getters = {
 
         }
         state.phases_this_project = phases;
-        console.log(phases)
         return state.phases_this_project;
     }
 }
@@ -134,10 +136,8 @@ const actions = {
         console.log(projectId)
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}`,
+            url: `jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}`,
             headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
@@ -145,9 +145,7 @@ const actions = {
         axios(config)
             .then(function (response) {
                 const phases = response.data.data;
-
                 commit('LOAD_PHASES', phases);
-
             })
             .catch(function (error) {
                 console.log(error)
@@ -156,33 +154,15 @@ const actions = {
 
     },
 
-    /*     async loadSinglePhaseFromState({ commit, state }, { phaseId }) {
-            let currentPhase = null
-    
-            for (let phase of state.phases_this_project) {
-                if (phase.attributes.field_phase_number == phaseId) {
-                    console.log(phase)
-                    console.log(phase.attributes.title)
-                    console.log(phase.relationships.field_projektid.data.id)
-                    currentPhase = phase
-                }
-    
-            }
-            console.log(currentPhase)
-    
-            commit('LOAD_PHASE', { currentPhase });
-    
-        }, */
+
 
     async loadSinglePhaseFromBackend({ commit, state, rootState, dispatch }, { projectId, phaseId }) {
         console.log(phaseId)
         console.log(state)
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
+            url: `jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
             headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
@@ -213,27 +193,25 @@ const actions = {
     },
 
     closePhase({ commit, rootState }, phase) {
-
         commit("CLOSE_PHASE", phase);
-        console.log(phase);
-        console.log(rootState);
-        console.log(phase.id);
-        console.log(rootState.project.currentProject.idd)
         // DATABASE REACTIONS
-        var data = `{"data":{"type":"node--phase_vorgehensmodell", "id": "${phase.id}", "attributes": { "title":"${phase.title}", "field_abschluss": ${true}}}}`;
+        var data = `{"data":{
+            "type":"node--phase_vorgehensmodell", 
+            "id": "${phase.id}", 
+            "attributes": { 
+                "title":"${phase.label}", 
+                "field_abschluss": ${true}
+            }}}`;
 
         var config = {
-            method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${rootState.project.currentProject.idd}&filter[field_phase_number]=${phase.id}`,
+            method: 'patch',
+            url: `jsonapi/node/phase_vorgehensmodell/${phase.id}`,
             headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data
         };
-        // console.log(config)
         axios(config).then((response) => {
             console.log(response)
         }).catch((error) => {
@@ -241,6 +219,8 @@ const actions = {
         })
 
     },
+
+
 
 
 
@@ -560,23 +540,7 @@ const mutations = {
     },
 
     CLOSE_PHASE(state, phase) {
-        // state.phases_this_project[phase.phaseNumber].done = true;
-
-        var changeColor = true;
-
-        for (let element of state.phases_this_project) {
-            if (element !== phase) {
-                if (element.done == false) {
-                    changeColor = false;
-                }
-            } else {
-                console.log("Ende erreicht");
-                break;
-            }
-        }
-        if (changeColor) {
-            state.phases_this_project[phase.phaseNumber].done = true;
-        }
+        state.phases_this_project[phase.phaseNumber].done = true;
 
     }
 }
