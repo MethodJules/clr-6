@@ -130,6 +130,7 @@ export default {
       );
     },
   },
+  computed: {},
   ready: function () {
     this.getProjectTitles();
   },

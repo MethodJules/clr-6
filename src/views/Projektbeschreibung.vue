@@ -89,10 +89,7 @@
 
         <b-col sm="5">
           <label for="input-1"> <strong> Gruppenmitglieder </strong> </label>
-          <b-row
-            v-for="mitglied in getCurrentProject.gruppenmitglieder"
-            :key="mitglied.id"
-          >
+          <b-row v-for="mitglied in getGroupMembers" :key="mitglied.id">
             <b-form-input
               v-model="mitglied.username"
               id="input-1"
@@ -223,6 +220,14 @@ export default {
   },
 
   computed: {
+    getGroupMembers() {
+      let unfiltered_members =
+        this.$store.state.project.currentProject.gruppenmitglieder;
+      return unfiltered_members.filter(function (member) {
+        //TODO: change the filter criterium to match the static groupmember -> static user in backend has the name "System"
+        return member.username != "System";
+      });
+    },
     getCurrentProject() {
       //console.log(this.$store.state.project.currentProject);
       return this.$store.state.project.currentProject;

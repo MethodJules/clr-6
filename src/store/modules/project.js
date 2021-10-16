@@ -197,6 +197,9 @@ const actions = {
 * @param rootState rootState allows access to states of other modules in store
 */
   async loadCurrentProjectWithLecturers({ commit, rootState }, projectId) {
+
+
+
     //console.log(state)
     //console.log(projectId)
     var config = {
@@ -233,6 +236,10 @@ const actions = {
 */
   createProject({ commit, dispatch, rootState }, projEntry) {
     const keywords = JSON.stringify(projEntry.schlagworter)
+    const dozenten = JSON.stringify(projEntry.betreuenderDozent)
+
+    // { "data": [{ "type": "user--user", "id": <user1> }, { "type": "user--user", "id": <user2> }, .... ]};
+
 
     //projEntry.betreuenderDozent= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
     //projEntry.gruppenadmin = "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
@@ -241,7 +248,25 @@ const actions = {
     //user id of currently logged in user
     //TODO: when a project is created the user is groupadmin and member nobody else - but it should be possible to include multiple dozenten
     //remove groupmember - only admin needed when filter works correctly with admin only
+
+    // { "data": [{ "type": "user--user", "id": <user1> }, { "type": "user--user", "id": <user2> }, .... ]};
+
+    /* 
+       let dataArray = [];
+    for (const lecturer of allLecturers) {
+        dataArray.push({"type": "user--user", "id": lecturerId});
+    }
+    
+    const data = {"data": dataArray};
+    
+       let dozenten = "["
+       for(dozent in projEntry.betreuenderDozent){
+         dozenten+= `{ "type": "user--user", "id": <user1> }`,
+       } */
+
     let userID = rootState.profile.userData.idd
+    //the id of the system user, which is needed because of the filtering bug here https://www.drupal.org/project/drupal/issues/3072384
+    let system_user_id = "bf1820d0-5477-4df6-b4dd-a1824d5e7794"
     console.log(keywords)
 
     var data = `{
@@ -267,9 +292,13 @@ const actions = {
                       "data": {
                         "0": {
                           "type": "user--user",
-                          "id": "${userID}"
+                          "id": "${system_user_id}"
                         }
                       }
+                    },
+                    "field_betreuender_dozent": {
+                      "data":  ${dozenten}
+                      
                     }
                   }
                 }
@@ -295,13 +324,13 @@ const actions = {
         let id_newly_created_project = response.data.data.id
         console.log(id_newly_created_project)
         //createAllPhasesforNewProject creates all 8 Phases for this project, is in phases.js
-        dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
+        //  dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
 
         //addLecturer does not push one lecturer after the other. array of 3 lecturers -> only 1 lecturer is saved. maybe the quick sequence of post requests leads to a replacement instead of additrion
-        for (let gruppenadmin of projEntry.betreuenderDozent) {
-          console.log(gruppenadmin)
-          dispatch('addLecturer', { gruppenadmin, id_newly_created_project })
-        }
+        /*         for (let gruppenadmin of projEntry.betreuenderDozent) {
+                  console.log(gruppenadmin)
+                  dispatch('addLecturer', { gruppenadmin, id_newly_created_project })
+                } */
         //is the id for new project in frontend when pushing from frontend only? is it needed?
         commit('ADD_PROJECT', projEntry)
       })
@@ -403,7 +432,6 @@ const actions = {
 
 
   addMember({ state, rootState, commit }, { mitglied, role }) {
-    //TODO: Gruppenadministrator in Backend zu array ändern
 
     /*     let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
         state.currentProject.gruppenmitglieder.splice(index, 1); */
@@ -477,9 +505,8 @@ const actions = {
 
   /*works not before groupadmins is an array in the backend*/
   deleteAdmin({ rootState, state }, mitglied) {
-
-    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
-    state.currentProject.gruppenmitglieder.splice(index, 1);
+    let index = state.currentProjectGroupAdmins.indexOf(mitglied)
+    state.currentProjectGroupAdmins.splice(index, 1);
 
     var data = `{ "data": [{
             "type": "user--user",

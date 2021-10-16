@@ -50,7 +50,7 @@ const actions = {
     * @param state state as parameter for access and manipulation of state data
     */
     async loadPhasesFromBackend({ commit, state, rootState }, projectId) {
-        console.log(state)
+        console.log(projectId)
         var config = {
             method: 'get',
             url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}`,
@@ -64,6 +64,8 @@ const actions = {
         axios(config)
             .then(function (response) {
                 const phases = response.data.data;
+                console.log(response.data.data)
+                console.log(config)
                 commit('LOAD_PHASES', phases);
 
             })
@@ -418,13 +420,13 @@ const mutations = {
         state.phases_this_project = phaseArray
         console.log(state.phases_this_project)
     },
-    LOAD_PHASE(state, currentPhase) {
-        console.log(currentPhase.currentPhase)
-
-        state.current_phase = currentPhase.currentPhase
-        console.log(state.current_phase)
-            ;
-    },
+    /*     LOAD_PHASE(state, currentPhase) {
+            console.log(currentPhase.currentPhase)
+    
+            state.current_phase = currentPhase.currentPhase
+            console.log(state.current_phase)
+                ;
+        }, */
 
     LOAD_SINGLE_PHASE(state, currentPhase) {
 

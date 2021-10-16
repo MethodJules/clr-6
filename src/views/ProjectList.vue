@@ -10,43 +10,48 @@
       > -->
       <div>
         <b-row>
-          <b-col>
-            <table>
-              <tr v-for="project in getProjectlist" :key="project.idd">
-                <b-card style="max-height: 20rem">
-                  <b-col>
-                    <b-row>
-                      <b-col>
-                        <h3>{{ project.title }}</h3>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <!--                         <b-link
+          <b-col v-if="!showspinner">
+            <div>
+              <table>
+                <tr v-for="project in getProjectlist" :key="project.idd">
+                  <b-card style="max-height: 20rem">
+                    <b-col>
+                      <b-row>
+                        <b-col>
+                          <h3>{{ project.title }}</h3>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col>
+                          <!--                         <b-link
                           :to="{ name: 'Home', params: { user_id: getUserID } }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
                         >
                       </b-col> -->
-                        <b-link
-                          :to="{
-                            name: 'Home',
-                            params: { project_id: project.idd },
-                          }"
-                          class="btn btn-outline-dark btn-block mb-2"
-                          >Dashboard</b-link
-                        >
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <ReflexionAuswahl :projectId="project.idd" />
-                      </b-col>
-                    </b-row>
-                  </b-col>
-                </b-card>
-              </tr>
-            </table>
+                          <b-link
+                            :to="{
+                              name: 'Home',
+                              params: { project_id: project.idd },
+                            }"
+                            class="btn btn-outline-dark btn-block mb-2"
+                            >Dashboard</b-link
+                          >
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col>
+                          <ReflexionAuswahl :projectId="project.idd" />
+                        </b-col>
+                      </b-row>
+                    </b-col>
+                  </b-card>
+                </tr>
+              </table>
+            </div>
+          </b-col>
+          <b-col v-else>
+            <p>pls wait</p>
           </b-col>
         </b-row>
       </div>
@@ -78,12 +83,12 @@ export default {
   },
   data() {
     return {
+      showspinner: true,
       project: {
         kurzbeschreibung: "",
         betreuenderDozent: [""],
         externeMitwirkende: "",
         schlagworter: [],
-
         idd: "",
         title: "",
       },
@@ -124,7 +129,11 @@ export default {
     
   }, */
   async mounted() {
-    this.$store.dispatch("project/loadProjectsFromBackend");
+    this.$store.dispatch("project/loadProjectsFromBackend").then(() => {
+      console.log(this.showspinner);
+      this.showspinner = false;
+      console.log(this.showspinner);
+    });
 
     //this.projectList = this.$store.state.project.myProjects;
     //console.log(this.projectList);
