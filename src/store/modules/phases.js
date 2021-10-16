@@ -223,7 +223,7 @@ const actions = {
         var data = `{"data":{"type":"node--phase_vorgehensmodell", "id": "${phase.id}", "attributes": { "title":"${phase.title}", "field_abschluss": ${true}}}}`;
 
         var config = {
-            method: 'patch',
+            method: 'post',
             url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${rootState.project.currentProject.idd}&filter[field_phase_number]=${phase.id}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
