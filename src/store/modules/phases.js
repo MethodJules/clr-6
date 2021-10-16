@@ -35,11 +35,92 @@ const state = () => ({
             phase_name: 'Gruppe auflösen'
         }
     ],
+
+    phasesAdditionalInfo: [
+        {
+            angle: 295,
+            label: "Gruppe Bilden",
+            labelPosition: "top",
+            iconType: "people",
+        },
+        {
+            angle: 336.42,
+            label: "Ziel und Umfang definieren",
+            labelPosition: "right",
+            iconType: "signpost-split",
+        },
+        {
+            angle: 17.84,
+            label: "Konzepte & Definition identifizieren",
+            labelPosition: "right",
+            iconType: "diagram3",
+        },
+        {
+            angle: 64.26,
+            label: "Literatur suchen",
+            iconType: "book",
+        },
+        {
+            angle: 115.68,
+            label: "Daten extrahieren",
+            iconType: "arrow-left-right",
+        },
+        {
+            angle: 162.1,
+            label: "Literatur analysieren & synthetisieren",
+            labelPosition: "left",
+            iconType: "vector-pen",
+        },
+
+        {
+            angle: 203.52,
+            label: "Ergebnisse kommunizieren",
+            labelPosition: "left",
+            iconType: "card-checklist",
+        },
+        {
+            angle: 245,
+            label: "Gruppe Auflösen",
+            labelPosition: "top",
+            iconType: "columns-gap",
+        },
+    ],
     phases_this_project: [],
     current_phase: {}
 
 
 })
+
+const getters = {
+    getPhasesOfProject(state) {
+        console.log(state.phases_this_project);
+        let sorted_array = [];
+        let phases = [];
+        console.log(state.phases_this_project)
+        sorted_array = state.phases_this_project.sort(function (a, b) {
+            return a.phase_number - b.phase_number;
+        });
+
+        let info = state.phasesAdditionalInfo;
+        for (let index = 0; index < sorted_array.length; index++) {
+            let phase = {
+                angle: info[index].angle,
+                label: sorted_array[index].title,
+                text: sorted_array[index].documentationText,
+                done: sorted_array[index].abschluss,
+                labelPosition: info[index].labelPosition,
+                iconType: info[index].iconType,
+                phaseNumber: sorted_array[index].phase_number,
+                id: sorted_array[index].phase_id,
+            }
+            phases.push(phase)
+
+        }
+        state.phases_this_project = phases;
+        console.log(phases)
+        return state.phases_this_project;
+    }
+}
 
 const actions = {
 
@@ -49,7 +130,7 @@ const actions = {
     * @param commit commit us used to call a mutation from this function
     * @param state state as parameter for access and manipulation of state data
     */
-    async loadPhasesFromBackend({ commit, state, rootState }, projectId) {
+    async loadPhasesFromBackend({ commit, rootState }, projectId) {
         console.log(projectId)
         var config = {
             method: 'get',
@@ -64,8 +145,7 @@ const actions = {
         axios(config)
             .then(function (response) {
                 const phases = response.data.data;
-                console.log(response.data.data)
-                console.log(config)
+
                 commit('LOAD_PHASES', phases);
 
             })
@@ -132,7 +212,35 @@ const actions = {
 
     },
 
+    closePhase({ commit, rootState }, phase) {
 
+        commit("CLOSE_PHASE", phase);
+        console.log(phase);
+        console.log(rootState);
+        console.log(phase.id);
+        console.log(rootState.project.currentProject.idd)
+        // DATABASE REACTIONS
+        var data = `{"data":{"type":"node--phase_vorgehensmodell", "id": "${phase.id}", "attributes": {"field_abschluss": ${true}}}}`;
+
+        var config = {
+            method: 'patch',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${rootState.project.currentProject.idd}&filter[field_phase_number]=${phase.id}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+        };
+        // console.log(config)
+        axios(config).then((response) => {
+            console.log(response)
+        }).catch((error) => {
+            console.log(error)
+        })
+
+    },
 
 
 
@@ -400,6 +508,7 @@ const mutations = {
     * @param state state as parameter for access and manipulation of state data
     */
     LOAD_PHASES(state, phases) {
+        console.log(phases);
         //  state.phases_this_project = phases
         let phaseArray = []
         phases.forEach(element => {
@@ -448,6 +557,27 @@ const mutations = {
         state.current_phase = currentPhaseFlattened
         console.log(currentPhaseFlattened)
 
+    },
+
+    CLOSE_PHASE(state, phase) {
+        // state.phases_this_project[phase.phaseNumber].done = true;
+
+        var changeColor = true;
+
+        for (let element of state.phases_this_project) {
+            if (element !== phase) {
+                if (element.done == false) {
+                    changeColor = false;
+                }
+            } else {
+                console.log("Ende erreicht");
+                break;
+            }
+        }
+        if (changeColor) {
+            state.phases_this_project[phase.phaseNumber].done = true;
+        }
+
     }
 }
 
@@ -455,5 +585,6 @@ export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions,
+    getters
 }
