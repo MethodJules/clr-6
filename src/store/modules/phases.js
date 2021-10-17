@@ -113,7 +113,8 @@ const actions = {
                 console.log(state.current_phase)
                 dispatch("inputDocuments/loadInputdocumentsFromBackend", null, { root: true })
                 dispatch("output_documents/loadOutputdocumentsFromBackend", null, { root: true })
-                dispatch("reflexion/loadReflexionFromBackend", null, { root: true })
+                var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137"
+                dispatch("reflexion/loadReflexionFromBackend", IchSicht, { root: true })
                 dispatch("tool/loadToolsFromBackend", null, { root: true })
 
 
@@ -381,7 +382,54 @@ const actions = {
 
 
     },
+    updateDocumentation({ state, rootState }, documentationText) {
 
+
+        console.log(state)
+
+
+
+        var phaseId = rootState.phases.current_phase.phase_id
+
+        var data = `{
+                "data": {
+                    "type": "node--phase_vorgehensmodell", 
+                    "id": "${phaseId}",
+                    "attributes": { 
+                        "field_documentationtext": "${documentationText}" 
+                        
+    
+                    }
+                    
+                }
+            }`;
+
+
+        var config = {
+            method: 'patch',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell/${phaseId}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+
+
+        };
+
+        axios(config)
+            .then(function (response) {
+                console.log(response)
+
+
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
+    },
 
 
 
@@ -391,6 +439,15 @@ const actions = {
 
 
 const mutations = {
+
+
+    UPDATE_DOCUMENTATION(state, documentationText) {
+
+        //console.log(state.current_phase)
+
+        state.current_phase.documentationText = documentationText
+        console.log(state.current_phase)
+    },
     /**
     * filters all received phases for project id of current project and saves the current phase in state
     * @param phases username the user gives as input in App.vue for registration

@@ -3,17 +3,17 @@
     <b-row>
       <div
         class="card-body text-center"
-        v-for="tool in listOfTools"
-        :key="tool.date"
+        v-for="(tool, index) in listOfTools"
+        :key="index"
       >
         <div>
           <b-form-checkbox
-            :id="tool.date"
+            :id="tool.idd"
             name="checkbox-1"
-            value="checked"
-            unchecked-value="unchecked"
-            >{{ tool.title }}</b-form-checkbox
-          >
+            @input="checkboxUpdate(index, tool)"
+            v-model="tool.benutzt"
+            >{{ tool.title }}
+          </b-form-checkbox>
         </div>
       </div>
     </b-row>
@@ -45,9 +45,17 @@ export default {
       };
 
       this.$store.dispatch("tool/createTool", neueEingabe);
+
       this.tool = "";
     },
+
+    checkboxUpdate(index, toolGeaendert) {
+      console.log(toolGeaendert);
+
+      this.$store.dispatch("tool/updateToolWithCheckbox", toolGeaendert);
+    },
   },
+
   /* mounted() {
     this.$store.dispatch("tool/loadToolsFromBackend");
   }, */

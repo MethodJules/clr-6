@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 const state = () => ({
-    /* Here we initialize an empty array for reflexionData, in order to have all the the inputs of textfields */
+    /* Here we initialize an empty object for reflexionData, in order to have all the the inputs of textfields in one reflexion.
+    Because we need only one reflexion for one person */
     reflexionData: {}
+
 })
 
 
@@ -12,10 +14,11 @@ const state = () => ({
 const actions = {
 
     /* TODO: We load the Reflexiondata from backend by filtering the phasenid to get the reflexionData of the right phase */
-    async loadReflexionFromBackend({ commit, state, rootState }) {
+    async loadReflexionFromBackend({ commit, state, rootState }, sicht) {
         var drupalUserUID = rootState.drupal_api.user.uid;
         var phaseId = rootState.phases.current_phase.phase_id;
-        //var sichtenReflexion = rootstate.reflexion.
+
+
         console.log(state);
         console.log(phaseId);
         console.log(rootState.drupal_api);
@@ -23,7 +26,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate?filter[field_phasenid.id]=${phaseId}&filter[field_user.drupal_internal__uid]=${drupalUserUID}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate?filter[field_phasenid.id]=${phaseId}&filter[field_user.drupal_internal__uid]=${drupalUserUID}&filter[field_sichten.id]=${sicht}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -38,7 +41,10 @@ const actions = {
                 const reflexion = response.data.data;
                 commit('SAVE_REFLEXION', { reflexion });
             }).catch(error => {
+
                 throw new Error(`API ${error}`);
+                // Fehler wird abgefangen, wenn eine Reflexion zur einer Sicht nicht existiert. Sonst bleibt die alte Reflexion vom Backend in der falschen Sicht erhalten, da der http Request nicht korrekt funktioniert und nur der Catch teil ausgeführt wird, und das state daher nie geändert wird und der alte inhalt im state erhalten bleibt
+
             });
 
     },
@@ -52,7 +58,7 @@ const actions = {
 
         console.log(phaseId)
 
-
+        // TODO Dynamisch mit Phase + UserName + Tab = Title
         var title = "Reflexion"
 
 
@@ -115,8 +121,8 @@ const actions = {
     that the backend knows which reflexionstemplate should be exactly updated/overwritten */
 
     updateReflexion({ state, rootState }, reflexion) {
-        let index = state.reflexionData.indexOf(reflexion);
-        state.reflexionData[index] = reflexion;
+
+
         var data = `
         {
             "data": {
@@ -158,7 +164,12 @@ const mutations = {
 
 
     SAVE_REFLEXION(state, { reflexion }) {
+        //var leeresReflexionArray = [];
         console.log(reflexion);
+
+        if (reflexion.length == 0) {
+            state.reflexionData = {}
+        }
         reflexion.forEach(element => {
             const field_berichten_reagieren = element.attributes.field_berichten_reagieren;
             console.log(field_berichten_reagieren)
@@ -170,9 +181,15 @@ const mutations = {
             console.log(field_schlussfolgern)
             const field_id = element.id;
             const field_title = element.attributes.title;
+
             state.reflexionData = { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title }
+            //leeresReflexionArray.push({ berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title })
 
         });
+
+
+        //state.reflexionData = leeresReflexionArray;
+        //console.log(state.reflexionData)
     }
 
 }
