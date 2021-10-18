@@ -193,15 +193,15 @@ const actions = {
 
     },
 
-    closePhase({ commit, rootState }, phase) {
+    closePhase({ commit, rootState }, { phase, open_close_phase }) {
         commit("CLOSE_PHASE", phase);
+        console.log(phase.done)
         // DATABASE REACTIONS
         var data = `{"data":{
             "type":"node--phase_vorgehensmodell", 
             "id": "${phase.id}", 
             "attributes": { 
-                "title":"${phase.label}", 
-                "field_abschluss": ${true}
+                "field_abschluss": ${open_close_phase}
             }}}`;
 
         var config = {

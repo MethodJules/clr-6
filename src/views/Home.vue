@@ -51,7 +51,6 @@ export default {
       "phases/loadPhasesFromBackend",
       this.$route.params.project_id
     );
-    //To DO: Load all phases for this project with projectid and put it in state. click on specific phase loads the respective phase from the state
   },
 };
 </script>
