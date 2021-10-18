@@ -183,6 +183,7 @@ export default {
       images: [],
       image: null,
       profilbild: null,
+      status: false,
 
       /* getProfileData: {
 

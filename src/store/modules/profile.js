@@ -15,6 +15,10 @@ const state = () => ({
 const actions = {
 
     /* We load the Userdata from backend by filtering the drupalUserUID to get the userdata of the right user */
+    /**
+     * 
+     * 
+     */
 
     async loadUserFromBackend({ commit, state, rootState }) {
         var drupalUserUID = rootState.drupal_api.user.uid
@@ -36,6 +40,12 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response);
+                /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data' 
+                 * array with all field values. But here we also need the included data which is found in response.data.included. 
+                 *  Therefore our paylod this time is response.data, 
+                 * which is an object with both 'data' and 'included' as attributes. 
+                 * */
+
                 const user = response.data;
                 commit('SAVE_USER', { user });
 
@@ -155,16 +165,21 @@ const actions = {
 
     },
 
+    /**
+     * 
+     * @object image will be send to the upload method, where the uploaded image will be converted from base64 format to binary format, in
+     * order to send it to backend to media and not as usual to the content type in backend. After converting process, the uploaded 
+     * image will be send to the next method below, which will be dispatched to the userdata.
+     * @object filename is dynamically, not static.
+     */
 
     async uploadImage({ dispatch, state, rootState }, { image, filename }) {
-        //const buffer = "abc";
+
         const base64ImageData = await fetch(image);
         const binaryImageData = await base64ImageData.blob();
-        /* const buffer = storedFile.Body; */
+
 
         var drupalUserUID = rootState.drupal_api.user.uid
-        //var filename = "file2.jpg"
-
 
 
         var config = {
@@ -186,6 +201,11 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response);
+                /**
+                 * the imageID will be need for the method 'updateUserdataWithProfileImage' in order to add the right image to Userdata.
+                 * 
+                 * */
+
                 const imageID = response.data.data.id;
                 console.log(imageID)
 
@@ -202,9 +222,16 @@ const actions = {
 
     },
 
+    /**
+     * 
+     * @param imageID will be send to this method, in order to add the right profile image to the user data in the backend.
+     * Here the userdata will be updated by uploading a profile image. To referencing the image to the right user, we declared the userID,
+     * which we defined dynamically. The profile image will be added to the userdata of the user by the userID
+     * 
+     * 
+     */
     updateUserdataWithProfileImage({ state, rootState }, imageID) {
         var userID = rootState.profile.userData.idd
-        //let user = state.userData.idd
 
         console.log(userID)
 
@@ -257,7 +284,8 @@ const actions = {
 
 
     /* makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.idd
-    that the backend knows which profile should be exactly updated/overwritten */
+    that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata 
+    rigth user */
 
     updateProfile({ state, rootState }, profile) {
 
@@ -316,30 +344,15 @@ const actions = {
 
 const mutations = {
 
-    /* takes all user and filters through all user and puts all relevant data of the user in state.userData
-     * @param profiles all profile existing in the backend
-     * @param drupalUserID id of the user in drupal backend
-     * @param state state as parameter for access and manipulation of state data*/
+    /* takes all user and filters through all user and puts all relevant data of the user in the state.userData
+     *
+    */
 
     SAVE_USER(state, { user }) {
 
-        /* for (const current_user in user) {
-            const field_fullname = current_user.data.attributes.field_fullname;
-            const field_matrikelnummer = current_user.data.attributes.field_matrikelnummer;
-            const field_id = current_user.data.attributes.field_id;
-            const field_title = current_user.data.attributes.field_title;
-            const mail = current_user.data.attributes.mail;
-            const url = current_user.included.attributes.uri.url;
-            console.log(current_user)
-
-            let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail, url: url }
-
-
-            state.userData = userObject
-
-
-        } */
-
+        /**
+         * consists the data of user only, which will be stored as object 'userObject' in the state userData
+         */
 
         user.data.forEach(element => {
             const field_fullname = element.attributes.field_fullname;
@@ -348,9 +361,6 @@ const mutations = {
             const field_id = element.id;
             const field_title = element.attributes.title;
             const mail = element.attributes.mail;
-
-
-
 
             let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail }
 
@@ -363,6 +373,13 @@ const mutations = {
 
         });
 
+        /**
+         * consist the object user with included data: the url of the profile image.
+         * from the response included, we get the second part of the url of the profilimage. 
+         * The first part of the url is defined statically above in line 2. 
+         * We get the fullurl by uniting the first and second part of the url. The full url will be pushed in to the state imageData.
+         */
+
         user.included.forEach(element => {
 
             const url = element.attributes.uri.url;
@@ -373,57 +390,15 @@ const mutations = {
 
             state.imageData = fullUrl
 
-
-
-            //user_array.push({ fullUrl: fullUrl })
-
-
-
         });
 
-
-
-
     },
-
-    /* user.data.forEach(element => {
-
-        const field_fullname = element.data.attributes.field_fullname;
-        const field_matrikelnummer = element.data.attributes.field_matrikelnummer;
-        const field_id = element.data.id;
-        const field_title = element.data.attributes.title;
-        const mail = element.data.attributes.mail;
-        const url = element.included.attributes.uri.url;
-
-
-        let fullUrl = urlBackend + url
-
-        let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail, fullUrl: fullUrl }
-
-
-        state.userData = userObject */
-
-    //.push(userObject)
-
-
-    //let profileObject = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title   }
-    //state.projectList.push(projectObject)
-    //state.myProfile.push(profileObject)
-
-
-
-
-    /* }); */
-
-
-
 
 
     /* 
     * takes all profiles and puts all relevant data of the profile in state.profileData
-    * @param profiles all profile existing in the backend
-    * @param drupalUserID id of the user in drupal backend
-    * @param state state as parameter for access and manipulation of state data*/
+    *
+    */
 
 
     SAVE_PROFILE(state, { profiles }) {
@@ -442,17 +417,6 @@ const mutations = {
             const field_profilbild = element.relationships.field_profilbild;
             const field_id = element.id;
             const field_title = element.attributes.title;
-
-
-
-
-
-            //state.profileData.push( { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title })
-            //console.log(state)         
-
-            //let profileObject = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title   }
-            //state.projectList.push(projectObject)
-            //state.myProfile.push(profileObject)
 
             state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title, profilbild: field_profilbild }
 

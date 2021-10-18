@@ -9,10 +9,9 @@ const state = () => ({
 
 const getters = {
     /**
-     * Getter to bringuploaded files in inputs array. 
+     * Getter to bring uploaded tools in listofTools array. 
      * @param state our state
-     * @returns files, uploaded files in state
-     * we send them reversed in order to see the last uploaded on top.
+     * @returns tools, uploaded tools in state
      */
     getTools(state) {
 
@@ -24,7 +23,7 @@ const getters = {
 
 
 /*  
-    * to load the saved tools in database 
+    * to load the saved tools from backend
     */
 const actions = {
     async loadToolsFromBackend({ commit, rootState }) {
@@ -54,7 +53,7 @@ const actions = {
 
     },
 
-    // method to add a new tool to database 
+    // method to add a new tool to backend
     createTool({ commit, rootState }, toolEntry) {
         var phaseId = rootState.phases.current_phase.phase_id
         console.log(phaseId)
@@ -79,7 +78,7 @@ const actions = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/tools',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/tools`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -102,12 +101,55 @@ const actions = {
 
     },
 
+    updateToolWithCheckbox({ rootState, state }, toolEntry) {
+
+        var phaseId = rootState.phases.current_phase.phase_id
+        console.log(phaseId)
+        console.log(toolEntry)
+
+
+        var data = `
+        {
+            "data": {
+                "type": "node--tools", 
+                "id": "${toolEntry.idd}",
+                "attributes": {
+                    "field_benutzt": ${toolEntry.benutzt}
+                    
+                }
+            }
+        }`;
+        var config = {
+            method: 'patch',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/tools/${toolEntry.idd}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+
+        };
+        axios(config)
+            .then((response) => {
+                console.log(response);
+
+
+            }).catch(function (error) {
+                console.log(error);
+            });
+
+
+
+    },
+
 }
 const mutations = {
 
 
     SAVE_NEW_TOOL_IN_FRONTEND(state, singleTool) {
-        state.listOfTools.push({ idd: singleTool.id, title: singleTool.attributes.title })
+        state.listOfTools.push({ idd: singleTool.id, title: singleTool.attributes.title, benutzt: singleTool.attributes.benutzt })
 
     },
 
@@ -123,18 +165,15 @@ const mutations = {
             const field_id = element.id;
             //console.log(element.id)
             const field_title = element.attributes.title;
-            //console.log(element.id)
-            leeresToolArray.push({ idd: field_id, title: field_title })
+            const field_benutzt = element.attributes.field_benutzt;
+            console.log(element.attributes.benutzt)
+            leeresToolArray.push({ idd: field_id, title: field_title, benutzt: field_benutzt })
             //console.log(state)
-
-
-
-
 
         });
 
-
-        state.listOfTools = leeresToolArray
+        state.listOfTools = leeresToolArray;
+        console.log(state.listOfTools)
     }
 
 }
