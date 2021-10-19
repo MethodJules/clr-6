@@ -72,6 +72,7 @@ export default {
       },
       todoNeu: "",
       appointment: "",
+      status: "",
       //msg: "Datum:" + { date } + { todo }
     };
   },

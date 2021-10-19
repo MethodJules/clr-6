@@ -8,7 +8,8 @@ const state = () => ({
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
   currentProject2: null,
-  keywordsInString: ""
+  keywordsInString: "",
+  loadingStatus: false,
 
 
 
@@ -43,6 +44,13 @@ const setters = {
 
 }
 
+const getters = {
+
+  loadingStatus(state){
+    return state.loadingStatus
+  }
+}
+
 
 const actions = {
 
@@ -54,6 +62,7 @@ const actions = {
   * @param rootState rootState allows access to states of other modules in store
   */
   async loadProjectsFromBackend({ commit, state, rootState }) {
+    commit('loadingStatus', true)
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
     console.log(rootState.drupal_api.user)
@@ -97,6 +106,8 @@ const actions = {
         console.log($store.state.sparky_api.drupalUserID) */
         const projects = response.data.data;
         commit('LOAD_PROJECT', { projects });
+        commit('loadingStatus', false)
+
 
       })
       .catch(function (error) {
@@ -474,8 +485,8 @@ const actions = {
 
   deleteMembers({ rootState, state }, mitglied) {
 
-    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
-    state.currentProject.gruppenmitglieder.splice(index, 1);
+
+    console.log(mitglied)
 
     var data = `{ "data": [{
             "type": "user--user",
@@ -496,6 +507,8 @@ const actions = {
     axios(config)
       .then((response) => {
         console.log(response);
+        let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
+        state.currentProject.gruppenmitglieder.splice(index, 1);
         // commit('deleteMemberFrontend', payload);
       }).catch(function (error) {
         console.log(error);
@@ -538,6 +551,13 @@ const actions = {
 
 
 const mutations = {
+
+  loadingStatus(state, newLoadingStatus) {
+    state.loadingStatus = newLoadingStatus
+  },
+
+
+
   //TODO: authorization token ist noch statisch, dynamisch aus state holen
 
   /**
@@ -717,5 +737,6 @@ export default {
   state,
   mutations,
   actions,
-  setters
+  setters,
+  getters
 }

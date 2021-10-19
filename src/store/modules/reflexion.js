@@ -3,7 +3,8 @@ import axios from 'axios';
 const state = () => ({
     /* Here we initialize an empty object for reflexionData, in order to have all the the inputs of textfields in one reflexion.
     Because we need only one reflexion for one person */
-    reflexionData: {}
+    reflexionData: {},
+    loadingStatus: false,
 
 })
 
@@ -17,6 +18,7 @@ const actions = {
     async loadReflexionFromBackend({ commit, state, rootState }, sicht) {
         var drupalUserUID = rootState.drupal_api.user.uid;
         var phaseId = rootState.phases.current_phase.phase_id;
+        commit('loadingStatus', true)
 
 
         console.log(state);
@@ -40,6 +42,7 @@ const actions = {
                 console.log(response)
                 const reflexion = response.data.data;
                 commit('SAVE_REFLEXION', { reflexion });
+                commit('loadingStatus', false)
             }).catch(error => {
 
                 throw new Error(`API ${error}`);
@@ -161,6 +164,9 @@ const actions = {
 }
 
 const mutations = {
+    loadingStatus(state, newLoadingStatus) {
+        state.loadingStatus = newLoadingStatus
+    },
 
 
     SAVE_REFLEXION(state, { reflexion }) {
