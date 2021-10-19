@@ -157,7 +157,7 @@ const actions = {
             console.log("from loadTokensfromSessionStorage")
             await commit('LOAD_TOKEN_SESSION_STORAGE');
             //await dispatch('loadUserFromBackend');
-            await router.push("/")
+            console.log(router)
         } else {
             console.log("session token")
             router.push("/Login");
