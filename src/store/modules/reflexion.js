@@ -9,8 +9,6 @@ const state = () => ({
 
 
 
-
-
 const actions = {
 
     /* TODO: We load the Reflexiondata from backend by filtering the phasenid to get the reflexionData of the right phase */
@@ -20,9 +18,12 @@ const actions = {
 
 
         console.log(state);
+        console.log(rootState);
+        console.log("url datas ")
+        // diese phase id kommt nicht when ich seite neu lade. 
         console.log(phaseId);
-        console.log(rootState.drupal_api);
         console.log(drupalUserUID);
+        console.log(sicht)
 
         var config = {
             method: 'get',
