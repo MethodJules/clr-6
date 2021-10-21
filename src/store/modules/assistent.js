@@ -4,7 +4,8 @@ const state = {
     assistentsArray: [
         // Es gibt alle assistent fields in this array
     ],
-    assistentsAll: []
+    assistentsAll: [],
+    assistentData: [],
 }
 
 
@@ -52,6 +53,16 @@ const actions = {
             });
 
     },
+    getData({commit}) {
+        axios.get('https://clr-backend.x-navi.de/jsonapi/node/assistententext/')
+            .then((response) => {
+                const data = response.data.data;
+                console.log(data);
+                commit('getData', data);
+            }).catch((error) => {
+                throw new Error(`API ${error}`);
+            })
+    }
 
 }
 
@@ -96,8 +107,10 @@ const mutations = {
                 console.log(error)
             })
     },
+    getData(state, data) {
+        state.assistentData = data;
+    }
 }
-
 
 export default {
     namespaced: true,
