@@ -23,17 +23,33 @@ const getters = {
 
 const actions = {
 
-    async loadToDoFromBackend({ commit }) {
-        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/to_dos')
+    async loadToDoFromBackend({ commit, rootState }, projectId) {
+        var drupalUserUID = rootState.drupal_api.user.uid;
+        console.log(drupalUserUID)
+
+
+        var config = {
+            method: 'get',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos?filter[field_projektid.id]=${projectId}&filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+        };
+
+        axios(config)
             .then((response) => {
-                //console.log(response);
+                console.log(response)
                 const data = response.data.data;
                 //let to-dos = [];
                 commit('SAVE_TODO', data);
 
-            }).catch(error => {
-                throw new Error(`API ${error}`);
-            });
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
 
     },
     createToDo({ commit, rootState }, todoEntry) {
@@ -47,15 +63,31 @@ const actions = {
 
 
         //console.log(todoEntry.todo)
+        var drupalUserUID = rootState.profile.userData.idd
+
         var data = `
         {
             "data": {
                 "type": "node--to_dos", 
                 "attributes": {
-                    "title": "Todo Titel", 
-                    "field_aufgaben": "${todoEntry.todo}", 
+                    "title": "${todoEntry.todo}",  
                     "field_date": "${todoEntry.date}"
+                },
+                "relationships": {
+                    "field_nutzer": {
+                        "data": {
+                            "type": "user--user",
+                            "id": "${drupalUserUID}"
+                        }
+                    }, 
+                    "field_projektid": {
+                        "data": {
+                            "type": "node--projekt",
+                            "id": "${todoEntry.project_id}"
+                        }
+                    }
                 }
+                
             }
         }`;
         var config = {
@@ -64,14 +96,16 @@ const actions = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': token
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data
         };
-        //console.log("te")
+
         axios(config)
             .then(function (response) {
                 console.log(response)
+                commit('SAVE_NEW_TODO', response.data.data)
             })
             .catch(function (error) {
                 console.log(error)
@@ -81,13 +115,13 @@ const actions = {
 
 
 
-        commit('ADD_TODO_ENTRY', todoEntry)
+
 
     },
     /*  
     calls function to delete tool from Backend 
     */
-    deleteTodo({ commit }, todoEntry) {
+    deleteTodo({ commit, rootState }, todoEntry) {
         var config = {
             method: 'delete',
             url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
@@ -95,7 +129,8 @@ const actions = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
         axios(config)
@@ -106,13 +141,49 @@ const actions = {
             });
         commit('DELETE_TODO_ENTRY', todoEntry);
     },
-    /*
-    updateTodo({commit}, todoEntry) {
 
-        commit('UPDATE_TODO_ENTRY', todoEntry);
-    }, */
+    /* updateTodo({ rootState }, todoEntry) {
+
+        var data = `
+        {
+            "data": {
+                "type": "node--to_dos", 
+                "id": "${todoEntry.idd}", 
+                "attributes": {
+                    "title": "${todoEntry.title}", 
+                    "field_aufgaben": "${todoEntry.todo}", 
+                    "field_date": "${todoEntry.date}" 
+                }
+            }
+        }`;
+        var config = {
+            method: 'patch',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+        };
+        axios(config)
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
+
+
+    } */
+
 }
+
 const mutations = {
+
+
     /* delete one entry from state list OfToDos */
     DELETE_TODO_ENTRY(state, todoEntry) {
         let index = state.listOfToDos.indexOf(todoEntry);
@@ -127,27 +198,11 @@ const mutations = {
         console.log(state + todoEntry)
 
     },
-    /* UPDATE_TODO_ENTRY(state, todoEntry) {
-    var data = `{"data": {"type": "node--to_dos", "id": "${todoEntry.idd}", "attributes": {"title": "${dailyEntry.title}", "field_aufgaben": "${todoEntry.todo}", "field_date": "${todoEntry.date} }}}`;
-    var config = {
-        method: 'patch',
-        url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
-        headers: {
-            'Accept': 'application/vnd.api+json',
-            'Content-Type': 'application/vnd.api+json',
-            'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-        },
-        data: data
-    };
 
-    axios(config)
-        .then(function(response){
-            console.log(response)
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
-    }, */
+    SAVE_NEW_TODO(state, newTodo) {
+        state.listOfToDos.push({ idd: newTodo.id, title: newTodo.attributes.title, date: newTodo.attributes.field_date })
+    },
+
     /** 
      * to fill the listOfToDos[] with all entries in the backend 
      * @param {*} state we send our state to the method 
@@ -156,22 +211,25 @@ const mutations = {
      */
     SAVE_TODO(state, todo) {
 
+        var leeresTodoArray = [];
         todo.forEach(element => {
-            const field_aufgaben = element.attributes.field_aufgaben;
-            //console.log(field_aufgaben)
+
             const field_date = element.attributes.field_date;
             //console.log(field_date)
             const field_id = element.id;
             //console.log(element.id)
             const field_title = element.attributes.title;
-            //console.log(element.id)
-            state.listOfToDos.push({ date: field_date, todo: field_aufgaben, idd: field_id, title: field_title })
-            //console.log(state)
-            state.todos.push(element.attributes.field_aufgaben)
+            leeresTodoArray.push({ date: field_date, idd: field_id, title: field_title })
+            state.todos.push(element.attributes.title)
             state.dates.push(element.attributes.field_date)
         });
 
+        state.listOfToDos = leeresTodoArray
+        console.log(state.listOfToDos)
+
     }
+
+
 }
 export default {
     namespaced: true,

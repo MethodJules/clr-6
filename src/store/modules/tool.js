@@ -149,7 +149,7 @@ const mutations = {
 
 
     SAVE_NEW_TOOL_IN_FRONTEND(state, singleTool) {
-        state.listOfTools.push({ idd: singleTool.id, title: singleTool.attributes.title, benutzt: singleTool.attributes.benutzt })
+        state.listOfTools.push({ idd: singleTool.id, title: singleTool.attributes.title, benutzt: singleTool.attributes.field_benutzt })
 
     },
 

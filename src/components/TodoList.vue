@@ -1,7 +1,7 @@
 <template>
   <div id="todoList">
     <!-- Liste zum Erstellen der Todos  -->
-    <div class="card p-0 m-1" v-for="todo in listOfToDos" :key="todo.date">
+    <div class="card p-0 m-1" v-for="todo in loadToDo" :key="todo.date">
       <div class="card-header text-center">
         {{ todo.title }} | <b>'{{ todo.date }}'</b>
       </div>
@@ -15,12 +15,11 @@
           class="checkbox"
         >
           <p>
-            {{ todo.todo }}
+            {{ todo.title }}
           </p>
         </b-form-checkbox>
       </div>
       <div class="card-buttons">
-        <b-button size="sm">Update??</b-button>
         <b-button @click="deleteTodo(todo)" size="sm">
           <b-icon icon="trash"></b-icon>
         </b-button>
@@ -73,6 +72,7 @@ export default {
       todoNeu: "",
       appointment: "",
       //msg: "Datum:" + { date } + { todo }
+      status: [],
     };
   },
   methods: {
@@ -80,6 +80,7 @@ export default {
       var neueEingabe = {
         todo: this.todoNeu,
         date: this.appointment,
+        project_id: this.getProjectID,
       };
       // Benutzereingabe wird in die Liste gespeichert
       this.listOfToDos.push(neueEingabe);
@@ -89,8 +90,6 @@ export default {
       this.todoNeu = "";
     },
     deleteTodo(todo) {
-      //Löschen eines Todos
-      //this.listOfToDos.splice(this.listOfToDos.indexOf(todo), 1)
       alert("Delete");
 
       this.$store.dispatch("todo/deleteTodo", todo);
@@ -104,8 +103,8 @@ export default {
   },
   //Die in der Datenbank gespeicherten Todos werden hiermit aufgelistet
   mounted() {
-    this.$store.dispatch("todo/loadToDoFromBackend");
-    this.listOfToDos = this.$store.state.todo.listOfToDos;
+    /*  this.$store.dispatch("todo/loadToDoFromBackend");
+    this.listOfToDos = this.$store.state.todo.listOfToDos; */
     //console.log(this.$store.getters.termin);
   },
   /*  getters:{
@@ -125,6 +124,13 @@ export default {
                     this.listOfToDos[key] = this.date + ': ' + this.todo
                 })
             } */
+    },
+    loadToDo() {
+      return this.$store.state.todo.listOfToDos;
+    },
+
+    getProjectID() {
+      return this.$route.params.project_id;
     },
   },
 };
