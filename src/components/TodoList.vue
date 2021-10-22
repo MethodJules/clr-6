@@ -1,18 +1,18 @@
 <template>
   <div id="todoList">
+    <h3>To Do</h3>
+
     <!-- Liste zum Erstellen der Todos  -->
-    <div class="card p-0 m-1" v-for="todo in loadToDo" :key="todo.date">
+    <div class="card p-0 m-1" v-for="(todo, index) in loadToDo" :key="index">
       <div class="card-header text-center">
-        {{ todo.title }} | <b>'{{ todo.date }}'</b>
+        <b> Fällig am: {{ todo.date }}</b>
       </div>
       <div class="card-body p-2">
         <b-form-checkbox
-          :id="todo.date"
-          v-model="status"
+          :id="todo.idd"
           name="checkbox-1"
-          value="checked"
-          unchecked-value="unchecked"
-          class="checkbox"
+          @input="checkboxUpdate(index, todo)"
+          v-model="todo.erledigt"
         >
           <p>
             {{ todo.title }}
@@ -29,10 +29,23 @@
     <div>
       <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist. 
             Es wird nur die zu erledigende Aufgabe angezeigt -->
-      <b-modal id="to_do_edit_modal" title="to_do">
+      <b-modal id="to_do_edit_modal" title="To Do">
         <label for="neueTodo">zu erledigende Aufgabe: </label>
-        <input v-model="todoNeu" type="text" placeholder="hier eingeben" />
-        <label for="example-datepicker">Frist: </label>
+        <input
+          v-model="todoNeu"
+          v-on:input="$v.todoNeu.$touch"
+          v-bind:class="{
+            error: $v.todoNeu.$error,
+            valid: $v.todoNeu.$dirty && !$v.todoNeu.$invalid,
+          }"
+          type="text"
+          placeholder="max. 250 Zeichen"
+        />
+        <br />
+        <label for="example-datepicker">
+          <br />
+          Frist:
+        </label>
         <b-form-datepicker
           id="example-datepicker"
           v-model="appointment"
@@ -53,6 +66,7 @@
 
 
 <script>
+import { required, maxLength } from "vuelidate/lib/validators";
 export default {
   props: {
     date: String,
@@ -72,8 +86,12 @@ export default {
       todoNeu: "",
       appointment: "",
       //msg: "Datum:" + { date } + { todo }
-      status: [],
+      todo: "",
     };
+  },
+
+  validations: {
+    todoNeu: { required, maxLength: maxLength(250) },
   },
   methods: {
     ok() {
@@ -99,6 +117,11 @@ export default {
       if (this.date === new Date().getMonth()) {
         return this.date;
       }
+    },
+    checkboxUpdate(index, todoErledigt) {
+      console.log(todoErledigt);
+
+      this.$store.dispatch("todo/updateTodo", todoErledigt);
     },
   },
   //Die in der Datenbank gespeicherten Todos werden hiermit aufgelistet
@@ -151,5 +174,35 @@ export default {
 }
 .card-buttons * {
   margin-left: 0.3rem;
+}
+
+.alert {
+  background-color: lightgreen;
+  padding: 15px;
+}
+
+/* input {
+  border: 1px solid silver;
+  border-radius: 4px;
+  background: white;
+  padding: 5px 10px;
+} */
+
+.error {
+  border-color: red;
+  background: #fdd;
+}
+
+.error:focus {
+  outline-color: #f99;
+}
+
+.valid {
+  border-color: #5a5;
+  background: #efe;
+}
+
+.valid:focus {
+  outline-color: #8e8;
 }
 </style>

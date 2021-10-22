@@ -8,7 +8,10 @@ const state = () => ({
     dates: [],//array to store only the deadlines from listOfToDos[] 
     token: ""
 
+
 })
+
+
 /*  
 getter to call the arrays todos[] and dates[] 
 */
@@ -18,12 +21,16 @@ const getters = {
     },
     getDate: state => {
         return state.listOfToDos.date
-    }
+    },
+
+
+
 }
 
 const actions = {
 
     async loadToDoFromBackend({ commit, rootState }, projectId) {
+
         var drupalUserUID = rootState.drupal_api.user.uid;
         console.log(drupalUserUID)
 
@@ -45,6 +52,7 @@ const actions = {
                 const data = response.data.data;
                 //let to-dos = [];
                 commit('SAVE_TODO', data);
+
 
             })
             .catch(function (error) {
@@ -142,7 +150,8 @@ const actions = {
         commit('DELETE_TODO_ENTRY', todoEntry);
     },
 
-    /* updateTodo({ rootState }, todoEntry) {
+    updateTodo({ rootState }, todoEntry) {
+
 
         var data = `
         {
@@ -150,15 +159,14 @@ const actions = {
                 "type": "node--to_dos", 
                 "id": "${todoEntry.idd}", 
                 "attributes": {
-                    "title": "${todoEntry.title}", 
-                    "field_aufgaben": "${todoEntry.todo}", 
-                    "field_date": "${todoEntry.date}" 
+                    "field_erledigt": ${todoEntry.erledigt}
                 }
+
             }
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -177,7 +185,7 @@ const actions = {
 
 
 
-    } */
+    }
 
 }
 
@@ -200,7 +208,7 @@ const mutations = {
     },
 
     SAVE_NEW_TODO(state, newTodo) {
-        state.listOfToDos.push({ idd: newTodo.id, title: newTodo.attributes.title, date: newTodo.attributes.field_date })
+        state.listOfToDos.push({ idd: newTodo.id, title: newTodo.attributes.title, date: newTodo.attributes.field_date, erledigt: newTodo.attributes.field_erledigt })
     },
 
     /** 
@@ -219,7 +227,8 @@ const mutations = {
             const field_id = element.id;
             //console.log(element.id)
             const field_title = element.attributes.title;
-            leeresTodoArray.push({ date: field_date, idd: field_id, title: field_title })
+            const field_erledigt = element.attributes.field_erledigt;
+            leeresTodoArray.push({ date: field_date, idd: field_id, title: field_title, erledigt: field_erledigt })
             state.todos.push(element.attributes.title)
             state.dates.push(element.attributes.field_date)
         });

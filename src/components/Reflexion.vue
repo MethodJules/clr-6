@@ -114,18 +114,13 @@
           }"
           >Dashboard</b-button
         >
-        <!-- <b-button size="sm" to="/home">Zum Dashboard</b-button> -->
-
         <b-button size="sm" @click="saveReflexion()">Speichern </b-button>
       </b-row>
-
-      <!--  <b-button  @click="addItem()">Speichern</b-button> -->
     </b-container>
   </b-col>
 </template>
 
 <script>
-//TO DO: mehr felder hinzufügen für die anderen tabs gruppe & zusammenarbeit und fachlicher kontext
 import { required, minLength } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
 export default {
@@ -217,10 +212,6 @@ export default {
         alert("Bitte alles ausfüllen");
       }
     },
-
-    /* To Do: überprüfen ob schon eine reflexion zu dieser phase von dieser person angefertigt wurde 
-            -> kein neuer Eintrag, alte Reflexion kann überschrieben oder aktualisiert werden
-            */
   },
 
   watch: {
