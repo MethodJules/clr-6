@@ -89,13 +89,20 @@
 
         <b-col sm="5">
           <label for="input-1"> <strong> Gruppenmitglieder </strong> </label>
+          <b-row v-for="mitglied in getGroupMembers" :key="mitglied.id">
+            <b-form-input
+              v-model="mitglied.username"
+              id="input-1"
+            ></b-form-input>
+          </b-row>
+          <!-- gruppenmitglieder und gruppenadmins werden in eine liste ausgegeben - Fehler in filter führt dazu, dass 1 Gruppenmitglied immer vorhanden sein muss -> Gruppenadmin kann auch Gruppenmitglied sein und ist dann hier doppelt -->
           <b-row
-            v-for="mitglied in getCurrentProject.gruppenmitglieder"
+            v-for="mitglied in getCurrentProjectGroupAdmins"
             :key="mitglied.id"
           >
             <b-form-input
               v-model="mitglied.username"
-              id="input-1"
+              id="input-2"
             ></b-form-input>
           </b-row>
         </b-col>
@@ -187,6 +194,9 @@ export default {
       console.log(this.getKeywords);
       var schlagworter = this.$store.state.project.keywordsInString;
       var schlagwortarray = schlagworter.split(",");
+      for (var i = 0; i < schlagwortarray.length; ++i) {
+        schlagwortarray[i] = schlagwortarray[i].trim();
+      }
       var keywords = Object.assign({}, schlagwortarray);
       console.log(keywords);
 
@@ -213,9 +223,21 @@ export default {
   },
 
   computed: {
+    getGroupMembers() {
+      let unfiltered_members =
+        this.$store.state.project.currentProject.gruppenmitglieder;
+      return unfiltered_members.filter(function (member) {
+        //TODO: change the filter criterium to match the static groupmember -> static user in backend has the name "System"
+        return member.username != "System";
+      });
+    },
     getCurrentProject() {
       //console.log(this.$store.state.project.currentProject);
       return this.$store.state.project.currentProject;
+    },
+    getCurrentProjectGroupAdmins() {
+      //console.log(this.$store.state.project.currentProject);
+      return this.$store.state.project.currentProjectGroupAdmins;
     },
 
     getKeywords: {
@@ -227,9 +249,6 @@ export default {
       },
     },
     getLecturers() {
-      console.log(this.$store.getters.getLecturers);
-      console.log(this.$store);
-      console.log(this.$store.getters);
       console.log(this.$store.getters["user/getLecturers"]);
 
       return this.$store.getters["user/getLecturers"];
@@ -238,7 +257,7 @@ export default {
 
   mounted() {
     this.$store.dispatch("user/loadLecturersFromBackend");
-    this.$store.dispatch("user/loadStudentsFromBackend");
+    //this.$store.dispatch("user/loadStudentsFromBackend");
     this.$store.dispatch("profile/loadUserFromBackend");
     console.log(this.$store.state.user.lecturers);
     console.log(this.$store.state.user.students);

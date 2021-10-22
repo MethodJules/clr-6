@@ -143,7 +143,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             <tr>
               <td>
                 <div class="form-group">
-                  <input
+                  <b-form-textarea
                     id="kurzbeschreibung"
                     v-model="project.kurzbeschreibung"
                     type="text"
@@ -187,6 +187,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
           >Beschreibung bearbeiten</b-button
         >
       </div>
+      <!-- TODO: remove else part for stuff in projektbeschreibung -->
       <div v-else>
         <!--         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>{{getLecturers}}</b-button> -->
         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project
@@ -248,34 +249,50 @@ export default {
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        console.log("title: ${this.titela}");
         this.newProject();
-        console.log(this.project.betreuenderDozent);
-        console.log(this.project);
       }
     },
     newProject() {
       var schlagwortarray = this.project.schlagworter.split(",");
+      for (var i = 0; i < schlagwortarray.length; ++i) {
+        schlagwortarray[i] = schlagwortarray[i].trim();
+      }
       var keywords = Object.assign({}, schlagwortarray);
-      console.log(keywords);
+
+      //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array
+      let dozent_filtered = this.project.betreuenderDozent.filter(
+        (item, index) => {
+          return (
+            this.project.betreuenderDozent.indexOf(item) === index && item != ""
+          );
+        }
+      );
+      //make dozent object array for http request
+      let dataArray = [];
+      for (const dozent of dozent_filtered) {
+        dataArray.push({ type: "user--user", id: dozent });
+      }
+
+      const dozenten = Object.assign({}, dataArray);
+      console.log(dozenten);
+
       var addProj = {
         title: this.project.title,
         kurzbeschreibung: this.project.kurzbeschreibung,
-        betreuenderDozent: this.project.betreuenderDozent,
+        betreuenderDozent: dozenten,
         externeMitwirkende: this.project.externeMitwirkende,
         schlagworter: keywords,
         gruppenadmin: this.$store.state.sparky_api.drupalUserID,
-        projectIdd: 0,
       };
 
       this.$store.dispatch("project/createProject", addProj);
       //this.projectList.push(addProj)
-
-      this.title = " ";
-      this.kurzbeschreibung = "";
-      this.betreuenderDozent = " ";
-      this.externeMitwirkende = " ";
-      this.schlagworter = " ";
+      this.$refs["create_project"].hide();
+      this.project.title = " ";
+      this.project.kurzbeschreibung = "";
+      this.project.betreuenderDozent = [];
+      this.project.externeMitwirkende = " ";
+      this.project.schlagworter = " ";
       //this.projectList.length + 1
     },
 

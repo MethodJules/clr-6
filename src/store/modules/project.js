@@ -2,13 +2,14 @@ import axios from 'axios';
 //TO DO: comments
 
 const state = () => ({
-  projectList: [],
+  allKeywordsList: [],
   myProjects: [],
   currentProject: {},
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
-  currentProject2: null,
-  keywordsInString: ""
+  keywordsInString: "",
+  loadingStatus: false,
+  projectsFilteredbyKeywords: []
 
 
 
@@ -43,17 +44,117 @@ const setters = {
 
 }
 
+const getters = {
+
+  loadingStatus(state) {
+    return state.loadingStatus
+  }
+}
+
 
 const actions = {
 
+
+
+
+
   /**
-   * loads all those projects from Backend where the current user is recorded inside filed_gruppenmitglieder and commits the mutation LOAD_PROJECT
+* loads all  projects from Backend and commits the mutation LOAD_ALL_PROJECTS
+* and passes drupal user id gotten from rootstate on
+* @param state state as parameter for access and manipulation of state data
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+*/
+  async loadProjectFilterbyKeyword({ commit, rootState }, keywords) {
+    //var drupalUserID = rootState.sparky_api.drupalUserID
+    let keyword_filter = ""
+    for (var i = 0; i < keywords.length; ++i) {
+      keyword_filter += `&filter[keywords][condition][value][${i + 1}]=${keywords[i]}`
+    }
+    console.log(keyword_filter)
+
+
+    const full_filter = `?filter[keywords][condition][path]=field_schlagworter&filter[keywords][condition][operator]=IN${keyword_filter}`
+
+    var config = {
+      method: 'get',
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${full_filter}`,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        const projects = response.data.data
+        commit('PROJECTS_FILTERED_BY_KEYWORD', { projects });
+
+
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+  },
+
+
+  /**
+ * loads all  projects from Backend and commits the mutation LOAD_ALL_KEYWORDS
+ * and passes drupal user id gotten from rootstate on
+* @param state state as parameter for access and manipulation of state data
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+*/
+  async loadAllKeywords({ commit, state, rootState }) {
+    //var drupalUserID = rootState.sparky_api.drupalUserID
+    console.log(rootState.drupal_api.user)
+    var config = {
+      method: 'get',
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt`,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        //console.log(response)
+        /* console.log($store.state.sparky_api.validCredential)
+        console.log($store.state.sparky_api.drupalUserID) */
+        const projects = response.data.data;
+        commit('LOAD_ALL_KEYWORDS', { projects });
+
+
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+  },
+
+
+
+
+
+
+
+
+
+  /**
+   * loads all those projects from Backend where the current user is recorded inside filed_gruppenmitglieder and commits the mutation LOAD_PROJECTs
    * and passes drupal user id gotten from rootstate on
   * @param state state as parameter for access and manipulation of state data
   * @param commit commit us used to call a mutation from this function
   * @param rootState rootState allows access to states of other modules in store
   */
   async loadProjectsFromBackend({ commit, state, rootState }) {
+    commit('loadingStatus', true)
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
     console.log(rootState.drupal_api.user)
@@ -96,7 +197,9 @@ const actions = {
         /* console.log($store.state.sparky_api.validCredential)
         console.log($store.state.sparky_api.drupalUserID) */
         const projects = response.data.data;
-        commit('LOAD_PROJECT', { projects });
+        commit('LOAD_MY_PROJECTS', { projects });
+        commit('loadingStatus', false)
+
 
       })
       .catch(function (error) {
@@ -197,6 +300,9 @@ const actions = {
 * @param rootState rootState allows access to states of other modules in store
 */
   async loadCurrentProjectWithLecturers({ commit, rootState }, projectId) {
+
+
+
     //console.log(state)
     //console.log(projectId)
     var config = {
@@ -233,6 +339,10 @@ const actions = {
 */
   createProject({ commit, dispatch, rootState }, projEntry) {
     const keywords = JSON.stringify(projEntry.schlagworter)
+    const dozenten = JSON.stringify(projEntry.betreuenderDozent)
+
+    // { "data": [{ "type": "user--user", "id": <user1> }, { "type": "user--user", "id": <user2> }, .... ]};
+
 
     //projEntry.betreuenderDozent= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
     //projEntry.gruppenadmin = "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
@@ -241,7 +351,25 @@ const actions = {
     //user id of currently logged in user
     //TODO: when a project is created the user is groupadmin and member nobody else - but it should be possible to include multiple dozenten
     //remove groupmember - only admin needed when filter works correctly with admin only
+
+    // { "data": [{ "type": "user--user", "id": <user1> }, { "type": "user--user", "id": <user2> }, .... ]};
+
+    /* 
+       let dataArray = [];
+    for (const lecturer of allLecturers) {
+        dataArray.push({"type": "user--user", "id": lecturerId});
+    }
+    
+    const data = {"data": dataArray};
+    
+       let dozenten = "["
+       for(dozent in projEntry.betreuenderDozent){
+         dozenten+= `{ "type": "user--user", "id": <user1> }`,
+       } */
+
     let userID = rootState.profile.userData.idd
+    //the id of the system user, which is needed because of the filtering bug here https://www.drupal.org/project/drupal/issues/3072384
+    let system_user_id = "bf1820d0-5477-4df6-b4dd-a1824d5e7794"
     console.log(keywords)
 
     var data = `{
@@ -267,9 +395,13 @@ const actions = {
                       "data": {
                         "0": {
                           "type": "user--user",
-                          "id": "${userID}"
+                          "id": "${system_user_id}"
                         }
                       }
+                    },
+                    "field_betreuender_dozent": {
+                      "data":  ${dozenten}
+                      
                     }
                   }
                 }
@@ -295,13 +427,13 @@ const actions = {
         let id_newly_created_project = response.data.data.id
         console.log(id_newly_created_project)
         //createAllPhasesforNewProject creates all 8 Phases for this project, is in phases.js
-        dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
+        //  dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
 
         //addLecturer does not push one lecturer after the other. array of 3 lecturers -> only 1 lecturer is saved. maybe the quick sequence of post requests leads to a replacement instead of additrion
-        for (let gruppenadmin of projEntry.betreuenderDozent) {
-          console.log(gruppenadmin)
-          dispatch('addLecturer', { gruppenadmin, id_newly_created_project })
-        }
+        /*         for (let gruppenadmin of projEntry.betreuenderDozent) {
+                  console.log(gruppenadmin)
+                  dispatch('addLecturer', { gruppenadmin, id_newly_created_project })
+                } */
         //is the id for new project in frontend when pushing from frontend only? is it needed?
         commit('ADD_PROJECT', projEntry)
       })
@@ -403,7 +535,6 @@ const actions = {
 
 
   addMember({ state, rootState, commit }, { mitglied, role }) {
-    //TODO: Gruppenadministrator in Backend zu array ändern
 
     /*     let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
         state.currentProject.gruppenmitglieder.splice(index, 1); */
@@ -446,8 +577,8 @@ const actions = {
 
   deleteMembers({ rootState, state }, mitglied) {
 
-    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
-    state.currentProject.gruppenmitglieder.splice(index, 1);
+
+    console.log(mitglied)
 
     var data = `{ "data": [{
             "type": "user--user",
@@ -468,6 +599,8 @@ const actions = {
     axios(config)
       .then((response) => {
         console.log(response);
+        let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
+        state.currentProject.gruppenmitglieder.splice(index, 1);
         // commit('deleteMemberFrontend', payload);
       }).catch(function (error) {
         console.log(error);
@@ -477,9 +610,8 @@ const actions = {
 
   /*works not before groupadmins is an array in the backend*/
   deleteAdmin({ rootState, state }, mitglied) {
-
-    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
-    state.currentProject.gruppenmitglieder.splice(index, 1);
+    let index = state.currentProjectGroupAdmins.indexOf(mitglied)
+    state.currentProjectGroupAdmins.splice(index, 1);
 
     var data = `{ "data": [{
             "type": "user--user",
@@ -511,6 +643,13 @@ const actions = {
 
 
 const mutations = {
+
+  loadingStatus(state, newLoadingStatus) {
+    state.loadingStatus = newLoadingStatus
+  },
+
+
+
   //TODO: authorization token ist noch statisch, dynamisch aus state holen
 
   /**
@@ -542,6 +681,47 @@ const mutations = {
   },
 
 
+
+
+
+  PROJECTS_FILTERED_BY_KEYWORD(state, { projects }) {
+    console.log(projects)
+    state.projectsFilteredbyKeywords = []
+    //TODO: maybe just save all the keywords for projectsearch and not everything, because every search is a new http request?
+
+
+    projects.forEach(element => {
+      console.log(element)
+      //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
+      const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
+      //console.log(field_betreuender_dozent)
+      const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
+      //console.log(field_externe_mitwirkende)
+      const field_schlagworter = element.attributes.field_schlagworter;
+      //console.log(field_schlagworter)
+      const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
+      //console.log(field_kurzbeschreibung)
+      const field_id = element.id;
+      //console.log(element.id)
+      const field_title = element.attributes.title;
+      //console.log(element.id)
+      const field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
+
+      //console.log(field_gruppenmitglieder_IDs)
+      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
+      // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
+      state.projectsFilteredbyKeywords.push(projectObject)
+
+      //console.log(projectObject)
+
+    });
+
+    console.log(state.projectsFilteredbyKeywords)
+    //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array 
+    console.log(state.projectsFilteredbyKeywords)
+  },
+
+
   /**
 * takes all projects and puts all relevant data of the project in state.projectList
 * filters through all projects and puts all projects of the user in state.myProjects
@@ -549,7 +729,36 @@ const mutations = {
 * @param drupalUserID id of the user in drupal backend
 * @param state state as parameter for access and manipulation of state data
 */
-  LOAD_PROJECT(state, { projects }) {
+  LOAD_ALL_KEYWORDS(state, { projects }) {
+    state.allKeywordsList = []
+    //TODO: maybe just save all the keywords for projectsearch and not everything, because every search is a new http request?
+    projects.forEach(element => {
+      element.attributes.field_schlagworter.forEach(element => {
+        state.allKeywordsList.push(element)
+      })
+    });
+    console.log(state.allKeywordsList)
+    //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array 
+    state.allKeywordsList = state.allKeywordsList.filter(
+      (item, index) => {
+        return (
+          state.allKeywordsList.indexOf(item) === index && item != ""
+        );
+      }
+    );
+    console.log(state.allKeywordsList)
+  },
+
+
+
+  /**
+* takes all projects and puts all relevant data of the project in state.projectList
+* filters through all projects and puts all projects of the user in state.myProjects
+* @param projects all project existing in the backend
+* @param drupalUserID id of the user in drupal backend
+* @param state state as parameter for access and manipulation of state data
+*/
+  LOAD_MY_PROJECTS(state, { projects }) {
     state.myProjects = []
 
     projects.forEach(element => {
@@ -625,15 +834,11 @@ const mutations = {
       // console.log(field_gruppenmitglieder)
       let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
       //TODO: remove second projectobject here and everywhere else, after projektbeschreibung is changed and cleaned up -> isnt needed anymore after that
-      let projectObject2 = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
 
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
 
       state.currentProject = projectObject
       console.log(state.currentProject)
-      state.currentProject2 = projectObject2
-
-
 
     });
     let keywords = state.currentProject.schlagworter;
@@ -690,5 +895,6 @@ export default {
   state,
   mutations,
   actions,
-  setters
+  setters,
+  getters
 }

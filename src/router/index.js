@@ -80,7 +80,7 @@ const routes = [
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Groupmanagement.vue')
             },
             {
-                path: '/newMember',
+                path: '/newMember/:project_id',
                 name: 'NewMember',
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
             },

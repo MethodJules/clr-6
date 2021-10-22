@@ -23,7 +23,10 @@
             Is it Okay????  -->
       <b-row>
         <b-tabs content-class="mt-3" fill>
-          <b-tab title="Documentation" active> <DocumentationField /></b-tab>
+          <b-tab title="Documentation" active>
+            <b-form-textarea disabled v-model="getDocumentation">
+              <DocumentationField /> </b-form-textarea
+          ></b-tab>
           <b-tab title="Input Documents"> <InputDocuments /></b-tab>
           <b-tab title="Output Documents">
             <OutputDocuments />
@@ -33,7 +36,7 @@
           </b-tab>
         </b-tabs>
       </b-row>
-      <TemplateButtons :inDoku="documentationList[0]"></TemplateButtons>
+      <TemplateButtons></TemplateButtons>
     </b-container>
   </div>
 </template>
@@ -54,7 +57,6 @@ export default {
     return {
       phaseId: this.$route.params.phase_id,
       projectId: this.$route.params.project_id,
-      documentationList: ["test"],
     };
   },
 
@@ -80,6 +82,15 @@ export default {
     getPhaseName() {
       return this.$store.state.phases.current_phase.phase_name;
     },
+
+    getDocumentation: {
+      get() {
+        return this.$store.state.phases.current_phase.documentationText;
+      },
+      set(value) {
+        this.$store.commit("phases/UPDATE_DOCUMENTATION", value);
+      },
+    },
   },
   async mounted() {
     //this.$store.dispatch('phases/loadSinglePhaseFromState', {phaseId: this.$route.params.phase_id})
@@ -95,11 +106,16 @@ export default {
     console.log(this.$store.state.phases.current_phase);
     console.log(this.$route.params.phase_id);
 
+    this.current_phase =
+      this.$store.state.phases.current_phase.documentationText;
+
+    this.current_phase = this.$store.state.phases.current_phase.phase_name;
+
     //put back in so that phasetemplate buttons are shown again
-    const doc = this.$store.state.documentation.documentations;
+    //const doc = this.$store.state.documentation.documentations;
     //console.log(doc)
     //console.log(typeof(doc))
-    this.documentationList = doc;
+    //this.documentationList = doc;
   },
 };
 </script>
