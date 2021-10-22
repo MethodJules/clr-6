@@ -22,9 +22,9 @@
         :id="el.id"
         :class="{ isDone: el.done === true, red: el.done !== true }"
         :label-pos="el.labelPosition"
-        v-b-popover.hover.top="el.text"
-        :title="el.label"
+        v-b-popover.hover.top="el.label"
       >
+        <!-- :title="el.text" removed, because text is not needed here and might get too big  -->
         <b-icon :icon="el.iconType" color="white" font-scale="2"></b-icon>
       </z-spot>
     </div>

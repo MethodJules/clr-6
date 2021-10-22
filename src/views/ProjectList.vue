@@ -14,7 +14,7 @@
             <b-col>
               <div>
                 <table>
-                  <tr v-for="project in getProjectlist" :key="project.idd">
+                  <tr v-for="project in getMyProjectlist" :key="project.idd">
                     <b-card style="max-height: 20rem">
                       <b-col>
                         <b-row>
@@ -82,7 +82,6 @@ export default {
   },
   data() {
     return {
-      showspinner: true,
       project: {
         kurzbeschreibung: "",
         betreuenderDozent: [""],
@@ -92,7 +91,7 @@ export default {
         title: "",
       },
 
-      projectList: this.getProjectlist,
+      //projectList: this.getMyProjectlist,
     };
   },
 
@@ -116,7 +115,7 @@ export default {
       // return true
       return this.$store.state.sparky_api.drupalUserID;
     },
-    getProjectlist() {
+    getMyProjectlist() {
       return this.$store.state.project.myProjects;
     },
     getLoadingStatus() {
@@ -132,11 +131,7 @@ export default {
     
   }, */
   async mounted() {
-    this.$store.dispatch("project/loadProjectsFromBackend").then(() => {
-      console.log(this.showspinner);
-      this.showspinner = false;
-      console.log(this.showspinner);
-    });
+    this.$store.dispatch("project/loadProjectsFromBackend").then(() => {});
 
     //this.projectList = this.$store.state.project.myProjects;
     //console.log(this.projectList);

@@ -143,7 +143,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             <tr>
               <td>
                 <div class="form-group">
-                  <input
+                  <b-form-textarea
                     id="kurzbeschreibung"
                     v-model="project.kurzbeschreibung"
                     type="text"
@@ -254,6 +254,9 @@ export default {
     },
     newProject() {
       var schlagwortarray = this.project.schlagworter.split(",");
+      for (var i = 0; i < schlagwortarray.length; ++i) {
+        schlagwortarray[i] = schlagwortarray[i].trim();
+      }
       var keywords = Object.assign({}, schlagwortarray);
 
       //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array
