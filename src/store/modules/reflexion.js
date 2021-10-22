@@ -10,11 +10,9 @@ const state = () => ({
 
 
 
-
-
 const actions = {
 
-    /* TODO: We load the Reflexiondata from backend by filtering the phasenid to get the reflexionData of the right phase */
+    /*  We load the Reflexiondata from backend by filtering the phasenid to get the reflexionData of the right phase */
     async loadReflexionFromBackend({ commit, state, rootState }, sicht) {
         var drupalUserUID = rootState.drupal_api.user.uid;
         var phaseId = rootState.phases.current_phase.phase_id;
@@ -22,9 +20,12 @@ const actions = {
 
 
         console.log(state);
+        console.log(rootState);
+        console.log("url datas ")
+        // TODO: Phase id ist undefined wenn Seite neugeladen wird, aber nicht wenn beim neuladen die Startseite aufgerufen wird 
         console.log(phaseId);
-        console.log(rootState.drupal_api);
         console.log(drupalUserUID);
+        console.log(sicht)
 
         var config = {
             method: 'get',
@@ -53,12 +54,13 @@ const actions = {
     },
 
     /* saves the reflexiondata in the backend  */
-    // sichten: "id": "325fd0af-838c-49f5-92d3-2fcc987e6137" Zeile 82
+
 
     createReflexion({ state, rootState }, reflexion) {
 
         var phaseId = rootState.phases.current_phase.phase_id
-
+        var drupalUserUID = rootState.profile.userData.idd
+        console.log(drupalUserUID)
         console.log(phaseId)
 
         // TODO Dynamisch mit Phase + UserName + Tab = Title
@@ -95,7 +97,16 @@ const actions = {
                             "type": "taxonomy_term--sichten", 
                             "id": "${reflexion.sichten}"
                         }
+                    },
+                    "field_user": 
+                    {
+                        "data": 
+                        {
+                            "type": "user--user",
+                            "id": "${drupalUserUID}"
+                        }
                     }
+
                 }
             }
         }`;
@@ -170,7 +181,7 @@ const mutations = {
 
 
     SAVE_REFLEXION(state, { reflexion }) {
-        //var leeresReflexionArray = [];
+
         console.log(reflexion);
 
         if (reflexion.length == 0) {
@@ -189,13 +200,9 @@ const mutations = {
             const field_title = element.attributes.title;
 
             state.reflexionData = { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title }
-            //leeresReflexionArray.push({ berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title })
 
         });
 
-
-        //state.reflexionData = leeresReflexionArray;
-        //console.log(state.reflexionData)
     }
 
 }

@@ -114,20 +114,13 @@
           }"
           >Dashboard</b-button
         >
-        <!-- <b-button size="sm" to="/home">Zum Dashboard</b-button> -->
-
-        <b-button size="sm" @click="addItem()">Speichern </b-button>
-
-        <b-button size="sm" @click="updateReflexion()">Ändern</b-button>
+        <b-button size="sm" @click="saveReflexion()">Speichern </b-button>
       </b-row>
-
-      <!--  <b-button  @click="addItem()">Speichern</b-button> -->
     </b-container>
   </b-col>
 </template>
 
 <script>
-//TO DO: mehr felder hinzufügen für die anderen tabs gruppe & zusammenarbeit und fachlicher kontext
 import { required, minLength } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
 export default {
@@ -160,10 +153,24 @@ export default {
     },
   },
   methods: {
+    /**
+     * if there is an idd, execute the update method, otherwise execute the add method because there is no reflexion or no idd.
+     * Long Form:
+     * if(idd) {
+     *  this.updateReflexion();
+     * }else{
+     *  this.addItem();
+     * }
+     */
+    saveReflexion() {
+      let idd = this.getReflexionData.idd;
+      //short form of if-condition
+      idd ? this.updateReflexion() : this.addItem();
+    },
+
     /** Reflexion wird in das Backend geladen */
     addItem() {
-      this.$v.$touch();
-
+      console.log("add item");
       if (!this.$v.$invalid) {
         console.log("title: ${this.titela}");
 
@@ -184,8 +191,7 @@ export default {
     },
 
     updateReflexion() {
-      this.$v.$touch();
-
+      console.log("update");
       if (!this.$v.$invalid) {
         console.log("title: ${this.titela}");
 
@@ -206,10 +212,6 @@ export default {
         alert("Bitte alles ausfüllen");
       }
     },
-
-    /* To Do: überprüfen ob schon eine reflexion zu dieser phase von dieser person angefertigt wurde 
-            -> kein neuer Eintrag, alte Reflexion kann überschrieben oder aktualisiert werden
-            */
   },
 
   watch: {
@@ -222,7 +224,11 @@ export default {
 
   /** lädt alle Reflexionen aus dem Backend */
   async mounted() {
-    //this.$store.dispatch("reflexion/loadReflexionFromBackend");
+    // var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137";
+    // this.$store.dispatch(
+    //     "reflexion/loadReflexionFromBackend",
+    //     "325fd0af-838c-49f5-92d3-2fcc987e6137"
+    // );
 
     this.reflexionData = this.$store.state.reflexion.reflexionData;
     /*  this.reflexionList=this.rowData */
@@ -232,7 +238,7 @@ export default {
   },
 
   computed: {
-    /*  ...mapGetters({ rowData: "reflexion/getRowData" }), */
+    // ...mapGetters({ getReflexionData: "reflexion/getReflexionData" }),
     getReflexionData() {
       return this.$store.state.reflexion.reflexionData;
     },
