@@ -49,7 +49,7 @@ export default {
       phases: [
         // TODO: This needs to be dynamic in future there should be an API Call to fetch the
         // data from Drupal and sort the array by the weight property of the term
-        // then the array can be used to get the right phase_uuid 
+        // then the array can be used to get the right phase_uuid         
         'c4a2e091-e5f3-4c0f-8a3a-10fadfec6c73',
         'd3d94eb4-9a18-4930-97ad-743f73de0a18',
         '5d052e85-c705-4a1b-96c9-1e29cfebe592',
@@ -59,19 +59,19 @@ export default {
         'd710639b-6999-446c-9670-a74894f800db',
         '3ba306d7-bbd2-46f7-9cad-091a63f174cd'
       ],
-      data: null,
       body: '',
       tasks: [],
     };
   },
   methods: {
     filterByPhase(id) {
-      console.log(id);
-      console.log(this.assistentData);
-      const data = this.assistentData.filter((item) => item.relationships.field_phase.data.id = id);
-      console.log(data);
-      this.body = data[0].attributes.body.value;
-      this.tasks = data[0].attributes.field_aufgaben;
+      const data = this.assistentData.filter((item) => item.relationships.field_phase.data.id == id);
+      if(data[0] == undefined) {
+        this.body = '<p>Der Dozent hat hier noch keinen Hinweis eingegeben.</p>'
+      } else {
+        this.body = data[0].attributes.body.value;
+        this.tasks = data[0].attributes.field_aufgaben
+      }
     },
   },
   computed: {
