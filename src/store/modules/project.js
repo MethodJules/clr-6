@@ -8,7 +8,6 @@ const state = () => ({
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
   keywordsInString: "",
-  loadingStatus: false,
   projectsFilteredbyKeywords: []
 
 
@@ -44,12 +43,6 @@ const setters = {
 
 }
 
-const getters = {
-
-  loadingStatus(state) {
-    return state.loadingStatus
-  }
-}
 
 
 const actions = {
@@ -154,24 +147,12 @@ const actions = {
   * @param rootState rootState allows access to states of other modules in store
   */
   async loadProjectsFromBackend({ commit, state, rootState }) {
-    commit('loadingStatus', true)
+    commit("loadingStatus", true, { root: true })
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
     console.log(rootState.drupal_api.user)
     //console.log(drupalUserUID)
-
-    /*https://clr-backend.x-navi.de/jsonapi/node/projekt?
-  
-  
-?filter[rock-group][group][conjunction]=OR
-&filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}
-&filter[memberOf]=rock-group
-
-?filter[rock-group][group][conjunction]=OR
-&filter[field_gruppenadministrator.drupal_internal__uid][operator]=IN&filter[field_gruppenadministrator.drupal_internal__uid]=${drupalUserUID}
-&filter[memberOf]=rock-group`*/
     //BUG: filter does not find projects where user is group admin, but no group member can be found -> afterwards createproject() can be changed so that the creating user only is groupadmin and not both member and admin
-    //TODO: make group_admin_field an array and change the filtering method here from equals to IN
 
     const filter_or_group = `?filter[or-group][group][conjunction]=OR`
     const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
@@ -198,7 +179,8 @@ const actions = {
         console.log($store.state.sparky_api.drupalUserID) */
         const projects = response.data.data;
         commit('LOAD_MY_PROJECTS', { projects });
-        commit('loadingStatus', false)
+        //commit('loadingStatus', false)
+        commit("loadingStatus", false, { root: true })
 
 
       })
@@ -218,6 +200,9 @@ const actions = {
 * @param rootState rootState allows access to states of other modules in store
 */
   async loadCurrentProject({ commit, rootState, dispatch, rootGetters }, projectId) {
+    commit("loadingStatus", true, { root: true })
+    console.log(projectId)
+
     //console.log(state)
     //console.log(projectId)
     var config = {
@@ -230,7 +215,7 @@ const actions = {
         'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
       },
     };
-
+    console.log(config)
     axios(config)
       .then(function (response) {
         console.log(response)
@@ -249,9 +234,11 @@ const actions = {
                 console.log(intersection) */
 
         const projects = response.data;
+        console.log(projectId)
         dispatch('loadCurrentProjectWithGroupAdmins', projectId)
         dispatch('loadCurrentProjectWithLecturers', projectId)
         commit('LOAD_CURRENT_PROJECT', { projects });
+        commit("loadingStatus", false, { root: true })
 
       })
       .catch(function (error) {
@@ -464,14 +451,6 @@ const actions = {
             "field_schlagworter": ${keywords},
             "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
             "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
-          },
-          "relationships": {
-            "field_betreuender_dozent": {
-              "data": {
-                "type": "user--user",
-                "id": "${projEntry.betreuenderDozent}"
-              }
-            }
           }
         }
       }`;
@@ -802,10 +781,11 @@ const mutations = {
     let user_array = []
     // TODO: error handling, in case there is nothing included?
     included_data.forEach(element => {
-
+      const internal_uid = element.attributes.drupal_internal__uid
       const username = element.attributes.field_fullname;
       const userid = element.id
-      user_array.push({ username: username, userid: userid, })
+      user_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+      console.log(internal_uid)
 
 
 
@@ -856,7 +836,8 @@ const mutations = {
 
       const username = element.attributes.field_fullname;
       const userid = element.id
-      groupadmins_array.push({ username: username, userid: userid, })
+      const internal_uid = element.attributes.drupal_internal__uid
+      groupadmins_array.push({ username: username, userid: userid, internal_uid: internal_uid })
 
     })
     state.currentProjectGroupAdmins = groupadmins_array
@@ -896,5 +877,4 @@ export default {
   mutations,
   actions,
   setters,
-  getters
 }

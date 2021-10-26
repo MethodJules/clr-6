@@ -64,13 +64,16 @@ const actions = {
     can get the right profile data of testacc user filtered by the drupalUserUID = 24 in this case*/
 
 
-    async loadProfileFromBackend({ commit, state, rootState }) {
+    async loadProfileFromBackend({ commit, state, rootState }, user_internal_uid) {
+        commit("loadingStatus", true, { root: true })
         console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
-
+        console.log(drupalUserUID)
+        //TODO: change/add user uuid instead of user uid and change field in backend from string field for user uid to relationship field with uuid
+        //TODO: or change to get profile for user when no user_internal_uid is given
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil?filter[field_user_uid]=${drupalUserUID}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil?filter[field_user_uid]=${user_internal_uid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -87,6 +90,7 @@ const actions = {
                 //console.log(rootState.sparky_api.drupalUserID)
                 const profiles = response.data.data;
                 commit('SAVE_PROFILE', { profiles });
+                commit("loadingStatus", false, { root: true })
 
 
             })

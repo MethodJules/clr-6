@@ -23,11 +23,15 @@
     <!-- <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Dokumentation bearbeiten</b-link>   -->
     <!-- <div>{{inDoku.documentationText}}</div> -->
     <!-- v-model="inDoku.documentation" Zeile 15 -->
-    <b-button v-b-modal.modal-phase class="mb-phase">
+    <b-button v-if="!isPhaseDone" v-b-modal.modal-phase class="mb-phase">
       Phase abschließen
+    </b-button>
+    <b-button v-if="isPhaseDone" v-b-modal.modal-phase class="mb-phase">
+      Phase wieder öffnen
     </b-button>
 
     <b-modal
+      @ok="ok"
       id="modal-phase"
       title="Bist du dir Sicher?"
       cancel-title="Abbrechen"
@@ -110,6 +114,15 @@ export default {
   }, */
 
   methods: {
+    ok() {
+      console.log("test");
+      console.log(this.$store.state.phases.current_phase);
+      console.log(this.$store.state.phases.current_phase.abschluss);
+      this.$store.dispatch("phases/closePhase", {
+        phase: this.$store.state.phases.current_phase,
+        open_close_phase: !this.isPhaseDone,
+      });
+    },
     updateDocu(inDoku) {
       console.log(inDoku + "das ist in templatebuttons");
       //this.$store.dispatch("documentation/updateDocumentation", inDoku);
@@ -140,6 +153,9 @@ export default {
   },
 
   computed: {
+    isPhaseDone() {
+      return this.$store.state.phases.current_phase.abschluss;
+    },
     getDocumentation: {
       get() {
         return this.$store.state.phases.current_phase.documentationText;

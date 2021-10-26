@@ -92,7 +92,9 @@ export default {
           (member) => member.userid === this.getCurrentUserID
         )
       ) {
-        alert("Du brauchst Adminrechte popup machen");
+        alert(
+          "Du musst Gruppenadministrator sein, um neue Gruppenmitglieder hinzufügen zu können"
+        );
       }
 
       if (

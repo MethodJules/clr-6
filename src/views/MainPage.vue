@@ -1,44 +1,46 @@
 <template>
   <!-- TODO: main page burada olacak -->
-  <b-container fluid class="p-0 m-0">
-    <MenueLeiste />
+  <b-overlay :show="getLoadingStatus" rounded="sm">
+    <b-container fluid class="p-0 m-0">
+      <MenueLeiste />
 
-    <b-row class="page-container">
-      <b-col class="linkeSeite m-0 p-0" md="2">
-        <b-row class="m-0 p-0">
-          <b-col class="m-0">
-            <TodoList />
-          </b-col>
-        </b-row>
+      <b-row class="page-container">
+        <b-col class="linkeSeite m-0 p-0" md="2">
+          <b-row class="m-0 p-0">
+            <b-col class="m-0">
+              <TodoList />
+            </b-col>
+          </b-row>
 
-        <b-row>
-          <b-col class="d-flex m-0">
-            <Kalender />
-          </b-col>
-        </b-row>
-      </b-col>
+          <b-row>
+            <b-col class="d-flex m-0">
+              <Kalender />
+            </b-col>
+          </b-row>
+        </b-col>
 
-      <b-col class="mainContent m-0 p-0">
-        <router-view :key="$route.path"></router-view>
-      </b-col>
-      <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
+        <b-col class="mainContent m-0 p-0">
+          <router-view :key="$route.path"></router-view>
+        </b-col>
+        <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
-      <b-col
-        class="d-flex flex-column justify-content-between p-0 m-0 rechtseite"
-        md="1"
-      >
-        <b-row>
-          <b-col class="m-0">
-            <SeitenNavigation />
-          </b-col>
-        </b-row>
-      </b-col>
-    </b-row>
-    <!-- 
+        <b-col
+          class="d-flex flex-column justify-content-between p-0 m-0 rechtseite"
+          md="1"
+        >
+          <b-row>
+            <b-col class="m-0">
+              <SeitenNavigation />
+            </b-col>
+          </b-row>
+        </b-col>
+      </b-row>
+      <!-- 
                 <b-row class="untereLeiste p-4 d-flex align-center">
                     <h3>Footer oder Impressium vielleicht</h3>
                 </b-row> -->
-  </b-container>
+    </b-container>
+  </b-overlay>
 </template>
 <script>
 import SeitenNavigation from "@/components/SeitenNavigation.vue";
@@ -83,6 +85,9 @@ export default {
   computed: {
     account() {
       return this.$store.state.sparky_api.account;
+    },
+    getLoadingStatus() {
+      return this.$store.state.loadingStatus;
     },
   },
   beforeMount() {

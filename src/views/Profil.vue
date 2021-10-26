@@ -64,7 +64,10 @@ export default {
   /** load the profile data and the user data from backend */
 
   async mounted() {
-    this.$store.dispatch("profile/loadProfileFromBackend");
+    this.$store.dispatch(
+      "profile/loadProfileFromBackend",
+      this.getUserInternalUID
+    );
     this.$store.dispatch("profile/loadUserFromBackend");
   },
 
@@ -81,6 +84,9 @@ export default {
 
     getImage() {
       return this.$store.state.profile.imageData;
+    },
+    getUserInternalUID() {
+      return this.$route.params.user_internal_uid;
     },
   },
 };

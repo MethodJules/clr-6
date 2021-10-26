@@ -23,7 +23,7 @@
             :to="{
               name: 'Profil',
               params: {
-                project_id: this.$route.params.project_id,
+                user_id: this.getCurrentUserID,
               },
             }"
             >Profil</b-nav-item
@@ -164,6 +164,9 @@ export default {
   computed: {
     startpage() {
       return this.$route.name === "ProjectList";
+    },
+    getCurrentUserID() {
+      return this.$store.state.profile.userData.idd;
     },
   },
 };

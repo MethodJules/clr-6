@@ -47,6 +47,7 @@ export default new Vuex.Store({
         ...sourceData,
         // authId: '98St7Q8Zi2N9SPa5ahzssq9kbyp6'
         authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
+        loadingStatus: false,
 
     },
 
@@ -94,6 +95,12 @@ export default new Vuex.Store({
     },
 
     mutations: {
+
+        loadingStatus(state, newLoadingStatus) {
+            state.loadingStatus = newLoadingStatus
+        },
+
+
         setPost(state, { post, postId }) {
             Vue.set(state.posts, postId, post)
         },

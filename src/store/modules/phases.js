@@ -157,6 +157,7 @@ const actions = {
 
 
     async loadSinglePhaseFromBackend({ commit, state, rootState, dispatch }, { projectId, phaseId }) {
+        commit("loadingStatus", true, { root: true })
         console.log(phaseId)
         console.log(state)
         var config = {
@@ -178,6 +179,7 @@ const actions = {
                 var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137"
                 dispatch("reflexion/loadReflexionFromBackend", IchSicht, { root: true })
                 dispatch("tool/loadToolsFromBackend", null, { root: true })
+                commit("loadingStatus", false, { root: true })
 
 
 
@@ -194,20 +196,21 @@ const actions = {
 
     },
 
-    closePhase({ commit, rootState }, { phase, open_close_phase }) {
-        commit("CLOSE_PHASE", phase);
-        console.log(phase.done)
+    closePhase({ commit, rootState, dispatch }, { phase, open_close_phase }) {
+        // commit("CLOSE_PHASE", phase);
+        console.log(phase)
+        console.log(phase.abschluss)
         // DATABASE REACTIONS
         var data = `{"data":{
             "type":"node--phase_vorgehensmodell", 
-            "id": "${phase.id}", 
+            "id": "${phase.phase_id}", 
             "attributes": { 
                 "field_abschluss": ${open_close_phase}
             }}}`;
 
         var config = {
             method: 'patch',
-            url: `jsonapi/node/phase_vorgehensmodell/${phase.id}`,
+            url: `jsonapi/node/phase_vorgehensmodell/${phase.phase_id}`,
             headers: {
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
@@ -216,6 +219,11 @@ const actions = {
         };
         axios(config).then((response) => {
             console.log(response)
+            console.log(phase.projektId)
+            console.log(phase.phase_number)
+            console.log(response.data.data.attributes.field_phase_number)
+            console.log(response.data.data.relationships.field_projektid.data.id)
+            dispatch("loadSinglePhaseFromBackend", { projectId: phase.projektId, phaseId: phase.phase_number })
         }).catch((error) => {
             console.log(error)
         })
@@ -598,7 +606,7 @@ const mutations = {
     },
 
     CLOSE_PHASE(state, phase) {
-        state.phases_this_project[phase.phaseNumber].done = true;
+        state.phases_this_project[phase.phase_number].done = true;
 
     }
 }

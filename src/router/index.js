@@ -137,7 +137,7 @@ const routes = [
             },
 
             {
-                path: '/profil/:project_id',
+                path: '/profil/:user_internal_uid',
                 name: 'Profil',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')

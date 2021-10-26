@@ -1,21 +1,16 @@
 <template>
   <b-tabs content-class="mt-3">
-    <b-overlay :show="getLoadingStatus" rounded="sm">
-      <b-tab title="Ich" @click="loadReflexion(ichSicht)">
-        <Reflexion :sicht="ichSicht"> </Reflexion>
-      </b-tab>
+    <b-tab title="Ich" @click="loadReflexion(ichSicht)">
+      <Reflexion :sicht="ichSicht"> </Reflexion>
+    </b-tab>
 
-      <b-tab
-        title="Gruppe & Zusammenarbeit"
-        @click="loadReflexion(gruppeSicht)"
-      >
-        <Reflexion :sicht="gruppeSicht"> </Reflexion>
-      </b-tab>
+    <b-tab title="Gruppe & Zusammenarbeit" @click="loadReflexion(gruppeSicht)">
+      <Reflexion :sicht="gruppeSicht"> </Reflexion>
+    </b-tab>
 
-      <b-tab title="Fachlicher Kontext" @click="loadReflexion(kontextSicht)">
-        <Reflexion :sicht="kontextSicht"> </Reflexion>
-      </b-tab>
-    </b-overlay>
+    <b-tab title="Fachlicher Kontext" @click="loadReflexion(kontextSicht)">
+      <Reflexion :sicht="kontextSicht"> </Reflexion>
+    </b-tab>
   </b-tabs>
 </template>
 
@@ -38,10 +33,6 @@ export default {
       this.$store.dispatch("reflexion/loadReflexionFromBackend", sicht);
     },
   },
-  computed: {
-    getLoadingStatus() {
-      return this.$store.state.reflexion.loadingStatus;
-    },
-  },
+  computed: {},
 };
 </script>

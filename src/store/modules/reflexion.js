@@ -16,7 +16,7 @@ const actions = {
     async loadReflexionFromBackend({ commit, state, rootState }, sicht) {
         var drupalUserUID = rootState.drupal_api.user.uid;
         var phaseId = rootState.phases.current_phase.phase_id;
-        commit('loadingStatus', true)
+        commit("loadingStatus", true, { root: true })
 
 
         console.log(state);
@@ -43,7 +43,7 @@ const actions = {
                 console.log(response)
                 const reflexion = response.data.data;
                 commit('SAVE_REFLEXION', { reflexion });
-                commit('loadingStatus', false)
+                commit("loadingStatus", false, { root: true })
             }).catch(error => {
 
                 throw new Error(`API ${error}`);

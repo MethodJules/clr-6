@@ -44,10 +44,6 @@
             <tr>
               <td>
                 <div>
-                  <!-- simple list instead of simplesuggest -> map name to id 
-TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
--->
-
                   <div
                     v-for="(betreuenderDozent, i) in project.betreuenderDozent"
                     :key="i"
@@ -64,6 +60,10 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                         {{ lecturer.name }}
                       </option>
                     </select>
+
+                    <b-button variant="link" @click="deleteLecturer(i)"
+                      ><b-icon icon="x-circle"></b-icon
+                    ></b-button>
                   </div>
                   <b-button @click="addLecturer('')"
                     >Weiteren Dozenten hinzufügen</b-button
@@ -246,6 +246,10 @@ export default {
       this.project.betreuenderDozent.push(betreuenderDozent);
     },
 
+    deleteLecturer(index) {
+      this.project.betreuenderDozent.splice(index, 1);
+    },
+
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -253,11 +257,17 @@ export default {
       }
     },
     newProject() {
+      //split keyword string into array. seperated by comma
       var schlagwortarray = this.project.schlagworter.split(",");
+      //trims whitespace
       for (var i = 0; i < schlagwortarray.length; ++i) {
         schlagwortarray[i] = schlagwortarray[i].trim();
       }
-      var keywords = Object.assign({}, schlagwortarray);
+      //removes duplicates and empty keywords
+      let keywords_filtered = schlagwortarray.filter((item, index) => {
+        return schlagwortarray.indexOf(item) === index && item != "";
+      });
+      var keywords = Object.assign({}, keywords_filtered);
 
       //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array
       let dozent_filtered = this.project.betreuenderDozent.filter(
@@ -274,7 +284,6 @@ export default {
       }
 
       const dozenten = Object.assign({}, dataArray);
-      console.log(dozenten);
 
       var addProj = {
         title: this.project.title,
@@ -296,6 +305,7 @@ export default {
       //this.projectList.length + 1
     },
 
+    //TODO: removed unused updateProject function in projectform
     updateProject() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -352,9 +362,6 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch("user/loadLecturersFromBackend");
-    this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadUserFromBackend");
     /*     console.log(this.$store.state.user.lecturers);
     console.log(this.$store.state.user.students); */
   },
