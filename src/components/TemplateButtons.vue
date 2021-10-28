@@ -115,17 +115,13 @@ export default {
 
   methods: {
     ok() {
-      console.log("test");
-      console.log(this.$store.state.phases.current_phase);
-      console.log(this.$store.state.phases.current_phase.abschluss);
+      console.log(this.$store.state.project_phases.current_phase);
       this.$store.dispatch("phases/closePhase", {
-        phase: this.$store.state.phases.current_phase,
+        phase: this.$store.state.project_phases.current_phase,
         open_close_phase: !this.isPhaseDone,
       });
     },
     updateDocu(inDoku) {
-      console.log(inDoku + "das ist in templatebuttons");
-      //this.$store.dispatch("documentation/updateDocumentation", inDoku);
       this.$store.dispatch("phases/updateDocumentation", inDoku);
     },
 
@@ -141,24 +137,24 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch("documentation/loadDocusFromBackend");
+    /*     await this.$store.dispatch("documentation/loadDocusFromBackend");
     const doc = this.$store.state.documentation.documentations;
     //console.log(doc)
     //console.log(typeof(doc))
     this.documentationList = doc;
-    console.log(this.documentationList[0].idd + "das ist in dokfield");
+    console.log(this.documentationList[0].uuid + "das ist in dokfield");
 
     this.current_phase =
-      this.$store.state.phases.current_phase.documentationText;
+      this.$store.state.project_phases.current_phase.documentationText; */
   },
 
   computed: {
     isPhaseDone() {
-      return this.$store.state.phases.current_phase.abschluss;
+      return this.$store.state.project_phases.current_phase.abschluss;
     },
     getDocumentation: {
       get() {
-        return this.$store.state.phases.current_phase.documentationText;
+        return this.$store.state.project_phases.current_phase.documentationText;
       },
       set(value) {
         this.$store.commit("phases/UPDATE_DOCUMENTATION", value);

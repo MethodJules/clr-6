@@ -165,8 +165,8 @@ export default {
     startpage() {
       return this.$route.name === "ProjectList";
     },
-    getCurrentUserID() {
-      return this.$store.state.profile.userData.idd;
+    getCurrentUserUUID() {
+      return this.$store.state.profile.userData.uuid;
     },
     //pprovided user uid is taken from the state, where the currentuuser uid is saved, because this navigation should only lead to the own profile
     getCurrentUserInternalUID() {

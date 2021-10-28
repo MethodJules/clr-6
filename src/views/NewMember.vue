@@ -133,7 +133,7 @@ export default {
       return this.$store.state.project.currentProjectGroupAdmins;
     },
     getCurrentUserID() {
-      return this.$store.state.profile.userData.idd;
+      return this.$store.state.profile.userData.uuid;
     },
   },
 };

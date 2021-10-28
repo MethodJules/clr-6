@@ -167,7 +167,7 @@ export default {
       for (let i = 0; i < this.$store.state.project.myProjects.length; i++) {
         if (
           this.$route.params.project_id ===
-          this.$store.state.project.myProjects[i].idd
+          this.$store.state.project.myProjects[i].uuid
         ) {
           rightIndex = i;
         }
@@ -194,17 +194,12 @@ export default {
         externeMitwirkende: this.getCurrentProject.externeMitwirkende,
         schlagworter: keywords,
         gruppenadmin: this.$store.state.sparky_api.drupalUserID,
-        projectIdd: this.$route.params.project_id,
+        projectuuid: this.$route.params.project_id,
       };
 
       this.$store.dispatch("project/updateProject", updatedProj);
     },
   },
-  /*   async mounted() {
-    this.project2 = this.$store.state.project.currentProject;
-    console.log(this.$store.state.project.currentProject);
-    console.log(this.project2);
-  }, */
   async created() {
     console.log(this.$route.params.project_id);
     await this.$store.dispatch(

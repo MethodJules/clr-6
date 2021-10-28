@@ -15,7 +15,7 @@ const actions = {
     /*  We load the Reflexiondata from backend by filtering the phasenid to get the reflexionData of the right phase */
     async loadReflexionFromBackend({ commit, state, rootState }, sicht) {
         var drupalUserUID = rootState.drupal_api.user.uid;
-        var phaseId = rootState.phases.current_phase.phase_id;
+        var phaseId = rootstate.project_phases.current_phase.phase_id;
         commit("loadingStatus", true, { root: true })
 
 
@@ -58,8 +58,8 @@ const actions = {
 
     createReflexion({ state, rootState }, reflexion) {
 
-        var phaseId = rootState.phases.current_phase.phase_id
-        var drupalUserUID = rootState.profile.userData.idd
+        var phaseId = rootstate.project_phases.current_phase.phase_id
+        var drupalUserUID = rootState.profile.userData.uuid
         console.log(drupalUserUID)
         console.log(phaseId)
 
@@ -131,7 +131,7 @@ const actions = {
             })
     },
 
-    /* makes changes of the existing reflexion in the backend and overwrites the existing reflexionstemplate. Herefore we need the reflexionstemplate.idd
+    /* makes changes of the existing reflexion in the backend and overwrites the existing reflexionstemplate. Herefore we need the reflexionstemplate.uuid
     that the backend knows which reflexionstemplate should be exactly updated/overwritten */
 
     updateReflexion({ state, rootState }, reflexion) {
@@ -141,7 +141,7 @@ const actions = {
         {
             "data": {
                 "type": "node--reflexionstemplate", 
-                "id": "${reflexion.idd}", 
+                "id": "${reflexion.uuid}", 
                 "attributes": {
                     "title": "${reflexion.title}", 
                     "field_berichten_reagieren": "${reflexion.berichten_reagieren}", 
@@ -153,7 +153,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -199,7 +199,7 @@ const mutations = {
             const field_id = element.id;
             const field_title = element.attributes.title;
 
-            state.reflexionData = { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, idd: field_id, title: field_title }
+            state.reflexionData = { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, uuid: field_id, title: field_title }
 
         });
 

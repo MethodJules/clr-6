@@ -170,25 +170,13 @@
               </td>
             </tr>
           </table>
-          <div v-if="inProjektbeschreibung">
-            <b-button @click="updateProject()"
-              >Projektbeschreibung bearbeiten</b-button
-            >
-          </div>
-          <div v-else>
+          <div>
             <b-button @click="submitForm()">Projekt anlegen</b-button>
             <!-- <b-button @click="newProject()">Projekt anlegen</b-button> -->
           </div>
         </form>
       </b-modal>
-
-      <div v-if="inProjektbeschreibung">
-        <b-button @click="showThisModal()" size="lg" v-b-modal.create_project
-          >Beschreibung bearbeiten</b-button
-        >
-      </div>
-      <!-- TODO: remove else part for stuff in projektbeschreibung -->
-      <div v-else>
+      <div>
         <!--         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>{{getLecturers}}</b-button> -->
         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project
           >+</b-button
@@ -304,30 +292,6 @@ export default {
       this.project.schlagworter = " ";
       //this.projectList.length + 1
     },
-
-    //TODO: removed unused updateProject function in projectform
-    updateProject() {
-      this.$v.$touch();
-      if (!this.$v.$invalid) {
-        console.log("title: ${this.titela}");
-        //this.updateForm()
-        var schlagwortarray = this.project.schlagworter.split(",");
-        var keywords = Object.assign({}, schlagwortarray);
-        console.log(keywords);
-
-        var updatedProj = {
-          title: this.project.title,
-          kurzbeschreibung: this.project.kurzbeschreibung,
-          betreuenderDozent: this.project.betreuenderDozent,
-          externeMitwirkende: this.project.externeMitwirkende,
-          schlagworter: keywords,
-          gruppenadmin: this.$store.state.sparky_api.drupalUserID,
-          projectIdd: this.$route.params.project_id,
-        };
-
-        this.$store.dispatch("project/updateProject", updatedProj);
-      }
-    },
   },
 
   computed: {
@@ -340,30 +304,14 @@ export default {
       return this.$store.state.user.lecturers;
     },
 
-    inProjektbeschreibung() {
-      // console.log(this.$route.name);
-      return this.$route.name === "Projektbeschreibung";
-    },
-
     getLecturers() {
-      /*    console.log(this.$store);
-      console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getLecturers"]); */
-
       return this.$store.getters["user/getLecturers"];
     },
 
     getStudents() {
-      /*console.log(this.$store);
-      console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getStudents"]); */
-
       return this.$store.getters["user/getStudents"];
     },
   },
-  mounted() {
-    /*     console.log(this.$store.state.user.lecturers);
-    console.log(this.$store.state.user.students); */
-  },
+  mounted() {},
 };
 </script>

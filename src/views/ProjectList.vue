@@ -13,7 +13,7 @@
           <b-col>
             <div>
               <table>
-                <tr v-for="project in getMyProjectlist" :key="project.idd">
+                <tr v-for="project in getMyProjectlist" :key="project.uuid">
                   <b-card style="max-height: 20rem">
                     <b-col>
                       <b-row>
@@ -32,7 +32,7 @@
                           <b-link
                             :to="{
                               name: 'Home',
-                              params: { project_id: project.idd },
+                              params: { project_id: project.uuid },
                             }"
                             class="btn btn-outline-dark btn-block mb-2"
                             >Dashboard</b-link
@@ -41,7 +41,7 @@
                       </b-row>
                       <b-row>
                         <b-col>
-                          <ReflexionAuswahl :projectId="project.idd" />
+                          <ReflexionAuswahl :projectId="project.uuid" />
                         </b-col>
                       </b-row>
                     </b-col>
@@ -85,7 +85,7 @@ export default {
         betreuenderDozent: [""],
         externeMitwirkende: "",
         schlagworter: [],
-        idd: "",
+        uuid: "",
         title: "",
       },
 

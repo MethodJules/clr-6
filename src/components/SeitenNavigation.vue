@@ -10,7 +10,7 @@
               :disabled="!phase.status"
               :to="{
                 name: 'PhaseTemplate',
-                params: { phase_id: i, project_id: getProjectID },
+                params: { phase_number: i, project_id: getProjectID },
               }"
               class="btn btn-danger mb-2 btn-block text-left"
             >

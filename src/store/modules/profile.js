@@ -111,7 +111,7 @@ const actions = {
         {
             "data": {
                 "type": "node--profil", 
-                "id": "${profile.idd}",
+                "id": "${profile.uuid}",
                 "attributes": {
                     "field_showemail": ${profile.show_email}
                     
@@ -120,7 +120,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -279,7 +279,7 @@ const actions = {
      * 
      */
     updateUserdataWithProfileImage({ state, rootState }, imageID) {
-        var userID = rootState.profile.userData.idd
+        var userID = rootState.profile.userData.uuid
 
         console.log(userID)
 
@@ -331,7 +331,7 @@ const actions = {
 
 
 
-    /* makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.idd
+    /* makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.uuid
     that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata 
     rigth user */
 
@@ -345,7 +345,7 @@ const actions = {
         var data = `{
             "data": {
                 "type": "node--profil", 
-                "id": "${profile.idd}",
+                "id": "${profile.uuid}",
                 "attributes": {
                     "title": "Profil", 
                     "field_studiengang": "${profile.studiengang}", 
@@ -363,7 +363,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -411,7 +411,7 @@ const mutations = {
             const field_title = element.attributes.title;
             const mail = element.attributes.mail;
 
-            let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail }
+            let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, uuid: field_id, title: field_title, mail: mail }
 
 
             state.userData = userObject
@@ -468,7 +468,7 @@ const mutations = {
             const field_title = element.attributes.title;
             const field_showemail = element.attributes.field_showemail
 
-            state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title, profilbild: field_profilbild, show_email: field_showemail }
+            state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, uuid: field_id, title: field_title, profilbild: field_profilbild, show_email: field_showemail }
 
 
 

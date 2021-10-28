@@ -262,6 +262,7 @@ const mutations = {
         state.csrf_token = login_data.csrf_token;
         state.user = login_data.current_user;
         state.logout_token = login_data.logout_token;
+        console
         /* console.log(state.csrf_token)
         console.log(state.user)
         console.log(state.logout_token) */

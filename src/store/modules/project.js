@@ -356,7 +356,7 @@ const actions = {
          dozenten+= `{ "type": "user--user", "id": <user1> }`,
        } */
 
-    let userID = rootState.profile.userData.idd
+    let userID = rootState.profile.userData.uuid
     //the id of the system user, which is needed because of the filtering bug here https://www.drupal.org/project/drupal/issues/3072384
     let system_user_id = "bf1820d0-5477-4df6-b4dd-a1824d5e7794"
     console.log(keywords)
@@ -435,7 +435,7 @@ const actions = {
   },
 
   updateProject({ commit, rootState }, projEntry) {
-    let userID = rootState.profile.userData.idd
+    let userID = rootState.profile.userData.uuid
     console.log(projEntry)
 
     //let index = state.myProjects.indexOf(projEntry);
@@ -447,7 +447,7 @@ const actions = {
     var data = `{
         "data": {
           "type": "node--projekt",
-           "id": "${projEntry.projectIdd}",
+           "id": "${projEntry.projectuuid}",
           "attributes": {
             "title": "${projEntry.title}",
             "field_schlagworter": ${keywords},
@@ -458,7 +458,7 @@ const actions = {
       }`;
     var config = {
       method: 'patch',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectIdd}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectuuid}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -529,7 +529,7 @@ const actions = {
 
     var config = {
       method: 'post',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/${role}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/${role}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -568,7 +568,7 @@ const actions = {
 
     var config = {
       method: 'delete',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenmitglieder`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenmitglieder`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -601,7 +601,7 @@ const actions = {
 
     var config = {
       method: 'delete',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenadministrator`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenadministrator`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -689,7 +689,7 @@ const mutations = {
       const field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
 
       //console.log(field_gruppenmitglieder_IDs)
-      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
+      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
       state.projectsFilteredbyKeywords.push(projectObject)
 
@@ -759,7 +759,7 @@ const mutations = {
       let field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
 
       //console.log(field_gruppenmitglieder_IDs)
-      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
+      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
       state.myProjects.push(projectObject)
 
@@ -814,7 +814,7 @@ const mutations = {
       //let includedUserObjects
 
       // console.log(field_gruppenmitglieder)
-      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
+      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
       //TODO: remove second projectobject here and everywhere else, after projektbeschreibung is changed and cleaned up -> isnt needed anymore after that
 
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen

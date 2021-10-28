@@ -74,7 +74,7 @@ const actions = {
                             //console.log(element.id)
                             const field_title = element.attributes.title;
                             const field_erledigt = element.attributes.field_erledigt;
-                            leeresTodoArray.push({ date: field_date, idd: field_id, title: field_title, erledigt: field_erledigt, project_title: project.attributes.title })
+                            leeresTodoArray.push({ date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt, project_title: project.attributes.title })
                         });
 
 
@@ -146,7 +146,7 @@ const actions = {
 
 
         //console.log(todoEntry.todo)
-        var drupalUserUID = rootState.profile.userData.idd
+        var drupalUserUID = rootState.profile.userData.uuid
 
         var data = `
         {
@@ -207,7 +207,7 @@ const actions = {
     deleteTodo({ commit, rootState }, todoEntry) {
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.uuid}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -232,7 +232,7 @@ const actions = {
         {
             "data": {
                 "type": "node--to_dos", 
-                "id": "${todoEntry.idd}", 
+                "id": "${todoEntry.uuid}", 
                 "attributes": {
                     "field_erledigt": ${todoEntry.erledigt}
                 }
@@ -241,7 +241,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -283,7 +283,7 @@ const mutations = {
     },
 
     SAVE_NEW_TODO(state, newTodo) {
-        state.listOfToDos.push({ idd: newTodo.id, title: newTodo.attributes.title, date: newTodo.attributes.field_date, erledigt: newTodo.attributes.field_erledigt })
+        state.listOfToDos.push({ uuid: newTodo.id, title: newTodo.attributes.title, date: newTodo.attributes.field_date, erledigt: newTodo.attributes.field_erledigt })
     },
 
     /** 
@@ -303,7 +303,7 @@ const mutations = {
             //console.log(element.id)
             const field_title = element.attributes.title;
             const field_erledigt = element.attributes.field_erledigt;
-            leeresTodoArray.push({ date: field_date, idd: field_id, title: field_title, erledigt: field_erledigt })
+            leeresTodoArray.push({ date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt })
             state.todos.push(element.attributes.title)
             state.dates.push(element.attributes.field_date)
         });

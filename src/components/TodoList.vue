@@ -11,7 +11,7 @@
           </div>
           <div class="card-body p-2">
             <b-form-checkbox
-              :id="todo.idd"
+              :id="todo.uuid"
               name="checkbox-1"
               @input="checkboxUpdate(index, todo)"
               v-model="todo.erledigt"
@@ -78,7 +78,7 @@
         </div>
         <div class="card-body p-2">
           <b-form-checkbox
-            :id="todo.idd"
+            :id="todo.uuid"
             name="checkbox-1"
             @input="checkboxUpdate(index, todo)"
             v-model="todo.erledigt"

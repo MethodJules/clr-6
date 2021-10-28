@@ -83,7 +83,7 @@ const actions = {
 
     async loadInputdocumentsFromBackend({ rootState, commit }) {
         var drupalUserUID = rootState.drupal_api.user.uid;
-        var phaseId = rootState.phases.current_phase.phase_id
+        var phaseId = rootstate.project_phases.current_phase.phase_id
         console.log(phaseId);
         console.log(rootState.drupal_api);
         console.log(drupalUserUID);
@@ -199,7 +199,7 @@ const actions = {
     addInputDocument({ state, rootState, commit }, payload) {
 
         console.log(state)
-        var phaseId = rootState.phases.current_phase.phase_id
+        var phaseId = rootstate.project_phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
             "data": {

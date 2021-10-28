@@ -2,8 +2,6 @@ import axios from 'axios';
 
 const state = () => ({
     listOfTools: [
-        { idd: "1", title: "1", tool: "1" }
-
     ]//we are using this array to store the used tools and upload the titles of the tools to database 
 })
 
@@ -30,7 +28,7 @@ const actions = {
         console.log(rootState.loadingStatus)
         commit("loadingStatus", true, { root: true })
         console.log(rootState.loadingStatus)
-        var phaseId = rootState.phases.current_phase.phase_id
+        var phaseId = rootstate.project_phases.current_phase.phase_id
         var config = {
             method: 'get',
             url: `https://clr-backend.x-navi.de/jsonapi/node/tools?filter[field_phasenid.id]=${phaseId}`,
@@ -59,7 +57,7 @@ const actions = {
 
     // method to add a new tool to backend
     createTool({ commit, rootState }, toolEntry) {
-        var phaseId = rootState.phases.current_phase.phase_id
+        var phaseId = rootstate.project_phases.current_phase.phase_id
         console.log(phaseId)
         console.log(toolEntry)
         var data = `
@@ -107,7 +105,7 @@ const actions = {
 
     updateToolWithCheckbox({ rootState, state }, toolEntry) {
 
-        var phaseId = rootState.phases.current_phase.phase_id
+        var phaseId = rootstate.project_phases.current_phase.phase_id
         console.log(phaseId)
         console.log(toolEntry)
 
@@ -116,7 +114,7 @@ const actions = {
         {
             "data": {
                 "type": "node--tools", 
-                "id": "${toolEntry.idd}",
+                "id": "${toolEntry.uuid}",
                 "attributes": {
                     "field_benutzt": ${toolEntry.benutzt}
                     
@@ -125,7 +123,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/tools/${toolEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/tools/${toolEntry.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -153,7 +151,7 @@ const mutations = {
 
 
     SAVE_NEW_TOOL_IN_FRONTEND(state, singleTool) {
-        state.listOfTools.push({ idd: singleTool.id, title: singleTool.attributes.title, benutzt: singleTool.attributes.field_benutzt })
+        state.listOfTools.push({ uuid: singleTool.id, title: singleTool.attributes.title, benutzt: singleTool.attributes.field_benutzt })
 
     },
 
@@ -171,7 +169,7 @@ const mutations = {
             const field_title = element.attributes.title;
             const field_benutzt = element.attributes.field_benutzt;
             console.log(element.attributes.benutzt)
-            leeresToolArray.push({ idd: field_id, title: field_title, benutzt: field_benutzt })
+            leeresToolArray.push({ uuid: field_id, title: field_title, benutzt: field_benutzt })
             //console.log(state)
 
         });

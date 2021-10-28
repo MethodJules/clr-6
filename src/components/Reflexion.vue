@@ -131,7 +131,7 @@ export default {
 
   data() {
     return {
-      phaseId: this.$route.params.phase_id,
+      phaseId: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
       testButClicked: false,
       reflexionList: [],
@@ -154,18 +154,18 @@ export default {
   },
   methods: {
     /**
-     * if there is an idd, execute the update method, otherwise execute the add method because there is no reflexion or no idd.
+     * if there is an uuid, execute the update method, otherwise execute the add method because there is no reflexion or no uuid.
      * Long Form:
-     * if(idd) {
+     * if(uuid) {
      *  this.updateReflexion();
      * }else{
      *  this.addItem();
      * }
      */
     saveReflexion() {
-      let idd = this.getReflexionData.idd;
+      let uuid = this.getReflexionData.uuid;
       //short form of if-condition
-      idd ? this.updateReflexion() : this.addItem();
+      uuid ? this.updateReflexion() : this.addItem();
     },
 
     /** Reflexion wird in das Backend geladen */
@@ -202,7 +202,7 @@ export default {
           in_bezug_setzen: this.getReflexionData.in_bezug_setzen,
           schlussfolgern: this.getReflexionData.schlussfolgern,
           rekonstruieren: this.getReflexionData.rekonstruieren,
-          idd: this.getReflexionData.idd,
+          uuid: this.getReflexionData.uuid,
         };
 
         this.testButClicked = true;

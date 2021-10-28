@@ -302,7 +302,7 @@ then the appropriate dispatch will be sent */
       return this.$store.state.project.currentProjectLecturers;
     },
     getCurrentUserID() {
-      return this.$store.state.profile.userData.idd;
+      return this.$store.state.profile.userData.uuid;
     },
 
     getCurrentUserInternalUID() {
