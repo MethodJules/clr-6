@@ -34,6 +34,7 @@
                     type="text"
                     placeholder="hier eingeben"
                 />
+                <div class="text-danger" v-if="!$v.todoNeu.required">Bitte gib eine Aufgabe ein!</div>
                 </div>
                 <div>
                 <label for="example-datepicker">Frist:</label>
@@ -43,6 +44,7 @@
                     :select-attribute="selectAttribute"
                     class="mb-2"
                 ></b-form-datepicker>
+                <div class="text-danger" v-if="!$v.appointment.required">Bitte gib eine Frist ein!</div>
                 </div>
             </b-modal>
             <!-- Zum öffnen des Modals -->
@@ -57,6 +59,7 @@
 
 
 <script>
+import { required } from "vuelidate/lib/validators";
 export default {
     props: {
         date: String,
@@ -75,18 +78,25 @@ export default {
                 //msg: "Datum:" + { date } + { todo }
             }
     },
+    validations: {
+        todoNeu: { required },
+        appointment: { required },
+    },
     methods: {
         saveTodo() {
-            var neueEingabe = {
+            // prevents submission of invalid data - but currently still closes the modal...
+            if (this.todoNeu.required && this.appointment.required) {
+                var neueEingabe = {
                 todo: this.todoNeu,
                 date: this.appointment,
-            };
+                };
             // Benutzereingabe wird in die Liste gespeichert
-            this.listOfToDos.push(neueEingabe);
+                this.listOfToDos.push(neueEingabe);
 
-            //Anbindung an die API
-            this.$store.dispatch("todo/createToDo", neueEingabe);
-            this.todoNeu = "";
+                //Anbindung an die API
+                this.$store.dispatch("todo/createToDo", neueEingabe);
+                this.todoNeu = "";
+            }
         },
         deleteTodo(todo) {
             //Löschen eines Todos

@@ -27,10 +27,10 @@
                 id="tools_edit_modal"
                 title="tools"
                 cancel-title="Abbrechen"
+                @ok="ok()"
             >
                 <label for="neueTools">Benutztes Tool: </label>
                 <input v-model="tool" type="text" placeholder="Tool" />
-                <b-button @click="ok()"> OK </b-button>
             </b-modal>
             <b-button v-b-modal.tools_edit_modal>+</b-button>
         </b-row>

@@ -164,8 +164,6 @@
         <b-button @click="addProfile()">Profil erstellen</b-button>
         <b-button @click="updateProfile()">Änderungen speichern</b-button>
         <b-button @click="cancelUpdate()">Änderungen verwerfen</b-button>
-        <!-- TODO: Abbrechen Funktion clear 
-                                    <b-col lg="4" class="pb-2"><b-button to="/einstellungen">Abbrechen</b-button> </b-col> -->
       </b-row>
     </b-row>
   </b-row>
@@ -236,6 +234,7 @@ export default {
     },
 
     /** In this method, we create an profile with all the profile data to the backend */
+    // @TODO check if this method is still necessary
     addProfile() {
       this.$v.$touch();
 

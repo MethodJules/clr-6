@@ -157,7 +157,8 @@ const mutations = {
     SAVE_TODO(state, todo) {
 
         todo.forEach(element => {
-            const field_aufgaben = element.attributes.field_aufgaben;
+            const field_aufgaben = element.attributes.field_aufgaben[0];
+            // element.attributes.field_aufgaben is an array. the actual text is at [0]. That's why we always get the [] when the todos are loaded from the backend.
             //console.log(field_aufgaben)
             const field_date = element.attributes.field_date;
             //console.log(field_date)
