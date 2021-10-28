@@ -109,9 +109,9 @@ export default {
   },
 
   computed: {
-    getUserID() {
+    getCurrentUserInternalUID() {
       // return true
-      return this.$store.state.sparky_api.drupalUserID;
+      return this.$store.state.drupal_api.user.uid;
     },
     getMyProjectlist() {
       return this.$store.state.project.myProjects;
@@ -134,7 +134,10 @@ export default {
     //load lecturer student and user for different lists
     this.$store.dispatch("user/loadLecturersFromBackend");
     this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadUserFromBackend");
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getCurrentUserInternalUID
+    );
   },
 };
 </script>

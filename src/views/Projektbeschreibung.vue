@@ -246,17 +246,24 @@ export default {
         this.$store.commit("project/UPDATE_KEYWORDS", value);
       },
     },
+
     getLecturers() {
       console.log(this.$store.getters["user/getLecturers"]);
 
       return this.$store.getters["user/getLecturers"];
+    },
+    getCurrentUserInternalUID() {
+      return this.$store.state.drupal_api.user.uid;
     },
   },
 
   mounted() {
     this.$store.dispatch("user/loadLecturersFromBackend");
     //this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadUserFromBackend");
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getCurrentUserInternalUID
+    );
     console.log(this.$store.state.user.lecturers);
     console.log(this.$store.state.user.students);
   },

@@ -146,7 +146,7 @@ const actions = {
   * @param commit commit us used to call a mutation from this function
   * @param rootState rootState allows access to states of other modules in store
   */
-  async loadProjectsFromBackend({ commit, state, rootState }) {
+  async loadProjectsFromBackend({ commit, state, rootState, dispatch }) {
     commit("loadingStatus", true, { root: true })
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
@@ -179,7 +179,10 @@ const actions = {
         console.log($store.state.sparky_api.drupalUserID) */
         const projects = response.data.data;
         commit('LOAD_MY_PROJECTS', { projects });
+        console.log(projects)
+        console.log({ projects })
         //commit('loadingStatus', false)
+        dispatch('todo/loadTodosAllProjects', projects, { root: true })
         commit("loadingStatus", false, { root: true })
 
 
@@ -189,7 +192,6 @@ const actions = {
       })
 
   },
-
 
 
   /**

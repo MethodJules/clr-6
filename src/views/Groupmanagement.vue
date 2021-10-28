@@ -47,7 +47,16 @@
             <h5>Gruppenadministrator</h5>
           </b-col>
           <b-col>
-            <h5>{{ admin.username }}</h5>
+            <b-nav-item
+              :to="{
+                name: 'Profil',
+                params: {
+                  user_internal_uid: admin.internal_uid,
+                },
+              }"
+              >{{ admin.username }}</b-nav-item
+            >
+            <!--            <h5>{{ admin.username }}</h5> -->
           </b-col>
           <b-col>
             <b-button
@@ -295,6 +304,10 @@ then the appropriate dispatch will be sent */
     getCurrentUserID() {
       return this.$store.state.profile.userData.idd;
     },
+
+    getCurrentUserInternalUID() {
+      return this.$store.state.drupal_api.user.uid;
+    },
     // checks if current user is a group administrator by looking for the currentuserid in group admin array
     //needed for some actions like adding and removing members
     currentUserisAdmin() {
@@ -303,9 +316,13 @@ then the appropriate dispatch will be sent */
       );
     },
   },
+
   async mounted() {
     this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadUserFromBackend");
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getCurrentUserInternalUID
+    );
     this.$store.dispatch(
       "project/loadCurrentProject",
       this.$route.params.project_id

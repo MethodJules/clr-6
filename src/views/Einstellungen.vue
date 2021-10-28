@@ -71,7 +71,11 @@
         <tr>
           <th scope="row">E-Mail im Profil anzeigen?</th>
           <td>
-            <b-form-checkbox id="checkbox-1" v-model="status" name="checkbox-1">
+            <b-form-checkbox
+              name="checkbox-email"
+              @input="updateEmailCheckbox()"
+              v-model="getProfileData.show_email"
+            >
             </b-form-checkbox>
           </td>
         </tr>
@@ -144,7 +148,7 @@
               height="100"
               accept="image/jpeg,image/png"
               buttonClass="btn btn-test"
-              hideChangeButton="true"
+              :hideChangeButton="true"
               :customStrings="{
                 upload: '<h1>Bild ändern</h1>',
                 drag: 'Bild hochladen',
@@ -161,7 +165,6 @@
     <b-row>
       <b-row class="buttons">
         <!-- <input type="file" @change="onFileChanged" accept="image/jpeg,image/png"> -->
-        <b-button @click="addProfile()">Profil erstellen </b-button>
         <b-button @click="updateProfile()">Änderung Speichern</b-button>
         <!-- TODO: Abbrechen Funktion clear 
                                     <b-col lg="4" class="pb-2"><b-button to="/einstellungen">Abbrechen</b-button> </b-col> -->
@@ -222,6 +225,11 @@ export default {
         console.log(image);
         this.image = image;
       }
+    },
+
+    updateEmailCheckbox() {
+      console.log(this.getProfileData);
+      this.$store.dispatch("profile/updateEmailCheckbox", this.getProfileData);
     },
 
     onUpload() {
@@ -295,8 +303,14 @@ export default {
 
   /** load the profile data and the user data from backend */
   mounted() {
-    this.$store.dispatch("profile/loadProfileFromBackend"),
-      this.$store.dispatch("profile/loadUserFromBackend");
+    this.$store.dispatch(
+      "profile/loadProfileFromBackend",
+      this.getCurrentUserInternalUID
+    ),
+      this.$store.dispatch(
+        "profile/loadUserFromBackend",
+        this.getCurrentUserInternalUID
+      );
 
     console.log(this.$store.state.profile.profileData);
     this.profileData = this.$store.state.profile.profileData;
@@ -312,6 +326,11 @@ export default {
 
     getProfileData() {
       return this.$store.state.profile.profileData;
+    },
+
+    getCurrentUserInternalUID() {
+      // return true
+      return this.$store.state.drupal_api.user.uid;
     },
   },
 };

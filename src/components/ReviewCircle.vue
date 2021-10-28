@@ -18,7 +18,7 @@
         :angle="el.angle"
         :key="index"
         :image-path="el.image"
-        @click.native="changeStyle(el)"
+        @click.native="goToPhase(index)"
         :id="el.id"
         :class="{ isDone: el.done === true, red: el.done !== true }"
         :label-pos="el.labelPosition"
@@ -41,6 +41,10 @@ export default {
     ...mapGetters({
       phases: "phases/getPhasesOfProject",
     }),
+
+    getProjectID() {
+      return this.$route.params.project_id;
+    },
   },
   methods: {
     changeStyle(el) {
@@ -96,6 +100,14 @@ export default {
             });
         }
       }
+    },
+    goToPhase(phaseid) {
+      console.log(phaseid);
+      console.log(this.getProjectID);
+      this.$router.push({
+        name: "PhaseTemplate",
+        params: { phase_id: phaseid, project_id: this.getProjectID },
+      });
     },
   },
 };

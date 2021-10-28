@@ -1,19 +1,6 @@
 <template>
   <div>
     <div class="buttons-container">
-      <div>
-        <b-dropdown text="Phasen" right>
-          <b-dropdown-item
-            v-for="(phase, i) in phasen"
-            :key="i"
-            v-on:click="phaseAbschliessen(phase.id)"
-            ><b-icon :icon="phase.iconType" class="mr-3"></b-icon> "{{
-              phase.title
-            }}" abschließen
-          </b-dropdown-item>
-        </b-dropdown>
-      </div>
-
       <Postfach />
       <div>
         <!-- open modal -->

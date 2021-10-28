@@ -144,7 +144,7 @@ const routes = [
             },
 
             {
-                path: '/einstellungen/:project_id',
+                path: '/einstellungen',
                 name: 'Einstellungen',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Einstellungen.vue')
