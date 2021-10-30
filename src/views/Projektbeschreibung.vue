@@ -17,18 +17,16 @@
         </b-col>
 
         <b-col sm="10">
-          <b-form-select
-            v-model="getCurrentProject.betreuenderDozent"
-            id="input-1"
+          <div
+            v-for="(betreuenderDozent, i) in getCurrentProjecLecturers"
+            :key="i"
           >
-            <option
-              v-for="lecturer in getLecturers"
-              v-bind:value="lecturer.uuid"
-              v-bind:key="lecturer.uuid"
+            <b-form-input
+              v-model="getCurrentProjecLecturers[i].username"
+              id="input-2"
             >
-              {{ lecturer.name }}
-            </option></b-form-select
-          >
+            </b-form-input>
+          </div>
 
           <!-- <select v-model="project.betreuenderDozent" class="form-control"> -->
           <!-- <option
@@ -159,28 +157,17 @@ export default {
     var rightIndex;
     return {
       projectId: this.$route.params.project_id,
-
-      project2: {
-        title: "Projekt",
-        betreuenderDozent: ["Muster", "Muster2"],
-        externeMitwirkende: "Max",
-        kurzbeschreibung: "Kurzbeschreibung x",
-        schlagworter: ["Hallo", "test"],
-        gruppenmitglieder: ["Max"],
-      },
-
-      projectContent: [],
       rightIndex,
-      gruppenmitglieder: ["person1", "person 2"],
     };
   },
   methods: {
+    //TODO: remove unused function?
     findIndex() {
       let rightIndex = 0;
       for (let i = 0; i < this.$store.state.project.myProjects.length; i++) {
         if (
           this.$route.params.project_id ===
-          this.$store.state.project.myProjects[i].idd
+          this.$store.state.project.myProjects[i].uuid
         ) {
           rightIndex = i;
         }
@@ -207,19 +194,19 @@ export default {
         externeMitwirkende: this.getCurrentProject.externeMitwirkende,
         schlagworter: keywords,
         gruppenadmin: this.$store.state.sparky_api.drupalUserID,
-        projectIdd: this.$route.params.project_id,
+        projectuuid: this.$route.params.project_id,
       };
 
       this.$store.dispatch("project/updateProject", updatedProj);
     },
   },
-  async mounted() {
-    this.project2 = this.$store.state.project.currentProject;
-    console.log(this.$store.state.project.currentProject);
-    console.log(this.project2);
-  },
   async created() {
-    await this.$store.dispatch("project/loadCurrentProject", this.projectId);
+    console.log(this.$route.params.project_id);
+    await this.$store.dispatch(
+      "project/loadCurrentProject",
+      this.$route.params.project_id
+    );
+    console.log(this.getCurrentProjecLecturers[0]);
   },
 
   computed: {
@@ -240,25 +227,38 @@ export default {
       return this.$store.state.project.currentProjectGroupAdmins;
     },
 
+    getCurrentProjecLecturers() {
+      //console.log(this.$store.state.project.currentProject);
+      return this.$store.state.project.currentProjectLecturers;
+    },
+
     getKeywords: {
       get() {
         return this.$store.state.project.keywordsInString;
       },
       set(value) {
+        //TODO: keyword trimming somewhere?
         this.$store.commit("project/UPDATE_KEYWORDS", value);
       },
     },
+
     getLecturers() {
       console.log(this.$store.getters["user/getLecturers"]);
 
       return this.$store.getters["user/getLecturers"];
+    },
+    getCurrentUserInternalUID() {
+      return this.$store.state.drupal_api.user.uid;
     },
   },
 
   mounted() {
     this.$store.dispatch("user/loadLecturersFromBackend");
     //this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadUserFromBackend");
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getCurrentUserInternalUID
+    );
     console.log(this.$store.state.user.lecturers);
     console.log(this.$store.state.user.students);
   },

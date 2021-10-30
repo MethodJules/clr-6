@@ -92,7 +92,9 @@ export default {
           (member) => member.userid === this.getCurrentUserID
         )
       ) {
-        alert("Du brauchst Adminrechte popup machen");
+        alert(
+          "Du musst Gruppenadministrator sein, um neue Gruppenmitglieder hinzufügen zu können"
+        );
       }
 
       if (
@@ -131,7 +133,7 @@ export default {
       return this.$store.state.project.currentProjectGroupAdmins;
     },
     getCurrentUserID() {
-      return this.$store.state.profile.userData.idd;
+      return this.$store.state.profile.userData.uuid;
     },
   },
 };

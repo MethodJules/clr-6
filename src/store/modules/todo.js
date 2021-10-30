@@ -29,6 +29,81 @@ const getters = {
 
 const actions = {
 
+
+    async loadTodosAllProjects({ commit, state, rootState }, projects) {
+
+        state.listOfToDos = []
+        console.log(projects)
+
+        var drupalUserUID = rootState.drupal_api.user.uid;
+
+
+        for (const project of projects) {
+            commit("loadingStatus", true, { root: true })
+            console.log(project)
+            // dispatch('loadToDoFromBackend', project )
+
+
+            var config = {
+                method: 'get',
+                url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos?filter[field_projektid.id]=${project.id}&filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': rootState.drupal_api.authToken,
+                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                },
+            };
+
+            axios(config)
+                .then((response) => {
+                    console.log(project.attributes.title)
+                    console.log(response)
+                    const data = response.data.data;
+                    console.log(data)
+                    //let to-dos = [];
+
+
+                    if (data.length > 0) {
+                        var leeresTodoArray = [];
+                        data.forEach(element => {
+
+                            const field_date = element.attributes.field_date;
+                            //console.log(field_date)
+                            const field_id = element.id;
+                            //console.log(element.id)
+                            const field_title = element.attributes.title;
+                            const field_erledigt = element.attributes.field_erledigt;
+                            leeresTodoArray.push({ date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt, project_title: project.attributes.title })
+                        });
+
+
+
+
+
+
+
+                        //gives array to mutation, which pushes array in state -> state has array of projects, which contain arrays of todos
+                        commit('SAVE_TODOS_ALL_PROJECTS', leeresTodoArray);
+                    }
+
+
+
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+
+
+
+            commit("loadingStatus", false, { root: true })
+
+
+        }
+
+
+    },
+
     async loadToDoFromBackend({ commit, rootState }, projectId) {
 
         var drupalUserUID = rootState.drupal_api.user.uid;
@@ -71,7 +146,7 @@ const actions = {
 
 
         //console.log(todoEntry.todo)
-        var drupalUserUID = rootState.profile.userData.idd
+        var drupalUserUID = rootState.profile.userData.uuid
 
         var data = `
         {
@@ -132,7 +207,7 @@ const actions = {
     deleteTodo({ commit, rootState }, todoEntry) {
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.uuid}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -157,7 +232,7 @@ const actions = {
         {
             "data": {
                 "type": "node--to_dos", 
-                "id": "${todoEntry.idd}", 
+                "id": "${todoEntry.uuid}", 
                 "attributes": {
                     "field_erledigt": ${todoEntry.erledigt}
                 }
@@ -166,7 +241,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -208,7 +283,7 @@ const mutations = {
     },
 
     SAVE_NEW_TODO(state, newTodo) {
-        state.listOfToDos.push({ idd: newTodo.id, title: newTodo.attributes.title, date: newTodo.attributes.field_date, erledigt: newTodo.attributes.field_erledigt })
+        state.listOfToDos.push({ uuid: newTodo.id, title: newTodo.attributes.title, date: newTodo.attributes.field_date, erledigt: newTodo.attributes.field_erledigt })
     },
 
     /** 
@@ -228,7 +303,7 @@ const mutations = {
             //console.log(element.id)
             const field_title = element.attributes.title;
             const field_erledigt = element.attributes.field_erledigt;
-            leeresTodoArray.push({ date: field_date, idd: field_id, title: field_title, erledigt: field_erledigt })
+            leeresTodoArray.push({ date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt })
             state.todos.push(element.attributes.title)
             state.dates.push(element.attributes.field_date)
         });
@@ -236,7 +311,28 @@ const mutations = {
         state.listOfToDos = leeresTodoArray
         console.log(state.listOfToDos)
 
+    },
+
+    /** 
+     * to fill the listOfToDos[] with all entries in the backend 
+     * @param {*} state we send our state to the method 
+     * @param {*} todo element to go through the array 
+     *  
+     */
+    SAVE_TODOS_ALL_PROJECTS(state, todoArray) {
+
+
+
+
+        state.listOfToDos.push(todoArray)
+        console.log(state.listOfToDos)
+
     }
+
+
+
+
+
 
 
 }

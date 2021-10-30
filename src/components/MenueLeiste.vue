@@ -23,7 +23,7 @@
             :to="{
               name: 'Profil',
               params: {
-                project_id: this.$route.params.project_id,
+                user_internal_uid: this.getCurrentUserInternalUID,
               },
             }"
             >Profil</b-nav-item
@@ -164,6 +164,13 @@ export default {
   computed: {
     startpage() {
       return this.$route.name === "ProjectList";
+    },
+    getCurrentUserUUID() {
+      return this.$store.state.profile.userData.uuid;
+    },
+    //pprovided user uid is taken from the state, where the currentuuser uid is saved, because this navigation should only lead to the own profile
+    getCurrentUserInternalUID() {
+      return this.$store.state.drupal_api.user.uid;
     },
   },
 };

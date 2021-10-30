@@ -8,7 +8,6 @@ const state = () => ({
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
   keywordsInString: "",
-  loadingStatus: false,
   projectsFilteredbyKeywords: []
 
 
@@ -44,12 +43,6 @@ const setters = {
 
 }
 
-const getters = {
-
-  loadingStatus(state) {
-    return state.loadingStatus
-  }
-}
 
 
 const actions = {
@@ -153,25 +146,13 @@ const actions = {
   * @param commit commit us used to call a mutation from this function
   * @param rootState rootState allows access to states of other modules in store
   */
-  async loadProjectsFromBackend({ commit, state, rootState }) {
-    commit('loadingStatus', true)
+  async loadProjectsFromBackend({ commit, state, rootState, dispatch }) {
+    commit("loadingStatus", true, { root: true })
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
     console.log(rootState.drupal_api.user)
     //console.log(drupalUserUID)
-
-    /*https://clr-backend.x-navi.de/jsonapi/node/projekt?
-  
-  
-?filter[rock-group][group][conjunction]=OR
-&filter[field_gruppenmitglieder.drupal_internal__uid][operator]=IN&filter[field_gruppenmitglieder.drupal_internal__uid]=${drupalUserUID}
-&filter[memberOf]=rock-group
-
-?filter[rock-group][group][conjunction]=OR
-&filter[field_gruppenadministrator.drupal_internal__uid][operator]=IN&filter[field_gruppenadministrator.drupal_internal__uid]=${drupalUserUID}
-&filter[memberOf]=rock-group`*/
     //BUG: filter does not find projects where user is group admin, but no group member can be found -> afterwards createproject() can be changed so that the creating user only is groupadmin and not both member and admin
-    //TODO: make group_admin_field an array and change the filtering method here from equals to IN
 
     const filter_or_group = `?filter[or-group][group][conjunction]=OR`
     const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
@@ -198,7 +179,11 @@ const actions = {
         console.log($store.state.sparky_api.drupalUserID) */
         const projects = response.data.data;
         commit('LOAD_MY_PROJECTS', { projects });
-        commit('loadingStatus', false)
+        console.log(projects)
+        console.log({ projects })
+        //commit('loadingStatus', false)
+        dispatch('todo/loadTodosAllProjects', projects, { root: true })
+        commit("loadingStatus", false, { root: true })
 
 
       })
@@ -209,7 +194,6 @@ const actions = {
   },
 
 
-
   /**
 * loads chosen project from backend
 * and passes drupal user id gotten from rootstate on
@@ -218,6 +202,9 @@ const actions = {
 * @param rootState rootState allows access to states of other modules in store
 */
   async loadCurrentProject({ commit, rootState, dispatch, rootGetters }, projectId) {
+    commit("loadingStatus", true, { root: true })
+    console.log(projectId)
+
     //console.log(state)
     //console.log(projectId)
     var config = {
@@ -230,7 +217,7 @@ const actions = {
         'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
       },
     };
-
+    console.log(config)
     axios(config)
       .then(function (response) {
         console.log(response)
@@ -249,9 +236,11 @@ const actions = {
                 console.log(intersection) */
 
         const projects = response.data;
+        console.log(projectId)
         dispatch('loadCurrentProjectWithGroupAdmins', projectId)
         dispatch('loadCurrentProjectWithLecturers', projectId)
         commit('LOAD_CURRENT_PROJECT', { projects });
+        commit("loadingStatus", false, { root: true })
 
       })
       .catch(function (error) {
@@ -367,7 +356,7 @@ const actions = {
          dozenten+= `{ "type": "user--user", "id": <user1> }`,
        } */
 
-    let userID = rootState.profile.userData.idd
+    let userID = rootState.profile.userData.uuid
     //the id of the system user, which is needed because of the filtering bug here https://www.drupal.org/project/drupal/issues/3072384
     let system_user_id = "bf1820d0-5477-4df6-b4dd-a1824d5e7794"
     console.log(keywords)
@@ -446,7 +435,7 @@ const actions = {
   },
 
   updateProject({ commit, rootState }, projEntry) {
-    let userID = rootState.profile.userData.idd
+    let userID = rootState.profile.userData.uuid
     console.log(projEntry)
 
     //let index = state.myProjects.indexOf(projEntry);
@@ -458,26 +447,18 @@ const actions = {
     var data = `{
         "data": {
           "type": "node--projekt",
-           "id": "${projEntry.projectIdd}",
+           "id": "${projEntry.projectuuid}",
           "attributes": {
             "title": "${projEntry.title}",
             "field_schlagworter": ${keywords},
             "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
             "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
-          },
-          "relationships": {
-            "field_betreuender_dozent": {
-              "data": {
-                "type": "user--user",
-                "id": "${projEntry.betreuenderDozent}"
-              }
-            }
           }
         }
       }`;
     var config = {
       method: 'patch',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectIdd}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectuuid}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -548,7 +529,7 @@ const actions = {
 
     var config = {
       method: 'post',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/${role}`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/${role}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -587,7 +568,7 @@ const actions = {
 
     var config = {
       method: 'delete',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenmitglieder`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenmitglieder`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -620,7 +601,7 @@ const actions = {
 
     var config = {
       method: 'delete',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.idd}/relationships/field_gruppenadministrator`,
+      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenadministrator`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -708,7 +689,7 @@ const mutations = {
       const field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
 
       //console.log(field_gruppenmitglieder_IDs)
-      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
+      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
       state.projectsFilteredbyKeywords.push(projectObject)
 
@@ -778,7 +759,7 @@ const mutations = {
       let field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
 
       //console.log(field_gruppenmitglieder_IDs)
-      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
+      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
       state.myProjects.push(projectObject)
 
@@ -802,10 +783,11 @@ const mutations = {
     let user_array = []
     // TODO: error handling, in case there is nothing included?
     included_data.forEach(element => {
-
+      const internal_uid = element.attributes.drupal_internal__uid
       const username = element.attributes.field_fullname;
       const userid = element.id
-      user_array.push({ username: username, userid: userid, })
+      user_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+      console.log(internal_uid)
 
 
 
@@ -832,7 +814,7 @@ const mutations = {
       //let includedUserObjects
 
       // console.log(field_gruppenmitglieder)
-      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, idd: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
+      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
       //TODO: remove second projectobject here and everywhere else, after projektbeschreibung is changed and cleaned up -> isnt needed anymore after that
 
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
@@ -856,7 +838,8 @@ const mutations = {
 
       const username = element.attributes.field_fullname;
       const userid = element.id
-      groupadmins_array.push({ username: username, userid: userid, })
+      const internal_uid = element.attributes.drupal_internal__uid
+      groupadmins_array.push({ username: username, userid: userid, internal_uid: internal_uid })
 
     })
     state.currentProjectGroupAdmins = groupadmins_array
@@ -896,5 +879,4 @@ export default {
   mutations,
   actions,
   setters,
-  getters
 }

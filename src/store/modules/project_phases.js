@@ -8,35 +8,35 @@ const state = () => ({
     // It would be easier to read the code. 
     phases: [
         {
-            phase_id: 0,
+            phase_number: 0,
             phase_name: 'Gruppe bilden',
         },
         {
-            phase_id: 1,
+            phase_number: 1,
             phase_name: 'Ziel & Umfang definieren'
         },
         {
-            phase_id: 2,
+            phase_number: 2,
             phase_name: 'Konzepte & Definitionen identifizieren'
         },
         {
-            phase_id: 3,
+            phase_number: 3,
             phase_name: 'Literatur suchen'
         },
         {
-            phase_id: 4,
+            phase_number: 4,
             phase_name: 'Daten extrahieren'
         },
         {
-            phase_id: 5,
+            phase_number: 5,
             phase_name: 'Literatur analysieren & synthetisieren'
         },
         {
-            phase_id: 6,
+            phase_number: 6,
             phase_name: 'Ergebnisse kommunizieren'
         },
         {
-            phase_id: 7,
+            phase_number: 7,
             phase_name: 'Gruppe auflösen'
         }
     ],
@@ -100,11 +100,11 @@ const getters = {
     getPhasesOfProject(state) {
         let sorted_array = [];
         let phases = [];
-        sorted_array = state.phases_this_project.sort(function (a, b) {
+        sorted_array = state.project_phases_this_project.sort(function (a, b) {
             return a.phase_number - b.phase_number;
         });
 
-        let info = state.phasesAdditionalInfo;
+        let info = state.project_phasesAdditionalInfo;
         for (let index = 0; index < sorted_array.length; index++) {
             let phase = {
                 angle: info[index].angle,
@@ -119,8 +119,8 @@ const getters = {
             phases.push(phase)
 
         }
-        state.phases_this_project = phases;
-        return state.phases_this_project;
+        state.project_phases_this_project = phases;
+        return state.project_phases_this_project;
     }
 }
 
@@ -157,6 +157,7 @@ const actions = {
 
 
     async loadSinglePhaseFromBackend({ commit, state, rootState, dispatch }, { projectId, phaseId }) {
+        commit("loadingStatus", true, { root: true })
         console.log(phaseId)
         console.log(state)
         var config = {
@@ -178,6 +179,7 @@ const actions = {
                 var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137"
                 dispatch("reflexion/loadReflexionFromBackend", IchSicht, { root: true })
                 dispatch("tool/loadToolsFromBackend", null, { root: true })
+                commit("loadingStatus", false, { root: true })
 
 
 
@@ -194,20 +196,21 @@ const actions = {
 
     },
 
-    closePhase({ commit, rootState }, { phase, open_close_phase }) {
-        commit("CLOSE_PHASE", phase);
-        console.log(phase.done)
+    closePhase({ commit, rootState, dispatch }, { phase, open_close_phase }) {
+        // commit("CLOSE_PHASE", phase);
+        console.log(phase)
+        console.log(phase.abschluss)
         // DATABASE REACTIONS
         var data = `{"data":{
             "type":"node--phase_vorgehensmodell", 
-            "id": "${phase.id}", 
+            "id": "${phase.phase_id}", 
             "attributes": { 
                 "field_abschluss": ${open_close_phase}
             }}}`;
 
         var config = {
             method: 'patch',
-            url: `jsonapi/node/phase_vorgehensmodell/${phase.id}`,
+            url: `jsonapi/node/phase_vorgehensmodell/${phase.phase_id}`,
             headers: {
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
@@ -216,6 +219,11 @@ const actions = {
         };
         axios(config).then((response) => {
             console.log(response)
+            console.log(phase.projektId)
+            console.log(phase.phase_number)
+            console.log(response.data.data.attributes.field_phase_number)
+            console.log(response.data.data.relationships.field_projektid.data.id)
+            dispatch("loadSinglePhaseFromBackend", { projectId: phase.projektId, phaseId: phase.phase_number })
         }).catch((error) => {
             console.log(error)
         })
@@ -251,7 +259,7 @@ const actions = {
                 "data": {
                     'type': 'node--phase_vorgehensmodell',
                     "attributes": {
-                        "title": `${state.phases[i].phase_name}`,
+                        "title": `${state.project_phases[i].phase_name}`,
                         'field_abschluss': { 'value': false },
                         'field_documentationtext': { 'value': " " },
                         'field_phase_number': { 'value': `${i}` },
@@ -480,7 +488,7 @@ const actions = {
 
 
 
-        var phaseId = rootState.phases.current_phase.phase_id
+        var phaseId = rootstate.project_phases.current_phase.phase_id
 
         var data = `{
                 "data": {
@@ -547,7 +555,7 @@ const mutations = {
     */
     LOAD_PHASES(state, phases) {
         console.log(phases);
-        //  state.phases_this_project = phases
+        //  state.project_phases_this_project = phases
         let phaseArray = []
         phases.forEach(element => {
 
@@ -564,8 +572,8 @@ const mutations = {
             phaseArray.push(phaseObject)
         })
 
-        state.phases_this_project = phaseArray
-        console.log(state.phases_this_project)
+        state.project_phases_this_project = phaseArray
+        console.log(state.project_phases_this_project)
     },
     /*     LOAD_PHASE(state, currentPhase) {
             console.log(currentPhase.currentPhase)
@@ -598,7 +606,7 @@ const mutations = {
     },
 
     CLOSE_PHASE(state, phase) {
-        state.phases_this_project[phase.phaseNumber].done = true;
+        state.project_phases_this_project[phase.phase_number].done = true;
 
     }
 }

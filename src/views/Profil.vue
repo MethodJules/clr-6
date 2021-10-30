@@ -11,7 +11,7 @@ are shown here as a profile view and if the user has uploaded a profile picture 
       <b-col> {{ getUser.fullname }}</b-col>
     </b-row>
 
-    <b-row>
+    <b-row v-if="getProfileData.show_email">
       <b-col> <strong> E-Mail </strong> </b-col>
       <b-col> {{ getUser.mail }} </b-col>
     </b-row>
@@ -64,8 +64,14 @@ export default {
   /** load the profile data and the user data from backend */
 
   async mounted() {
-    this.$store.dispatch("profile/loadProfileFromBackend");
-    this.$store.dispatch("profile/loadUserFromBackend");
+    this.$store.dispatch(
+      "profile/loadProfileFromBackend",
+      this.getUserInternalUID
+    );
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getUserInternalUID
+    );
   },
 
   /* With the getters, we can show the loading data from the backend, that it can be visible in the frontend for the users */
@@ -81,6 +87,10 @@ export default {
 
     getImage() {
       return this.$store.state.profile.imageData;
+    },
+    //here getCurrentUserInternalUID returns the uid provided by the params -> this is because profiles of other students should also be visitable
+    getUserInternalUID() {
+      return this.$route.params.user_internal_uid;
     },
   },
 };

@@ -12,16 +12,28 @@
             <h5>Gruppenmitglied</h5>
           </b-col>
           <b-col>
-            <h5>{{ mitglied.username }}</h5>
+            <b-nav-item
+              :to="{
+                name: 'Profil',
+                params: {
+                  user_internal_uid: mitglied.internal_uid,
+                },
+              }"
+              >{{ mitglied.username }}</b-nav-item
+            >
           </b-col>
           <b-col>
             <b-button
-              v-if="getCurrentUserID != mitglied.userid"
+              v-if="(getCurrentUserID != mitglied.userid) & currentUserisAdmin"
+              variant="link"
               @click="deleteMember(mitglied)"
             >
-              X
+              <b-icon icon="x"></b-icon>
             </b-button>
-            <b-button variant="link" @click="giveAdminRights(mitglied)"
+            <b-button
+              v-if="(getCurrentUserID != mitglied.userid) & currentUserisAdmin"
+              variant="link"
+              @click="giveAdminRights(mitglied)"
               ><b-icon icon="flag-fill"></b-icon
             ></b-button>
             <br />
@@ -32,17 +44,27 @@
       <div v-for="admin in getGroupAdmins" :key="admin.userid">
         <b-row>
           <b-col>
-            <h5>Gruppenadmin</h5>
+            <h5>Gruppenadministrator</h5>
           </b-col>
           <b-col>
-            <h5>{{ admin.username }}</h5>
+            <b-nav-item
+              :to="{
+                name: 'Profil',
+                params: {
+                  user_internal_uid: admin.internal_uid,
+                },
+              }"
+              >{{ admin.username }}</b-nav-item
+            >
+            <!--            <h5>{{ admin.username }}</h5> -->
           </b-col>
           <b-col>
             <b-button
-              v-if="getCurrentUserID != admin.userid"
+              variant="link"
+              v-if="(getCurrentUserID != admin.userid) & currentUserisAdmin"
               @click="deleteAdmin(admin)"
             >
-              X
+              <b-icon icon="x"></b-icon>
             </b-button>
             <br />
           </b-col>
@@ -105,16 +127,11 @@ export default {
     return {};
   },
   methods: {
-    addMember: function (mitglied) {
-      //let role_field = "field_gruppenmitglieder";
-      this.$store.dispatch("project/addMembers", mitglied);
-      //this.$store.dispatch("project/deleteMembers", { mitglied, role_field });
-    },
     /* checks if current user is in group admin array, because he needs the rights to remove another member.
     then sends dispatch to delete member*/
     deleteMember: function (mitglied) {
       //let role_field = "field_gruppenmitglieder";
-      if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
+      if (this.currentUserisAdmin) {
         alert("Das Gruppenmitglied wurde gelöscht");
         this.$store.dispatch("project/deleteMembers", mitglied);
       } else {
@@ -130,7 +147,7 @@ export default {
     then sends dispatch to delete admin*/
     deleteAdmin: function (mitglied) {
       //if(me=gruppenadministrator AND nicht selbst letzte admin)
-      if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
+      if (this.currentUserisAdmin) {
         this.$store.dispatch("project/deleteAdmin", mitglied);
       } else {
         alert(
@@ -184,11 +201,7 @@ then the appropriate dispatch will be sent */
         this.$router.push("/");
       }
 
-      if (
-        this.getGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserID
-        )
-      ) {
+      if (this.currentUserisAdmin) {
         if (this.getGroupAdmins.length < 2) {
           alert(
             "Mache erst ein anderes Gruppenmitglied zu einem Gruppenadministrator, bevor du die Gruppe verlässt. Falls du die letzte Person in der Gruppe bist, entferne deine Gruppenadministrator-Rechte bevor du die Gruppe verlässt "
@@ -215,11 +228,7 @@ then the appropriate dispatch will be sent */
     giveAdminRights: function (new_admin) {
       let member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
       //evtl redundant?
-      if (
-        this.getGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserID
-        )
-      ) {
+      if (this.currentUserisAdmin) {
         //first add new admin
         this.$store
           .dispatch("project/addMember", {
@@ -244,20 +253,13 @@ then the appropriate dispatch will be sent */
       //if letzter admin und noch ein grp mitglied außer system da , dann erst admin an anderen vergeben
       let member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
       //evtl redundant?
-      if (
-        this.getGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserID
-        )
-      ) {
+      if (this.currentUserisAdmin) {
         //if user ist letzter admin and there are still groupmembers left, user has to promote someone first. otherwise the group has no admins left but there are still other group members left
         if (this.getGroupMembers.length > 0 && this.getGroupAdmins.length < 2) {
           alert(
             "Du musst erst ein anderes Gruppenmitglied zum Gruppenadministrator machen, um deine Administratorrechte aufzugeben"
           );
         } else {
-          alert(
-            "Du bist kein Gruppenadministrator mehr, du hast keine Rechte die du aufgeben kannst"
-          );
           member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
           //first delete user in groupadmin array
           this.$store.dispatch("project/deleteAdmin", member);
@@ -267,6 +269,7 @@ then the appropriate dispatch will be sent */
             role: "field_gruppenmitglieder",
           });
           //then delete old group member
+          alert("Du bist nun kein Gruppenadministrator mehr");
         }
       } else {
         alert(
@@ -299,8 +302,31 @@ then the appropriate dispatch will be sent */
       return this.$store.state.project.currentProjectLecturers;
     },
     getCurrentUserID() {
-      return this.$store.state.profile.userData.idd;
+      return this.$store.state.profile.userData.uuid;
     },
+
+    getCurrentUserInternalUID() {
+      return this.$store.state.drupal_api.user.uid;
+    },
+    // checks if current user is a group administrator by looking for the currentuserid in group admin array
+    //needed for some actions like adding and removing members
+    currentUserisAdmin() {
+      return this.getGroupAdmins.some(
+        (e) => e.userid === this.getCurrentUserID
+      );
+    },
+  },
+
+  async mounted() {
+    this.$store.dispatch("user/loadStudentsFromBackend");
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getCurrentUserInternalUID
+    );
+    this.$store.dispatch(
+      "project/loadCurrentProject",
+      this.$route.params.project_id
+    );
   },
 };
 </script>

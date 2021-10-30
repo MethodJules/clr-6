@@ -20,15 +20,16 @@ const actions = {
      * 
      */
 
-    async loadUserFromBackend({ commit, state, rootState }) {
-        var drupalUserUID = rootState.drupal_api.user.uid
+    async loadUserFromBackend({ commit, state, rootState }, user_internal_uid) {
+        //var drupalUserUID = rootState.drupal_api.user.uid
         // console.log(rootState.sparky_api.drupalUserID)
         // console.log(drupalUserUID)
+        console.log()
 
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/user/user?filter[drupal_internal__uid]=${drupalUserUID}&include=user_picture`,
+            url: `https://clr-backend.x-navi.de/jsonapi/user/user?filter[drupal_internal__uid]=${user_internal_uid}&include=user_picture`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -47,7 +48,7 @@ const actions = {
                  * */
 
                 const user = response.data;
-                commit('SAVE_USER', { user });
+                commit('SAVE_USER_IN_STATE', { user });
 
             })
             .catch(function (error) {
@@ -64,13 +65,16 @@ const actions = {
     can get the right profile data of testacc user filtered by the drupalUserUID = 24 in this case*/
 
 
-    async loadProfileFromBackend({ commit, state, rootState }) {
+    async loadProfileFromBackend({ commit, state, rootState }, user_internal_uid) {
+        commit("loadingStatus", true, { root: true })
         console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
-
+        console.log(drupalUserUID)
+        //TODO: change/add user uuid instead of user uid and change field in backend from string field for user uid to relationship field with uuid
+        //TODO: or change to get profile for user when no user_internal_uid is given
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil?filter[field_user_uid]=${drupalUserUID}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil?filter[field_user_uid]=${user_internal_uid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -87,12 +91,54 @@ const actions = {
                 //console.log(rootState.sparky_api.drupalUserID)
                 const profiles = response.data.data;
                 commit('SAVE_PROFILE', { profiles });
+                commit("loadingStatus", false, { root: true })
 
 
             })
             .catch(function (error) {
                 console.log(error)
             })
+
+
+    },
+
+    updateEmailCheckbox({ rootState, state }, profile) {
+
+        console.log(profile)
+
+
+        var data = `
+        {
+            "data": {
+                "type": "node--profil", 
+                "id": "${profile.uuid}",
+                "attributes": {
+                    "field_showemail": ${profile.show_email}
+                    
+                }
+            }
+        }`;
+        var config = {
+            method: 'patch',
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.uuid}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+
+        };
+        axios(config)
+            .then((response) => {
+                console.log(response);
+
+
+            }).catch(function (error) {
+                console.log(error);
+            });
+
 
 
     },
@@ -133,7 +179,9 @@ const actions = {
                     "field_datenbanken": "", 
                     "field_referenztool": "", 
                     "field_analysetool": "",
-                    "field_user_uid": "${drupalUserUID}"
+                    "field_user_uid": "${drupalUserUID}",
+                    "field_showemail": false
+                    
                     
                 }
                 
@@ -231,7 +279,7 @@ const actions = {
      * 
      */
     updateUserdataWithProfileImage({ state, rootState }, imageID) {
-        var userID = rootState.profile.userData.idd
+        var userID = rootState.profile.userData.uuid
 
         console.log(userID)
 
@@ -283,7 +331,7 @@ const actions = {
 
 
 
-    /* makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.idd
+    /* makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.uuid
     that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata 
     rigth user */
 
@@ -297,7 +345,7 @@ const actions = {
         var data = `{
             "data": {
                 "type": "node--profil", 
-                "id": "${profile.idd}",
+                "id": "${profile.uuid}",
                 "attributes": {
                     "title": "Profil", 
                     "field_studiengang": "${profile.studiengang}", 
@@ -315,7 +363,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -348,7 +396,8 @@ const mutations = {
      *
     */
 
-    SAVE_USER(state, { user }) {
+    SAVE_USER_IN_STATE(state, { user }) {
+        console.log(user)
 
         /**
          * consists the data of user only, which will be stored as object 'userObject' in the state userData
@@ -362,7 +411,7 @@ const mutations = {
             const field_title = element.attributes.title;
             const mail = element.attributes.mail;
 
-            let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, idd: field_id, title: field_title, mail: mail }
+            let userObject = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, uuid: field_id, title: field_title, mail: mail }
 
 
             state.userData = userObject
@@ -417,8 +466,9 @@ const mutations = {
             const field_profilbild = element.relationships.field_profilbild;
             const field_id = element.id;
             const field_title = element.attributes.title;
+            const field_showemail = element.attributes.field_showemail
 
-            state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, idd: field_id, title: field_title, profilbild: field_profilbild }
+            state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, uuid: field_id, title: field_title, profilbild: field_profilbild, show_email: field_showemail }
 
 
 

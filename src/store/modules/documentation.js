@@ -20,7 +20,7 @@ const actions = {
                 let documentations = [];
                 for (var i in data) {
                     //console.log(i)
-                    documentations.push({ idd: data[i].id, title: data[i].attributes.title, documentation: data[i].attributes.field_documentationtext })
+                    documentations.push({ uuid: data[i].id, title: data[i].attributes.title, documentation: data[i].attributes.field_documentationtext })
                 }
 
                 //console.log(documentations)
@@ -36,7 +36,7 @@ const actions = {
     
             var config = {
                 method: 'get',
-                url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
+                url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.uuid}`,
                 headers: {
                     'Accept': 'application/vnd.api+json',
                     'Content-Type': 'application/vnd.api+json',
@@ -133,7 +133,7 @@ const mutations = {
              //console.log(element.id)
              const field_title = element.attributes.title;
              //console.log(element.id)
-             state.rowData.push({ documentation: field_documentationtext, idd: field_id, title: field_title })
+             state.rowData.push({ documentation: field_documentationtext, uuid: field_id, title: field_title })
              //console.log(state)
          }); */
 
@@ -153,7 +153,7 @@ const mutations = {
         var data = `{
             "data": {
                 "type": "node--documentation", 
-                "id": "${docuEntry.idd}", 
+                "id": "${docuEntry.uuid}", 
                 "attributes": {
                     "title": "${docuEntry.title}", 
                     "field_documentationtext": "${docuEntry.documentation}" 
@@ -162,7 +162,7 @@ const mutations = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.idd}`,
+            url: `https://clr-backend.x-navi.de/jsonapi/node/documentation/${docuEntry.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

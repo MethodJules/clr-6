@@ -18,7 +18,7 @@
         :angle="el.angle"
         :key="index"
         :image-path="el.image"
-        @click.native="changeStyle(el)"
+        @click.native="goToPhase(index)"
         :id="el.id"
         :class="{ isDone: el.done === true, red: el.done !== true }"
         :label-pos="el.labelPosition"
@@ -41,9 +41,13 @@ export default {
     ...mapGetters({
       phases: "phases/getPhasesOfProject",
     }),
+
+    getProjectID() {
+      return this.$route.params.project_id;
+    },
   },
   methods: {
-    changeStyle(el) {
+    /*     changeStyle(el) {
       let changeColor = true;
       //this if is for when the clicked phase is not finished - looks if all phases before where finished, thus no phase can be skipped -> if yes then closes the phase
       if (el.done == false) {
@@ -96,6 +100,14 @@ export default {
             });
         }
       }
+    }, */
+    goToPhase(phase_number) {
+      console.log(phase_number);
+      console.log(this.getProjectID);
+      this.$router.push({
+        name: "PhaseTemplate",
+        params: { phase_number: phase_number, project_id: this.getProjectID },
+      });
     },
   },
 };

@@ -44,10 +44,6 @@
             <tr>
               <td>
                 <div>
-                  <!-- simple list instead of simplesuggest -> map name to id 
-TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
--->
-
                   <div
                     v-for="(betreuenderDozent, i) in project.betreuenderDozent"
                     :key="i"
@@ -64,6 +60,10 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                         {{ lecturer.name }}
                       </option>
                     </select>
+
+                    <b-button variant="link" @click="deleteLecturer(i)"
+                      ><b-icon icon="x-circle"></b-icon
+                    ></b-button>
                   </div>
                   <b-button @click="addLecturer('')"
                     >Weiteren Dozenten hinzufügen</b-button
@@ -170,25 +170,13 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
               </td>
             </tr>
           </table>
-          <div v-if="inProjektbeschreibung">
-            <b-button @click="updateProject()"
-              >Projektbeschreibung bearbeiten</b-button
-            >
-          </div>
-          <div v-else>
+          <div>
             <b-button @click="submitForm()">Projekt anlegen</b-button>
             <!-- <b-button @click="newProject()">Projekt anlegen</b-button> -->
           </div>
         </form>
       </b-modal>
-
-      <div v-if="inProjektbeschreibung">
-        <b-button @click="showThisModal()" size="lg" v-b-modal.create_project
-          >Beschreibung bearbeiten</b-button
-        >
-      </div>
-      <!-- TODO: remove else part for stuff in projektbeschreibung -->
-      <div v-else>
+      <div>
         <!--         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>{{getLecturers}}</b-button> -->
         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project
           >+</b-button
@@ -246,6 +234,10 @@ export default {
       this.project.betreuenderDozent.push(betreuenderDozent);
     },
 
+    deleteLecturer(index) {
+      this.project.betreuenderDozent.splice(index, 1);
+    },
+
     submitForm() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -253,11 +245,17 @@ export default {
       }
     },
     newProject() {
+      //split keyword string into array. seperated by comma
       var schlagwortarray = this.project.schlagworter.split(",");
+      //trims whitespace
       for (var i = 0; i < schlagwortarray.length; ++i) {
         schlagwortarray[i] = schlagwortarray[i].trim();
       }
-      var keywords = Object.assign({}, schlagwortarray);
+      //removes duplicates and empty keywords
+      let keywords_filtered = schlagwortarray.filter((item, index) => {
+        return schlagwortarray.indexOf(item) === index && item != "";
+      });
+      var keywords = Object.assign({}, keywords_filtered);
 
       //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array
       let dozent_filtered = this.project.betreuenderDozent.filter(
@@ -274,7 +272,6 @@ export default {
       }
 
       const dozenten = Object.assign({}, dataArray);
-      console.log(dozenten);
 
       var addProj = {
         title: this.project.title,
@@ -295,29 +292,6 @@ export default {
       this.project.schlagworter = " ";
       //this.projectList.length + 1
     },
-
-    updateProject() {
-      this.$v.$touch();
-      if (!this.$v.$invalid) {
-        console.log("title: ${this.titela}");
-        //this.updateForm()
-        var schlagwortarray = this.project.schlagworter.split(",");
-        var keywords = Object.assign({}, schlagwortarray);
-        console.log(keywords);
-
-        var updatedProj = {
-          title: this.project.title,
-          kurzbeschreibung: this.project.kurzbeschreibung,
-          betreuenderDozent: this.project.betreuenderDozent,
-          externeMitwirkende: this.project.externeMitwirkende,
-          schlagworter: keywords,
-          gruppenadmin: this.$store.state.sparky_api.drupalUserID,
-          projectIdd: this.$route.params.project_id,
-        };
-
-        this.$store.dispatch("project/updateProject", updatedProj);
-      }
-    },
   },
 
   computed: {
@@ -330,33 +304,14 @@ export default {
       return this.$store.state.user.lecturers;
     },
 
-    inProjektbeschreibung() {
-      // console.log(this.$route.name);
-      return this.$route.name === "Projektbeschreibung";
-    },
-
     getLecturers() {
-      /*    console.log(this.$store);
-      console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getLecturers"]); */
-
       return this.$store.getters["user/getLecturers"];
     },
 
     getStudents() {
-      /*console.log(this.$store);
-      console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getStudents"]); */
-
       return this.$store.getters["user/getStudents"];
     },
   },
-  mounted() {
-    this.$store.dispatch("user/loadLecturersFromBackend");
-    this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadUserFromBackend");
-    /*     console.log(this.$store.state.user.lecturers);
-    console.log(this.$store.state.user.students); */
-  },
+  mounted() {},
 };
 </script>

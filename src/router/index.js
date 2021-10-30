@@ -85,7 +85,7 @@ const routes = [
             },
 
             {
-                path: '/phasetemplate/:phase_id:project_id',
+                path: '/phasetemplate/:phase_number:project_id',
                 name: 'PhaseTemplate',
                 //props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
@@ -136,14 +136,14 @@ const routes = [
             },
 
             {
-                path: '/profil/:project_id',
+                path: '/profil/:user_internal_uid',
                 name: 'Profil',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
             },
 
             {
-                path: '/einstellungen/:project_id',
+                path: '/einstellungen',
                 name: 'Einstellungen',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Einstellungen.vue')
