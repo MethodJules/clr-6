@@ -194,6 +194,9 @@ export default {
       console.log(this.getKeywords);
       var schlagworter = this.$store.state.project.keywordsInString;
       var schlagwortarray = schlagworter.split(",");
+      for (var i = 0; i < schlagwortarray.length; ++i) {
+        schlagwortarray[i] = schlagwortarray[i].trim();
+      }
       var keywords = Object.assign({}, schlagwortarray);
       console.log(keywords);
 

@@ -15,7 +15,12 @@
             <h5>{{ mitglied.username }}</h5>
           </b-col>
           <b-col>
-            <b-button @click="deleteMember(mitglied)"> X </b-button>
+            <b-button
+              v-if="getCurrentUserID != mitglied.userid"
+              @click="deleteMember(mitglied)"
+            >
+              X
+            </b-button>
             <b-button variant="link" @click="giveAdminRights(mitglied)"
               ><b-icon icon="flag-fill"></b-icon
             ></b-button>
@@ -33,7 +38,12 @@
             <h5>{{ admin.username }}</h5>
           </b-col>
           <b-col>
-            <b-button @click="deleteAdmin(admin)"> X </b-button>
+            <b-button
+              v-if="getCurrentUserID != admin.userid"
+              @click="deleteAdmin(admin)"
+            >
+              X
+            </b-button>
             <br />
           </b-col>
         </b-row>
@@ -105,10 +115,10 @@ export default {
     deleteMember: function (mitglied) {
       //let role_field = "field_gruppenmitglieder";
       if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
-        console.log("Member gelöscht popup");
+        alert("Das Gruppenmitglied wurde gelöscht");
         this.$store.dispatch("project/deleteMembers", mitglied);
       } else {
-        console.log(
+        alert(
           "Du musst Gruppenadministrator sein, um Gruppenmitglieder zu entfernen"
         );
       }
@@ -123,7 +133,7 @@ export default {
       if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
         this.$store.dispatch("project/deleteAdmin", mitglied);
       } else {
-        console.log(
+        alert(
           "Du musst Gruppenadministrator sein, um Gruppenmitglieder zu entfernen"
         );
       }
@@ -131,7 +141,6 @@ export default {
 
     filter(memberId, memberList) {
       //filters the current user by id - is used in a function for leaving the group
-      console.log("test");
       let filteredCollection = memberList.filter((item) => {
         console.log(item);
         if (item.userid == memberId) {
@@ -164,7 +173,15 @@ then the appropriate dispatch will be sent */
         console.log("member funzt");
         member = this.filter(this.getCurrentUserID, this.getGroupMembers);
         console.log(member);
-        this.$store.dispatch("project/deleteMembers", member);
+        this.$store.dispatch("project/deleteMembers", member).then(() => {
+          this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
+            title: "Du hast die Gruppe verlassen",
+            autoHideDelay: 4000,
+            variant: "warning",
+          });
+        });
+        this.$store.dispatch("project/loadProjectsFromBackend");
+        this.$router.push("/");
       }
 
       if (
@@ -172,16 +189,23 @@ then the appropriate dispatch will be sent */
           (member) => member.userid === this.getCurrentUserID
         )
       ) {
-        console.log("admin funzt");
-        member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
-        this.$store.dispatch("project/deleteAdmin", member).then(() => {
-          this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
-            title: "Du hast die Gruppe verlassen",
-            autoHideDelay: 4000,
-            variant: "warning",
+        if (this.getGroupAdmins.length < 2) {
+          alert(
+            "Mache erst ein anderes Gruppenmitglied zu einem Gruppenadministrator, bevor du die Gruppe verlässt. Falls du die letzte Person in der Gruppe bist, entferne deine Gruppenadministrator-Rechte bevor du die Gruppe verlässt "
+          );
+        } else {
+          console.log("admin funzt");
+          member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
+          this.$store.dispatch("project/deleteAdmin", member).then(() => {
+            this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
+              title: "Du hast die Gruppe verlassen",
+              autoHideDelay: 4000,
+              variant: "warning",
+            });
           });
-        });
-        this.$router.push("/");
+          this.$store.dispatch("project/loadProjectsFromBackend");
+          this.$router.push("/");
+        }
       }
       //this.$store.dispatch("project/deleteMembers", userID);
 
@@ -197,14 +221,19 @@ then the appropriate dispatch will be sent */
         )
       ) {
         //first add new admin
-        this.$store.dispatch("project/addMember", {
-          mitglied: new_admin,
-          role: "field_gruppenadministrator",
-        });
-        //then delete old group member
-        this.$store.dispatch("project/deleteMembers", member);
+        this.$store
+          .dispatch("project/addMember", {
+            mitglied: new_admin,
+            role: "field_gruppenadministrator",
+          })
+          .then(() => {
+            //then delete old group member
+            //sometimes the member is not deleted
+            //do a .then for the second dispatch?
+            this.$store.dispatch("project/deleteMembers", new_admin);
+          });
       } else {
-        console.log(
+        alert(
           "Du musst Gruppenadministrator sein, um andere Gruppenmitglieder zu Gruppenadministratoren zu befördern"
         );
       }
@@ -212,6 +241,7 @@ then the appropriate dispatch will be sent */
 
     removeOwnAdminRights: function () {
       //TODO: make only possible if there is at least one other admin
+      //if letzter admin und noch ein grp mitglied außer system da , dann erst admin an anderen vergeben
       let member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
       //evtl redundant?
       if (
@@ -219,17 +249,27 @@ then the appropriate dispatch will be sent */
           (member) => member.userid === this.getCurrentUserID
         )
       ) {
-        member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
-        //first delete user in groupadmin array
-        this.$store.dispatch("project/deleteAdmin", member);
-        //then add in groupmember array
-        this.$store.dispatch("project/addMember", {
-          mitglied: member,
-          role: "field_gruppenmitglieder",
-        });
-        //then delete old group member
+        //if user ist letzter admin and there are still groupmembers left, user has to promote someone first. otherwise the group has no admins left but there are still other group members left
+        if (this.getGroupMembers.length > 0 && this.getGroupAdmins.length < 2) {
+          alert(
+            "Du musst erst ein anderes Gruppenmitglied zum Gruppenadministrator machen, um deine Administratorrechte aufzugeben"
+          );
+        } else {
+          alert(
+            "Du bist kein Gruppenadministrator mehr, du hast keine Rechte die du aufgeben kannst"
+          );
+          member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
+          //first delete user in groupadmin array
+          this.$store.dispatch("project/deleteAdmin", member);
+          //then add in groupmember array
+          this.$store.dispatch("project/addMember", {
+            mitglied: member,
+            role: "field_gruppenmitglieder",
+          });
+          //then delete old group member
+        }
       } else {
-        console.log(
+        alert(
           "Du musst Gruppenadministrator sein, um deine Administratorrechte aufgeben zu können"
         );
       }

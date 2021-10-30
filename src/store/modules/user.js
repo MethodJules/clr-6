@@ -10,7 +10,10 @@ const getters = {
     getLecturers(state) {
         let lecturer_array = []
         for (let lecturer of state.lecturers) {
-            lecturer_array.push({ name: lecturer[1].field_fullname[0].value, uid: lecturer[1].uid[0].value, uuid: lecturer[1].uuid[0].value })
+            if ((typeof lecturer[1].field_fullname[0]) !== 'undefined') {
+                lecturer_array.push({ name: lecturer[1].field_fullname[0].value, uid: lecturer[1].uid[0].value, uuid: lecturer[1].uuid[0].value })
+            }
+
         }
         console.log(lecturer_array)
         return lecturer_array
@@ -19,8 +22,9 @@ const getters = {
     getStudents(state) {
         let student_array = []
         for (let student of state.students) {
-
-            student_array.push({ name: student[1].field_fullname[0].value, uid: student[1].uid[0].value, uuid: student[1].uuid[0].value })
+            if ((typeof student[1].field_fullname[0]) !== 'undefined') {
+                student_array.push({ name: student[1].field_fullname[0].value, uid: student[1].uid[0].value, uuid: student[1].uuid[0].value })
+            }
         }
         console.log(student_array)
         return student_array
