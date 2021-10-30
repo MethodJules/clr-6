@@ -1,6 +1,6 @@
 <template>
   <div id="todoList">
-    <div v-if="inProjectList">
+    <div v-if="inProjectList || inEinstellungen || inProfil">
       <div v-for="(project, index) in getTodosForAllMyProjects" :key="index">
         <h3>To Do {{ project[0].project_title }}</h3>
 
@@ -63,71 +63,74 @@
         </div> -->
       </div>
     </div>
-
-    <div v-if="!inProjectList">
-      <h3>To Do</h3>
-
-      <!-- Liste zum Erstellen der Todos  -->
-      <div
-        class="card p-0 m-1"
-        v-for="(todo, index) in getTodosForAllMyProjects"
-        :key="index"
-      >
-        <div class="card-header text-center">
-          <b> Fällig am: {{ todo.date }}</b>
-        </div>
-        <div class="card-body p-2">
-          <b-form-checkbox
-            :id="todo.uuid"
-            name="checkbox-1"
-            @input="checkboxUpdate(index, todo)"
-            v-model="todo.erledigt"
-          >
-            <p>
-              {{ todo.title }}
-            </p>
-          </b-form-checkbox>
-        </div>
-        <div class="card-buttons">
-          <b-button @click="deleteTodo(todo)" size="sm">
-            <b-icon icon="trash"></b-icon>
-          </b-button>
-        </div>
-      </div>
-
+    <div>
       <div>
-        <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist. 
+        <div v-if="!inEinstellungen && !inProjectList && !inProfil">
+          <h3>To Do</h3>
+
+          <!-- Liste zum Erstellen der Todos  -->
+          <div
+            class="card p-0 m-1"
+            v-for="(todo, index) in getTodosForAllMyProjects"
+            :key="index"
+          >
+            <div class="card-header text-center">
+              <b> Fällig am: {{ todo.date }}</b>
+            </div>
+            <div class="card-body p-2">
+              <b-form-checkbox
+                :id="todo.uuid"
+                name="checkbox-1"
+                @input="checkboxUpdate(index, todo)"
+                v-model="todo.erledigt"
+              >
+                <p>
+                  {{ todo.title }}
+                </p>
+              </b-form-checkbox>
+            </div>
+            <div class="card-buttons">
+              <b-button @click="deleteTodo(todo)" size="sm">
+                <b-icon icon="trash"></b-icon>
+              </b-button>
+            </div>
+          </div>
+
+          <div>
+            <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist. 
             Es wird nur die zu erledigende Aufgabe angezeigt -->
-        <b-modal id="to_do_edit_modal" title="To Do">
-          <label for="neueTodo">zu erledigende Aufgabe: </label>
-          <input
-            v-model="todoNeu"
-            v-on:input="$v.todoNeu.$touch"
-            v-bind:class="{
-              error: $v.todoNeu.$error,
-              valid: $v.todoNeu.$dirty && !$v.todoNeu.$invalid,
-            }"
-            type="text"
-            placeholder="max. 250 Zeichen"
-          />
-          <br />
-          <label for="example-datepicker">
-            <br />
-            Frist:
-          </label>
-          <b-form-datepicker
-            id="example-datepicker"
-            v-model="appointment"
-            :select-attribute="selectAttribute"
-            class="mb-2"
-          ></b-form-datepicker>
-          <b-button @click="ok()"> OK </b-button>
-        </b-modal>
-        <!-- Zum öffnen des Modals -->
-      </div>
-      <!-- <div class="giveTodo" v-for="todo in listOfToDos" :key="todo.date">
+            <b-modal id="to_do_edit_modal" title="To Do">
+              <label for="neueTodo">zu erledigende Aufgabe: </label>
+              <input
+                v-model="todoNeu"
+                v-on:input="$v.todoNeu.$touch"
+                v-bind:class="{
+                  error: $v.todoNeu.$error,
+                  valid: $v.todoNeu.$dirty && !$v.todoNeu.$invalid,
+                }"
+                type="text"
+                placeholder="max. 250 Zeichen"
+              />
+              <br />
+              <label for="example-datepicker">
+                <br />
+                Frist:
+              </label>
+              <b-form-datepicker
+                id="example-datepicker"
+                v-model="appointment"
+                :select-attribute="selectAttribute"
+                class="mb-2"
+              ></b-form-datepicker>
+              <b-button @click="ok()"> OK </b-button>
+            </b-modal>
+            <!-- Zum öffnen des Modals -->
+          </div>
+          <!-- <div class="giveTodo" v-for="todo in listOfToDos" :key="todo.date">
             <b-card v-if="diffMonth">Todo: '{{ todo.todo }}', bis: '{{ todo.date }}'</b-card>
         </div> -->
+        </div>
+      </div>
     </div>
 
     <b-button v-if="!inProjectList" v-b-modal.to_do_edit_modal>+</b-button>
@@ -146,11 +149,7 @@ export default {
   data() {
     return {
       //To DO: new key for todo list
-      listOfToDos: [
-        { todo: "todo1", date: "21.02.2021" },
-        { todo: "todo2", date: "23.02.2021" },
-        { todo: "todo3", date: "24.02.2021" },
-      ],
+      listOfToDos: [],
       selectAttribute: {
         dot: true,
       },
@@ -211,6 +210,14 @@ export default {
     inProjectList() {
       // console.log(this.$route.name);
       return this.$route.name === "ProjectList";
+    },
+    inProfil() {
+      // console.log(this.$route.name);
+      return this.$route.name === "Profil";
+    },
+    inEinstellungen() {
+      // console.log(this.$route.name);
+      return this.$route.name === "Einstellungen";
     },
 
     getMyProjectlist() {

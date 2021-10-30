@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/custom_axios";
+
 //TO DO: comments
 
 const state = () => ({
@@ -53,7 +54,7 @@ const actions = {
 
   /**
 * loads all  projects from Backend and commits the mutation LOAD_ALL_PROJECTS
-* and passes drupal user id gotten from rootstate on
+* and passes drupal user id gotten from rootState on
 * @param state state as parameter for access and manipulation of state data
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
@@ -71,7 +72,7 @@ const actions = {
 
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${full_filter}`,
+      url: `jsonapi/node/projekt/${full_filter}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -96,7 +97,7 @@ const actions = {
 
   /**
  * loads all  projects from Backend and commits the mutation LOAD_ALL_KEYWORDS
- * and passes drupal user id gotten from rootstate on
+ * and passes drupal user id gotten from rootState on
 * @param state state as parameter for access and manipulation of state data
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
@@ -106,7 +107,7 @@ const actions = {
     console.log(rootState.drupal_api.user)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt`,
+      url: `jsonapi/node/projekt`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -141,7 +142,7 @@ const actions = {
 
   /**
    * loads all those projects from Backend where the current user is recorded inside filed_gruppenmitglieder and commits the mutation LOAD_PROJECTs
-   * and passes drupal user id gotten from rootstate on
+   * and passes drupal user id gotten from rootState on
   * @param state state as parameter for access and manipulation of state data
   * @param commit commit us used to call a mutation from this function
   * @param rootState rootState allows access to states of other modules in store
@@ -163,7 +164,7 @@ const actions = {
 
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${filter_joined}`,
+      url: `jsonapi/node/projekt/${filter_joined}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -196,7 +197,7 @@ const actions = {
 
   /**
 * loads chosen project from backend
-* and passes drupal user id gotten from rootstate on
+* and passes drupal user id gotten from rootState on
 * @param state state as parameter for access and manipulation of state data
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
@@ -209,7 +210,7 @@ const actions = {
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
+      url: `jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -259,7 +260,7 @@ const actions = {
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
+      url: `jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -296,7 +297,7 @@ const actions = {
     //console.log(projectId)
     var config = {
       method: 'get',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
+      url: `jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -400,7 +401,7 @@ const actions = {
     console.log(data)
     var config = {
       method: 'post',
-      url: 'https://clr-backend.x-navi.de/jsonapi/node/projekt',
+      url: 'jsonapi/node/projekt',
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -415,8 +416,8 @@ const actions = {
         console.log(response)
         let id_newly_created_project = response.data.data.id
         console.log(id_newly_created_project)
-        //createAllPhasesforNewProject creates all 8 Phases for this project, is in phases.js
-        //  dispatch('phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
+        //createAllPhasesforNewProject creates all 8 Phases for this project, is in project_phases.js
+        //  dispatch('project_phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
 
         //addLecturer does not push one lecturer after the other. array of 3 lecturers -> only 1 lecturer is saved. maybe the quick sequence of post requests leads to a replacement instead of additrion
         /*         for (let gruppenadmin of projEntry.betreuenderDozent) {
@@ -458,7 +459,7 @@ const actions = {
       }`;
     var config = {
       method: 'patch',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${projEntry.projectuuid}`,
+      url: `jsonapi/node/projekt/${projEntry.projectuuid}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -495,7 +496,7 @@ const actions = {
 
     var config = {
       method: 'post',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${id_newly_created_project}/relationships/field_betreuender_dozent`,
+      url: `jsonapi/node/projekt/${id_newly_created_project}/relationships/field_betreuender_dozent`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -529,7 +530,7 @@ const actions = {
 
     var config = {
       method: 'post',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/${role}`,
+      url: `jsonapi/node/projekt/${state.currentProject.uuid}/relationships/${role}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -568,7 +569,7 @@ const actions = {
 
     var config = {
       method: 'delete',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenmitglieder`,
+      url: `jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenmitglieder`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -601,7 +602,7 @@ const actions = {
 
     var config = {
       method: 'delete',
-      url: `https://clr-backend.x-navi.de/jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenadministrator`,
+      url: `jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenadministrator`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',

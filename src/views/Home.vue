@@ -49,7 +49,7 @@ export default {
     this.$store.dispatch("project/loadCurrentProject", this.getProjectID);
 
     this.$store.dispatch(
-      "phases/loadPhasesFromBackend",
+      "project_phases/loadPhasesFromBackend",
       this.$route.params.project_id
     );
   },
