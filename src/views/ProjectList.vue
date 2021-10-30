@@ -1,13 +1,16 @@
 <template>
+
   <div>
     <h1>Meine Projekte</h1>
     <br />
     <b-row>
       <!-- <b-card class="m-2"
+
         v-for="proj in projectList"
         :key="proj.projectId"
         :title="proj.titel"
       > -->
+
       <div>
         <b-row>
           <b-col>
@@ -24,11 +27,13 @@
                       <b-row>
                         <b-col>
                           <!--                         <b-link
+
                           :to="{ name: 'Home', params: { user_id: getUserID } }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
                         >
                       </b-col> -->
+
                           <b-link
                             :to="{
                               name: 'Home',
@@ -65,13 +70,14 @@
       </b-card>
     </b-row>
   </div>
+
 </template>
 
 <script>
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 import ProjectForm from "@/components/ProjectForm";
-
 export default {
+
   name: "ProjectList",
 
   components: {
@@ -96,38 +102,52 @@ export default {
   methods: {
     fetchData(proj) {
       this.project.title = proj.title;
+
     },
-    getProjectTitles: function () {
-      this.$http.get(
-        "https://clr-backend.x-navi.de/jsonapi/node/projekt",
-        function (title) {
-          this.$set("title", title);
-          console.log(title);
-        }
-      );
+    data() {
+        return {
+            project: {
+                kurzbeschreibung: "",
+                betreuenderDozent: [""],
+                externeMitwirkende: "",
+                schlagworter: [],
+                idd: "",
+                title: "",
+            },
+            //projectList: this.getMyProjectlist,
+        };
     },
+
   },
 
   computed: {
     getCurrentUserInternalUID() {
       // return true
       return this.$store.state.drupal_api.user.uid;
+
     },
-    getMyProjectlist() {
-      return this.$store.state.project.myProjects;
+    computed: {
+        getUserID() {
+            // return true
+            return this.$store.state.sparky_api.drupalUserID;
+        },
+        getMyProjectlist() {
+            return this.$store.state.project.myProjects;
+        },
+        getLoadingStatus() {
+            return this.$store.state.project.loadingStatus;
+        },
     },
+
     getLoadingStatus() {
       return this.$store.state.loadingStatus;
-    },
-  },
 
-  ready: function () {
-    this.getProjectTitles();
-  },
-  /* created(){
+    },
+    /* created(){
     return this.$store.state.project[this.$route.params.titel]
     
   }, */
+
   async mounted() {
     this.$store.dispatch("project/loadProjectsFromBackend").then(() => {});
 
@@ -139,5 +159,6 @@ export default {
       this.getCurrentUserInternalUID
     );
   },
+
 };
 </script>

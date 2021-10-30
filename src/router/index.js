@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from "@/store"
 
 //import BegruessungPage from '../views/BegruessungPage.vue'
 
@@ -160,9 +159,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    //let isAuthenticated = store.state.drupal_api.validCredential;
-    //let isAuthenticated = sessionStorage.getItem("valid_credentials") == "true";
-
 
     let isAuthenticated = Boolean(sessionStorage.getItem("valid_credentials")); // true
 
