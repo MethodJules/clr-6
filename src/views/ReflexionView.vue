@@ -1,16 +1,21 @@
 <template>
   <b-tabs content-class="mt-3">
-    <b-tab title="Ich">
-      <Reflexion :sicht="ichSicht"> </Reflexion>
-    </b-tab>
+    <b-overlay :show="getLoadingStatus" rounded="sm">
+      <b-tab title="Ich" @click="loadReflexion(ichSicht)">
+        <Reflexion :sicht="ichSicht"> </Reflexion>
+      </b-tab>
 
-    <b-tab title="Gruppe & Zusammenarbeit">
-      <Reflexion :sicht="gruppeSicht"> </Reflexion>
-    </b-tab>
+      <b-tab
+        title="Gruppe & Zusammenarbeit"
+        @click="loadReflexion(gruppeSicht)"
+      >
+        <Reflexion :sicht="gruppeSicht"> </Reflexion>
+      </b-tab>
 
-    <b-tab title="Fachlicher Kontext">
-      <Reflexion :sicht="kontextSicht"> </Reflexion>
-    </b-tab>
+      <b-tab title="Fachlicher Kontext" @click="loadReflexion(kontextSicht)">
+        <Reflexion :sicht="kontextSicht"> </Reflexion>
+      </b-tab>
+    </b-overlay>
   </b-tabs>
 </template>
 
@@ -27,6 +32,16 @@ export default {
       gruppeSicht: "141a144e-9db2-4257-9fbf-36e77bc63119",
       kontextSicht: "e7b2630b-0f87-44d0-8dfb-f04f6f1c21ee",
     };
+  },
+  methods: {
+    loadReflexion(sicht) {
+      this.$store.dispatch("reflexion/loadReflexionFromBackend", sicht);
+    },
+  },
+  computed: {
+    getLoadingStatus() {
+      return this.$store.state.reflexion.loadingStatus;
+    },
   },
 };
 </script>

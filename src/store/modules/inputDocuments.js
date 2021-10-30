@@ -1,18 +1,16 @@
 import axios from "axios"
-// const urlBackend = "https://clr-backend.x-navi.de"
 
 const state = () => ({
-    inputs: [], // we are using this array to store the file names and sizes only
-    inputsForDatabase: [], // we are going to use this array in order to upload our files to database
+    inputs: [], // we are using this array to store the file names and sizes only in state
+
 
 })
 
 const getters = {
     /**
-     * Getter to bringuploaded files in inputs array. 
+     * Getter to bring uploaded files in inputs array to state. 
      * @param state our state
      * @returns files, uploaded files in state
-     * we send them reversed in order to see the last uploaded on top.
      */
     getInputs(state) {
 
@@ -26,11 +24,11 @@ const mutations = {
 
     /**
      * 
-     * @param state we send our state to the method
+     * @param state we send our state to the method, in order to load the uploaded files to state from backend
      * @param {array} inputarrayPayload array with the fileobjects(payload) that we are going to use 
      * 
-     * uploads the name, size and url of the fileobject (payload) in the array to the state. 
-     * 'inputs' array from the state is exchanged with the 'inputarrayPayload' array from the action method 'loadInputdocumentsFromBackend' 
+     * uploads the name, size and url of the fileobject (payload) in the array 'inputarrayPayload' to the state. 
+     * 'inputs' array from the state will be exchanged with the 'inputarrayPayload' array from the action method 'loadInputdocumentsFromBackend' 
      * 
      */
 
@@ -39,14 +37,14 @@ const mutations = {
         state.inputs = inputarrayPayload;
         console.log(state.inputs)
 
-        //state.inputs = payload
-        /* if (state.inputs.includes(payload)) {
-            console.log(payload)
 
-        } else {
-            state.inputs.push(payload);
-        } */
     },
+
+    /**
+     * 
+     * @param state our state which we used to add a new inputdocument.
+     * @param file uploaded file will be pushed to the state
+     */
 
     UPDATE_INPUTS(state, file) {
         console.log(file)
@@ -56,7 +54,7 @@ const mutations = {
 
     /**
      * 
-     * @param state we send our state to the method
+     * @param state we send our state to the method, where uploaded files exist.
      * @param payload file that we are going to delete
      * 
      * Deletes the file from state
@@ -64,6 +62,8 @@ const mutations = {
     deleteInput(state, payload) {
         state.inputs.splice(payload.index, 1);
     },
+
+    // TODO: Comment for this ? 
 
     setOkButtonClicked(state, isClicked) {
         state.okButtonClicked = isClicked;
@@ -74,6 +74,12 @@ const mutations = {
 }
 
 const actions = {
+
+    /**
+     * 
+     * In this action method, we load the uploaded inputdocuments from backend filtered by the right phase id. For this load method, we included 
+     * the entity reference to file, in order to get the information about the file size and file url.
+     */
 
     async loadInputdocumentsFromBackend({ rootState, commit }) {
         var drupalUserUID = rootState.drupal_api.user.uid;
@@ -103,7 +109,13 @@ const actions = {
                 
                 We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend 
                 with the foreach loop are pushed one after the other in the initialized array 'inputarrayPayload'. This means that the 
-                array does not remain empty. The array consists of the file objects, from the backend.
+                array does not remain empty. If Wenn die dokumente im response vorhanden sind (im Backend existieren in der jeweiligen Phase), wenn kein dokument angelegt 
+                ist, bleibt das array leer.
+
+
+                 The array consists of the file objects, from the backend.
+
+                D.h. das das a
                 */
                 let inputarrayPayload = []
                 for (let index = 0; index < files.length; index++) {
