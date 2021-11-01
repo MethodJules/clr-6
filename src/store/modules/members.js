@@ -31,7 +31,7 @@ const actions = {
         console.log(dispatch)
         var config = {
             method: 'get',
-            url: 'https://clr-backend.x-navi.de/jsonapi/user/user',
+            url: 'jsonapi/user/user',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -60,7 +60,7 @@ const actions = {
 
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/project/${mitglied.userid}`,
+            url: `jsonapi/node/project/${mitglied.userid}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',

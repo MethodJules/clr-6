@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "@/config/custom_axios";
 
 const state = () => ({
     inputs: [], // we are using this array to store the file names and sizes only in state
@@ -83,14 +83,14 @@ const actions = {
 
     async loadInputdocumentsFromBackend({ rootState, commit }) {
         var drupalUserUID = rootState.drupal_api.user.uid;
-        var phaseId = rootstate.project_phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
         console.log(phaseId);
         console.log(rootState.drupal_api);
         console.log(drupalUserUID);
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien?include=field_documentid&filter[field_phasenid.id]=${phaseId}`,
+            url: `jsonapi/node/inputdateien?include=field_documentid&filter[field_phasenid.id]=${phaseId}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -166,7 +166,7 @@ const actions = {
 
             var config = {
                 method: 'post',
-                url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
+                url: `jsonapi/media/document/field_media_document`,
                 headers: {
                     'Accept': 'application/vnd.api+json',
                     'Content-Type': 'application/octet-stream',
@@ -199,7 +199,7 @@ const actions = {
     addInputDocument({ state, rootState, commit }, payload) {
 
         console.log(state)
-        var phaseId = rootstate.project_phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
             "data": {
@@ -228,7 +228,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien?include=field_documentid`,
+            url: `jsonapi/node/inputdateien?include=field_documentid`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -265,7 +265,7 @@ const actions = {
 
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/inputdateien/${payload.input.dataId}`,
+            url: `jsonapi/node/inputdateien/${payload.input.dataId}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',

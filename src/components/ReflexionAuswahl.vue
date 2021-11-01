@@ -46,7 +46,7 @@ export default {
     loadCurrentPhase(phaseid) {
       this.$store.dispatch("project/loadCurrentProject", this.projectId);
       console.log(this.projectId);
-      this.$store.dispatch("phases/loadSinglePhaseFromBackend", {
+      this.$store.dispatch("project_phases/loadSinglePhaseFromBackend", {
         phaseId: phaseid,
         projectId: this.projectId,
       });

@@ -116,13 +116,13 @@ export default {
   methods: {
     ok() {
       console.log(this.$store.state.project_phases.current_phase);
-      this.$store.dispatch("phases/closePhase", {
+      this.$store.dispatch("project_phases/closePhase", {
         phase: this.$store.state.project_phases.current_phase,
         open_close_phase: !this.isPhaseDone,
       });
     },
     updateDocu(inDoku) {
-      this.$store.dispatch("phases/updateDocumentation", inDoku);
+      this.$store.dispatch("project_phases/updateDocumentation", inDoku);
     },
 
     /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
@@ -157,7 +157,7 @@ export default {
         return this.$store.state.project_phases.current_phase.documentationText;
       },
       set(value) {
-        this.$store.commit("phases/UPDATE_DOCUMENTATION", value);
+        this.$store.commit("project_phases/UPDATE_DOCUMENTATION", value);
       },
     },
   },

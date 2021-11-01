@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/custom_axios";
+
 
 const state = () => ({
     /* Here we initialize an empty object for reflexionData, in order to have all the the inputs of textfields in one reflexion.
@@ -15,7 +16,7 @@ const actions = {
     /*  We load the Reflexiondata from backend by filtering the phasenid to get the reflexionData of the right phase */
     async loadReflexionFromBackend({ commit, state, rootState }, sicht) {
         var drupalUserUID = rootState.drupal_api.user.uid;
-        var phaseId = rootstate.project_phases.current_phase.phase_id;
+        var phaseId = rootState.project_phases.current_phase.phase_id;
         commit("loadingStatus", true, { root: true })
 
 
@@ -29,7 +30,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate?filter[field_phasenid.id]=${phaseId}&filter[field_user.drupal_internal__uid]=${drupalUserUID}&filter[field_sichten.id]=${sicht}`,
+            url: `jsonapi/node/reflexionstemplate?filter[field_phasenid.id]=${phaseId}&filter[field_user.drupal_internal__uid]=${drupalUserUID}&filter[field_sichten.id]=${sicht}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -58,7 +59,7 @@ const actions = {
 
     createReflexion({ state, rootState }, reflexion) {
 
-        var phaseId = rootstate.project_phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
         var drupalUserUID = rootState.profile.userData.uuid
         console.log(drupalUserUID)
         console.log(phaseId)
@@ -112,7 +113,7 @@ const actions = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate',
+            url: 'jsonapi/node/reflexionstemplate',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -153,7 +154,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/reflexionstemplate/${reflexion.uuid}`,
+            url: `jsonapi/node/reflexionstemplate/${reflexion.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

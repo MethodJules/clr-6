@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      phases: "phases/getPhasesOfProject",
+      phases: "project_phases/getPhasesOfProject",
     }),
 
     getProjectID() {
@@ -64,7 +64,7 @@ export default {
         if (changeColor) {
           console.log(changeColor);
           el.done = true;
-          this.$store.dispatch("phases/closePhase", {
+          this.$store.dispatch("project_phases/closePhase", {
             phase: el,
             open_close_phase: true,
           });
@@ -89,7 +89,7 @@ export default {
           el.done = false;
           //actually reopens the phase now
           this.$store
-            .dispatch("phases/closePhase", {
+            .dispatch("project_phases/closePhase", {
               phase: el,
               open_close_phase: false,
             })

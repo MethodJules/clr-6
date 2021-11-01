@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/custom_axios";
+
 
 const state = () => ({
     listOfTools: [
@@ -28,10 +29,10 @@ const actions = {
         console.log(rootState.loadingStatus)
         commit("loadingStatus", true, { root: true })
         console.log(rootState.loadingStatus)
-        var phaseId = rootstate.project_phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/tools?filter[field_phasenid.id]=${phaseId}`,
+            url: `jsonapi/node/tools?filter[field_phasenid.id]=${phaseId}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -57,7 +58,7 @@ const actions = {
 
     // method to add a new tool to backend
     createTool({ commit, rootState }, toolEntry) {
-        var phaseId = rootstate.project_phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
         console.log(phaseId)
         console.log(toolEntry)
         var data = `
@@ -80,7 +81,7 @@ const actions = {
         }`;
         var config = {
             method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/tools`,
+            url: `jsonapi/node/tools`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -105,7 +106,7 @@ const actions = {
 
     updateToolWithCheckbox({ rootState, state }, toolEntry) {
 
-        var phaseId = rootstate.project_phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
         console.log(phaseId)
         console.log(toolEntry)
 
@@ -123,7 +124,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/tools/${toolEntry.uuid}`,
+            url: `jsonapi/node/tools/${toolEntry.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

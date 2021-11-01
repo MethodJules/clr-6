@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/custom_axios";
+
 const urlBackend = "https://clr-backend.x-navi.de"
 
 
@@ -29,7 +30,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/user/user?filter[drupal_internal__uid]=${user_internal_uid}&include=user_picture`,
+            url: `jsonapi/user/user?filter[drupal_internal__uid]=${user_internal_uid}&include=user_picture`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -74,7 +75,7 @@ const actions = {
         //TODO: or change to get profile for user when no user_internal_uid is given
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil?filter[field_user_uid]=${user_internal_uid}`,
+            url: `jsonapi/node/profil?filter[field_user_uid]=${user_internal_uid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -120,7 +121,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.uuid}`,
+            url: `jsonapi/node/profil/${profile.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -190,7 +191,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil`,
+            url: `jsonapi/node/profil`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -232,7 +233,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/media/image/field_media_image`,
+            url: `jsonapi/media/image/field_media_image`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/octet-stream',
@@ -304,7 +305,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/user/user/${userID}`,
+            url: `jsonapi/user/user/${userID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -363,7 +364,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/profil/${profile.uuid}`,
+            url: `jsonapi/node/profil/${profile.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

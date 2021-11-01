@@ -89,13 +89,13 @@ export default {
         return this.$store.state.project_phases.current_phase.documentationText;
       },
       set(value) {
-        this.$store.commit("phases/UPDATE_DOCUMENTATION", value);
+        this.$store.commit("project_phases/UPDATE_DOCUMENTATION", value);
       },
     },
   },
   async mounted() {
-    //this.$store.dispatch('phases/loadSinglePhaseFromState', {phaseId: this.$route.params.phase_number})
-    this.$store.dispatch("phases/loadSinglePhaseFromBackend", {
+    //this.$store.dispatch('project_phasesloadSinglePhaseFromState', {phaseId: this.$route.params.phase_number})
+    this.$store.dispatch("project_phases/loadSinglePhaseFromBackend", {
       phaseId: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
     });

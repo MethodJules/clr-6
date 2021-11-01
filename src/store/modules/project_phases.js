@@ -1,4 +1,4 @@
-import axios from '@/config/custom_axios';
+import axios from "@/config/custom_axios";
 //TODO: comments
 const state = () => ({
     // We are using it just when we create a new project I think. 
@@ -6,7 +6,7 @@ const state = () => ({
     // I am not doing it because I dont know actually how you use it. 
     // If it would be ok you can do it or ask me to do it. 
     // It would be easier to read the code. 
-    phases: [
+    project_phases: [
         {
             phase_number: 0,
             phase_name: 'Gruppe bilden',
@@ -41,7 +41,7 @@ const state = () => ({
         }
     ],
 
-    phasesAdditionalInfo: [
+    project_phasesAdditionalInfo: [
         {
             angle: 295,
             label: "Gruppe Bilden",
@@ -90,7 +90,7 @@ const state = () => ({
             iconType: "columns-gap",
         },
     ],
-    phases_this_project: [],
+    project_phases_this_project: [],
     current_phase: {}
 
 
@@ -290,7 +290,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+            url: 'jsonapi/node/phase_vorgehensmodell',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -310,7 +310,7 @@ const actions = {
 
                 var config = {
                     method: 'post',
-                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                    url: 'jsonapi/node/phase_vorgehensmodell',
                     headers: {
                         'Accept': 'application/vnd.api+json',
                         'Content-Type': 'application/vnd.api+json',
@@ -330,7 +330,7 @@ const actions = {
 
                         var config = {
                             method: 'post',
-                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                            url: 'jsonapi/node/phase_vorgehensmodell',
                             headers: {
                                 'Accept': 'application/vnd.api+json',
                                 'Content-Type': 'application/vnd.api+json',
@@ -349,7 +349,7 @@ const actions = {
 
                                 var config = {
                                     method: 'post',
-                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                    url: 'jsonapi/node/phase_vorgehensmodell',
                                     headers: {
                                         'Accept': 'application/vnd.api+json',
                                         'Content-Type': 'application/vnd.api+json',
@@ -368,7 +368,7 @@ const actions = {
 
                                         var config = {
                                             method: 'post',
-                                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                            url: 'jsonapi/node/phase_vorgehensmodell',
                                             headers: {
                                                 'Accept': 'application/vnd.api+json',
                                                 'Content-Type': 'application/vnd.api+json',
@@ -387,7 +387,7 @@ const actions = {
 
                                                 var config = {
                                                     method: 'post',
-                                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                    url: 'jsonapi/node/phase_vorgehensmodell',
                                                     headers: {
                                                         'Accept': 'application/vnd.api+json',
                                                         'Content-Type': 'application/vnd.api+json',
@@ -406,7 +406,7 @@ const actions = {
 
                                                         var config = {
                                                             method: 'post',
-                                                            url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                            url: 'jsonapi/node/phase_vorgehensmodell',
                                                             headers: {
                                                                 'Accept': 'application/vnd.api+json',
                                                                 'Content-Type': 'application/vnd.api+json',
@@ -425,7 +425,7 @@ const actions = {
 
                                                                 var config = {
                                                                     method: 'post',
-                                                                    url: 'https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell',
+                                                                    url: 'jsonapi/node/phase_vorgehensmodell',
                                                                     headers: {
                                                                         'Accept': 'application/vnd.api+json',
                                                                         'Content-Type': 'application/vnd.api+json',
@@ -488,7 +488,7 @@ const actions = {
 
 
 
-        var phaseId = rootstate.project_phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
 
         var data = `{
                 "data": {
@@ -506,7 +506,7 @@ const actions = {
 
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/phase_vorgehensmodell/${phaseId}`,
+            url: `jsonapi/node/phase_vorgehensmodell/${phaseId}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -584,6 +584,7 @@ const mutations = {
         }, */
 
     LOAD_SINGLE_PHASE(state, currentPhase) {
+        console.log(currentPhase)
 
         let currentPhaseFlattened = null
         currentPhase.currentPhase.forEach(element => {
@@ -602,6 +603,7 @@ const mutations = {
         })
         state.current_phase = currentPhaseFlattened
         console.log(currentPhaseFlattened)
+        console.log(state.current_phase)
 
     },
 

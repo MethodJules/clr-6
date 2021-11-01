@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/custom_axios";
+
 
 const state = {
     lecturers: [],
@@ -40,7 +41,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/clr/clr_resource/lecturer?_format=json`,
+            url: `clr/clr_resource/lecturer?_format=json`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -72,7 +73,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/clr/clr_resource/student?_format=json`,
+            url: `clr/clr_resource/student?_format=json`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',

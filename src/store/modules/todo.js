@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/custom_axios";
+
 
 const state = () => ({
     listOfToDos: [
@@ -46,7 +47,7 @@ const actions = {
 
             var config = {
                 method: 'get',
-                url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos?filter[field_projektid.id]=${project.id}&filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
+                url: `jsonapi/node/to_dos?filter[field_projektid.id]=${project.id}&filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
                 headers: {
                     'Accept': 'application/vnd.api+json',
                     'Content-Type': 'application/vnd.api+json',
@@ -112,7 +113,7 @@ const actions = {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos?filter[field_projektid.id]=${projectId}&filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
+            url: `jsonapi/node/to_dos?filter[field_projektid.id]=${projectId}&filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -175,7 +176,7 @@ const actions = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/to_dos',
+            url: 'jsonapi/node/to_dos',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -207,7 +208,7 @@ const actions = {
     deleteTodo({ commit, rootState }, todoEntry) {
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.uuid}`,
+            url: `jsonapi/node/to_dos/${todoEntry.uuid}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -241,7 +242,7 @@ const actions = {
         }`;
         var config = {
             method: 'patch',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/to_dos/${todoEntry.uuid}`,
+            url: `jsonapi/node/to_dos/${todoEntry.uuid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
