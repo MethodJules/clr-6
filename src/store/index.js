@@ -9,7 +9,7 @@ import tool from './modules/tool'
 import todo from './modules/todo'
 import assistent from './modules/assistent'
 import inputDocuments from './modules/inputDocuments'
-import phases from './modules/phases'
+import project_phases from './modules/project_phases'
 import project from './modules/project'
 import output_documents from './modules/output_documents'
 import postfach from './modules/postfach'
@@ -24,17 +24,17 @@ Vue.config.devtools = true
 
 export default new Vuex.Store({
     modules: {
-       items,
-       project,
-       members,
-       reflexion,
-       documentation,
-       tool,
-       todo,
-       assistent,
-       phases,
-       output_documents,
-       postfach,
+        items,
+        project,
+        members,
+        reflexion,
+        documentation,
+        tool,
+        todo,
+        assistent,
+        project_phases,
+        output_documents,
+        postfach,
         sparky_api,
         inputDocuments,
         drupal_api,
@@ -47,6 +47,7 @@ export default new Vuex.Store({
         ...sourceData,
         // authId: '98St7Q8Zi2N9SPa5ahzssq9kbyp6'
         authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
+        loadingStatus: false,
 
     },
 
@@ -94,6 +95,12 @@ export default new Vuex.Store({
     },
 
     mutations: {
+
+        loadingStatus(state, newLoadingStatus) {
+            state.loadingStatus = newLoadingStatus
+        },
+
+
         setPost(state, { post, postId }) {
             Vue.set(state.posts, postId, post)
         },

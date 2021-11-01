@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from "@/config/custom_axios";
 import router from '../../router';
 
 const state = () => ({
@@ -32,7 +32,7 @@ const actions = {
 
         //eigtl csrf token, nicht sessiontoken
         console.log(state)
-        await axios.get('https://clr-backend.x-navi.de/rest/session/token')
+        await axios.get('rest/session/token')
             .then((response) => {
                 console.log(response.data);
                 const token = response.data;
@@ -90,7 +90,7 @@ const actions = {
         //TODO: state.csrf_token testen und evtl gegen rootState.drupal_api.csrf_token austauschen
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/user/register?_format=json',
+            url: 'user/register?_format=json',
             headers: {
                 'X-CSRF-Token': state.csrf_token,
                 'Content-Type': 'application/json'
@@ -110,6 +110,10 @@ const actions = {
                 var base64 = btoa(creds);
                 let authorization_token = "Basic " + base64;
                 dispatch("profile/createProfile", authorization_token, { root: true })
+                //TODO: call dispatch for loaduserdata to get user uuid -> create profil with user uuid and make a relatinoship field in backend
+                //TODO: then use useruuid for loading profile from backend -> then loadprofiledata can use the user uuid to get the profile
+                //TODO: -> with different uuids from group members and admins profiles can be filtered and shown. - atm it is done with uids
+                //TODO: do it like this: first createuser.then so here -> dispatch(loaduserdata).then(here call createprofile) <- this is still here in function
                 //TODO: dispatch userdata update profileimage or put in image url in const data above, so it is linked  with the user creation
 
             }).catch(error => {
@@ -126,7 +130,7 @@ const actions = {
         //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished
         //maybe change both functions -> sparky_api/authenticate calls loginToDrupal when it is finished, and App/Login.vue calls sparky_api/authenticate first
         //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
-        const url = 'https://clr-backend.x-navi.de/user/login?_format=json';
+        const url = 'user/login?_format=json';
         const data = `{"name": "${username}", "pass": "${password}"}`;
         const config = {
             method: 'post',
@@ -158,6 +162,7 @@ const actions = {
             await commit('LOAD_TOKEN_SESSION_STORAGE');
             //await dispatch('loadUserFromBackend');
             await router.push("/")
+            console.log(router)
         } else {
             console.log("session token")
             router.push("/Login");
@@ -176,7 +181,7 @@ const actions = {
         console.log(rootState.drupal_api.logout_token)
         console.log(rootState.drupal_api.authToken)
         console.log(sessionStorage)
-        const url = `https://clr-backend.x-navi.de/user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
+        const url = `user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
         const config = {
             method: 'post',
             url: url,
@@ -258,6 +263,7 @@ const mutations = {
         state.csrf_token = login_data.csrf_token;
         state.user = login_data.current_user;
         state.logout_token = login_data.logout_token;
+        console
         /* console.log(state.csrf_token)
         console.log(state.user)
         console.log(state.logout_token) */

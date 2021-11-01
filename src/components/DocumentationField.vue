@@ -42,8 +42,10 @@ export default {
 
   computed: {
     getDocumentation() {
-      console.warn(this.$store.state.phases.current_phase.documentationText);
-      return this.$store.state.phases.current_phase.documentationText;
+      console.warn(
+        this.$store.state.project_phases.current_phase.documentationText
+      );
+      return this.$store.state.project_phases.current_phase.documentationText;
     },
   },
 
@@ -53,7 +55,7 @@ export default {
     //console.log(doc)
     //console.log(typeof(doc))
     this.documentationList = doc;
-    console.log(this.documentationList[0].idd + "das ist in dokfield");
+    console.log(this.documentationList[0].uuid + "das ist in dokfield");
   },
 };
 </script>

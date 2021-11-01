@@ -286,15 +286,11 @@ export default {
               this.zugangsKennung = "";
               this.passwort = "";
             } else {
-              this.$bvToast.toast(
-                // removed because of new routing this is not available at login at this point of time `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.name}`,
-                `Login Daten falsch`,
-                {
-                  title: "Error",
-                  autoHideDelay: 4000,
-                  variant: "warning",
-                }
-              );
+              this.$bvToast.toast(`Login Daten falsch`, {
+                title: "Error",
+                autoHideDelay: 4000,
+                variant: "warning",
+              });
             }
           });
         this.$store.dispatch("drupal_api/saveBasicAuth", authorization_token);

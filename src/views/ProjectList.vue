@@ -4,49 +4,57 @@
     <br />
     <b-row>
       <!-- <b-card class="m-2"
+
         v-for="proj in projectList"
         :key="proj.projectId"
         :title="proj.titel"
       > -->
+
       <div>
         <b-row>
           <b-col>
-            <table>
-              <tr v-for="project in getProjectlist" :key="project.idd">
-                <b-card style="max-height: 20rem">
-                  <b-col>
-                    <b-row>
-                      <b-col>
-                        <h3>{{ project.title }}</h3>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <!--                         <b-link
+            <div>
+              <table>
+                <tr v-for="project in getMyProjectlist" :key="project.uuid">
+                  <b-card style="max-height: 20rem">
+                    <b-col>
+                      <b-row>
+                        <b-col>
+                          <h3>{{ project.title }}</h3>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col>
+                          <!--                         <b-link
+
                           :to="{ name: 'Home', params: { user_id: getUserID } }"
                           class="btn btn-outline-dark btn-block mb-2"
                           >Dashboard</b-link
                         >
                       </b-col> -->
-                        <b-link
-                          :to="{
-                            name: 'Home',
-                            params: { project_id: project.idd },
-                          }"
-                          class="btn btn-outline-dark btn-block mb-2"
-                          >Dashboard</b-link
-                        >
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <ReflexionAuswahl :projectId="project.idd" />
-                      </b-col>
-                    </b-row>
-                  </b-col>
-                </b-card>
-              </tr>
-            </table>
+
+                          <b-link
+                            :to="{
+                              name: 'Home',
+                              params: {
+                                project_id: project.uuid,
+                              },
+                            }"
+                            class="btn btn-outline-dark btn-block mb-2"
+                            >Dashboard</b-link
+                          >
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-col>
+                          <ReflexionAuswahl :projectId="project.uuid" />
+                        </b-col>
+                      </b-row>
+                    </b-col>
+                  </b-card>
+                </tr>
+              </table>
+            </div>
           </b-col>
         </b-row>
       </div>
@@ -68,7 +76,6 @@
 <script>
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 import ProjectForm from "@/components/ProjectForm";
-
 export default {
   name: "ProjectList",
 
@@ -83,12 +90,11 @@ export default {
         betreuenderDozent: [""],
         externeMitwirkende: "",
         schlagworter: [],
-
-        idd: "",
+        uuid: "",
         title: "",
       },
 
-      projectList: this.getProjectlist,
+      //projectList: this.getMyProjectlist,
     };
   },
 
@@ -96,39 +102,32 @@ export default {
     fetchData(proj) {
       this.project.title = proj.title;
     },
-    getProjectTitles: function () {
-      this.$http.get(
-        "https://clr-backend.x-navi.de/jsonapi/node/projekt",
-        function (title) {
-          this.$set("title", title);
-          console.log(title);
-        }
-      );
-    },
   },
 
   computed: {
-    getUserID() {
+    getCurrentUserInternalUID() {
       // return true
-      return this.$store.state.sparky_api.drupalUserID;
+      return this.$store.state.drupal_api.user.uid;
     },
-    getProjectlist() {
+
+    getLoadingStatus() {
+      return this.$store.state.loadingStatus;
+    },
+    getMyProjectlist() {
       return this.$store.state.project.myProjects;
     },
   },
-  ready: function () {
-    this.getProjectTitles();
-  },
-  /* created(){
-    return this.$store.state.project[this.$route.params.titel]
-    
-  }, */
-  async mounted() {
-    this.$store.dispatch("project/loadProjectsFromBackend");
 
-    //this.projectList = this.$store.state.project.myProjects;
-    //console.log(this.projectList);
-    console.log("mount projectList");
+  async mounted() {
+    this.$store.dispatch("project/loadProjectsFromBackend").then(() => {});
+
+    //load lecturer student and user for different lists
+    this.$store.dispatch("user/loadLecturersFromBackend");
+    this.$store.dispatch("user/loadStudentsFromBackend");
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getCurrentUserInternalUID
+    );
   },
 };
 </script>

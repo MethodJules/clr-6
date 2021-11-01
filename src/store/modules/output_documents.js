@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "@/config/custom_axios";
 // const urlBackend = "https://clr-backend.x-navi.de"
 
 const state = () => ({
@@ -63,13 +63,13 @@ const actions = {
 
     async loadOutputdocumentsFromBackend({ rootState, commit }) {
         var drupalUserUID = rootState.drupal_api.user.uid;
-        var phaseId = rootState.phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
         console.log(rootState.drupal_api);
         console.log(drupalUserUID);
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/outputdateien?include=field_output_datei&filter[field_phasenid.id]=${phaseId}`,
+            url: `jsonapi/node/outputdateien?include=field_output_datei&filter[field_phasenid.id]=${phaseId}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -134,7 +134,7 @@ const actions = {
 
             var config = {
                 method: 'post',
-                url: `https://clr-backend.x-navi.de/jsonapi/media/document/field_media_document`,
+                url: `jsonapi/media/document/field_media_document`,
                 headers: {
                     'Accept': 'application/vnd.api+json',
                     'Content-Type': 'application/octet-stream',
@@ -167,7 +167,7 @@ const actions = {
     addOutputDocument({ state, rootState, commit }, payload) {
 
         console.log(state)
-        var phaseId = rootState.phases.current_phase.phase_id
+        var phaseId = rootState.project_phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
             "data": {
@@ -196,7 +196,7 @@ const actions = {
 
         var config = {
             method: 'post',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/outputdateien?include=field_output_datei`,
+            url: `jsonapi/node/outputdateien?include=field_output_datei`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -232,7 +232,7 @@ const actions = {
 
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/outputdateien/${payload.output.dataId}`,
+            url: `jsonapi/node/outputdateien/${payload.output.dataId}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',

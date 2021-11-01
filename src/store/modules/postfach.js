@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/custom_axios";
+
 
 const state = () => ({
     listOfPostfach: [
@@ -9,7 +10,7 @@ const state = () => ({
 const actions = {
 
     async loadPostfachFromBackend({ commit }) {
-        await axios.get('https://clr-backend.x-navi.de/jsonapi/node/postfach')
+        await axios.get('jsonapi/node/postfach')
             .then((response) => {
                 //console.log(response);
                 const data = response.data.data;
@@ -29,7 +30,7 @@ const actions = {
     deletePostfach({ commit }, postfachEntry) {
         var config = {
             method: 'delete',
-            url: `https://clr-backend.x-navi.de/jsonapi/node/postfach/${postfachEntry.idd}`,
+            url: `jsonapi/node/postfach/${postfachEntry.uuid}`,
 
             headers: {
                 'Accept': 'application/vnd.api+json',
@@ -66,7 +67,7 @@ const mutations = {
         }`;
         var config = {
             method: 'post',
-            url: 'https://clr-backend.x-navi.de/jsonapi/node/postfach',
+            url: 'jsonapi/node/postfach',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -93,7 +94,7 @@ const mutations = {
 
             const field_title = element.attributes.title;
 
-            state.listOfPostfach.push({ postfach: field_nachrichten, idd: field_id, title: field_title })
+            state.listOfPostfach.push({ postfach: field_nachrichten, uuid: field_id, title: field_title })
 
         });
     }

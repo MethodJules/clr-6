@@ -23,11 +23,15 @@
     <!-- <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Dokumentation bearbeiten</b-link>   -->
     <!-- <div>{{inDoku.documentationText}}</div> -->
     <!-- v-model="inDoku.documentation" Zeile 15 -->
-    <b-button v-b-modal.modal-phase class="mb-phase">
+    <b-button v-if="!isPhaseDone" v-b-modal.modal-phase class="mb-phase">
       Phase abschließen
+    </b-button>
+    <b-button v-if="isPhaseDone" v-b-modal.modal-phase class="mb-phase">
+      Phase wieder öffnen
     </b-button>
 
     <b-modal
+      @ok="ok"
       id="modal-phase"
       title="Bist du dir Sicher?"
       cancel-title="Abbrechen"
@@ -110,10 +114,15 @@ export default {
   }, */
 
   methods: {
+    ok() {
+      console.log(this.$store.state.project_phases.current_phase);
+      this.$store.dispatch("project_phases/closePhase", {
+        phase: this.$store.state.project_phases.current_phase,
+        open_close_phase: !this.isPhaseDone,
+      });
+    },
     updateDocu(inDoku) {
-      console.log(inDoku + "das ist in templatebuttons");
-      //this.$store.dispatch("documentation/updateDocumentation", inDoku);
-      this.$store.dispatch("phases/updateDocumentation", inDoku);
+      this.$store.dispatch("project_phases/updateDocumentation", inDoku);
     },
 
     /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
@@ -128,24 +137,27 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch("documentation/loadDocusFromBackend");
+    /*     await this.$store.dispatch("documentation/loadDocusFromBackend");
     const doc = this.$store.state.documentation.documentations;
     //console.log(doc)
     //console.log(typeof(doc))
     this.documentationList = doc;
-    console.log(this.documentationList[0].idd + "das ist in dokfield");
+    console.log(this.documentationList[0].uuid + "das ist in dokfield");
 
     this.current_phase =
-      this.$store.state.phases.current_phase.documentationText;
+      this.$store.state.project_phases.current_phase.documentationText; */
   },
 
   computed: {
+    isPhaseDone() {
+      return this.$store.state.project_phases.current_phase.abschluss;
+    },
     getDocumentation: {
       get() {
-        return this.$store.state.phases.current_phase.documentationText;
+        return this.$store.state.project_phases.current_phase.documentationText;
       },
       set(value) {
-        this.$store.commit("phases/UPDATE_DOCUMENTATION", value);
+        this.$store.commit("project_phases/UPDATE_DOCUMENTATION", value);
       },
     },
   },

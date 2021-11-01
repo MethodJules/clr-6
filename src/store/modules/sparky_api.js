@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 const baseUrl = "http://147.172.178.30:8080/"
 
 //TO DO: Coments
@@ -31,10 +32,8 @@ const mutations = {
     setSparkyObject(state, response) {
         state.sparkyUserID = response.data.id
         state.sparkyUserObject = response
-        console.log("pls funze")
-        console.log(response)
-        console.log(state.sparkyUserID)
-        console.log(state.sparkyUserObject)
+        /*         console.log(state.sparkyUserID)
+                console.log(state.sparkyUserObject) */
     },
     sparkyLogin(state) {
         state.sparkylogin = true
@@ -53,7 +52,7 @@ const actions = {
             console.log(commit)
             var config = {
                 method: 'get',
-                url: 'https://clr-backend.x-navi.de/jsonapi/user/user',
+                url: 'jsonapi/user/user',
                 headers: {
                     'Accept': 'application/vnd.api+json',
                     'Content-Type': 'application/vnd.api+json',
@@ -86,7 +85,7 @@ const actions = {
     * @param password input from login
     * @param matrikelnummer input from registrate
     */
-    async getWhoamI({ dispatch, commit }, { username, password, matrikelnummer }) {
+    async getWhoamI({ dispatch, commit, state }, { username, password, matrikelnummer }) {
         console.log(state.responsestate.data.token.token)
         //state.sparkyUserID = " response.data.id"
         axios.get(

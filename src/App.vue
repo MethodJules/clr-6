@@ -6,6 +6,9 @@
 <script>
 export default {
     name: "App",
+    created() {
+      this.$store.dispatch("assistent/getData");
+    }
 };
 </script>
 

@@ -13,7 +13,7 @@
             ="Dozenten eingeben"
           />
                       </div> -->
-    <b-badge v-for="keyword in keywords" :key="keyword.id" variant="primary"
+    <b-badge v-for="(keyword, index) in keywords" :key="index" variant="primary"
       >{{ keyword }}
       <BIconXCircleFill v-on:click="deletekeyword(keyword)"> </BIconXCircleFill
     ></b-badge>
@@ -24,10 +24,26 @@
 
     <!-- {{keyword2}}  -->
 
-    <b-card-group columns v-for="project in searchResult" :key="project.id">
-      <b-card>
+    <b-card-group v-for="(project, index) in getFilteredProjects" :key="index">
+      <b-card border-variant="dark" :header="project.title" align="center">
+        <!--               <b-card
+        border-variant="dark"
+        align="center"
+        text-variant="white"
+        overlay
+        img-src="https://picsum.photos/900/250/?image=3"
+      > -->
+        <!-- 
+        <b-img
+          v-bind="user"
+          src="https://picsum.photos/900/250/?image=3"
+          fluid
+          rounded="circle"
+          class="img-center shadow shadow-lg--hover"
+          style="height: 140px"
+        /> -->
+
         <b-card-text>
-          <p>{{ project.title }}</p>
           <div v-if="'istDozent' == 'istDozent'">
             <p>Kurzbeschreibung: {{ project.kurzbeschreibung }}</p>
             <p>Betreuender Dozent: {{ project.betreuenderDozent }}</p>
@@ -35,7 +51,12 @@
               externe Mitwirkende:
               {{ project.externeMitwirkende }}
             </p>
-            <p>Schlagwörter: {{ project.schlagworter }}</p>
+            <span
+              v-for="(schlagwort, index) in project.schlagworter"
+              :key="index"
+            >
+              {{ schlagwort }},
+            </span>
           </div>
         </b-card-text>
       </b-card>
@@ -62,6 +83,7 @@ export default {
 
   data() {
     return {
+      user: { width: 200, height: 200, class: "m1" },
       project: {
         kurzbeschreibung: "",
         betreuenderDozent: "",
@@ -86,7 +108,7 @@ export default {
   methods: {
     simpleSuggestionList() {
       //return this.existingKeywordList
-      return ["schlagwort", "Testprojekt", "Literaturreview"];
+      return this.getKeyWords;
     },
 
     deletekeyword(keyword) {
@@ -97,6 +119,8 @@ export default {
 
     keywordSearch(keyword) {
       this.keywords.push(keyword);
+      this.$store.dispatch("project/loadProjectFilterbyKeyword", this.keywords);
+      this.keyword = "";
       console.log(this.searchResult);
       this.adjustKeywords();
     },
@@ -130,6 +154,15 @@ export default {
       );
     },
   },
+  computed: {
+    getKeyWords() {
+      return this.$store.state.project.allKeywordsList;
+    },
+
+    getFilteredProjects() {
+      return this.$store.state.project.projectsFilteredbyKeywords;
+    },
+  },
   ready: function () {
     this.getProjectTitles();
   },
@@ -138,6 +171,9 @@ export default {
     
   }, */
   async mounted() {
+    this.$store.dispatch("project/loadAllKeywords");
+
+    /* 
     //this.$store.dispatch('project/loadProjectsFromBackend')
     this.projectList = this.$store.state.project.projectList;
     this.searchResult = this.projectList;
@@ -148,7 +184,7 @@ export default {
     }
     console.log("keywordlist");
     console.log(this.existingKeywordList);
-    this.keywordSearch(this.keyword2);
+    this.keywordSearch(this.keyword2); */
   },
 };
 </script>

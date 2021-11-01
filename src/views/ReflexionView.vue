@@ -33,5 +33,6 @@ export default {
       this.$store.dispatch("reflexion/loadReflexionFromBackend", sicht);
     },
   },
+  computed: {},
 };
 </script>

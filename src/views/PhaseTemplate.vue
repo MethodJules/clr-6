@@ -7,7 +7,7 @@
         <b-col cols="10">
           <!-- <h2>Gruppe Bilden</h2> -->
           <!-- <h2>{{ getPhaseName }}</h2> -->
-          <h2>Phase: {{ phaseId }}</h2>
+          <h2>Phase: {{ getPhaseName }}</h2>
           <!--  <h2>{{ projectId }}</h2>
                     <h2>Phase: {{ xphase.phase_name }}</h2>  -->
         </b-col>
@@ -55,7 +55,7 @@ export default {
 
   data() {
     return {
-      phaseId: this.$route.params.phase_id,
+      phaseId: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
     };
   },
@@ -74,42 +74,44 @@ export default {
 
   computed: {
     /* xphase() {
-      return this.$store.state.phases.phases.find(
-        (phase) => phase.phase_id === this.$route.params.phase_id
+      return this.$store.state.project_phases.phases.find(
+        (phase) => phase.phase_number === this.$route.params.phase_number
       ); */
     //},
 
     getPhaseName() {
-      return this.$store.state.phases.current_phase.phase_name;
+      //return this.$store.state.project_phases.current_phase.label;
+      return this.$store.state.project_phases.current_phase.title;
     },
 
     getDocumentation: {
       get() {
-        return this.$store.state.phases.current_phase.documentationText;
+        return this.$store.state.project_phases.current_phase.documentationText;
       },
       set(value) {
-        this.$store.commit("phases/UPDATE_DOCUMENTATION", value);
+        this.$store.commit("project_phases/UPDATE_DOCUMENTATION", value);
       },
     },
   },
   async mounted() {
-    //this.$store.dispatch('phases/loadSinglePhaseFromState', {phaseId: this.$route.params.phase_id})
-    this.$store.dispatch("phases/loadSinglePhaseFromBackend", {
-      phaseId: this.$route.params.phase_id,
+    //this.$store.dispatch('project_phasesloadSinglePhaseFromState', {phaseId: this.$route.params.phase_number})
+    this.$store.dispatch("project_phases/loadSinglePhaseFromBackend", {
+      phaseId: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
     });
 
     //this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
 
-    this.$store.state.phases.current_phase.phase_name;
-    console.log(this.$store.state.phases.current_phase.phase_name);
-    console.log(this.$store.state.phases.current_phase);
-    console.log(this.$route.params.phase_id);
+    this.$store.state.project_phases.current_phase.phase_name;
+    console.log(this.$store.state.project_phases.current_phase.phase_name);
+    console.log(this.$store.state.project_phases.current_phase);
+    console.log(this.$route.params.phase_number);
 
     this.current_phase =
-      this.$store.state.phases.current_phase.documentationText;
+      this.$store.state.project_phases.current_phase.documentationText;
 
-    this.current_phase = this.$store.state.phases.current_phase.phase_name;
+    this.current_phase =
+      this.$store.state.project_phases.current_phase.phase_name;
 
     //put back in so that phasetemplate buttons are shown again
     //const doc = this.$store.state.documentation.documentations;

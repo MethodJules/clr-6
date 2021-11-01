@@ -8,7 +8,7 @@
       >
         <div>
           <b-form-checkbox
-            :id="tool.idd"
+            :id="tool.uuid"
             name="checkbox-1"
             @input="checkboxUpdate(index, tool)"
             v-model="tool.benutzt"

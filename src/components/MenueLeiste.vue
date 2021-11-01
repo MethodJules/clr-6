@@ -20,10 +20,11 @@
         <b-navbar-nav>
           <!-- Es gibt kein Profil in router.. -->
           <b-nav-item
+            v-if="inProjectList || inEinstellungen || inProfil"
             :to="{
               name: 'Profil',
               params: {
-                project_id: this.$route.params.project_id,
+                user_internal_uid: this.getCurrentUserInternalUID,
               },
             }"
             >Profil</b-nav-item
@@ -79,13 +80,10 @@
           </b-navbar-nav>
         </template>
 
-        <b-navbar-nav>
+        <b-navbar-nav v-if="inProjectList || inEinstellungen || inProfil">
           <b-nav-item
             :to="{
               name: 'Einstellungen',
-              params: {
-                project_id: this.$route.params.project_id,
-              },
             }"
             >Einstellungen</b-nav-item
           >
@@ -164,6 +162,25 @@ export default {
   computed: {
     startpage() {
       return this.$route.name === "ProjectList";
+    },
+    getCurrentUserUUID() {
+      return this.$store.state.profile.userData.uuid;
+    },
+    //pprovided user uid is taken from the state, where the currentuuser uid is saved, because this navigation should only lead to the own profile
+    getCurrentUserInternalUID() {
+      return this.$store.state.drupal_api.user.uid;
+    },
+    inProjectList() {
+      // console.log(this.$route.name);
+      return this.$route.name === "ProjectList";
+    },
+    inProfil() {
+      // console.log(this.$route.name);
+      return this.$route.name === "Profil";
+    },
+    inEinstellungen() {
+      // console.log(this.$route.name);
+      return this.$route.name === "Einstellungen";
     },
   },
 };

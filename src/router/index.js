@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from "@/store"
 
 //import BegruessungPage from '../views/BegruessungPage.vue'
 
@@ -86,7 +85,7 @@ const routes = [
             },
 
             {
-                path: '/phasetemplate/:phase_id:project_id',
+                path: '/phasetemplate/:phase_number:project_id',
                 name: 'PhaseTemplate',
                 //props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
@@ -137,14 +136,14 @@ const routes = [
             },
 
             {
-                path: '/profil/:project_id',
+                path: '/profil/:user_internal_uid',
                 name: 'Profil',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
             },
 
             {
-                path: '/einstellungen/:project_id',
+                path: '/einstellungen',
                 name: 'Einstellungen',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Einstellungen.vue')
@@ -160,9 +159,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    //let isAuthenticated = store.state.drupal_api.validCredential;
-    //let isAuthenticated = sessionStorage.getItem("valid_credentials") == "true";
-
 
     let isAuthenticated = Boolean(sessionStorage.getItem("valid_credentials")); // true
 

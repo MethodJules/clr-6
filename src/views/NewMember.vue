@@ -92,7 +92,9 @@ export default {
           (member) => member.userid === this.getCurrentUserID
         )
       ) {
-        console.log("Du brauchst Adminrechte popup machen");
+        alert(
+          "Du musst Gruppenadministrator sein, um neue Gruppenmitglieder hinzufügen zu können"
+        );
       }
 
       if (
@@ -100,12 +102,19 @@ export default {
           (member) => member.userid === this.getCurrentUserID
         )
       ) {
-        this.$store.dispatch("project/addMember", {
-          mitglied: member,
-          role: this.role,
-        });
-        console.log("Nutzer hinzugefügt popup machen");
-        this.$router.push({ name: "Groupmanagement" });
+        if (
+          this.getGroupAdmins.some((e) => e.userid === member.userid) ||
+          this.getGroupMembers.some((e) => e.userid === member.userid)
+        ) {
+          alert("Dieser Nutzer ist bereits Teil deiner Gruppe.");
+        } else {
+          this.$store.dispatch("project/addMember", {
+            mitglied: member,
+            role: this.role,
+          });
+          alert("Der Nutzer wurde der Gruppe hinzugefügt");
+          this.$router.push({ name: "Groupmanagement" });
+        }
       }
 
       console.log(this.member);
@@ -124,7 +133,7 @@ export default {
       return this.$store.state.project.currentProjectGroupAdmins;
     },
     getCurrentUserID() {
-      return this.$store.state.profile.userData.idd;
+      return this.$store.state.profile.userData.uuid;
     },
   },
 };
