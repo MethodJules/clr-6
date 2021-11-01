@@ -3,7 +3,9 @@
     <b-container fluid>
       <b-row>
         <b-col sm="5">
-          <label for="input-1"> <strong> Projekttitel </strong> </label>
+          <label for="input-1">
+            <strong> Projekttitel </strong>
+          </label>
         </b-col>
 
         <b-col sm="10">
@@ -13,7 +15,9 @@
           <br />
         </b-col>
         <b-col sm="5">
-          <label for="input-1"> <strong> Betreuer*in </strong> </label>
+          <label for="input-1">
+            <strong> Betreuer*in </strong>
+          </label>
         </b-col>
 
         <b-col sm="10">
@@ -60,8 +64,10 @@
           <br />
         </b-col>
 
-        <b-col sm="5">
-          <label for="input-2"> <strong> Schlagwörter </strong> </label>
+        <b-col sm="10">
+          <label for="input-2">
+            <strong> Schlagwörter </strong>
+          </label>
           <b-row>
             <b-form-input v-model="getKeywords" id="input-2"> </b-form-input>
           </b-row>
@@ -72,7 +78,9 @@
         </b-col>
 
         <b-col sm="5">
-          <label for="input-1"> <strong> Projektbeschreibung </strong> </label>
+          <label for="input-1">
+            <strong> Projektbeschreibung </strong>
+          </label>
         </b-col>
 
         <b-col sm="10">
@@ -85,8 +93,10 @@
           <br />
         </b-col>
 
-        <b-col sm="5">
-          <label for="input-1"> <strong> Gruppenmitglieder </strong> </label>
+        <b-col sm="10">
+          <label for="input-1">
+            <strong> Gruppenmitglieder </strong>
+          </label>
           <b-row v-for="mitglied in getGroupMembers" :key="mitglied.id">
             <b-form-input
               v-model="mitglied.username"
@@ -111,45 +121,22 @@
       </b-row>
     </b-container>
 
-    <div>
-      <b-row>
-        <b-col cols="2"> </b-col>
-        <b-col cols="3">
-          <b-link
-            :to="{ name: 'Home' }"
-            class="btn btn-outline-dark btn-block mb-2"
-            >Zum Dashboard</b-link
-          >
-        </b-col>
-        <b-col cols="3">
-          <b-row>
-            <div>
-              <b-button @click="updateProject()"
-                >Beschreibung bearbeiten</b-button
-              >
-            </div>
-          </b-row>
-        </b-col>
-        <b-col cols="3">
-          <b-link
-            :to="{ name: 'Groupmanagement' }"
-            class="btn btn-outline-dark btn-block mb-2"
-            >Zum Gruppenmanagement</b-link
-          >
-        </b-col>
+    <b-row class="projectBeschreibung-buttons">
+      <b-button :to="{ name: 'Home' }">Zum Dashboard</b-button>
 
-        <b-col cols="2" />
-      </b-row>
-    </div>
+      <b-button @click="updateProject()">Beschreibung bearbeiten</b-button>
+
+      <b-button :to="{ name: 'Groupmanagement' }"
+        >Zum Gruppenmanagement</b-button
+      >
+    </b-row>
   </div>
 </template>
 
 <script>
 import ProjectForm from "@/components/ProjectForm.vue";
-
 export default {
   name: "Projektbeschreibung",
-
   components: {
     ProjectForm,
   },
@@ -172,10 +159,8 @@ export default {
           rightIndex = i;
         }
       }
-
       return rightIndex;
     },
-
     updateProject() {
       console.log(this.$store.state.project.keywordsInString);
       console.log(this.getKeywords);
@@ -186,7 +171,6 @@ export default {
       }
       var keywords = Object.assign({}, schlagwortarray);
       console.log(keywords);
-
       var updatedProj = {
         title: this.getCurrentProject.title,
         kurzbeschreibung: this.getCurrentProject.kurzbeschreibung,
@@ -196,7 +180,6 @@ export default {
         gruppenadmin: this.$store.state.sparky_api.drupalUserID,
         projectuuid: this.$route.params.project_id,
       };
-
       this.$store.dispatch("project/updateProject", updatedProj);
     },
   },
@@ -208,7 +191,6 @@ export default {
     );
     console.log(this.getCurrentProjecLecturers[0]);
   },
-
   computed: {
     getGroupMembers() {
       let unfiltered_members =
@@ -244,14 +226,12 @@ export default {
 
     getLecturers() {
       console.log(this.$store.getters["user/getLecturers"]);
-
       return this.$store.getters["user/getLecturers"];
     },
     getCurrentUserInternalUID() {
       return this.$store.state.drupal_api.user.uid;
     },
   },
-
   mounted() {
     this.$store.dispatch("user/loadLecturersFromBackend");
     //this.$store.dispatch("user/loadStudentsFromBackend");
@@ -264,3 +244,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.projectBeschreibung-buttons {
+  display: flex;
+  justify-content: center;
+}
+.projectBeschreibung-buttons * {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  max-width: 15rem;
+}
+</style>

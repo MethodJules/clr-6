@@ -72,26 +72,21 @@
       </div>
       <br />
 
-      <b-container>
-        <b-row>
-          <b-col>
-            <b-button>
-              <router-link :to="{ name: 'NewMember' }" tag="div">
+          <b-row class="groupmanagement-buttons">
+            <b-button
+            :to="{ name: 'NewMember' }" tag="div">
                 Neues Mitglied hinzufügen
-              </router-link>
+              
             </b-button>
-          </b-col>
-          <b-col>
+         
             <b-button @click="removeOwnAdminRights"
               >Admin-Rechte entfernen
             </b-button>
-          </b-col>
-          <b-col>
+          
             <b-button @click="$bvModal.show('modal-scoped')"
               >Gruppe verlassen
             </b-button>
-          </b-col>
-        </b-row>
+          </b-row>
 
         <!--  <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>       
         <b-modal
@@ -331,7 +326,18 @@ then the appropriate dispatch will be sent */
 };
 </script>
 
+
+
 <style scoped>
+.groupmanagement-buttons {
+  display: flex;
+  justify-content: center;
+}
+.groupmanagement-buttons * {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  max-width: 15rem;
+}
 h1 {
   text-align: right;
 }
