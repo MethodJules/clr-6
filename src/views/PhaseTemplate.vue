@@ -21,22 +21,26 @@
             They take too much place and we need to make a detailed page for mobile. 
             Thats why I have changed it to tabs and hide them when they are not needed.
             Is it Okay????  -->
-      <b-row>
-        <b-tabs content-class="mt-3" fill>
-          <b-tab title="Documentation" active>
-            <b-form-textarea disabled v-model="getDocumentation">
-              <DocumentationField /> </b-form-textarea
-          ></b-tab>
-          <b-tab title="Input Documents"> <InputDocuments /></b-tab>
-          <b-tab title="Output Documents">
-            <OutputDocuments />
-          </b-tab>
-          <b-tab title="Verwendete Tools">
-            <UsedTools />
-          </b-tab>
-        </b-tabs>
-      </b-row>
-      <TemplateButtons></TemplateButtons>
+      <b-card border-variant="primary">
+        <b-card-text>
+          <b-row>
+            <b-tabs content-class="mt-3" fill>
+              <b-tab title="Documentation" active>
+                <b-form-textarea disabled v-model="getDocumentation">
+                  <DocumentationField /> </b-form-textarea
+              ></b-tab>
+              <b-tab title="Input Documents"> <InputDocuments /></b-tab>
+              <b-tab title="Output Documents">
+                <OutputDocuments />
+              </b-tab>
+              <b-tab title="Verwendete Tools">
+                <UsedTools />
+              </b-tab>
+            </b-tabs>
+          </b-row>
+          <TemplateButtons></TemplateButtons>
+        </b-card-text>
+      </b-card>
     </b-container>
   </div>
 </template>

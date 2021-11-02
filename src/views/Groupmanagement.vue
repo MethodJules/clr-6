@@ -1,113 +1,124 @@
 <template>
   <div class="home">
-    <b-row>
-      <h2>{{ getCurrentProject.title }}</h2>
-    </b-row>
     <br />
 
     <div>
-      <div v-for="mitglied in getGroupMembers" :key="mitglied.userid">
-        <b-row>
-          <b-col>
-            <h5>Gruppenmitglied</h5>
-          </b-col>
-          <b-col>
-            <b-nav-item
-              :to="{
-                name: 'Profil',
-                params: {
-                  user_internal_uid: mitglied.internal_uid,
-                },
-              }"
-              >{{ mitglied.username }}</b-nav-item
-            >
-          </b-col>
-          <b-col>
-            <b-button
-              v-if="(getCurrentUserID != mitglied.userid) & currentUserisAdmin"
-              variant="link"
-              @click="deleteMember(mitglied)"
-            >
-              <b-icon icon="x"></b-icon>
-            </b-button>
-            <b-button
-              v-if="(getCurrentUserID != mitglied.userid) & currentUserisAdmin"
-              variant="link"
-              @click="giveAdminRights(mitglied)"
-              ><b-icon icon="flag-fill"></b-icon
-            ></b-button>
-            <br />
-          </b-col>
-        </b-row>
-      </div>
-
-      <div v-for="admin in getGroupAdmins" :key="admin.userid">
-        <b-row>
-          <b-col>
-            <h5>Gruppenadministrator</h5>
-          </b-col>
-          <b-col>
-            <b-nav-item
-              :to="{
-                name: 'Profil',
-                params: {
-                  user_internal_uid: admin.internal_uid,
-                },
-              }"
-              >{{ admin.username }}</b-nav-item
-            >
-            <!--            <h5>{{ admin.username }}</h5> -->
-          </b-col>
-          <b-col>
-            <b-button
-              variant="link"
-              v-if="(getCurrentUserID != admin.userid) & currentUserisAdmin"
-              @click="deleteAdmin(admin)"
-            >
-              <b-icon icon="x"></b-icon>
-            </b-button>
-            <br />
-          </b-col>
-        </b-row>
-      </div>
-      <br />
-
-          <b-row class="groupmanagement-buttons">
-            <b-button
-            :to="{ name: 'NewMember' }" tag="div">
-                Neues Mitglied hinzufügen
-              
-            </b-button>
-         
-            <b-button @click="removeOwnAdminRights"
-              >Admin-Rechte entfernen
-            </b-button>
-          
-            <b-button @click="$bvModal.show('modal-scoped')"
-              >Gruppe verlassen
-            </b-button>
-          </b-row>
-
-        <!--  <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>       
-        <b-modal
-          id="leave_group"
-          title="Bist du dir sicher?"
-          cancel-title="Abbrechen"
+      <b-card-group deck>
+        <b-card
+          header-tag="header"
+          footer-tag="footer"
+          border-variant="primary"
         >
-        </b-modal> -->
-
-        <b-modal id="modal-scoped" title="Bist du dir sicher?">
-          <template #modal-footer="{ cancel }">
-            <!-- Emulate built in modal footer ok and cancel button actions -->
-            <b-button size="sm" variant="danger" @click="cancel()">
-              Cancel
-            </b-button>
-            <b-button size="sm" variant="success" @click="leaveGroup()">
-              OK
-            </b-button>
+          <template #header>
+            <h6 class="mb-0">
+              <b> {{ getCurrentProject.title }} </b>
+            </h6>
           </template>
-        </b-modal>
-      </b-container>
+          <b-card-text>
+            <div v-for="mitglied in getGroupMembers" :key="mitglied.userid">
+              <b-row>
+                <b-col>
+                  <p>Gruppenmitglied</p>
+                </b-col>
+                <b-col>
+                  <b-nav-item
+                    :to="{
+                      name: 'Profil',
+                      params: {
+                        user_internal_uid: mitglied.internal_uid,
+                      },
+                    }"
+                  >
+                    <p class="mitglied">
+                      <b> {{ mitglied.username }} </b>
+                    </p>
+                  </b-nav-item>
+                </b-col>
+                <b-col>
+                  <b-button
+                    v-if="
+                      (getCurrentUserID != mitglied.userid) & currentUserisAdmin
+                    "
+                    variant="link"
+                    @click="deleteMember(mitglied)"
+                  >
+                    <b-icon icon="x"></b-icon>
+                  </b-button>
+                  <b-button
+                    v-if="
+                      (getCurrentUserID != mitglied.userid) & currentUserisAdmin
+                    "
+                    variant="link"
+                    @click="giveAdminRights(mitglied)"
+                    ><b-icon icon="person-check-fill"></b-icon
+                  ></b-button>
+                  <br />
+                </b-col>
+              </b-row>
+            </div>
+
+            <div v-for="admin in getGroupAdmins" :key="admin.userid">
+              <b-row>
+                <b-col>
+                  <p>Gruppenadministrator</p>
+                </b-col>
+                <b-col>
+                  <b-nav-item
+                    :to="{
+                      name: 'Profil',
+                      params: {
+                        user_internal_uid: admin.internal_uid,
+                      },
+                    }"
+                    ><p class="admin">
+                      <b>{{ admin.username }}</b>
+                    </p>
+                  </b-nav-item>
+                </b-col>
+                <b-col>
+                  <b-button
+                    variant="link"
+                    v-if="
+                      (getCurrentUserID != admin.userid) & currentUserisAdmin
+                    "
+                    @click="deleteAdmin(admin)"
+                  >
+                    <b-icon icon="x"></b-icon>
+                  </b-button>
+                  <br />
+                </b-col>
+              </b-row>
+            </div>
+            <br />
+
+            <b-row class="groupmanagement-buttons">
+              <b-button :to="{ name: 'NewMember' }" tag="div">
+                Neues Mitglied hinzufügen
+              </b-button>
+
+              <b-button @click="removeOwnAdminRights"
+                >Admin-Rechte entfernen
+              </b-button>
+
+              <b-button @click="$bvModal.show('modal-scoped')"
+                >Gruppe verlassen
+              </b-button>
+            </b-row>
+
+            <b-modal id="modal-scoped" title="Bist du dir sicher?">
+              <template #modal-footer="{ cancel }">
+                <!-- Emulate built in modal footer ok and cancel button actions -->
+                <b-button size="sm" variant="danger" @click="cancel()">
+                  Cancel
+                </b-button>
+                <b-button size="sm" variant="success" @click="leaveGroup()">
+                  OK
+                </b-button>
+              </template>
+            </b-modal>
+          </b-card-text>
+        </b-card>
+      </b-card-group>
     </div>
   </div>
 </template>
@@ -329,6 +340,20 @@ then the appropriate dispatch will be sent */
 
 
 <style scoped>
+.mitglied {
+  color: black;
+  text-align: justify;
+
+  display: inline-block;
+}
+
+.admin {
+  color: #c93e37;
+  text-align: justify;
+
+  display: inline-block;
+}
+
 .groupmanagement-buttons {
   display: flex;
   justify-content: center;
@@ -352,20 +377,5 @@ h5 {
 
 button {
   float: right;
-}
-
-.groupCard {
-  color: black;
-  margin: 5px;
-  width: 30%;
-  text-align: center;
-}
-
-.card {
-  display: inline-block;
-}
-
-img {
-  width: 60%;
 }
 </style>

@@ -170,6 +170,12 @@ export default {
   margin-top: 1rem !important;
 }
 
+.buttons-container * {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  max-width: 15rem;
+}
+
 footer {
   padding: 8px 15px;
   background: #76dbae;

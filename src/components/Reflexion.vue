@@ -5,15 +5,14 @@
         Erfolgreich Gespeichert !
       </div>
     </transition>
+    <!--  <h2>Reflexion zu Phase: {{ phaseId }}</h2> -->
 
-    <h2>Reflexion zu Phase: {{ phaseId }}</h2>
     <b-container fluid>
       <b-row>
         <b-col sm="2">
           <!-- Textfeld 1 -->
-          <!-- v-model="getReflexionData.berichten_reagieren" -->
-          <!-- v-model="getReflexionData.in_bezug_setzen" -->
-          <label for="textfeld-1">Berichten / Reagieren </label>
+
+          <label for="textfeld-1"><b>Berichten/Reagieren </b></label>
         </b-col>
 
         <b-col sm="10">
@@ -36,7 +35,7 @@
       <b-row>
         <b-col sm="2">
           <!-- Textfeld 2 -->
-          <label for="textfeld-2">In Bezug setzen </label>
+          <label for="textfeld-2"><b>In Bezug setzen</b> </label>
         </b-col>
 
         <b-col sm="10">
@@ -59,7 +58,7 @@
       <b-row>
         <b-col sm="2">
           <!-- Textfeld 3 -->
-          <label for="textfeld-3">Schlussfolgern </label>
+          <label for="textfeld-3"><b>Schlussfolgern </b></label>
         </b-col>
 
         <b-col sm="10">
@@ -82,7 +81,7 @@
       <b-row>
         <b-col sm="2">
           <!-- Textfeld 4 -->
-          <label for="textfeld-4">Rekonstruieren </label>
+          <label for="textfeld-4"><b>Rekonstruieren</b> </label>
         </b-col>
 
         <b-col sm="10">
