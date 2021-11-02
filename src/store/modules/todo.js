@@ -24,7 +24,31 @@ const getters = {
         return state.listOfToDos.date
     },
 
-
+    getAttributesForVcCalendar(state) {
+        console.log("It is loading two times? Why?")
+        // because it loads two times I have made attributes array empty at the begining of this getter
+        // I think at loadTodosAllProjects, it is done because of the same reason. 
+        // I have inspired from there. 
+        // But it needs to be fixed..
+        state.attributes = []
+        let todos = state.listOfToDos;
+        todos.forEach(todo => {
+            state.attributes.push({
+                highlight: todo[0].erledigt,
+                // highlight configuration
+                // You can just delete to see default one. 
+                highlight: {
+                    color: 'orange',
+                    fillMode: 'light',
+                },
+                dates: todo[0].date,
+                popover: {
+                    label: todo[0].title,
+                },
+            })
+        });
+        return state.attributes;
+    }
 
 }
 
