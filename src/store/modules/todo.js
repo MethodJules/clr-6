@@ -7,7 +7,9 @@ const state = () => ({
     ],
     todos: [],//array to store only the todo tasks from listOfToDos[] 
     dates: [],//array to store only the deadlines from listOfToDos[] 
-    token: ""
+    token: "",
+    attributes: [],
+    currentProject: ""
 
 
 })
@@ -17,12 +19,6 @@ const state = () => ({
 getter to call the arrays todos[] and dates[] 
 */
 const getters = {
-    getTodo: state => {
-        return state.listOfToDos.todo
-    },
-    getDate: state => {
-        return state.listOfToDos.date
-    },
 
     getAttributesForVcCalendar(state) {
         console.log("It is loading two times? Why?")
@@ -30,24 +26,51 @@ const getters = {
         // I think at loadTodosAllProjects, it is done because of the same reason. 
         // I have inspired from there. 
         // But it needs to be fixed..
-        state.attributes = []
+        // state.attributes = []
         let todos = state.listOfToDos;
         todos.forEach(todo => {
-            state.attributes.push({
-                highlight: todo[0].erledigt,
-                // highlight configuration
-                // You can just delete to see default one. 
-                highlight: {
-                    color: 'orange',
-                    fillMode: 'light',
-                },
-                dates: todo[0].date,
-                popover: {
-                    label: todo[0].title,
-                },
+            todo.forEach((todo) => {
+
+                state.attributes.push({
+                    highlight: todo.erledigt,
+                    // highlight configuration
+                    // You can just delete to see default one. 
+                    highlight: {
+                        color: 'orange',
+                        fillMode: 'light',
+                    },
+                    dates: todo.date,
+                    popover: {
+                        label: todo.title,
+                    },
+                })
             })
         });
         return state.attributes;
+    },
+
+    // OUT OF USE for now. maybe later
+    getTodosOfCurrentProject(state) {
+        console.log(state.listOfToDos);
+        console.log(state.currentProject)
+
+        let todos = ""
+        if (currentProject) {
+
+            state.listOfToDos.forEach(todo => {
+                console.log(todo[0].project_title)
+                if (todo[0].project_title == state.currentProject.title) {
+                    console.log("todo founded")
+                    console.log(todo)
+                    todos = todo;
+                }
+            });
+        } else {
+            todos = listOfToDos;
+        }
+        console.log(todos)
+        return todos;
+
     }
 
 }
@@ -285,7 +308,9 @@ const actions = {
 
 
 
-    }
+    },
+
+
 
 }
 
@@ -345,16 +370,14 @@ const mutations = {
      *  
      */
     SAVE_TODOS_ALL_PROJECTS(state, todoArray) {
-
-
-
-
         state.listOfToDos.push(todoArray)
         console.log(state.listOfToDos)
 
+    },
+
+    SET_CURRENT_PROJECT(state, project) {
+        state.currentProject = project;
     }
-
-
 
 
 
