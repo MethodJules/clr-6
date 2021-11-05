@@ -34,12 +34,9 @@
           >
         </b-navbar-nav>
 
-        <template
+        <div
           v-if="!startpage & !(this.$route.params.project_id == undefined)"
         >
-          <b-navbar-nav>
-            <b-nav-item to="/profil">Profil</b-nav-item>
-          </b-navbar-nav>
 
           <b-navbar-nav>
             <b-nav-item
@@ -51,8 +48,7 @@
               }"
               >Dashboard</b-nav-item
             >
-          </b-navbar-nav>
-          <b-navbar-nav>
+
             <b-nav-item
               :to="{
                 name: 'Forum',
@@ -62,8 +58,7 @@
               }"
               >Projektforum</b-nav-item
             >
-          </b-navbar-nav>
-          <b-navbar-nav>
+
             <b-nav-item
               :to="{
                 name: 'Groupmanagement',
@@ -74,7 +69,7 @@
               >Gruppenmanagement</b-nav-item
             >
           </b-navbar-nav>
-        </template>
+        </div>
 
         <b-navbar-nav v-if="inProjectList || inEinstellungen || inProfil">
           <b-nav-item
@@ -104,10 +99,9 @@
             ></b-form-input>
           </b-input-group>
         </b-navbar-nav>
-        </template>
         
         <!-- If in a project: Show links to project-related pages, but not to profile and settings and project search (workaround for Bug 8). -->
-        <template v-if="(showProjectLinks)">
+        <div v-if="(showProjectLinks)">
           <b-navbar-nav>
             <b-nav-item to="/home">Dashboard</b-nav-item>
           </b-navbar-nav>
@@ -128,7 +122,7 @@
           <b-navbar-nav>
             <b-nav-item to="/groupmanagement">Gruppenmanagement</b-nav-item>
           </b-navbar-nav>
-        </template>
+        </div>
 
       </b-collapse>
         <!-- Always show logout. -->
