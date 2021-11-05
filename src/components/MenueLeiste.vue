@@ -7,15 +7,18 @@
       class="navbar-top"
       sticky
     >
+
+      <!-- Always show branding and Home button. -->
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
-      <b-navbar-brand>CLR Tool</b-navbar-brand>
+      <b-navbar-brand>eCLR Tool</b-navbar-brand>
 
       <b-navbar-nav>
         <b-nav-item to="/">
-          <b-icon icon="house-fill" to="/">Startseite </b-icon></b-nav-item
+          <b-icon icon="house-fill" to="/">Startseite</b-icon></b-nav-item
         >
       </b-navbar-nav>
 
+      <!-- If on startpage/profile page/settings: Show links to profile and settings and project search -->
       <b-collapse id="nav-text-collapse" variant="secondary" is-nav>
         <b-navbar-nav>
           <!-- Es gibt kein Profil in router.. -->
@@ -35,16 +38,9 @@
           v-if="!startpage & !(this.$route.params.project_id == undefined)"
         >
           <b-navbar-nav>
-            <b-nav-item
-              :to="{
-                name: 'Projektbeschreibung',
-                params: {
-                  project_id: this.$route.params.project_id,
-                },
-              }"
-              >Projektbeschreibung</b-nav-item
-            >
+            <b-nav-item to="/profil">Profil</b-nav-item>
           </b-navbar-nav>
+
           <b-navbar-nav>
             <b-nav-item
               :to="{
@@ -108,7 +104,36 @@
             ></b-form-input>
           </b-input-group>
         </b-navbar-nav>
+        </template>
+        
+        <!-- If in a project: Show links to project-related pages, but not to profile and settings and project search (workaround for Bug 8). -->
+        <template v-if="(showProjectLinks)">
+          <b-navbar-nav>
+            <b-nav-item to="/home">Dashboard</b-nav-item>
+          </b-navbar-nav>
+          <b-navbar-nav>
+            <b-nav-item
+              :to="{
+                name: 'Projektbeschreibung',
+                params: {
+                  project_id: this.$route.params.project_id,
+                },
+              }"
+              >Projektbeschreibung</b-nav-item
+            >
+          </b-navbar-nav>
+          <b-navbar-nav>
+            <b-nav-item to="/forum">Projektforum</b-nav-item>
+          </b-navbar-nav>
+          <b-navbar-nav>
+            <b-nav-item to="/groupmanagement">Gruppenmanagement</b-nav-item>
+          </b-navbar-nav>
+        </template>
+
       </b-collapse>
+        <!-- Always show logout. -->
+
+
       <b-navbar-nav>
         <b-button @click="logout()">
           <b-icon icon="box-arrow-right"></b-icon
@@ -160,8 +185,8 @@ export default {
   },
 
   computed: {
-    startpage() {
-      return this.$route.name === "ProjectList";
+    showProfileSettingsLinks() {
+      return (this.$route.name === "ProjectList" || this.$route.name === "Profil" || this.$route.name === "Einstellungen");
     },
     getCurrentUserUUID() {
       return this.$store.state.profile.userData.uuid;

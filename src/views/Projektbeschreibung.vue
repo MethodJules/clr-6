@@ -125,7 +125,7 @@
           <b-row>
             <div>
               <b-button @click="updateProject()"
-                >Beschreibung bearbeiten</b-button
+                >Änderungen speichern</b-button
               >
             </div>
           </b-row>

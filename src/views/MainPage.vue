@@ -108,6 +108,12 @@ export default {
 };
 </script>
 <style>
+.v-card__title,
+.v-card__subtitle,
+.v-card__text {
+    color: white;
+}
+
 .row {
   width: 100% !important;
   margin: 0 !important;

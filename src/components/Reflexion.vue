@@ -172,7 +172,6 @@ export default {
     addItem() {
       console.log("add item");
       if (!this.$v.$invalid) {
-        console.log("title: ${this.titela}");
 
         var ausgabe = {
           sichten: this.sicht,

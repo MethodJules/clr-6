@@ -100,7 +100,7 @@ export default {
       projectId: this.$route.params.project_id,
     });
 
-    //this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
+    this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
 
     this.$store.state.project_phases.current_phase.phase_name;
     console.log(this.$store.state.project_phases.current_phase.phase_name);

@@ -18,11 +18,11 @@
           <td>{{ getUser.fullname }}</td>
         </tr>
         <tr>
-          <th scope="row">Matrikelnummer:</th>
+          <th scope="row">Matrikelnummer</th>
           <td>{{ getUser.matrikelnummer }}</td>
         </tr>
         <tr>
-          <th scope="row">E-Mail:</th>
+          <th scope="row">E-Mail</th>
           <td>{{ getUser.mail }}</td>
         </tr>
 
@@ -164,9 +164,8 @@
     <b-row>
       <b-row class="buttons">
         <!-- <input type="file" @change="onFileChanged" accept="image/jpeg,image/png"> -->
-        <b-button @click="updateProfile()">Änderung Speichern</b-button>
-        <!-- TODO: Abbrechen Funktion clear 
-                                    <b-col lg="4" class="pb-2"><b-button to="/einstellungen">Abbrechen</b-button> </b-col> -->
+        <b-button @click="updateProfile()">Änderungen speichern</b-button>
+        <b-button @click="cancelUpdate()">Änderungen verwerfen</b-button>
       </b-row>
     </b-row>
   </b-row>
@@ -297,6 +296,10 @@ export default {
       } else {
         alert("Bitte alles ausfüllen");
       }
+    },
+
+    cancelUpdate() {
+      this.$store.dispatch("profile/loadProfileFromBackend");
     },
   },
   watch: {

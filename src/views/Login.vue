@@ -1,4 +1,5 @@
 <template>
+    <div class="w-background">
   <div class="container">
     <b-card class="container-form">
       <b-form-group>
@@ -134,6 +135,23 @@
       </b-form-group>
     </b-card>
   </div>
+            <v-footer padless>
+                <v-card class="flat tile text-center" color="#6c757d">
+                    <v-card-title>
+                        eCLR Tool - Das Tool für kollaborative Literaturreviews in der Lehre
+                    </v-card-title>
+                    <v-card-subtitle>
+                        Dieses OpenSource-Projekt wurde im Rahmen der Ausschreibung "Qualität Plus" des MWK Niedersachsen erstellt.
+                        Näheres dazu finden Sie <a href="https://www.uni-hildesheim.de/fb4/institute/bwl/informationssysteme-und-unternehmensmodellierung/projekte/qualitaet-plus/">hier</a>
+                    </v-card-subtitle>
+                    <v-divider></v-divider>
+                    <v-card-text class="pb-3">
+                        <img src="../assets/logo.svg" width="24px" height="24px"> Universität Hildesheim - {{ new Date().getFullYear() }}
+                </v-card>
+                    </v-card-text>
+        </div>
+            </v-footer>
+    </div>
 </template>
 <script>
 import {
@@ -334,6 +352,17 @@ export default {
 };
 </script>
 <style scoped>
+.w-background {
+    background-image: url('../assets/background2.jpg');
+    background-size: cover;
+}
+
+.v-card__title,
+.v-card__subtitle,
+.v-card__text {
+    color: white;
+}
+
 .container {
   display: grid;
   grid-template-rows: repeat(3, 1fr);
