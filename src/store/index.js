@@ -17,6 +17,7 @@ import sparky_api from './modules/sparky_api'
 import drupal_api from './modules/drupal_api'
 import user from './modules/user'
 import profile from './modules/profile'
+import phases from './modules/phases'
 
 
 Vue.use(Vuex)
@@ -39,7 +40,8 @@ export default new Vuex.Store({
         inputDocuments,
         drupal_api,
         user,
-        profile
+        profile,
+        phases
     },
 
     //noch in Datei packen
