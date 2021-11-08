@@ -8,6 +8,7 @@ export default {
     name: "App",
     created() {
       this.$store.dispatch("assistent/getData");
+      this.$store.dispatch("phases/load_phases");
     }
 };
 </script>
