@@ -6,10 +6,11 @@
       <!-- <z-canvas :views="myViews"> -->
       <ReviewCircle> </ReviewCircle>
     </z-canvas>
-    <ReflexionAuswahl :projectId="getProjectID" />
-    {{ getProjectID }}
+    <div class="reflexionsButton">
+      <ReflexionAuswahl :projectId="getProjectID" />
+    </div>
   </div>
-</template>
+</template >
 
 <script>
 import ReviewCircle from "@/components/ReviewCircle.vue";
@@ -56,3 +57,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.reflexionsButton {
+  position: absolute;
+  top: 85vh; /** vh: viewer height . vw: viewer width */
+  right: 80vh;
+}
+</style>

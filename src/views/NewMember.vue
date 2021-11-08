@@ -57,6 +57,19 @@
           <b-col>
             <b-button @click="save()">Speichern</b-button>
           </b-col>
+          <b-col> </b-col>
+          <b-col> </b-col>
+          <b-col>
+            <b-button
+              :to="{
+                name: 'Groupmanagement',
+                params: {
+                  project_id: this.$route.params.project_id,
+                },
+              }"
+              >Abbrechen</b-button
+            >
+          </b-col>
         </b-row>
       </b-container>
     </b-form>
