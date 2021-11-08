@@ -322,9 +322,6 @@ const mutations = {
      */
     SAVE_TODOS_ALL_PROJECTS(state, todoArray) {
 
-
-
-
         state.listOfToDos.push(todoArray)
         console.log(state.listOfToDos)
 

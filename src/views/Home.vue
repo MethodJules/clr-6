@@ -36,6 +36,7 @@ export default {
       return this.$route.params.project_id;
     },
   },
+
   mounted() {
     this.$zircle.config({
       mode: "mixed",

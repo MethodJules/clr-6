@@ -148,18 +148,29 @@ const actions = {
   * @param rootState rootState allows access to states of other modules in store
   */
   async loadProjectsFromBackend({ commit, state, rootState, dispatch }) {
-    commit("loadingStatus", true, { root: true })
+
+    let filter_joined = ""
+    console.log(rootState.drupal_api.user)
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
     console.log(rootState.drupal_api.user)
     //console.log(drupalUserUID)
-    //BUG: filter does not find projects where user is group admin, but no group member can be found -> afterwards createproject() can be changed so that the creating user only is groupadmin and not both member and admin
 
-    const filter_or_group = `?filter[or-group][group][conjunction]=OR`
-    const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
-    //const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
-    const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
-    const filter_joined = filter_or_group + filter_gruppenmitglieder + filter_gruppenadministrator
+    if (rootState.drupal_api.user.role == "student") {
+      console.log("student")
+      //BUG: filter does not find projects where user is group admin, but no group member can be found -> afterwards createproject() can be changed so that the creating user only is groupadmin and not both member and admin
+      const filter_or_group = `?filter[or-group][group][conjunction]=OR`
+      const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
+      //const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
+      const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
+      filter_joined = filter_or_group + filter_gruppenmitglieder + filter_gruppenadministrator
+    } else if (rootState.drupal_api.user.role == "lecturer") {
+      filter_joined = `?filter[field_betreuender_dozent][condition][path]=field_betreuender_dozent.drupal_internal__uid&filter[field_betreuender_dozent][condition][operator]=IN&filter[field_betreuender_dozent][condition][value]=${drupalUserUID}`
+      console.log(filter_joined)
+    }
+    commit("loadingStatus", true, { root: true })
+
+
 
 
     var config = {
@@ -172,7 +183,7 @@ const actions = {
         'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
       },
     };
-
+    console.log(config)
     axios(config)
       .then(function (response) {
         //console.log(response)
@@ -437,7 +448,7 @@ const actions = {
 
   updateProject({ commit, rootState }, projEntry) {
     let userID = rootState.profile.userData.uuid
-    console.log(projEntry)
+    const dozenten = JSON.stringify(projEntry.betreuenderDozent)
 
     //let index = state.myProjects.indexOf(projEntry);
     //state.myProjects[index]=projEntry;
@@ -454,6 +465,11 @@ const actions = {
             "field_schlagworter": ${keywords},
             "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
             "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
+          },
+          "relationships": {
+            "field_betreuender_dozent": {
+              "data":  ${dozenten}    
+            }
           }
         }
       }`;
@@ -480,40 +496,40 @@ const actions = {
 
   },
 
-  addLecturer({ state, rootState, commit }, { gruppenadmin, id_newly_created_project }) {
-    //TODO: Gruppenadministrator in Backend zu array ändern
-
-    /*     let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
-        state.currentProject.gruppenmitglieder.splice(index, 1); */
-    console.log(gruppenadmin)
-    console.log(id_newly_created_project)
-
-
-    var data = `{ "data": [{
-            "type": "user--user",
-             "id": "${gruppenadmin}"
-          }]}`;
-
-    var config = {
-      method: 'post',
-      url: `jsonapi/node/projekt/${id_newly_created_project}/relationships/field_betreuender_dozent`,
-      headers: {
-        'Accept': 'application/vnd.api+json',
-        'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
-      },
-      data: data
-    };
-    axios(config)
-      .then((response) => {
-        console.log(response);
-
-      }).catch(function (error) {
-        console.log(error);
-      });
-
-  },
+  /*   addLecturer({ state, rootState, commit }, { gruppenadmin, id_newly_created_project }) {
+      //TODO: Gruppenadministrator in Backend zu array ändern
+  
+      //    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
+        //  state.currentProject.gruppenmitglieder.splice(index, 1); 
+      console.log(gruppenadmin)
+      console.log(id_newly_created_project)
+  
+  
+      var data = `{ "data": [{
+              "type": "user--user",
+               "id": "${gruppenadmin}"
+            }]}`;
+  
+      var config = {
+        method: 'post',
+        url: `jsonapi/node/projekt/${id_newly_created_project}/relationships/field_betreuender_dozent`,
+        headers: {
+          'Accept': 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
+          'Authorization': rootState.drupal_api.authToken,
+          'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        },
+        data: data
+      };
+      axios(config)
+        .then((response) => {
+          console.log(response);
+  
+        }).catch(function (error) {
+          console.log(error);
+        });
+  
+    }, */
 
 
   addMember({ state, rootState, commit }, { mitglied, role }) {
@@ -603,6 +619,37 @@ const actions = {
     var config = {
       method: 'delete',
       url: `jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_gruppenadministrator`,
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json',
+        'Authorization': rootState.drupal_api.authToken,
+        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+      },
+      data: data
+    };
+    axios(config)
+      .then((response) => {
+        console.log(response);
+        // commit('deleteMemberFrontend', payload);
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+  },
+
+  leaveGroupLecturer({ rootState, state }, mitglied) {
+
+
+    console.log(mitglied)
+
+    var data = `{ "data": [{
+            "type": "user--user",
+             "id": "${mitglied.uuid}"
+          }]}`;
+
+    var config = {
+      method: 'delete',
+      url: `jsonapi/node/projekt/${state.currentProject.uuid}/relationships/field_betreuender_dozent`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
@@ -854,9 +901,9 @@ const mutations = {
     // TODO: error handling, in case there is nothing included?
     included_data.forEach(element => {
 
-      const username = element.attributes.field_fullname;
-      const userid = element.id
-      lecturers_array.push({ username: username, userid: userid, })
+      const name = element.attributes.field_fullname;
+      const uuid = element.id
+      lecturers_array.push({ name: name, uuid: uuid, })
 
     })
     state.currentProjectLecturers = lecturers_array

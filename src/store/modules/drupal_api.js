@@ -145,6 +145,9 @@ const actions = {
 
         await axios(config)
             .then((response) => {
+                console.log(response)
+                console.log(response.data.current_user)
+                console.log(response.data.access_token)
                 console.log(rootState.sparky_api.sparkylogin)
                 commit('SAVE_LOGIN_USER', response.data);
                 //console.log(response.data.csrf_token);
@@ -255,15 +258,39 @@ const mutations = {
     * @param {*} login_data 
     */
     SAVE_LOGIN_USER(state, login_data) {
+
+        //in access_token
+        login_data
+        const fullname = login_data.access_token.fullname
+        const uuid = login_data.access_token.uuid
+        const mail = login_data.access_token.mail
+        const matrikelnummer = login_data.access_token.matrikelnumber
+        //only gets secoond role from roles array which is either student or dozent
+        const role = login_data.access_token.roles[1]
+        //for both array entries [authenticated, student/dozent]
+        //const roles=login_data.access_token.roles
+
+        // in current_user
+        const display_name = login_data.current_user.name
+        const uid = login_data.current_user.uid
+
+        let current_user = { fullname: fullname, uuid: uuid, mail: mail, matrikelnummer: matrikelnummer, role: role, displayname: display_name, uid: uid }
+
+
+        /*         console.log(response.data.current_user)
+                console.log(response.data.access_token)
+                login_data.current_user
+                login_data.access_token */
+
+
         sessionStorage.setItem("csrf_token", login_data.csrf_token);
         sessionStorage.setItem("logout_token", login_data.logout_token);
         sessionStorage.setItem("valid_credentials", "true");
-        sessionStorage.setItem('current_user', JSON.stringify(login_data.current_user));
+        sessionStorage.setItem('current_user', JSON.stringify(current_user));
         //sessionStorage.setItem("current_user", login_data.current_user);
         state.csrf_token = login_data.csrf_token;
-        state.user = login_data.current_user;
+        state.user = current_user
         state.logout_token = login_data.logout_token;
-        console
         /* console.log(state.csrf_token)
         console.log(state.user)
         console.log(state.logout_token) */

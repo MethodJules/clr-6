@@ -8,8 +8,14 @@
       sticky
     >
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
-      <b-navbar-brand>CLR Tool</b-navbar-brand>
 
+      <b-navbar-brand v-if="inProjectList || inEinstellungen || inProfil"
+        >CLR Tool</b-navbar-brand
+      >
+
+      <b-navbar-brand v-else>{{
+        getProjectName | truncate(19)
+      }}</b-navbar-brand>
       <b-navbar-nav>
         <b-nav-item to="/">
           <b-icon icon="house-fill" to="/">Startseite </b-icon></b-nav-item
@@ -67,7 +73,7 @@
               >Projektforum</b-nav-item
             >
           </b-navbar-nav>
-          <b-navbar-nav>
+          <b-navbar-nav v-if="getUserRole != 'lecturer'">
             <b-nav-item
               :to="{
                 name: 'Groupmanagement',
@@ -181,6 +187,25 @@ export default {
     inEinstellungen() {
       // console.log(this.$route.name);
       return this.$route.name === "Einstellungen";
+    },
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
+    getProjectName() {
+      let projektname = this.$store.state.project.currentProject.title;
+
+      // return this.$store.state.project.currentProject.title.slice(0, 15);
+      return projektname;
+    },
+  },
+  filters: {
+    truncate: function (value, cutoff) {
+      console.log(value);
+      console.log(value);
+      if (value.length > cutoff) {
+        return value.slice(0, cutoff) + "...";
+      }
+      return value;
     },
   },
 };

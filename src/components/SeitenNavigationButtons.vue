@@ -17,7 +17,6 @@
         </b-popover>
       </div>
     </div>
-    ´
   </div>
 </template>
 <script>

@@ -33,6 +33,14 @@ export default {
       this.$store.dispatch("reflexion/loadReflexionFromBackend", sicht);
     },
   },
-  computed: {},
+  computed: {
+    getProjectID() {
+      return this.$route.params.project_id;
+    },
+  },
+
+  async mounted() {
+    this.$store.dispatch("todo/loadToDoFromBackend", this.getProjectID);
+  },
 };
 </script>

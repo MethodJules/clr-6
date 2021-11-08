@@ -82,11 +82,11 @@ export default {
       //gmake new object with new attribute names, so that it matches with the other existing membbers in 'Gruppenmanagement'
       //the list in 'Gruppenmanagement' comes from project.gruppenmitglieder and has other attributes than the member list here, which comes from 'getStudents',
       // TODO: change attribute names in LOAD_CURRENT_PROJECT so that both list entries match?
-      const member = {
+      const new_member = {
         username: this.member.name,
         userid: this.member.uuid,
       };
-
+      //if current user is in group member array, he cant be a group admin -> current user is not allowed to add a member
       if (
         this.getGroupMembers.some(
           (member) => member.userid === this.getCurrentUserID
@@ -96,20 +96,22 @@ export default {
           "Du musst Gruppenadministrator sein, um neue Gruppenmitglieder hinzufügen zu können"
         );
       }
-
-      if (
+      // if current user is in group admin array, he can add another user to the group
+      // TODO: maybe check if user is not in groupadmins as well, in case of unforseeable errors
+      else if (
         this.getGroupAdmins.some(
           (member) => member.userid === this.getCurrentUserID
         )
       ) {
+        //if new user is already in the group (is in member or admin array) he cant be added again
         if (
-          this.getGroupAdmins.some((e) => e.userid === member.userid) ||
-          this.getGroupMembers.some((e) => e.userid === member.userid)
+          this.getGroupAdmins.some((e) => e.userid === new_member.userid) ||
+          this.getGroupMembers.some((e) => e.userid === new_member.userid)
         ) {
           alert("Dieser Nutzer ist bereits Teil deiner Gruppe.");
         } else {
           this.$store.dispatch("project/addMember", {
-            mitglied: member,
+            mitglied: new_member,
             role: this.role,
           });
           alert("Der Nutzer wurde der Gruppe hinzugefügt");

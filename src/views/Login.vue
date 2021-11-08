@@ -321,12 +321,6 @@ export default {
         }
       );
     },
-
-    encodeBasicAuth(user, password) {
-      var creds = user + ":" + password;
-      var base64 = btoa(creds);
-      return "Basic " + base64;
-    },
   },
   // mounted() {
   //     this.$store.dispatch("drupal_api/loadTokensfromSessionStorage");

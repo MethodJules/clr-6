@@ -145,6 +145,7 @@ const actions = {
                 }
             })
             .catch((error) => {
+                //TODO: delete if not needed
                 commit('setAccount', error);
             });
         //console.log(data)

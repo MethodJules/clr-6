@@ -298,9 +298,6 @@ then the appropriate dispatch will be sent */
     getGroupAdmins() {
       return this.$store.state.project.currentProjectGroupAdmins;
     },
-    getProjectLecturers() {
-      return this.$store.state.project.currentProjectLecturers;
-    },
     getCurrentUserID() {
       return this.$store.state.profile.userData.uuid;
     },

@@ -195,7 +195,6 @@ export default {
   },
   data() {
     return {
-      lecturer_array: [this.project.betreuenderDozent],
       chosen: "",
       autoCompleteStyle: {
         vueSimpleSuggest: "position-relative",
@@ -281,16 +280,15 @@ export default {
         schlagworter: keywords,
         gruppenadmin: this.$store.state.sparky_api.drupalUserID,
       };
-
-      this.$store.dispatch("project/createProject", addProj);
-      //this.projectList.push(addProj)
-      this.$refs["create_project"].hide();
-      this.project.title = " ";
-      this.project.kurzbeschreibung = "";
-      this.project.betreuenderDozent = [];
-      this.project.externeMitwirkende = " ";
-      this.project.schlagworter = " ";
-      //this.projectList.length + 1
+      this.$store.dispatch("project/createProject", addProj).then(() => {
+        this.$refs["create_project"].hide();
+        this.project.title = " ";
+        this.project.kurzbeschreibung = "";
+        this.project.betreuenderDozent = [];
+        this.project.externeMitwirkende = " ";
+        this.project.schlagworter = " ";
+        alert("Dein neues Projekt wurde erstellt");
+      });
     },
   },
 

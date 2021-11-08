@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="getUserRole != 'lecturer'">
     <b-dropdown text="Zur Reflexion" class="">
       <b-dropdown-item @click="loadCurrentPhase(0)"
         >Gruppe bilden</b-dropdown-item
@@ -40,6 +40,9 @@ export default {
       console.log(this.projectId);
       //return this.$route.params.project_id;
       return this.projectId;
+    },
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
     },
   },
   methods: {

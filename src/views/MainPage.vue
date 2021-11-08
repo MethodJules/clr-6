@@ -5,7 +5,11 @@
       <MenueLeiste />
 
       <b-row class="page-container">
-        <b-col class="linkeSeite m-0 p-0" md="2">
+        <b-col
+          v-if="getUserRole != 'lecturer'"
+          class="linkeSeite m-0 p-0"
+          md="2"
+        >
           <b-row class="m-0 p-0">
             <b-col class="m-0">
               <TodoList />
@@ -85,6 +89,10 @@ export default {
   computed: {
     account() {
       return this.$store.state.sparky_api.account;
+    },
+
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
     },
     getLoadingStatus() {
       return this.$store.state.loadingStatus;
