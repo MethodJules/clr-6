@@ -153,11 +153,10 @@ export default {
             uuid ? this.updateReflexion() : this.addItem();
         },
 
-        /** Reflexion wird in das Backend geladen */
-        addItem() {
-            console.log("add item");
-            if (!this.$v.$invalid) {
-                console.log("title: ${this.titela}");
+    /** Reflexion wird in das Backend geladen */
+    addItem() {
+      console.log("add item");
+      if (!this.$v.$invalid) {
 
                 var ausgabe = {
                     sichten: this.sicht,

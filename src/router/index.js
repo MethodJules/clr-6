@@ -18,28 +18,7 @@ const routes = [
         component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/MainPage.vue'),
         children: [
             {
-                path: '/scope',
-                name: 'Scope',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Scope.vue')
-            },
-            {
-                path: '/search',
-                name: 'Search',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Search.vue')
-            },
-
-            {
-                path: '/analysis',
-                name: 'Analysis',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Analysis.vue')
-            },
-            {
-                path: '/agenda',
-                name: 'Agenda',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Agenda.vue')
-            },
-            {
-                path: '/forum/:project_id',
+                path: '/forum',
                 name: 'Forum',
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Forum.vue')
             },
@@ -68,11 +47,6 @@ const routes = [
                 props: true
             },
             {
-                path: '/review',
-                name: 'Review',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Review.vue')
-            },
-            {
                 path: '/groupmanagement/:project_id',
                 name: 'Groupmanagement',
                 meta: { requiresAuth: true },
@@ -85,7 +59,7 @@ const routes = [
             },
 
             {
-                path: '/phasetemplate/:phase_number:project_id',
+                path: '/phasetemplate/:phase_number/:project_id',
                 name: 'PhaseTemplate',
                 //props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
@@ -106,13 +80,14 @@ const routes = [
                 component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
             },
             {
-                path: '/reflexion/:reflexionsPhase:project_id',
+                path: '/reflexion/:reflexionsPhase/:project_id',
                 name: 'ReflexionView',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ReflexionView.vue')
             },
 
             {
+                // Dashboard
                 //path: '/home:user_id',
                 path: '/home/:project_id',
                 name: 'Home',

@@ -10,7 +10,7 @@
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
 
       <b-navbar-brand v-if="inProjectList || inEinstellungen || inProfil"
-        >CLR Tool</b-navbar-brand
+        >eCLR Tool</b-navbar-brand
       >
 
       <b-navbar-brand v-else>{{
@@ -166,8 +166,12 @@ export default {
   },
 
   computed: {
-    startpage() {
-      return this.$route.name === "ProjectList";
+    showProfileSettingsLinks() {
+      return (
+        this.$route.name === "ProjectList" ||
+        this.$route.name === "Profil" ||
+        this.$route.name === "Einstellungen"
+      );
     },
     getCurrentUserUUID() {
       return this.$store.state.profile.userData.uuid;
@@ -175,6 +179,9 @@ export default {
     //pprovided user uid is taken from the state, where the currentuuser uid is saved, because this navigation should only lead to the own profile
     getCurrentUserInternalUID() {
       return this.$store.state.drupal_api.user.uid;
+    },
+    startpage() {
+      return this.$route.name === "ProjectList";
     },
     inProjectList() {
       // console.log(this.$route.name);
@@ -199,9 +206,8 @@ export default {
     },
   },
   filters: {
+    //truncates when the length of given value (project title) is longer than the given cutoff threshold
     truncate: function (value, cutoff) {
-      console.log(value);
-      console.log(value);
       if (value.length > cutoff) {
         return value.slice(0, cutoff) + "...";
       }

@@ -138,6 +138,8 @@ const actions = {
             method: 'get',
             url: `jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}`,
             headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
@@ -164,13 +166,14 @@ const actions = {
             method: 'get',
             url: `jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
             headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
         axios(config)
             .then(function (response) {
-                console.log(response);
                 const currentPhase = response.data.data;
                 commit('LOAD_SINGLE_PHASE', { currentPhase });
                 console.log(state.current_phase)
@@ -212,6 +215,8 @@ const actions = {
             method: 'patch',
             url: `jsonapi/node/phase_vorgehensmodell/${phase.phase_id}`,
             headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
