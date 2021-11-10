@@ -60,7 +60,12 @@
       </div>
       <!-- </b-card> -->
 
-      <b-card title="Neues Projekt" style="max-height: 10rem" class="m-2">
+      <b-card
+        v-if="getUserRole != 'lecturer'"
+        title="Neues Projekt"
+        style="max-height: 10rem"
+        class="m-2"
+      >
         <b-row>
           <b-col cols="3">
             <ProjectForm :project="project"></ProjectForm>
@@ -105,6 +110,10 @@ export default {
   },
 
   computed: {
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
+
     getCurrentUserInternalUID() {
       // return true
       return this.$store.state.drupal_api.user.uid;

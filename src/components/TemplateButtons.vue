@@ -17,16 +17,26 @@
       ></b-form-textarea>
       <b-button @click="updateDocu(getDocumentation)">Speichern</b-button>
     </b-modal>
-    <b-button v-b-modal.documentation_edit_modal
+    <b-button
+      v-if="getUserRole != 'lecturer'"
+      v-b-modal.documentation_edit_modal
       >Dokumentation bearbeiten</b-button
     >
     <!-- <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Dokumentation bearbeiten</b-link>   -->
     <!-- <div>{{inDoku.documentationText}}</div> -->
     <!-- v-model="inDoku.documentation" Zeile 15 -->
-    <b-button v-if="!isPhaseDone" v-b-modal.modal-phase class="mb-phase">
+    <b-button
+      v-if="!isPhaseDone && getUserRole != 'lecturer'"
+      v-b-modal.modal-phase
+      class="mb-phase"
+    >
       Phase abschließen
     </b-button>
-    <b-button v-if="isPhaseDone" v-b-modal.modal-phase class="mb-phase">
+    <b-button
+      v-if="isPhaseDone && getUserRole != 'lecturer'"
+      v-b-modal.modal-phase
+      class="mb-phase"
+    >
       Phase wieder öffnen
     </b-button>
 
@@ -149,6 +159,9 @@ export default {
   },
 
   computed: {
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
     isPhaseDone() {
       return this.$store.state.project_phases.current_phase.abschluss;
     },

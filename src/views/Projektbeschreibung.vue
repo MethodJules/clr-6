@@ -164,9 +164,23 @@
           v-if="getUserRole != 'lecturer'"
           :to="{ name: 'Groupmanagement' }"
           >Zum Gruppenmanagement</b-button
-        ><b-button v-if="getUserRole == 'lecturer'" @click="lecturerLeaveGroup"
-          >Projekt Verlassen</b-button
         >
+
+        <b-button
+          v-if="getUserRole == 'lecturer'"
+          @click="$bvModal.show('lecturer-leave-group')"
+          >Gruppe verlassen
+        </b-button>
+
+        <b-modal
+          @ok="lecturerLeaveGroup"
+          id="lecturer-leave-group"
+          title="Bist du dir sicher?"
+          ><p>
+            Du kannst nicht mehr auf das Projekt zugreifen, wenn du das Projekt
+            verlässt!
+          </p>
+        </b-modal>
       </b-row>
     </div>
   </div>
@@ -204,10 +218,14 @@ export default {
       this.getCurrentProjectLecturers.splice(index, 1);
     },
     lecturerLeaveGroup() {
-      this.$store.dispatch(
-        "project/leaveGroupLecturer",
-        this.$store.state.drupal_api.user
-      );
+      this.$store
+        .dispatch(
+          "project/leaveGroupLecturer",
+          this.$store.state.drupal_api.user
+        )
+        .then(() => {
+          this.$store.dispatch("project/loadProjectsFromBackend");
+        });
       this.$router.push("/");
     },
 

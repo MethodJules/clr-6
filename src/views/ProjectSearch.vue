@@ -46,11 +46,6 @@
         <b-card-text>
           <div v-if="'istDozent' == 'istDozent'">
             <p>Kurzbeschreibung: {{ project.kurzbeschreibung }}</p>
-            <p>Betreuender Dozent: {{ project.betreuenderDozent }}</p>
-            <p>
-              externe Mitwirkende:
-              {{ project.externeMitwirkende }}
-            </p>
             <span
               v-for="(schlagwort, index) in project.schlagworter"
               :key="index"
@@ -114,15 +109,22 @@ export default {
     deletekeyword(keyword) {
       var keywordIndex = this.keywords.indexOf(keyword);
       this.keywords.splice(keywordIndex, 1);
-      this.adjustKeywords();
+      this.$store.dispatch("project/loadProjectFilterbyKeyword", this.keywords);
+      // this.adjustKeywords();
     },
 
     keywordSearch(keyword) {
-      this.keywords.push(keyword);
-      this.$store.dispatch("project/loadProjectFilterbyKeyword", this.keywords);
-      this.keyword = "";
-      console.log(this.searchResult);
-      this.adjustKeywords();
+      if (keyword != "") {
+        this.keywords.push(keyword);
+        this.$store.dispatch(
+          "project/loadProjectFilterbyKeyword",
+          this.keywords
+        );
+        this.keyword = "";
+      }
+
+      //   console.log(this.searchResult);
+      //  this.adjustKeywords();
     },
 
     adjustKeywords() {
@@ -155,6 +157,10 @@ export default {
     },
   },
   computed: {
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
+
     getKeyWords() {
       return this.$store.state.project.allKeywordsList;
     },
@@ -185,6 +191,9 @@ export default {
     console.log("keywordlist");
     console.log(this.existingKeywordList);
     this.keywordSearch(this.keyword2); */
+  },
+  beforeDestroy() {
+    this.$store.state.project.projectsFilteredbyKeywords = [];
   },
 };
 </script>

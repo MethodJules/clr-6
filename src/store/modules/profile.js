@@ -203,12 +203,16 @@ const actions = {
 
         axios(config)
             .then(function (response) {
+                alert("Dein Benutzerkonto wurde erstellt. Du kannst dich nun anmelden")
+
                 console.log(response)
 
 
             })
             .catch(function (error) {
                 console.log(error)
+                alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an:...")
+
             })
 
 

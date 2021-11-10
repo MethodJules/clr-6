@@ -1,157 +1,169 @@
 <template>
   <div class="w-background">
-  <div class="container">
-    <b-card class="container-form">
-      <b-form-group>
-        <b-tabs>
-          <!-- Class name is automatically "tabs" -->
-          <!-- Tab 1 -->
-          <b-tab title="Login">
-            <div class="login-header">
-              <h5>Melde dich hier mit deinem Uni-Account an</h5>
-              <p>
-                Wenn du dich noch nicht registriert hast, bitte registriere dich
-                mit deinem Uni-Account
-              </p>
-            </div>
-            <table>
-              <tr>
-                <td>
-                  <label for="zugangsKennung">Zugangskennung</label>
-                </td>
-                <td>
-                  <b-form-input
-                    v-model="zugangsKennung"
-                    v-on:input="$v.zugangsKennung.$touch"
-                    v-bind:class="{
-                      error: $v.zugangsKennung.$error,
-                      valid:
-                        $v.zugangsKennung.$dirty && !$v.zugangsKennung.$invalid,
-                    }"
-                    id="zugangsKennung"
-                    placeholder=""
-                  >
-                  </b-form-input>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="password">Passwort</label>
-                </td>
-                <td>
-                  <b-form-input
-                    v-model="passwort"
-                    v-on:input="$v.passwort.$touch"
-                    v-bind:class="{
-                      error: $v.passwort.$error,
-                      valid: $v.passwort.$dirty && !$v.passwort.$invalid,
-                    }"
-                    type="password"
-                    id="password"
-                    placeholder=""
-                  >
-                  </b-form-input>
-                </td>
-              </tr>
-            </table>
+    <div class="container">
+      <b-card class="container-form">
+        <b-form-group>
+          <b-tabs>
+            <!-- Class name is automatically "tabs" -->
+            <!-- Tab 1 -->
+            <b-tab title="Login">
+              <div class="login-header">
+                <h5>Melde dich hier mit deinem Uni-Account an</h5>
+                <p>
+                  Wenn du dich noch nicht registriert hast, bitte registriere
+                  dich mit deinem Uni-Account
+                </p>
+              </div>
+              <table>
+                <tr>
+                  <td>
+                    <label for="zugangsKennung">Zugangskennung</label>
+                  </td>
+                  <td>
+                    <b-form-input
+                      v-model="zugangsKennung"
+                      v-on:input="$v.zugangsKennung.$touch"
+                      v-bind:class="{
+                        error: $v.zugangsKennung.$error,
+                        valid:
+                          $v.zugangsKennung.$dirty &&
+                          !$v.zugangsKennung.$invalid,
+                      }"
+                      id="zugangsKennung"
+                      placeholder=""
+                    >
+                    </b-form-input>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label for="password">Passwort</label>
+                  </td>
+                  <td>
+                    <b-form-input
+                      v-model="passwort"
+                      v-on:input="$v.passwort.$touch"
+                      v-bind:class="{
+                        error: $v.passwort.$error,
+                        valid: $v.passwort.$dirty && !$v.passwort.$invalid,
+                      }"
+                      type="password"
+                      id="password"
+                      placeholder=""
+                    >
+                    </b-form-input>
+                  </td>
+                </tr>
+              </table>
 
-            <b-button @click="login()">Login</b-button>
-          </b-tab>
-          <b-tab title="Registrierung">
-            <div class="registrierung-header">
-              <h5>Registriere dich hier mit deinem Uni-Account</h5>
-              <p>
-                Falls du Hilfe benötigst, wende dich an mail@uni-hildesheim.de
-              </p>
-            </div>
-            <table>
-              <tr>
-                <td>
-                  <label for="zugangsKennung">Zugangskennung</label>
-                </td>
-                <td>
-                  <b-form-input
-                    v-model="registrierungsKennung"
-                    v-on:input="$v.registrierungsKennung.$touch"
-                    v-bind:class="{
-                      error: $v.registrierungsKennung.$error,
-                      valid:
-                        $v.registrierungsKennung.$dirty &&
-                        !$v.registrierungsKennung.$invalid,
-                    }"
-                    id="zugangskennung2"
-                    type="text"
-                    placeholder=""
-                  >
-                  </b-form-input>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="password">Passwort</label>
-                </td>
-                <td>
-                  <b-form-input
-                    v-model="registrierungsPasswort"
-                    v-on:input="$v.registrierungsPasswort.$touch"
-                    v-bind:class="{
-                      error: $v.registrierungsPasswort.$error,
-                      valid:
-                        $v.registrierungsPasswort.$dirty &&
-                        !$v.registrierungsPasswort.$invalid,
-                    }"
-                    type="password"
-                    id="password2"
-                    placeholder=""
-                  >
-                  </b-form-input>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label for="Matrikelnummer" class="mr-1 mt-1"
-                    >Matrikelnummer</label
-                  >
-                </td>
-                <td>
-                  <b-form-input
-                    v-model="matrikelnummer"
-                    v-on:input="$v.matrikelnummer.$touch"
-                    v-bind:class="{
-                      error: $v.matrikelnummer.$error,
-                      valid:
-                        $v.matrikelnummer.$dirty && !$v.matrikelnummer.$invalid,
-                    }"
-                    id="matrikelnummer"
-                    placeholder=""
-                  >
-                  </b-form-input>
-                </td>
-              </tr>
-            </table>
-            <b-button @click="registrieren()">Registrieren</b-button>
-          </b-tab>
-        </b-tabs>
-      </b-form-group>
-    </b-card>
-  </div>
-  <div>
+              <b-button @click="login()">Login</b-button>
+            </b-tab>
+            <b-tab title="Registrierung">
+              <div class="registrierung-header">
+                <h5>Registriere dich hier mit deinem Uni-Account</h5>
+                <p>
+                  Falls du Hilfe benötigst, wende dich an mail@uni-hildesheim.de
+                </p>
+              </div>
+              <table>
+                <tr>
+                  <td>
+                    <label for="zugangsKennung">Zugangskennung</label>
+                  </td>
+                  <td>
+                    <b-form-input
+                      v-model="registrierungsKennung"
+                      v-on:input="$v.registrierungsKennung.$touch"
+                      v-bind:class="{
+                        error: $v.registrierungsKennung.$error,
+                        valid:
+                          $v.registrierungsKennung.$dirty &&
+                          !$v.registrierungsKennung.$invalid,
+                      }"
+                      id="zugangskennung2"
+                      type="text"
+                      placeholder=""
+                    >
+                    </b-form-input>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label for="password">Passwort</label>
+                  </td>
+                  <td>
+                    <b-form-input
+                      v-model="registrierungsPasswort"
+                      v-on:input="$v.registrierungsPasswort.$touch"
+                      v-bind:class="{
+                        error: $v.registrierungsPasswort.$error,
+                        valid:
+                          $v.registrierungsPasswort.$dirty &&
+                          !$v.registrierungsPasswort.$invalid,
+                      }"
+                      type="password"
+                      id="password2"
+                      placeholder=""
+                    >
+                    </b-form-input>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label
+                      v-b-tooltip.hover
+                      title="Studenten geben bitte ihre Matrikelnummer mit an"
+                      for="Matrikelnummer"
+                      class="mr-1 mt-1"
+                      >Matrikelnummer</label
+                    >
+                  </td>
+                  <td>
+                    <b-form-input
+                      v-model="matrikelnummer"
+                      v-on:input="$v.matrikelnummer.$touch"
+                      v-bind:class="{
+                        error: $v.matrikelnummer.$error,
+                        valid:
+                          $v.matrikelnummer.$dirty &&
+                          !$v.matrikelnummer.$invalid,
+                      }"
+                      id="matrikelnummer"
+                      placeholder=""
+                    >
+                    </b-form-input>
+                  </td>
+                </tr>
+              </table>
+              <b-button @click="registrieren()">Registrieren</b-button>
+            </b-tab>
+          </b-tabs>
+        </b-form-group>
+      </b-card>
+    </div>
+    <div>
       <v-footer padless>
-          <v-card class="flat tile text-center" color="#6c757d">
-              <v-card-title>
-                  eCLR Tool - Das Tool für kollaborative Literaturreviews in der Lehre
-              </v-card-title>
-              <v-card-subtitle>
-                  Dieses OpenSource-Projekt wurde im Rahmen der Ausschreibung "Qualität Plus" des MWK Niedersachsen erstellt.
-                  Näheres dazu finden Sie <a href="https://www.uni-hildesheim.de/fb4/institute/bwl/informationssysteme-und-unternehmensmodellierung/projekte/qualitaet-plus/">hier</a>
-              </v-card-subtitle>
-              <v-divider></v-divider>
-              <v-card-text class="pb-3">
-                  <img src="../assets/logo.svg" width="24px" height="24px"> Universität Hildesheim - {{ new Date().getFullYear() }}
-              </v-card-text>
-          </v-card>
+        <v-card class="flat tile text-center" color="#6c757d">
+          <v-card-title>
+            eCLR Tool - Das Tool für kollaborative Literaturreviews in der Lehre
+          </v-card-title>
+          <v-card-subtitle>
+            Dieses OpenSource-Projekt wurde im Rahmen der Ausschreibung
+            "Qualität Plus" des MWK Niedersachsen erstellt. Näheres dazu finden
+            Sie
+            <a
+              href="https://www.uni-hildesheim.de/fb4/institute/bwl/informationssysteme-und-unternehmensmodellierung/projekte/qualitaet-plus/"
+              >hier</a
+            >
+          </v-card-subtitle>
+          <v-divider></v-divider>
+          <v-card-text class="pb-3">
+            <img src="../assets/logo.svg" width="24px" height="24px" />
+            Universität Hildesheim - {{ new Date().getFullYear() }}
+          </v-card-text>
+        </v-card>
       </v-footer>
-  </div>
+    </div>
   </div>
 </template>
 <script>
@@ -287,30 +299,25 @@ export default {
      */
     login() {
       this.$v.$touch();
-
+      //checks if the given user data is valid i.e. username is string only(rechenzentrumskennung only uses letters) and password are filled out , both have min length requirement
       if (!this.$v.$invalid) {
         let username = this.zugangsKennung;
         let password = this.passwort;
         let authorization_token = this.encodeBasicAuth(username, password);
+        //first calls authenticate from sparky api, then logs user in backend
         this.$store
+          //TODO: uncomment next line and comment out the line after, when project goes in production -> authenticate with sparkyservice
+          // .dispatch("sparky_api/authenticate", {
           .dispatch("drupal_api/loginToDrupal", {
             username,
             password,
           })
           .then(() => {
-            if (this.$store.state.drupal_api.validCredential) {
-              this.$router.push("/");
-              this.makeToast();
-              console.log(this.$store.state.drupal_api.validCredential);
-              this.zugangsKennung = "";
-              this.passwort = "";
-            } else {
-              this.$bvToast.toast(`Login Daten falsch`, {
-                title: "Error",
-                autoHideDelay: 4000,
-                variant: "warning",
-              });
-            }
+            //also appears when the user is logged in, but the sessionStorage is empty -> error 403
+            //TODO: check if error 403?
+            this.makeToast();
+            this.zugangsKennung = "";
+            this.passwort = "";
           });
         this.$store.dispatch("drupal_api/saveBasicAuth", authorization_token);
 
@@ -318,9 +325,8 @@ export default {
 
         //this.testButClicked(true);
       } else {
-        alert("Bitte Logindaten eingeben");
+        alert("Bitte gib deine Rechenzentrumskennung und dein Passwort ein.");
       }
-      return authorization_token;
     },
     /* creates the basic authentication token */
     encodeBasicAuth(user, password) {
@@ -330,9 +336,11 @@ export default {
     },
     // welcome message with toast
     makeToast() {
-      this.$bvToast.toast(
+      console.log(this.$root);
+      this.$root.$bvToast.toast(
         // removed because of new routing this is not available at login at this point of time `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.name}`,
         `Willkommen zu dem kollaborativen Literaturreview Tool`,
+        // `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.fullname}`,
         {
           title: "Willkommen",
           autoHideDelay: 4000,
@@ -348,14 +356,14 @@ export default {
 </script>
 <style scoped>
 .w-background {
-    background-image: url('../assets/background2.jpg');
-    background-size: cover;
+  background-image: url("../assets/background2.jpg");
+  background-size: cover;
 }
 
 .v-card__title,
 .v-card__subtitle,
 .v-card__text {
-    color: white;
+  color: white;
 }
 
 .container {

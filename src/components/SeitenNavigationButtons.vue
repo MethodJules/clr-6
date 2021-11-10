@@ -10,7 +10,7 @@
         </b-button>
         <b-popover
           target="popover-chat"
-          triggers="click"
+          triggers="click blur"
           placement="bottomright"
         >
           <ChatAdvanced />

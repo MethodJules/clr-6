@@ -23,10 +23,8 @@ const mutations = {
 
     setAccount(state, account) {
 
-        state.token = account.data.token.token
-        if (account.status == 200) {
-            state.validCredential = true
-        }
+        console.log(account)
+
     },
 
     setSparkyObject(state, response) {
@@ -85,17 +83,17 @@ const actions = {
     * @param password input from login
     * @param matrikelnummer input from registrate
     */
-    async getWhoamI({ dispatch, commit, state }, { username, password, matrikelnummer }) {
-        console.log(state.responsestate.data.token.token)
+    async getWhoamI({ dispatch, commit, state }, { username, password, matrikelnummer, token }) {
+        console.log(token)
         //state.sparkyUserID = " response.data.id"
         axios.get(
-            "http://147.172.178.30:3000/auth/whoAmI",
+            "http://147.172.178.30:8080/stmgmt/auth/whoAmI",
 
             {
                 headers: {
                     'Accept': '*/*',
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + state.responsestate.data.token.token,
+                    'Authorization': 'Bearer ' + token,
                 },
 
             }
@@ -111,6 +109,8 @@ const actions = {
             })
             .catch((error) => {
                 console.log(error)
+                alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder überprüfe den Status hier: http://147.172.178.30/  oder schreibe eine Email an:..... ")
+
             });
     },
 
@@ -120,7 +120,8 @@ const actions = {
     * @param username input from Login.vue
     * @param password input from Login.vue
     */
-    async authenticate({ state, commit }, { username, password }) {
+    async authenticate({ state, commit, rootState, dispatch }, { username, password }) {
+        console.log(username + password)
         let dynamicUrl = "api/v1/authenticate"
         let fullUrl = baseUrl + dynamicUrl
         let data = await axios.post(
@@ -138,6 +139,7 @@ const actions = {
             .then(response => {
                 if (response.status === 200) {
                     commit('sparkyLogin');
+                    dispatch("drupal_api/loginToDrupal", { username, password }, { root: true })
                     state.responsestate = response
                     console.log(response)
                     //dispatch ist hier störend, wenn nur authenticate benötigt wird, vorher mit await dispatch besser gewesen
@@ -145,8 +147,15 @@ const actions = {
                 }
             })
             .catch((error) => {
-                //TODO: delete if not needed
-                commit('setAccount', error);
+                //if there is an error, we check, if the error status is 401 which means the user is not authorized
+                //if the error code is something else, we presume the SparkyService might not be functioning correctly, thus another error message with contact details is given
+                //if not authorized
+                console.log(error)
+                if (error.response.status == 401) {
+                    alert("Du konntest nicht authorisiert werden. Bitte gib deine korrekte Rechenzentrumskennung ein")
+                } else {
+                    alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder überprüfe den Status hier: http://147.172.178.30/  oder schreibe eine Email an:..... ")
+                }
             });
         //console.log(data)
     },
@@ -156,7 +165,7 @@ const actions = {
 * @param username input from getWhoamI
 * @param password input from getWhoamI
 */
-    async registrate({ dispatch }, { username, password, matrikelnummer }) {
+    async registrate({ dispatch, commit }, { username, password, matrikelnummer }) {
         let dynamicUrl = "api/v1/authenticate"
         let fullUrl = baseUrl + dynamicUrl
         let data = await axios.post(
@@ -174,14 +183,18 @@ const actions = {
             .then(response => {
                 if (response.status === 200) {
                     state.responsestate = response
-                    console.log(data)
-                    console.log(response)
+                    const token = response.data.token.token
                     //dispatch ist hier störend, wenn nur authenticate benötigt wird, vorher mit await dispatch besser gewesen
-                    dispatch('getWhoamI', { username, password, matrikelnummer })
+                    dispatch('getWhoamI', { username, password, matrikelnummer, token })
                 }
             })
             .catch((error) => {
                 console.log(error);
+                if (error.response.status == 401) {
+                    alert("Du konntest nicht authorisiert werden. Bitte gib deine korrekte Rechenzentrumskennung ein")
+                } else {
+                    alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder überprüfe den Status hier: http://147.172.178.30/  oder schreibe eine Email an:..... ")
+                }
             });
         //console.log(data)
     },
