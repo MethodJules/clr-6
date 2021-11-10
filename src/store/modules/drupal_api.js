@@ -234,8 +234,11 @@ const actions = {
 
             }
         ).catch((error) => {
+            //error 403 -> requested resource is forbidden for user(role) user who logs out should be either lecturer or student and logged in. if one of those tries to log out (uses log out resource), while already logged out 
+            //-> frontend "thinks" user is logged in, but he is already logged out at the backend i.e. cookie is deleted
             if (error.response.status == 403) {
                 console.log("testlogout")
+                alert("Der Session Cookie ist wahrscheinlich abgelaufen bzw. bist du bereits vom Backend abgemeldet. Refreshe die Seite und logge dich erneut ein, um den Fehler zu beheben")
                 commit('REMOVE_SESSIONTOKENS_OF_USER')
                 state.validCredential = false;
             }

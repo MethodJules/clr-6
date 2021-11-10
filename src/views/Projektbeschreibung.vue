@@ -74,7 +74,9 @@
               >Weiteren Dozenten hinzufügen</b-button
             >
           </b-modal>
-          <b-button @click="showThisModal()" size="lg">+</b-button>
+          <b-button v-if="currentUserisAdmin" @click="showThisModal()" size="lg"
+            >Dozent hinzufügen</b-button
+          >
 
           <br />
         </b-col>
