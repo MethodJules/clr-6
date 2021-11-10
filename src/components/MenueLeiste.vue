@@ -9,7 +9,8 @@
     >
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
 
-      <b-navbar-brand v-if="inProjectList || inEinstellungen || inProfil"
+      <b-navbar-brand
+        v-if="inProjectList || inEinstellungen || inProfil || inProjectSearch"
         >eCLR Tool</b-navbar-brand
       >
 
@@ -26,7 +27,9 @@
         <b-navbar-nav>
           <!-- Es gibt kein Profil in router.. -->
           <b-nav-item
-            v-if="inProjectList || inEinstellungen || inProfil"
+            v-if="
+              inProjectList || inEinstellungen || inProfil || inProjectSearch
+            "
             :to="{
               name: 'Profil',
               params: {
@@ -86,7 +89,9 @@
           </b-navbar-nav>
         </template>
 
-        <b-navbar-nav v-if="inProjectList || inEinstellungen || inProfil">
+        <b-navbar-nav
+          v-if="inProjectList || inEinstellungen || inProfil || inProjectSearch"
+        >
           <b-nav-item
             :to="{
               name: 'Einstellungen',
@@ -95,13 +100,13 @@
           >
         </b-navbar-nav>
 
-        <b-navbar-nav v-if="!startpage">
+        <b-navbar-nav v-if="inProjectList || inEinstellungen || inProfil">
           <b-input-group size="sm" class="mb-2">
             <b-input-group-prepend is-text>
               <b-link
                 :to="{
                   name: 'ProjectSearch',
-                  params: { keyword2: keyword2 },
+                  params: { keyword: keyword },
                 }"
               >
                 <b-icon icon="search"></b-icon>
@@ -110,7 +115,7 @@
             <b-form-input
               type="search"
               placeholder="Projekte durchsuchen"
-              v-model="keyword2"
+              v-model="keyword"
             ></b-form-input>
           </b-input-group>
         </b-navbar-nav>
@@ -141,8 +146,7 @@
 export default {
   data() {
     return {
-      schlagwort: "Hallo",
-      keyword2: "",
+      keyword: " ",
       projectId: this.$route.params.project_id,
     };
   },
@@ -190,6 +194,10 @@ export default {
     inProfil() {
       // console.log(this.$route.name);
       return this.$route.name === "Profil";
+    },
+    inProjectSearch() {
+      // console.log(this.$route.name);
+      return this.$route.name === "ProjectSearch";
     },
     inEinstellungen() {
       // console.log(this.$route.name);

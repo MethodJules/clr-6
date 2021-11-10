@@ -228,8 +228,9 @@ const actions = {
                 //console.log(response.data.csrf_token);
                 //console.log(response.data.current_user);
                 //console.log(response.data.logout_token);
-                router.push('login')
                 commit('REMOVE_SESSIONTOKENS_OF_USER')
+                router.push('login')
+
 
 
             }

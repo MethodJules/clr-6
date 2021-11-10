@@ -1,6 +1,6 @@
 <template>
   <div id="todoList">
-    <div v-if="inProjectList || inEinstellungen || inProfil">
+    <div v-if="inProjectList || inEinstellungen || inProfil || inProjectSearch">
       <div v-for="(project, index) in getTodosForAllMyProjects" :key="index">
         <h3>To Do {{ project[0].project_title }}</h3>
 
@@ -65,7 +65,11 @@
     </div>
     <div>
       <div>
-        <div v-if="!inEinstellungen && !inProjectList && !inProfil">
+        <div
+          v-if="
+            !inEinstellungen && !inProjectList && !inProfil && !inProjectSearch
+          "
+        >
           <h3>To Do</h3>
 
           <!-- Liste zum Erstellen der Todos  -->
@@ -207,6 +211,10 @@ export default {
         }
     }, */
   computed: {
+    inProjectSearch() {
+      // console.log(this.$route.name);
+      return this.$route.name === "ProjectSearch";
+    },
     inProjectList() {
       // console.log(this.$route.name);
       return this.$route.name === "ProjectList";

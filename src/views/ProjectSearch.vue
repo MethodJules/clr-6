@@ -177,6 +177,9 @@ export default {
     
   }, */
   async mounted() {
+    if (this.$route.params.keyword.length > 0) {
+      this.keywordSearch(this.$route.params.keyword.trim());
+    }
     this.$store.dispatch("project/loadAllKeywords");
 
     /* 
