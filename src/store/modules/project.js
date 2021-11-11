@@ -9,8 +9,7 @@ const state = () => ({
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
   keywordsInString: "",
-  projectsFilteredbyKeywords: []
-
+  projectsFilteredbyKeywords: [],
 
 
 })
@@ -157,7 +156,6 @@ const actions = {
 
     const filter_or_group = `?filter[or-group][group][conjunction]=OR`
     const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
-    //const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
     const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
     const filter_joined = filter_or_group + filter_gruppenmitglieder + filter_gruppenadministrator
 
@@ -175,14 +173,9 @@ const actions = {
 
     axios(config)
       .then(function (response) {
-        //console.log(response)
-        /* console.log($store.state.sparky_api.validCredential)
-        console.log($store.state.sparky_api.drupalUserID) */
+
         const projects = response.data.data;
         commit('LOAD_MY_PROJECTS', { projects });
-        console.log(projects)
-        console.log({ projects })
-        //commit('loadingStatus', false)
         dispatch('todo/loadTodosAllProjects', projects, { root: true })
         commit("loadingStatus", false, { root: true })
 

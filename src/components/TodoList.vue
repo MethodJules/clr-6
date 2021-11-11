@@ -1,16 +1,14 @@
 <template>
     <div id="todoList">
+        {{ todos }}
         <div v-if="inProjectList || inEinstellungen || inProfil">
-            <div
-                v-for="(project, index) in getTodosForAllMyProjects"
-                :key="index"
-            >
-                <h3>To Do {{ project[0].project_title }}</h3>
+            <div v-for="(todos, index) in listOfTodos" :key="index">
+                <h3>To Do {{ todos[0].project_title }}</h3>
 
                 <!-- Liste zum Erstellen der Todos  -->
                 <div
                     class="card p-0 m-1"
-                    v-for="(todo, index) in project"
+                    v-for="(todo, index) in todos"
                     :key="index"
                 >
                     <div class="card-header text-center">
@@ -34,41 +32,6 @@
                         </b-button>
                     </div>
                 </div>
-
-                <div>
-                    <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist. 
-            Es wird nur die zu erledigende Aufgabe angezeigt -->
-                    <b-modal id="to_do_edit_modal" title="To Do">
-                        <label for="neueTodo">zu erledigende Aufgabe: </label>
-                        <input
-                            v-model="todoNeu"
-                            v-on:input="$v.todoNeu.$touch"
-                            v-bind:class="{
-                                error: $v.todoNeu.$error,
-                                valid:
-                                    $v.todoNeu.$dirty && !$v.todoNeu.$invalid,
-                            }"
-                            type="text"
-                            placeholder="max. 250 Zeichen"
-                        />
-                        <br />
-                        <label for="example-datepicker">
-                            <br />
-                            Frist:
-                        </label>
-                        <b-form-datepicker
-                            id="example-datepicker"
-                            v-model="appointment"
-                            :select-attribute="selectAttribute"
-                            class="mb-2"
-                        ></b-form-datepicker>
-                        <b-button @click="ok()"> OK </b-button>
-                    </b-modal>
-                    <!-- Zum öffnen des Modals -->
-                </div>
-                <!-- <div class="giveTodo" v-for="todo in listOfToDos" :key="todo.date">
-            <b-card v-if="diffMonth">Todo: '{{ todo.todo }}', bis: '{{ todo.date }}'</b-card>
-        </div> -->
             </div>
         </div>
         <div>
@@ -79,7 +42,7 @@
                     <!-- Liste zum Erstellen der Todos  -->
                     <div
                         class="card p-0 m-1"
-                        v-for="(todo, index) in getTodosForAllMyProjects"
+                        v-for="(todo, index) in todosOfProject"
                         :key="index"
                     >
                         <div class="card-header text-center">
@@ -107,7 +70,11 @@
                     <div>
                         <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist. 
             Es wird nur die zu erledigende Aufgabe angezeigt -->
-                        <b-modal id="to_do_edit_modal" title="To Do">
+                        <b-modal
+                            id="to_do_edit_modal"
+                            hide-footer
+                            title="To Do"
+                        >
                             <label for="neueTodo"
                                 >zu erledigende Aufgabe:
                             </label>
@@ -138,9 +105,6 @@
                         </b-modal>
                         <!-- Zum öffnen des Modals -->
                     </div>
-                    <!-- <div class="giveTodo" v-for="todo in listOfToDos" :key="todo.date">
-            <b-card v-if="diffMonth">Todo: '{{ todo.todo }}', bis: '{{ todo.date }}'</b-card>
-        </div> -->
                 </div>
             </div>
         </div>
@@ -153,6 +117,7 @@
 
 <script>
 import { required, maxLength } from "vuelidate/lib/validators";
+import { mapGetters } from "vuex";
 export default {
     props: {
         date: String,
@@ -184,7 +149,7 @@ export default {
                 project_id: this.getProjectID,
             };
             // Benutzereingabe wird in die Liste gespeichert
-            this.listOfToDos.push(neueEingabe);
+            // this.listOfToDos.push(neueEingabe);
 
             //Anbindung an die API
             this.$store.dispatch("todo/createToDo", neueEingabe);
@@ -207,29 +172,41 @@ export default {
             this.$store.dispatch("todo/updateTodo", todoErledigt);
         },
     },
-    //Die in der Datenbank gespeicherten Todos werden hiermit aufgelistet
-    mounted() {
-        /*  this.$store.dispatch("todo/loadToDoFromBackend");
-    this.listOfToDos = this.$store.state.todo.listOfToDos; */
-        //console.log(this.$store.getters.termin);
-    },
-    /*  getters:{
-        termin: state=() => {
-            return state.todo.listOfToDos.date
-        }
-    }, */
+
     computed: {
+        ...mapGetters({
+            listOfTodos: "todo/getListOfTodos",
+            todosOfProject: "todo/getTodosOfProject",
+        }),
+
+        projectTodo() {},
         inProjectList() {
+            console.log(this.$route.name);
             // console.log(this.$route.name);
-            return this.$route.name === "ProjectList";
+            let result = false;
+            this.$route.name === "ProjectList"
+                ? (result = true)
+                : (result = false);
+            console.log(result);
+            return result;
         },
         inProfil() {
-            // console.log(this.$route.name);
-            return this.$route.name === "Profil";
+            console.log(this.$route.name);
+            // return this.$route.name === "Profil";
+            let result = false;
+            this.$route.name === "Profil" ? (result = true) : (result = false);
+            console.log(result);
+            return result;
         },
         inEinstellungen() {
             // console.log(this.$route.name);
-            return this.$route.name === "Einstellungen";
+            // return this.$route.name === "Einstellungen";
+            let result = false;
+            this.$route.name === "Einstellungen"
+                ? (result = true)
+                : (result = false);
+            console.log(result);
+            return result;
         },
 
         getMyProjectlist() {
@@ -237,6 +214,7 @@ export default {
         },
 
         getTodosForAllMyProjects() {
+            console.log(this.$store.state.todo.listOfToDos);
             return this.$store.state.todo.listOfToDos;
         },
 
