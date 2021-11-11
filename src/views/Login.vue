@@ -1,5 +1,6 @@
 <template>
   <div class="w-background">
+    <Gdpr v-on:gdprAccepted="enableButtons" />
     <div class="container">
       <b-card class="container-form">
         <b-form-group>
@@ -56,13 +57,13 @@
                 </tr>
               </table>
 
-              <b-button @click="login()">Login</b-button>
+              <b-button :disabled="!gdprAccepted" @click="login()">Login</b-button>
             </b-tab>
             <b-tab title="Registrierung">
               <div class="registrierung-header">
                 <h5>Registriere dich hier mit deinem Uni-Account</h5>
                 <p>
-                  Falls du Hilfe benötigst, wende dich an mail@uni-hildesheim.de
+                  Falls du Hilfe benötigst, wende dich an maren.stadtlaender@uni-hildesheim.de
                 </p>
               </div>
               <table>
@@ -135,7 +136,7 @@
                   </td>
                 </tr>
               </table>
-              <b-button @click="registrieren()">Registrieren</b-button>
+              <b-button :disabled="!gdprAccepted"  @click="registrieren()">Registrieren</b-button>
             </b-tab>
           </b-tabs>
         </b-form-group>
@@ -152,14 +153,16 @@
             "Qualität Plus" des MWK Niedersachsen erstellt. Näheres dazu finden
             Sie
             <a
-              href="https://www.uni-hildesheim.de/fb4/institute/bwl/informationssysteme-und-unternehmensmodellierung/projekte/qualitaet-plus/"
+              href="https://www.uni-hildesheim.de/fb4/institute/bwl/informationssysteme-und-unternehmensmodellierung/projekte/qualitaet-plus/" target="_blank" rel="noopener noreferrer"
               >hier</a
-            >
+            >.
           </v-card-subtitle>
           <v-divider></v-divider>
           <v-card-text class="pb-3">
             <img src="../assets/logo.svg" width="24px" height="24px" />
-            Universität Hildesheim - {{ new Date().getFullYear() }}
+            <a href="https://www.uni-hildesheim.de/impressum/" target="_blank" rel="noopener noreferrer">
+            Universität Hildesheim
+            </a> - {{ new Date().getFullYear() }}
           </v-card-text>
         </v-card>
       </v-footer>
@@ -175,8 +178,11 @@ import {
   minValue,
   maxLength,
 } from "vuelidate/lib/validators";
+import Gdpr from "@/components/Gdpr.vue";
 
 export default {
+  components: { Gdpr },
+
   data() {
     return {
       zugangsKennung: "",
@@ -184,6 +190,7 @@ export default {
       registrierungsKennung: "",
       registrierungsPasswort: "",
       matrikelnummer: "",
+      gdprAccepted: false,
     };
   },
   /* 
@@ -240,6 +247,11 @@ export default {
     },
   },
   methods: {
+    // enable buttons after data protection has been accepted
+    enableButtons() {
+      this.gdprAccepted = true;
+    },
+
     /* function validates log in and registration input
     returns true, when the associated input field (dependent_field) is not empty or all fields are empty
     e.g. if passwort is not empty, zugansKennung is also required*/

@@ -41,6 +41,7 @@
     "node-sass": "^4.14.1",
     "sass-loader": "^10.0.2",
     "vue-cli-plugin-vuetify": "~2.0.7",
+    "vue-cookie-law": "^1.13.3",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
