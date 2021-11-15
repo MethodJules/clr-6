@@ -7,7 +7,10 @@ const state = () => ({
     ],
     todos: [],//array to store only the todo tasks from listOfToDos[] 
     dates: [],//array to store only the deadlines from listOfToDos[] 
-    token: ""
+    token: "",
+    attributes: [],
+    currentProject: "",
+    todosOfProject: [],
 
 
 })
@@ -17,14 +20,45 @@ const state = () => ({
 getter to call the arrays todos[] and dates[] 
 */
 const getters = {
-    getTodo: state => {
-        return state.listOfToDos.todo
-    },
-    getDate: state => {
-        return state.listOfToDos.date
+
+    getAttributesForVcCalendar(state) {
+        console.log("It is loading two times? Why?")
+        // because it loads two times I have made attributes array empty at the begining of this getter
+        // I think at loadTodosAllProjects, it is done because of the same reason. 
+        // I have inspired from there. 
+        // But it needs to be fixed..
+        state.attributes = []
+        let todos = state.listOfToDos;
+        todos.forEach(todo => {
+            todo.forEach((todo) => {
+
+                state.attributes.push({
+                    highlight: todo.erledigt,
+                    // highlight configuration
+                    // You can just delete to see default one. 
+                    highlight: {
+                        color: 'orange',
+                        fillMode: 'light',
+                    },
+                    dates: todo.date,
+                    popover: {
+                        label: todo.title,
+                    },
+                })
+            })
+        });
+        return state.attributes;
     },
 
+    getListOfTodos(state) {
 
+        return state.listOfToDos
+    },
+
+    getTodosOfProject(state) {
+
+        return state.todosOfProject;
+    }
 
 }
 
@@ -78,25 +112,13 @@ const actions = {
                             leeresTodoArray.push({ date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt, project_title: project.attributes.title })
                         });
 
-
-
-
-
-
-
                         //gives array to mutation, which pushes array in state -> state has array of projects, which contain arrays of todos
                         commit('SAVE_TODOS_ALL_PROJECTS', leeresTodoArray);
                     }
-
-
-
                 })
                 .catch(function (error) {
                     console.log(error)
                 })
-
-
-
             commit("loadingStatus", false, { root: true })
 
 
@@ -106,9 +128,10 @@ const actions = {
     },
 
     async loadToDoFromBackend({ commit, rootState }, projectId) {
+        console.log("somebody call me")
 
         var drupalUserUID = rootState.drupal_api.user.uid;
-        console.log(drupalUserUID)
+
 
 
         var config = {
@@ -124,7 +147,7 @@ const actions = {
 
         axios(config)
             .then((response) => {
-                console.log(response)
+
                 const data = response.data.data;
                 //let to-dos = [];
                 commit('SAVE_TODO', data);
@@ -206,6 +229,7 @@ const actions = {
     calls function to delete tool from Backend 
     */
     deleteTodo({ commit, rootState }, todoEntry) {
+        console.log(rootState)
         var config = {
             method: 'delete',
             url: `jsonapi/node/to_dos/${todoEntry.uuid}`,
@@ -261,7 +285,9 @@ const actions = {
 
 
 
-    }
+    },
+
+
 
 }
 
@@ -270,8 +296,32 @@ const mutations = {
 
     /* delete one entry from state list OfToDos */
     DELETE_TODO_ENTRY(state, todoEntry) {
-        let index = state.listOfToDos.indexOf(todoEntry);
-        state.listOfToDos.splice(index, 1);
+        // changed the array here from listOfTodos to the todosOfProject, 
+        // because we show that array at that time. 
+
+        // for project page
+        let index = state.todosOfProject.indexOf(todoEntry);
+        state.todosOfProject.splice(index, 1);
+        console.log(state.listOfToDos)
+        // For main page
+        // I cant understand how listOfToDos is filling. It always changes in the state. 
+        // Thats why I cannot manipulate it. 
+        for (let index1 = 0; index1 < state.listOfToDos.length; index1++) {
+            const todos = state.listOfToDos[index1];
+            for (let index2 = 0; index2 < todos.length; index2++) {
+                const todo = todos[index2];
+                console.log(todo)
+                console.log("index1", index1)
+                console.log("index2", index2)
+                if (todo.title == todoEntry.title) {
+                    console.log(todo)
+                    console.log(state.listOfToDos)
+                    state.listOfToDos[index1].splice(index2, 1);
+
+                }
+            }
+
+        }
     },
     /** 
     * adds a new todo by user input 
@@ -284,7 +334,14 @@ const mutations = {
     },
 
     SAVE_NEW_TODO(state, newTodo) {
-        state.listOfToDos.push({ uuid: newTodo.id, title: newTodo.attributes.title, date: newTodo.attributes.field_date, erledigt: newTodo.attributes.field_erledigt })
+        // changed the array here from listOfTodos to the todosOfProject, 
+        // because we show that array at that time. 
+        state.todosOfProject.push({
+            uuid: newTodo.id,
+            title: newTodo.attributes.title,
+            date: newTodo.attributes.field_date,
+            erledigt: newTodo.attributes.field_erledigt
+        })
     },
 
     /** 
@@ -297,11 +354,9 @@ const mutations = {
 
         var leeresTodoArray = [];
         todo.forEach(element => {
-
+            console.log(element)
             const field_date = element.attributes.field_date;
-            //console.log(field_date)
             const field_id = element.id;
-            //console.log(element.id)
             const field_title = element.attributes.title;
             const field_erledigt = element.attributes.field_erledigt;
             leeresTodoArray.push({ date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt })
@@ -309,8 +364,8 @@ const mutations = {
             state.dates.push(element.attributes.field_date)
         });
 
-        state.listOfToDos = leeresTodoArray
-        console.log(state.listOfToDos)
+        state.todosOfProject = leeresTodoArray
+        console.log(state.todosOfProject)
 
     },
 
@@ -321,13 +376,15 @@ const mutations = {
      *  
      */
     SAVE_TODOS_ALL_PROJECTS(state, todoArray) {
-
         state.listOfToDos.push(todoArray)
         console.log(state.listOfToDos)
 
+    },
+
+    SET_CURRENT_PROJECT(state, project) {
+        console.log(project)
+        state.currentProject = project;
     }
-
-
 
 
 

@@ -33,18 +33,13 @@ export default {
   props: {
     projectId: String,
   },
+
   computed: {
-    getProjectID() {
-      console.log("Bu ne yav:");
-      console.log(this.$route);
-      console.log(this.projectId);
-      //return this.$route.params.project_id;
-      return this.projectId;
-    },
     getUserRole() {
       return this.$store.state.drupal_api.user.role;
     },
   },
+
   methods: {
     loadCurrentPhase(phaseid) {
       this.$store.dispatch("project/loadCurrentProject", this.projectId);
@@ -55,7 +50,10 @@ export default {
       });
       this.$router.push({
         name: "ReflexionView",
-        params: { reflexionsPhase: phaseid, project_id: this.getProjectID },
+        params: {
+          reflexionsPhase: phaseid,
+          project_id: this.projectId,
+        },
       });
     },
   },

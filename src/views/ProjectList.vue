@@ -2,78 +2,31 @@
   <div>
     <h1>Meine Projekte</h1>
     <br />
-    <b-row>
-      <!-- <b-card class="m-2"
-
-        v-for="proj in projectList"
-        :key="proj.projectId"
-        :title="proj.titel"
-      > -->
-
-      <div>
-        <b-row>
-          <b-col>
-            <div>
-              <table>
-                <tr v-for="project in getMyProjectlist" :key="project.uuid">
-                  <b-card style="max-height: 20rem">
-                    <b-col>
-                      <b-row>
-                        <b-col>
-                          <h3>{{ project.title }}</h3>
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col>
-                          <!--                         <b-link
-
-                          :to="{ name: 'Home', params: { user_id: getUserID } }"
-                          class="btn btn-outline-dark btn-block mb-2"
-                          >Dashboard</b-link
-                        >
-                      </b-col> -->
-
-                          <b-link
-                            :to="{
-                              name: 'Home',
-                              params: {
-                                project_id: project.uuid,
-                              },
-                            }"
-                            class="btn btn-outline-dark btn-block mb-2"
-                            >Dashboard</b-link
-                          >
-                        </b-col>
-                      </b-row>
-                      <b-row>
-                        <b-col>
-                          <ReflexionAuswahl :projectId="project.uuid" />
-                        </b-col>
-                      </b-row>
-                    </b-col>
-                  </b-card>
-                </tr>
-              </table>
-            </div>
-          </b-col>
-        </b-row>
-      </div>
-      <!-- </b-card> -->
-
-      <b-card
-        v-if="getUserRole != 'lecturer'"
-        title="Neues Projekt"
-        style="max-height: 10rem"
-        class="m-2"
-      >
-        <b-row>
-          <b-col cols="3">
-            <ProjectForm :project="project"></ProjectForm>
-
-            <!-- <b-link class=" btn btn-outline-dark mt-5">Neues Projekt</b-link> -->
-          </b-col>
-        </b-row>
+    <b-row class="projectlist-container">
+      <b-card title="Neues Projekt">
+        <ProjectForm :project="project"></ProjectForm>
       </b-card>
+
+      <div v-for="project in getMyProjectlist" :key="project.uuid">
+        <b-card class="projects">
+          <h3>
+            {{ project.title }}
+          </h3>
+
+          <b-link
+            :to="{
+              name: 'Home',
+              params: {
+                project_id: project.uuid,
+              },
+            }"
+            class="btn btn-outline-dark btn-block mb-2"
+            @click="setCurrentProject(project)"
+            >Dashboard</b-link
+          >
+          <ReflexionAuswahl :projectId="project.uuid" />
+        </b-card>
+      </div>
     </b-row>
   </div>
 </template>
@@ -107,13 +60,17 @@ export default {
     fetchData(proj) {
       this.project.title = proj.title;
     },
+
+    setCurrentProject(project) {
+      console.log(project);
+      this.$store.commit("todo/SET_CURRENT_PROJECT", project);
+    },
   },
 
   computed: {
     getUserRole() {
       return this.$store.state.drupal_api.user.role;
     },
-
     getCurrentUserInternalUID() {
       // return true
       return this.$store.state.drupal_api.user.uid;
@@ -140,3 +97,15 @@ export default {
   },
 };
 </script>
+<style scoped>
+.projectlist-container {
+  display: flex;
+}
+.projectlist-container * {
+  margin-right: 1rem;
+  max-width: 15rem;
+}
+.projects * {
+  width: 100%;
+}
+</style>

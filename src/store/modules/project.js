@@ -9,8 +9,7 @@ const state = () => ({
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
   keywordsInString: "",
-  projectsFilteredbyKeywords: []
-
+  projectsFilteredbyKeywords: [],
 
 
 })
@@ -157,16 +156,13 @@ const actions = {
     //console.log(drupalUserUID)
 
     if (rootState.drupal_api.user.role == "student") {
-      console.log("student")
       //BUG: filter does not find projects where user is group admin, but no group member can be found -> afterwards createproject() can be changed so that the creating user only is groupadmin and not both member and admin
       const filter_or_group = `?filter[or-group][group][conjunction]=OR`
       const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
-      //const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
       const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
       filter_joined = filter_or_group + filter_gruppenmitglieder + filter_gruppenadministrator
     } else if (rootState.drupal_api.user.role == "lecturer") {
       filter_joined = `?filter[field_betreuender_dozent][condition][path]=field_betreuender_dozent.drupal_internal__uid&filter[field_betreuender_dozent][condition][operator]=IN&filter[field_betreuender_dozent][condition][value]=${drupalUserUID}`
-      console.log(filter_joined)
     }
     commit("loadingStatus", true, { root: true })
 
@@ -186,14 +182,9 @@ const actions = {
     console.log(config)
     axios(config)
       .then(function (response) {
-        //console.log(response)
-        /* console.log($store.state.sparky_api.validCredential)
-        console.log($store.state.sparky_api.drupalUserID) */
+
         const projects = response.data.data;
         commit('LOAD_MY_PROJECTS', { projects });
-        console.log(projects)
-        console.log({ projects })
-        //commit('loadingStatus', false)
         dispatch('todo/loadTodosAllProjects', projects, { root: true })
         commit("loadingStatus", false, { root: true })
 

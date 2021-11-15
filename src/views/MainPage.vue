@@ -29,6 +29,7 @@
         <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
         <b-col
+          v-if="!inProjectList"
           class="d-flex flex-column justify-content-between p-0 m-0 rechtseite"
           md="1"
         >
@@ -90,14 +91,23 @@ export default {
     account() {
       return this.$store.state.sparky_api.account;
     },
+    getLoadingStatus() {
+      return this.$store.state.loadingStatus;
+    },
+    inProjectList() {
+      console.log(this.$route.name);
+      // console.log(this.$route.name);
+      let result = false;
+      this.$route.name === "ProjectList" ? (result = true) : (result = false);
+      console.log(result);
+      return result;
+    },
 
     getUserRole() {
       return this.$store.state.drupal_api.user.role;
     },
-    getLoadingStatus() {
-      return this.$store.state.loadingStatus;
-    },
   },
+
   beforeMount() {
     this.$store.dispatch("drupal_api/loadTokensfromSessionStorage");
   },
@@ -119,7 +129,7 @@ export default {
 .v-card__title,
 .v-card__subtitle,
 .v-card__text {
-    color: white;
+  color: white;
 }
 
 .row {
