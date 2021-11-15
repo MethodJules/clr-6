@@ -1,9 +1,10 @@
 <template>
     <div id="todoList">
-        {{ todos }}
         <div v-if="inProjectList || inEinstellungen || inProfil">
             <div v-for="(todos, index) in listOfTodos" :key="index">
-                <h3>To Do {{ todos[0].project_title }}</h3>
+                <h3 v-if="todos.length > 0">
+                    To Do {{ todos[0].project_title }}
+                </h3>
 
                 <!-- Liste zum Erstellen der Todos  -->
                 <div

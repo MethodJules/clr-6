@@ -302,7 +302,7 @@ const mutations = {
         // for project page
         let index = state.todosOfProject.indexOf(todoEntry);
         state.todosOfProject.splice(index, 1);
-
+        console.log(state.listOfToDos)
         // For main page
         // I cant understand how listOfToDos is filling. It always changes in the state. 
         // Thats why I cannot manipulate it. 
