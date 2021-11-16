@@ -3,7 +3,7 @@
     <h1>Meine Projekte</h1>
     <br />
     <b-row class="projectlist-container">
-      <b-card title="Neues Projekt">
+      <b-card title="Neues Projekt" v-if="getUserRole != 'lecturer'">
         <ProjectForm :project="project"></ProjectForm>
       </b-card>
 

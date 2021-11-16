@@ -5,19 +5,16 @@
     </b-col>
 
     <b-card border-variant="primary">
-      <b-tabs content-class="mt-3">
-        <b-tab title="Ich" @click="loadReflexion(ichSicht)">
+      <b-tabs content-class="mt-3" lazy>
+        <b-tab title="Ich">
           <Reflexion :sicht="ichSicht"> </Reflexion>
         </b-tab>
 
-        <b-tab
-          title="Gruppe & Zusammenarbeit"
-          @click="loadReflexion(gruppeSicht)"
-        >
+        <b-tab title="Gruppe & Zusammenarbeit">
           <Reflexion :sicht="gruppeSicht"> </Reflexion>
         </b-tab>
 
-        <b-tab title="Fachlicher Kontext" @click="loadReflexion(kontextSicht)">
+        <b-tab title="Fachlicher Kontext">
           <Reflexion :sicht="kontextSicht"> </Reflexion>
         </b-tab>
       </b-tabs>
@@ -57,6 +54,7 @@ export default {
   },
 
   async mounted() {
+    //TODO: remove todo? why is it here?
     this.$store.dispatch("todo/loadToDoFromBackend", this.getProjectID);
   },
 };

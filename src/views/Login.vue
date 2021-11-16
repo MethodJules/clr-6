@@ -57,13 +57,16 @@
                 </tr>
               </table>
 
-              <b-button :disabled="!gdprAccepted" @click="login()">Login</b-button>
+              <b-button :disabled="!gdprAccepted" @click="login()"
+                >Login</b-button
+              >
             </b-tab>
             <b-tab title="Registrierung">
               <div class="registrierung-header">
                 <h5>Registriere dich hier mit deinem Uni-Account</h5>
                 <p>
-                  Falls du Hilfe benötigst, wende dich an maren.stadtlaender@uni-hildesheim.de
+                  Falls du Hilfe benötigst, wende dich an
+                  maren.stadtlaender@uni-hildesheim.de
                 </p>
               </div>
               <table>
@@ -136,7 +139,9 @@
                   </td>
                 </tr>
               </table>
-              <b-button :disabled="!gdprAccepted"  @click="registrieren()">Registrieren</b-button>
+              <b-button :disabled="!gdprAccepted" @click="registrieren()"
+                >Registrieren</b-button
+              >
             </b-tab>
           </b-tabs>
         </b-form-group>
@@ -153,16 +158,23 @@
             "Qualität Plus" des MWK Niedersachsen erstellt. Näheres dazu finden
             Sie
             <a
-              href="https://www.uni-hildesheim.de/fb4/institute/bwl/informationssysteme-und-unternehmensmodellierung/projekte/qualitaet-plus/" target="_blank" rel="noopener noreferrer"
+              href="https://www.uni-hildesheim.de/fb4/institute/bwl/informationssysteme-und-unternehmensmodellierung/projekte/qualitaet-plus/"
+              target="_blank"
+              rel="noopener noreferrer"
               >hier</a
             >.
           </v-card-subtitle>
           <v-divider></v-divider>
           <v-card-text class="pb-3">
             <img src="../assets/logo.svg" width="24px" height="24px" />
-            <a href="https://www.uni-hildesheim.de/impressum/" target="_blank" rel="noopener noreferrer">
-            Universität Hildesheim
-            </a> - {{ new Date().getFullYear() }}
+            <a
+              href="https://www.uni-hildesheim.de/impressum/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Universität Hildesheim
+            </a>
+            - {{ new Date().getFullYear() }}
           </v-card-text>
         </v-card>
       </v-footer>
@@ -327,9 +339,11 @@ export default {
           .then(() => {
             //also appears when the user is logged in, but the sessionStorage is empty -> error 403
             //TODO: check if error 403?
-            this.makeToast();
-            this.zugangsKennung = "";
-            this.passwort = "";
+            if (this.$store.state.drupal_api.validCredential) {
+              this.makeToast();
+              this.zugangsKennung = "";
+              this.passwort = "";
+            }
           });
         this.$store.dispatch("drupal_api/saveBasicAuth", authorization_token);
 
@@ -351,7 +365,7 @@ export default {
       console.log(this.$root);
       this.$root.$bvToast.toast(
         // removed because of new routing this is not available at login at this point of time `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.name}`,
-        `Willkommen zu dem kollaborativen Literaturreview Tool`,
+        `Willkommen zu deinem kollaborativen Literaturreview Tool`,
         // `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.fullname}`,
         {
           title: "Willkommen",

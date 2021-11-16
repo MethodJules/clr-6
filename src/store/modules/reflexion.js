@@ -57,7 +57,7 @@ const actions = {
     /* saves the reflexiondata in the backend  */
 
 
-    createReflexion({ state, rootState }, reflexion) {
+    createReflexion({ state, rootState, commit }, reflexion) {
 
         var phaseId = rootState.project_phases.current_phase.phase_id
         var drupalUserUID = rootState.profile.userData.uuid
@@ -126,6 +126,8 @@ const actions = {
         axios(config)
             .then(function (response) {
                 console.log(response)
+                let reflexion = response.data.data;
+                commit('SAVE_REFLEXION_AFTER_CREATION', reflexion);
             })
             .catch(function (error) {
                 console.log(error)
@@ -179,7 +181,22 @@ const mutations = {
     loadingStatus(state, newLoadingStatus) {
         state.loadingStatus = newLoadingStatus
     },
+    SAVE_REFLEXION_AFTER_CREATION(state, reflexion) {
 
+        const field_berichten_reagieren = reflexion.attributes.field_berichten_reagieren;
+        console.log(field_berichten_reagieren)
+        const field_in_bezug_setzen = reflexion.attributes.field_in_bezug_setzen;
+        console.log(field_in_bezug_setzen)
+        const field_rekonstruieren = reflexion.attributes.field_rekonstruieren;
+        console.log(field_rekonstruieren)
+        const field_schlussfolgern = reflexion.attributes.field_schlussfolgern;
+        console.log(field_schlussfolgern)
+        const field_id = reflexion.id;
+        const field_title = reflexion.attributes.title;
+
+        state.reflexionData = { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, uuid: field_id, title: field_title }
+
+    },
 
     SAVE_REFLEXION(state, { reflexion }) {
 

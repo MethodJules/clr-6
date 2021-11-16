@@ -133,17 +133,21 @@ export default {
   },
   methods: {
     ok() {
-      var neueEingabe = {
-        todo: this.todoNeu,
-        date: this.appointment,
-        project_id: this.getProjectID,
-      };
-      // Benutzereingabe wird in die Liste gespeichert
-      // this.listOfToDos.push(neueEingabe);
+      this.$v.$touch();
 
-      //Anbindung an die API
-      this.$store.dispatch("todo/createToDo", neueEingabe);
-      this.todoNeu = "";
+      if (!this.$v.$invalid) {
+        var neueEingabe = {
+          todo: this.todoNeu,
+          date: this.appointment,
+          project_id: this.getProjectID,
+        };
+        // Benutzereingabe wird in die Liste gespeichert
+        // this.listOfToDos.push(neueEingabe);
+
+        //Anbindung an die API
+        this.$store.dispatch("todo/createToDo", neueEingabe);
+        this.todoNeu = "";
+      }
     },
     deleteTodo(todo) {
       alert("Delete");
