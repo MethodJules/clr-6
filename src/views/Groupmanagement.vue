@@ -199,6 +199,7 @@ then the appropriate dispatch will be sent */
             autoHideDelay: 4000,
             variant: "warning",
           });
+          //we call this method, to update the projects in state. otherwise the user will still see the project he left in his projectlist
           this.$store.dispatch("project/loadProjectsFromBackend");
         });
 
@@ -267,14 +268,15 @@ then the appropriate dispatch will be sent */
         } else {
           member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
           //first delete user in groupadmin array
-          this.$store.dispatch("project/deleteAdmin", member);
-          //then add in groupmember array
-          this.$store.dispatch("project/addMember", {
-            mitglied: member,
-            role: "field_gruppenmitglieder",
+          this.$store.dispatch("project/deleteAdmin", member).then(() => {
+            this.$store.dispatch("project/addMember", {
+              mitglied: member,
+              role: "field_gruppenmitglieder",
+            });
+            //then delete old group member
+            alert("Du bist nun kein Gruppenadministrator mehr");
           });
-          //then delete old group member
-          alert("Du bist nun kein Gruppenadministrator mehr");
+          //then add in groupmember array
         }
       } else {
         alert(

@@ -177,15 +177,11 @@ const actions = {
                 const currentPhase = response.data.data;
                 commit('LOAD_SINGLE_PHASE', { currentPhase });
                 console.log(state.current_phase)
-                dispatch("inputDocuments/loadInputdocumentsFromBackend", null, { root: true })
-                dispatch("output_documents/loadOutputdocumentsFromBackend", null, { root: true })
+                //loading all data which is connected to a single phase here, instead of mounted of the components, because of better synchronization
+                //we keep this initial loading of the reflexion in because
                 var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137"
                 dispatch("reflexion/loadReflexionFromBackend", IchSicht, { root: true })
-                dispatch("tool/loadToolsFromBackend", null, { root: true })
                 commit("loadingStatus", false, { root: true })
-
-
-
             })
             // Leeres Array gepackt, damit keine alte Phase im State ist; TODO/Vllt: Route zur Startseite
 
@@ -253,6 +249,7 @@ const actions = {
         //field_assistent bekommt die assistent id vom standard assistenten - hier die ID de Assistenten als ein statischer string
         let assistent_id = "a6260ded-71e7-40c0-8e24-bf78caa8746e"
         //id_newly_created_project = "695c2f01-6de9-4456-988f-1fcf5db91dfb"
+        //TODO: remove basic assistent?
 
         //json.stringify hier eigtl nicht nötig
 
@@ -488,11 +485,6 @@ const actions = {
     },
     updateDocumentation({ state, rootState }, documentationText) {
 
-
-        console.log(state)
-
-
-
         var phaseId = rootState.project_phases.current_phase.phase_id
 
         var data = `{
@@ -501,13 +493,9 @@ const actions = {
                     "id": "${phaseId}",
                     "attributes": { 
                         "field_documentationtext": "${documentationText}" 
-                        
-    
-                    }
-                    
+                    }                 
                 }
             }`;
-
 
         var config = {
             method: 'patch',
@@ -519,28 +507,17 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data
-
-
         };
-
         axios(config)
             .then(function (response) {
                 console.log(response)
-
-
             })
             .catch(function (error) {
                 console.log(error)
             })
-
     },
 
-
-
 }
-
-
-
 
 const mutations = {
 

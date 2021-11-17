@@ -1,307 +1,307 @@
 <template>
-    <b-col>
-        <transition name="fade" mode="out-in">
-            <div v-if="testButClicked" class="alert" role="alert">
-                Erfolgreich Gespeichert !
-            </div>
-        </transition>
-        <!--  <h2>Reflexion zu Phase: {{ phaseId }}</h2> -->
+  <b-col>
+    <transition name="fade" mode="out-in">
+      <div v-if="testButClicked" class="alert" role="alert">
+        Erfolgreich Gespeichert !
+      </div>
+    </transition>
+    <!--  <h2>Reflexion zu Phase: {{ phaseId }}</h2> -->
 
-        <b-container class="reflexion">
-            <b-row class="reflexion-item">
-                <!-- Textfeld 1 -->
+    <b-container class="reflexion">
+      <b-row class="reflexion-item">
+        <!-- Textfeld 1 -->
 
-                <label for="textfeld-1"><b>Berichten/Reagieren </b></label>
+        <label for="textfeld-1"><b>Berichten/Reagieren </b></label>
 
-                <b-form-textarea
-                    v-model="getReflexionData.berichten_reagieren"
-                    v-on:input="$v.getReflexionData.berichten_reagieren.$touch"
-                    v-bind:class="{
-                        error: $v.getReflexionData.berichten_reagieren.$error,
-                        valid:
-                            $v.getReflexionData.berichten_reagieren.$dirty &&
-                            !$v.getReflexionData.berichten_reagieren.$invalid,
-                    }"
-                    id="textfeld-1"
-                    placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"
-                >
-                    <!-- <span v-if="!$v.berichten_reagieren.required && $v.project.berichten_reagieren.$dirty" class="text-danger">Bitte ausfülen!</span> -->
-                </b-form-textarea>
-            </b-row>
-            <b-row class="reflexion-item">
-                <!-- Textfeld 2 -->
-                <label for="textfeld-2"><b>In Bezug setzen</b> </label>
+        <b-form-textarea
+          v-model="getReflexionData.berichten_reagieren"
+          v-on:input="$v.getReflexionData.berichten_reagieren.$touch"
+          v-bind:class="{
+            error: $v.getReflexionData.berichten_reagieren.$error,
+            valid:
+              $v.getReflexionData.berichten_reagieren.$dirty &&
+              !$v.getReflexionData.berichten_reagieren.$invalid,
+          }"
+          id="textfeld-1"
+          placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"
+        >
+          <!-- <span v-if="!$v.berichten_reagieren.required && $v.project.berichten_reagieren.$dirty" class="text-danger">Bitte ausfülen!</span> -->
+        </b-form-textarea>
+      </b-row>
+      <b-row class="reflexion-item">
+        <!-- Textfeld 2 -->
+        <label for="textfeld-2"><b>In Bezug setzen</b> </label>
 
-                <b-form-textarea
-                    v-model="getReflexionData.in_bezug_setzen"
-                    v-on:input="$v.getReflexionData.in_bezug_setzen.$touch"
-                    v-bind:class="{
-                        error: $v.getReflexionData.in_bezug_setzen.$error,
-                        valid:
-                            $v.getReflexionData.in_bezug_setzen.$dirty &&
-                            !$v.getReflexionData.in_bezug_setzen.$invalid,
-                    }"
-                    id="textfeld-2"
-                    placeholder="Setzen Sie den Vorfall bzw. das Problem mit Ihren eigenen Kenntnissen, Fertigkeiten, Erfahrung oder fachlichem Wissen in Verbindung. Ist Ihnen ein ähnlicher Vorfall schon einmal begegnet? Waren die Umstände gleich oder unterschiedlich? Haben Sie die Fähigkeiten und das Wissen, um damit umzugehen? Erläutern Sie."
-                >
-                    <!--  <span v-if="!$v.in_bezug_setzen.required && $v.project.in_bezug_setzen.$dirty" class="text-danger">Bitte ausfülen!</span> -->
-                </b-form-textarea>
-            </b-row>
-            <b-row class="reflexion-item">
-                <!-- Textfeld 3 -->
-                <label for="textfeld-3"><b>Schlussfolgern </b></label>
+        <b-form-textarea
+          v-model="getReflexionData.in_bezug_setzen"
+          v-on:input="$v.getReflexionData.in_bezug_setzen.$touch"
+          v-bind:class="{
+            error: $v.getReflexionData.in_bezug_setzen.$error,
+            valid:
+              $v.getReflexionData.in_bezug_setzen.$dirty &&
+              !$v.getReflexionData.in_bezug_setzen.$invalid,
+          }"
+          id="textfeld-2"
+          placeholder="Setzen Sie den Vorfall bzw. das Problem mit Ihren eigenen Kenntnissen, Fertigkeiten, Erfahrung oder fachlichem Wissen in Verbindung. Ist Ihnen ein ähnlicher Vorfall schon einmal begegnet? Waren die Umstände gleich oder unterschiedlich? Haben Sie die Fähigkeiten und das Wissen, um damit umzugehen? Erläutern Sie."
+        >
+          <!--  <span v-if="!$v.in_bezug_setzen.required && $v.project.in_bezug_setzen.$dirty" class="text-danger">Bitte ausfülen!</span> -->
+        </b-form-textarea>
+      </b-row>
+      <b-row class="reflexion-item">
+        <!-- Textfeld 3 -->
+        <label for="textfeld-3"><b>Schlussfolgern </b></label>
 
-                <b-form-textarea
-                    v-model="getReflexionData.schlussfolgern"
-                    v-on:input="$v.getReflexionData.schlussfolgern.$touch"
-                    v-bind:class="{
-                        error: $v.getReflexionData.schlussfolgern.$error,
-                        valid:
-                            $v.getReflexionData.schlussfolgern.$dirty &&
-                            !$v.getReflexionData.schlussfolgern.$invalid,
-                    }"
-                    id="textfeld-3"
-                    placeholder="Beleuchten Sie mögliche Ursachen oder Erklärungen für den Vorfall bzw. das Problem. Welche Faktoren waren ausschlaggebend? Setzen Sie Ihre Überlegungen ggf. mit relevanten Theorien oder Wissen in Verbindung und berücksichtigen Sie verschiedene Perspektiven."
-                >
-                    <!--   <span v-if="!$v.schlussfolgern.required && $v.schlussfolgern.$dirty" class="text-danger">Bitte ausfülen!</span> -->
-                </b-form-textarea>
-            </b-row>
-            <b-row class="reflexion-item">
-                <!-- Textfeld 4 -->
-                <label for="textfeld-4"><b>Rekonstruieren</b> </label>
+        <b-form-textarea
+          v-model="getReflexionData.schlussfolgern"
+          v-on:input="$v.getReflexionData.schlussfolgern.$touch"
+          v-bind:class="{
+            error: $v.getReflexionData.schlussfolgern.$error,
+            valid:
+              $v.getReflexionData.schlussfolgern.$dirty &&
+              !$v.getReflexionData.schlussfolgern.$invalid,
+          }"
+          id="textfeld-3"
+          placeholder="Beleuchten Sie mögliche Ursachen oder Erklärungen für den Vorfall bzw. das Problem. Welche Faktoren waren ausschlaggebend? Setzen Sie Ihre Überlegungen ggf. mit relevanten Theorien oder Wissen in Verbindung und berücksichtigen Sie verschiedene Perspektiven."
+        >
+          <!--   <span v-if="!$v.schlussfolgern.required && $v.schlussfolgern.$dirty" class="text-danger">Bitte ausfülen!</span> -->
+        </b-form-textarea>
+      </b-row>
+      <b-row class="reflexion-item">
+        <!-- Textfeld 4 -->
+        <label for="textfeld-4"><b>Rekonstruieren</b> </label>
 
-                <b-form-textarea
-                    v-model="getReflexionData.rekonstruieren"
-                    v-on:input="$v.getReflexionData.rekonstruieren.$touch"
-                    v-bind:class="{
-                        error: $v.getReflexionData.rekonstruieren.$error,
-                        valid:
-                            $v.getReflexionData.rekonstruieren.$dirty &&
-                            !$v.getReflexionData.rekonstruieren.$invalid,
-                    }"
-                    id="textfeld-4"
-                    placeholder="Rekonstruieren Sie zukünftiges Handeln in Bezug auf den Vorfall bzw. das Problem. Wie würden Sie beim nächsten Mal vorgehen? Welche Ansätze könnten funktionieren und wieso? Gibt es verschiedene Optionen, aus denen Sie wählen können? Welches Ergebnis erwarten Sie?"
-                >
-                    <!--  <span v-if="!$v.rekonstruieren.required && $v.rekonstruieren.$dirty" class="text-danger">Bitte ausfülen!</span> -->
-                </b-form-textarea>
-            </b-row>
+        <b-form-textarea
+          v-model="getReflexionData.rekonstruieren"
+          v-on:input="$v.getReflexionData.rekonstruieren.$touch"
+          v-bind:class="{
+            error: $v.getReflexionData.rekonstruieren.$error,
+            valid:
+              $v.getReflexionData.rekonstruieren.$dirty &&
+              !$v.getReflexionData.rekonstruieren.$invalid,
+          }"
+          id="textfeld-4"
+          placeholder="Rekonstruieren Sie zukünftiges Handeln in Bezug auf den Vorfall bzw. das Problem. Wie würden Sie beim nächsten Mal vorgehen? Welche Ansätze könnten funktionieren und wieso? Gibt es verschiedene Optionen, aus denen Sie wählen können? Welches Ergebnis erwarten Sie?"
+        >
+          <!--  <span v-if="!$v.rekonstruieren.required && $v.rekonstruieren.$dirty" class="text-danger">Bitte ausfülen!</span> -->
+        </b-form-textarea>
+      </b-row>
 
-            <b-row class="buttonGroup">
-                <b-button
-                    size="sm"
-                    :to="{
-                        name: 'Home',
-                        params: {
-                            project_id: this.$route.params.project_id,
-                        },
-                    }"
-                    >Dashboard</b-button
-                >
-                <b-button size="sm" @click="saveReflexion()"
-                    >Speichern
-                </b-button>
-            </b-row>
-        </b-container>
-    </b-col>
+      <b-row class="buttonGroup">
+        <b-button
+          size="sm"
+          :to="{
+            name: 'Home',
+            params: {
+              project_id: this.$route.params.project_id,
+            },
+          }"
+          >Dashboard</b-button
+        >
+        <b-button size="sm" @click="saveReflexion()">Speichern </b-button>
+      </b-row>
+    </b-container>
+  </b-col>
 </template>
 
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
 export default {
-    props: {
-        reflexionsPhase: String,
-        sicht: String,
-    },
+  props: {
+    reflexionsPhase: String,
+    sicht: String,
+  },
 
-    data() {
-        return {
-            phaseId: this.$route.params.phase_number,
-            projectId: this.$route.params.project_id,
-            testButClicked: false,
-            reflexionList: [],
+  data() {
+    return {
+      phaseId: this.$route.params.phase_number,
+      projectId: this.$route.params.project_id,
+      testButClicked: false,
+      reflexionList: [],
 
-            /*  berichten_reagieren: "",
+      /*  berichten_reagieren: "",
       in_bezug_setzen: "",
       schlussfolgern: "",
       rekonstruieren: "", */
-            phaseId: this.$route.params.reflexionsPhase,
-        };
-    },
+      phaseId: this.$route.params.reflexionsPhase,
+    };
+  },
 
-    validations: {
-        getReflexionData: {
-            berichten_reagieren: { required, minLength: minLength(5) },
-            in_bezug_setzen: { required, minLength: minLength(5) },
-            schlussfolgern: { required, minLength: minLength(5) },
-            rekonstruieren: { required, minLength: minLength(5) },
-        },
+  validations: {
+    getReflexionData: {
+      berichten_reagieren: { required, minLength: minLength(5) },
+      in_bezug_setzen: { required, minLength: minLength(5) },
+      schlussfolgern: { required, minLength: minLength(5) },
+      rekonstruieren: { required, minLength: minLength(5) },
     },
-    methods: {
-        /**
-         * if there is an uuid, execute the update method, otherwise execute the add method because there is no reflexion or no uuid.
-         * Long Form:
-         * if(uuid) {
-         *  this.updateReflexion();
-         * }else{
-         *  this.addItem();
-         * }
-         */
-        saveReflexion() {
-            let uuid = this.getReflexionData.uuid;
-            //short form of if-condition
-            uuid ? this.updateReflexion() : this.addItem();
-        },
+  },
+  methods: {
+    /**
+     * if there is an uuid, execute the update method, otherwise execute the add method because there is no reflexion or no uuid.
+     * Long Form:
+     * if(uuid) {
+     *  this.updateReflexion();
+     * }else{
+     *  this.addItem();
+     * }
+     */
+    saveReflexion() {
+      let uuid = this.getReflexionData.uuid;
+      //short form of if-condition
+      uuid ? this.updateReflexion() : this.addItem();
+    },
 
     /** Reflexion wird in das Backend geladen */
     addItem() {
       console.log("add item");
       if (!this.$v.$invalid) {
+        var ausgabe = {
+          sichten: this.sicht,
+          berichten_reagieren: this.getReflexionData.berichten_reagieren,
+          in_bezug_setzen: this.getReflexionData.in_bezug_setzen,
+          schlussfolgern: this.getReflexionData.schlussfolgern,
+          rekonstruieren: this.getReflexionData.rekonstruieren,
+        };
 
-                var ausgabe = {
-                    sichten: this.sicht,
-                    berichten_reagieren:
-                        this.getReflexionData.berichten_reagieren,
-                    in_bezug_setzen: this.getReflexionData.in_bezug_setzen,
-                    schlussfolgern: this.getReflexionData.schlussfolgern,
-                    rekonstruieren: this.getReflexionData.rekonstruieren,
-                };
+        this.testButClicked = true;
 
-                this.testButClicked = true;
-
-                this.$store.dispatch("reflexion/createReflexion", ausgabe);
-            } else {
-                alert("Bitte alles ausfüllen");
-            }
-        },
-
-        updateReflexion() {
-            console.log("update");
-            if (!this.$v.$invalid) {
-                console.log("title: ${this.titela}");
-
-                var ausgabe = {
-                    sichten: this.sicht,
-                    title: this.getReflexionData.title,
-                    berichten_reagieren:
-                        this.getReflexionData.berichten_reagieren,
-                    in_bezug_setzen: this.getReflexionData.in_bezug_setzen,
-                    schlussfolgern: this.getReflexionData.schlussfolgern,
-                    rekonstruieren: this.getReflexionData.rekonstruieren,
-                    uuid: this.getReflexionData.uuid,
-                };
-
-                this.testButClicked = true;
-
-                this.$store.dispatch("reflexion/updateReflexion", ausgabe);
-            } else {
-                alert("Bitte alles ausfüllen");
-            }
-        },
+        this.$store.dispatch("reflexion/createReflexion", ausgabe);
+      } else {
+        alert("Bitte alles ausfüllen");
+      }
     },
 
-    watch: {
-        testButClicked(val) {
-            if (val) {
-                setTimeout(() => (this.testButClicked = false), 1000);
-            }
-        },
-    },
+    updateReflexion() {
+      console.log("update");
+      if (!this.$v.$invalid) {
+        console.log("title: ${this.titela}");
 
-    /** lädt alle Reflexionen aus dem Backend */
-    async mounted() {
-        // var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137";
-        // this.$store.dispatch(
-        //     "reflexion/loadReflexionFromBackend",
-        //     "325fd0af-838c-49f5-92d3-2fcc987e6137"
-        // );
+        var ausgabe = {
+          sichten: this.sicht,
+          title: this.getReflexionData.title,
+          berichten_reagieren: this.getReflexionData.berichten_reagieren,
+          in_bezug_setzen: this.getReflexionData.in_bezug_setzen,
+          schlussfolgern: this.getReflexionData.schlussfolgern,
+          rekonstruieren: this.getReflexionData.rekonstruieren,
+          uuid: this.getReflexionData.uuid,
+        };
 
-        this.reflexionData = this.$store.state.reflexion.reflexionData;
-        /*  this.reflexionList=this.rowData */
-        // TO DO: nur die Daten laden die der Phase und der Nutzer ID entsprechen
-        //console.log(this.reflexionList)
-        //console.log(typeof(this.reflexionList))
-    },
+        this.testButClicked = true;
 
-    computed: {
-        // ...mapGetters({ getReflexionData: "reflexion/getReflexionData" }),
-        getReflexionData() {
-            return this.$store.state.reflexion.reflexionData;
-        },
+        this.$store.dispatch("reflexion/updateReflexion", ausgabe);
+      } else {
+        alert("Bitte alles ausfüllen");
+      }
     },
+  },
+
+  watch: {
+    testButClicked(val) {
+      if (val) {
+        setTimeout(() => (this.testButClicked = false), 1000);
+      }
+    },
+  },
+
+  /** lädt alle Reflexionen aus dem Backend */
+  async mounted() {
+    // var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137";
+    // this.$store.dispatch(
+    //     "reflexion/loadReflexionFromBackend",
+    //     "325fd0af-838c-49f5-92d3-2fcc987e6137"
+    // );
+
+    /* 
+would be helfpul to load it here in mounted with lazy loading, but takes way too long
+      -> put lazy here -> <b-tabs content-class="mt-3" lazy> in reflexionview*/
+    this.$store.dispatch("reflexion/loadReflexionFromBackend", this.sicht);
+
+    this.reflexionData = this.$store.state.reflexion.reflexionData;
+    /*  this.reflexionList=this.rowData */
+    // TO DO: nur die Daten laden die der Phase und der Nutzer ID entsprechen
+    //console.log(this.reflexionList)
+    //console.log(typeof(this.reflexionList))
+  },
+
+  computed: {
+    // ...mapGetters({ getReflexionData: "reflexion/getReflexionData" }),
+    getReflexionData() {
+      return this.$store.state.reflexion.reflexionData;
+    },
+  },
 };
 </script>
 <style scoped>
 .container-fluid .row {
-    margin-bottom: 1rem !important;
+  margin-bottom: 1rem !important;
 }
 
 .buttonGroup {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .alert {
-    background-color: lightgreen;
-    padding: 15px;
+  background-color: lightgreen;
+  padding: 15px;
 }
 
 @media only screen and (max-width: 600px) {
-    .reflexion-item {
-        flex-wrap: wrap !important;
-    }
+  .reflexion-item {
+    flex-wrap: wrap !important;
+  }
 }
 
 .reflexion {
-    padding: 0 1rem 0 0;
+  padding: 0 1rem 0 0;
 }
 
 .reflexion-item {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 .reflexion-item label {
-    min-width: 20%;
+  min-width: 20%;
 }
 .reflexion-item textarea {
-    min-width: 80%;
+  min-width: 80%;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 1.3s ease;
+  transition: opacity 1.3s ease;
 }
 
 .fade-enter,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 input {
-    border: 1px solid silver;
-    border-radius: 4px;
-    background: white;
-    padding: 5px 10px;
+  border: 1px solid silver;
+  border-radius: 4px;
+  background: white;
+  padding: 5px 10px;
 }
 
 .error {
-    border-color: red;
-    background: #fdd;
+  border-color: red;
+  background: #fdd;
 }
 
 .error:focus {
-    outline-color: #f99;
+  outline-color: #f99;
 }
 
 .valid {
-    border-color: #5a5;
-    background: #efe;
+  border-color: #5a5;
+  background: #efe;
 }
 
 .valid:focus {
-    outline-color: #8e8;
+  outline-color: #8e8;
 }
 </style>
 

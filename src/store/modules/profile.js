@@ -25,7 +25,6 @@ const actions = {
         //var drupalUserUID = rootState.drupal_api.user.uid
         // console.log(rootState.sparky_api.drupalUserID)
         // console.log(drupalUserUID)
-        console.log()
 
 
         var config = {
@@ -62,8 +61,7 @@ const actions = {
     /* We load the Profiledata from backend by filtering the drupalUserUID to get the right profile of the user which belongs to the 
     userdata
     
-    In the backend we add an field called field_user_uid for entering the user uid which is 24 for the testacc user and with that, we 
-    can get the right profile data of testacc user filtered by the drupalUserUID = 24 in this case*/
+    In the backend we have a field "field_user" in this content type. we filter by the user_internal_uid, given as a paremeter to get the correct profile*/
 
 
     async loadProfileFromBackend({ commit, state, rootState }, user_internal_uid) {
@@ -75,7 +73,7 @@ const actions = {
         //TODO: or change to get profile for user when no user_internal_uid is given
         var config = {
             method: 'get',
-            url: `jsonapi/node/profil?filter[field_user_uid]=${user_internal_uid}`,
+            url: `jsonapi/node/profil?filter[field_nutzer.drupal_internal__uid]=${user_internal_uid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -149,6 +147,8 @@ const actions = {
     createProfile({ state, rootState }, authorization_token) {
         //console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
+        var drupalUserUUID = rootState.drupal_api.user.uuid
+        console.log(rootState.drupal_api.user)
         let username = rootState.drupal_api.user.username
         console.log(drupalUserUID)
         var title = `Profil ${username}`
@@ -180,11 +180,19 @@ const actions = {
                     "field_datenbanken": "", 
                     "field_referenztool": "", 
                     "field_analysetool": "",
-                    "field_user_uid": "${drupalUserUID}",
-                    "field_showemail": false
-                    
-                    
-                }
+                    "field_showemail": false     
+                },
+                "relationships": {
+
+                    "field_nutzer": {
+                      "data": {
+                        "0": {
+                          "type": "user--user",
+                          "id": "${drupalUserUUID}"
+                        }
+                      }
+                    }
+                    }
                 
             }
         }`;
@@ -352,14 +360,12 @@ const actions = {
                 "type": "node--profil", 
                 "id": "${profile.uuid}",
                 "attributes": {
-                    "title": "Profil", 
+                    "title": "${profile.title}", 
                     "field_studiengang": "${profile.studiengang}", 
                     "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}" , 
                     "field_datenbanken": "${profile.datenbanken}", 
                     "field_referenztool": "${profile.referenztool}", 
-                    "field_analysetool": "${profile.analysetool}",
-                    "field_user_uid": "${drupalUserUID}"
-
+                    "field_analysetool": "${profile.analysetool}"
                 }
                 
             }
@@ -433,18 +439,23 @@ const mutations = {
          * The first part of the url is defined statically above in line 2. 
          * We get the fullurl by uniting the first and second part of the url. The full url will be pushed in to the state imageData.
          */
+        if (user.included != undefined) {
+            user.included.forEach(element => {
 
-        user.included.forEach(element => {
+                const url = element.attributes.uri.url;
 
-            const url = element.attributes.uri.url;
-
-            let fullUrl = urlBackend + url
+                let fullUrl = urlBackend + url
 
 
 
-            state.imageData = fullUrl
+                state.imageData = fullUrl
 
-        });
+            });
+        } else {
+            state.imageData = ""
+            // maybe put basic image in state which is showed instead? -> relative path with local image did not work
+        }
+
 
     },
 
@@ -468,12 +479,11 @@ const mutations = {
             console.log(field_analysetool)
             const field_referenztool = element.attributes.field_referenztool;
             console.log(field_referenztool)
-            const field_profilbild = element.relationships.field_profilbild;
             const field_id = element.id;
             const field_title = element.attributes.title;
             const field_showemail = element.attributes.field_showemail
 
-            state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, uuid: field_id, title: field_title, profilbild: field_profilbild, show_email: field_showemail }
+            state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, uuid: field_id, title: field_title, show_email: field_showemail }
 
 
 

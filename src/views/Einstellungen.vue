@@ -173,7 +173,7 @@
 
 <script>
 import PictureInput from "vue-picture-input";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, minLength, integer } from "vuelidate/lib/validators";
 //import axios from 'axios';
 
 export default {
@@ -204,7 +204,7 @@ export default {
   validations: {
     getProfileData: {
       studiengang: { required, minLength: minLength(1) },
-      anzahl_literaturreviews: { required, minLength: minLength(1) },
+      anzahl_literaturreviews: { required, integer, minLength: minLength(1) },
       datenbanken: { required, minLength: minLength(1) },
       referenztool: { required, minLength: minLength(1) },
       analysetool: { required, minLength: minLength(1) },
@@ -273,12 +273,12 @@ export default {
 
       if (!this.$v.$invalid) {
         var ausgabe = {
+          title: this.getProfileData.title,
           studiengang: this.getProfileData.studiengang,
           anzahl_literaturreviews: this.getProfileData.anzahl_literaturreviews,
           datenbanken: this.getProfileData.datenbanken,
           referenztool: this.getProfileData.referenztool,
           analysetool: this.getProfileData.analysetool,
-          profilbild: this.profilbild,
           uuid: this.getProfileData.uuid,
         };
 

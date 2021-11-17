@@ -42,6 +42,28 @@ const getters = {
 const setters = {
 
 }
+const getters = {
+
+
+
+  /**
+ * Getter to bringuploaded files in outputs array. 
+ * @param state our state
+ * @returns files, uploaded files in state
+ * we send them reversed in order to see the last uploaded on top.
+ */
+  /*        getOutputs(state) {
+          let files = state.outputs;
+          return files;
+      },
+   */
+
+
+
+
+
+
+}
 
 
 
@@ -147,14 +169,14 @@ const actions = {
   * @param rootState rootState allows access to states of other modules in store
   */
   async loadProjectsFromBackend({ commit, state, rootState, dispatch }) {
-
     let filter_joined = ""
     console.log(rootState.drupal_api.user)
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
     console.log(rootState.drupal_api.user)
     //console.log(drupalUserUID)
-
+    //depending on role of a user (if user is student or lecturer) the filters are different: student -> filter by id in gruppenadministrator and gruppenmitglied; lecturer -> filter by id in betreuender_dozent
+    //TODO: maybe make another else part for "superdozent" respectively "admin".
     if (rootState.drupal_api.user.role == "student") {
       //BUG: filter does not find projects where user is group admin, but no group member can be found -> afterwards createproject() can be changed so that the creating user only is groupadmin and not both member and admin
       const filter_or_group = `?filter[or-group][group][conjunction]=OR`
@@ -164,11 +186,12 @@ const actions = {
     } else if (rootState.drupal_api.user.role == "lecturer") {
       filter_joined = `?filter[field_betreuender_dozent][condition][path]=field_betreuender_dozent.drupal_internal__uid&filter[field_betreuender_dozent][condition][operator]=IN&filter[field_betreuender_dozent][condition][value]=${drupalUserUID}`
     }
+    //if user has no valid role -> dont load anything
+    else {
+      return
+    }
+
     commit("loadingStatus", true, { root: true })
-
-
-
-
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt/${filter_joined}`,
@@ -274,10 +297,8 @@ const actions = {
     axios(config)
       .then(function (response) {
         console.log(response)
-
         const groupadmins = response.data.included;
         commit('LOAD_CURRENT_PROJECT_GROUP_ADMIN', { groupadmins });
-
       })
       .catch(function (error) {
         console.log(error)
@@ -292,9 +313,6 @@ const actions = {
 * @param rootState rootState allows access to states of other modules in store
 */
   async loadCurrentProjectWithLecturers({ commit, rootState }, projectId) {
-
-
-
     //console.log(state)
     //console.log(projectId)
     var config = {
@@ -314,7 +332,6 @@ const actions = {
 
         const lecturers = response.data.included;
         commit('LOAD_CURRENT_PROJECT_LECTURERS', { lecturers });
-
       })
       .catch(function (error) {
         console.log(error)
@@ -821,16 +838,19 @@ const mutations = {
     let included_data = projects.included
     let user_array = []
     // TODO: error handling, in case there is nothing included?
-    included_data.forEach(element => {
-      const internal_uid = element.attributes.drupal_internal__uid
-      const username = element.attributes.field_fullname;
-      const userid = element.id
-      user_array.push({ username: username, userid: userid, internal_uid: internal_uid })
-      console.log(internal_uid)
+
+    if (included_data != undefined) {
+      included_data.forEach(element => {
+        const internal_uid = element.attributes.drupal_internal__uid
+        const username = element.attributes.field_fullname;
+        const userid = element.id
+        user_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+        console.log(internal_uid)
+      })
+    }
 
 
 
-    })
 
     projects.data.forEach(element => {
 
@@ -869,34 +889,40 @@ const mutations = {
     state.keywordsInString = keywordsInString
   },
   LOAD_CURRENT_PROJECT_GROUP_ADMIN(state, { groupadmins }) {
-
-    let included_data = groupadmins
     let groupadmins_array = []
-    // TODO: error handling, in case there is nothing included?
-    included_data.forEach(element => {
 
-      const username = element.attributes.field_fullname;
-      const userid = element.id
-      const internal_uid = element.attributes.drupal_internal__uid
-      groupadmins_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+    if (groupadmins != undefined) {
+      let included_data = groupadmins
+      included_data.forEach(element => {
 
-    })
+        const username = element.attributes.field_fullname;
+        const userid = element.id
+        const internal_uid = element.attributes.drupal_internal__uid
+        groupadmins_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+
+      })
+
+    }
     state.currentProjectGroupAdmins = groupadmins_array
     console.log(state.currentProjectGroupAdmins)
   },
 
   LOAD_CURRENT_PROJECT_LECTURERS(state, { lecturers }) {
-
-    let included_data = lecturers
     let lecturers_array = []
+    let included_data = lecturers
+
+    if (included_data != undefined) {
+      included_data.forEach(element => {
+
+        const name = element.attributes.field_fullname;
+        const uuid = element.id
+        lecturers_array.push({ name: name, uuid: uuid, })
+
+      })
+
+    }
     // TODO: error handling, in case there is nothing included?
-    included_data.forEach(element => {
 
-      const name = element.attributes.field_fullname;
-      const uuid = element.id
-      lecturers_array.push({ name: name, uuid: uuid, })
-
-    })
     state.currentProjectLecturers = lecturers_array
     console.log(state.currentProjectLecturers)
     //console.log(lecturers_array)
@@ -918,4 +944,5 @@ export default {
   mutations,
   actions,
   setters,
+  getters,
 }

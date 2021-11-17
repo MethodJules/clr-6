@@ -373,9 +373,11 @@ export default {
                     .then(() => {
                         //also appears when the user is logged in, but the sessionStorage is empty -> error 403
                         //TODO: check if error 403?
-                        this.makeToast();
-                        this.zugangsKennung = "";
-                        this.passwort = "";
+                        if (this.$store.state.drupal_api.validCredential) {
+                            this.makeToast();
+                            this.zugangsKennung = "";
+                            this.passwort = "";
+                        }
                     });
                 this.$store.dispatch(
                     "drupal_api/saveBasicAuth",
@@ -402,7 +404,7 @@ export default {
             console.log(this.$root);
             this.$root.$bvToast.toast(
                 // removed because of new routing this is not available at login at this point of time `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.name}`,
-                `Willkommen zu dem kollaborativen Literaturreview Tool`,
+                `Willkommen zu deinem kollaborativen Literaturreview Tool`,
                 // `Willkommen zu dem kollaborativen Literaturreview Tool ${this.$store.state.drupal_api.user.fullname}`,
                 {
                     title: "Willkommen",
@@ -434,6 +436,7 @@ footer {
     align-items: center;
     justify-content: center;
 }
+
 .v-card__title,
 .v-card__subtitle,
 .v-card__text {

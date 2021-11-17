@@ -1,6 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/sparky_axios";
 
-const baseUrl = "http://147.172.178.30:8080/"
 
 //TO DO: Coments
 const state = () => ({
@@ -11,11 +10,7 @@ const state = () => ({
     //ganzes Object nötig?
     sparkyUserObject: null,
     responsestate: null,
-    drupalUserID: "",
     //ganzes Object nötig?
-    drupalUserObject: null,
-    lecturers: [],
-    lecturers2: [],
     sparkylogin: false,
 });
 
@@ -87,8 +82,7 @@ const actions = {
         console.log(token)
         //state.sparkyUserID = " response.data.id"
         axios.get(
-            "http://147.172.178.30:8080/stmgmt/auth/whoAmI",
-
+            "stmgmt/auth/whoAmI",
             {
                 headers: {
                     'Accept': '*/*',
@@ -109,7 +103,7 @@ const actions = {
             })
             .catch((error) => {
                 console.log(error)
-                alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder überprüfe den Status hier: http://147.172.178.30/  oder schreibe eine Email an:..... ")
+                alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
 
             });
     },
@@ -121,11 +115,9 @@ const actions = {
     * @param password input from Login.vue
     */
     async authenticate({ state, commit, rootState, dispatch }, { username, password }) {
-        console.log(username + password)
-        let dynamicUrl = "api/v1/authenticate"
-        let fullUrl = baseUrl + dynamicUrl
+        // console.log(username + password)
         let data = await axios.post(
-            fullUrl, {
+            "api/v1/authenticate", {
             "username": username,
             "password": password
         },
@@ -154,7 +146,7 @@ const actions = {
                 if (error.response.status == 401) {
                     alert("Du konntest nicht authorisiert werden. Bitte gib deine korrekte Rechenzentrumskennung ein")
                 } else {
-                    alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder überprüfe den Status hier: http://147.172.178.30/  oder schreibe eine Email an:..... ")
+                    alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
                 }
             });
         //console.log(data)
@@ -166,10 +158,8 @@ const actions = {
 * @param password input from getWhoamI
 */
     async registrate({ dispatch, commit }, { username, password, matrikelnummer }) {
-        let dynamicUrl = "api/v1/authenticate"
-        let fullUrl = baseUrl + dynamicUrl
         let data = await axios.post(
-            fullUrl, {
+            "api/v1/authenticate", {
             "username": username,
             "password": password
         },
@@ -193,7 +183,7 @@ const actions = {
                 if (error.response.status == 401) {
                     alert("Du konntest nicht authorisiert werden. Bitte gib deine korrekte Rechenzentrumskennung ein")
                 } else {
-                    alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder überprüfe den Status hier: http://147.172.178.30/  oder schreibe eine Email an:..... ")
+                    alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
                 }
             });
         //console.log(data)

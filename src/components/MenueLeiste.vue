@@ -143,6 +143,8 @@
 }
 </style>
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -170,6 +172,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ getUserRole: "drupal_api/getUserRole" }),
+
     showProfileSettingsLinks() {
       return (
         this.$route.name === "ProjectList" ||
@@ -203,9 +207,7 @@ export default {
       // console.log(this.$route.name);
       return this.$route.name === "Einstellungen";
     },
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
+
     getProjectName() {
       let projektname = this.$store.state.project.currentProject.title;
 

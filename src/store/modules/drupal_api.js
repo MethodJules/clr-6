@@ -3,13 +3,21 @@ import router from '../../router';
 
 const state = () => ({
     user: null, //TODO Should we name it current_user? Would be more semantically correct
-    csrf_token: '', //TODO user individual token is to be used in all subsequent api requests instead of the admin token which is used at the moment
+    csrf_token: null, //TODO user individual token is to be used in all subsequent api requests instead of the admin token which is used at the moment
     logout_token: null,
     validCredential: false,
     authToken: null,
 
 
 })
+
+const getters = {
+
+
+    getUserRole(state) {
+        return state.user.role;
+    },
+}
 const actions = {
     //TO DO: Check if a user already exists
 
@@ -41,7 +49,7 @@ const actions = {
 
             }).catch(error => {
                 console.log(error)
-                alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an:...")
+                alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
 
             });
 
@@ -80,12 +88,12 @@ const actions = {
             //'field_sparky_id': {'value': `${sparkyUserObject.data.id}`},
             'field_fullname': { 'value': `${sparkyUserObject.data.displayName}` },
             'field_matrikelnummer': { 'value': `${matrikelnummer}` },
-            "user_picture": {
-                "data": {
-                    "type": "file--file",
-                    "id": "dc9ea37b-5e91-4450-8d7c-91b8b84b5fad"
-                }
-            }
+            /*            "user_picture": {
+                           "data": {
+                               "type": "file--file",
+                               "id": "dc9ea37b-5e91-4450-8d7c-91b8b84b5fad"
+                           }
+                       } */
             //'field_matrikelnummer': {'value': `12345`},
             //'field_matrikelnummer': {'value': `${sparkyUserObject.data.matrNr}`},
         })
@@ -120,7 +128,7 @@ const actions = {
 
             }).catch(error => {
                 console.log(error)
-                alert("DeinBenutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an:...")
+                alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
 
             });
     },
@@ -173,12 +181,14 @@ const actions = {
                 //a logout button which could appear at the login page appears to be not possible as well. because csrf token and logout token are missing
                 //therefore the user receives a message, which tells him to log out manually at the backend
                 else if (error.response.status == 403) {
-                    alert("Du konntest nicht authentifiziert werden. Dies liegt wahrscheinlich daran, dass du dich das letzte Mal nicht korrekt ausgeloggt hast. Um diesen Fehler zu beheben besuche das Backend und logge dich dort direkt aus https://clr-backend.x-navi.de/")
+                    // commit('SHO', response.data);
+                    alert("Du konntest nicht authentifiziert werden. Bitte logge dich das nächste mal aus, bevor du die Seite verlässt, um diesen Fehler zu vermeiden. Versuche nun dich erneut einzuloggen. ")
+                    dispatch('logoutDrupal')
                     console.log(error.response.data.message)
                 }
                 //if the user gets another status, it most likely means there is an error on the backend side -> the user is informed of contact emails for further help
                 else {
-                    alert("Die Authentifizierung mit dem Backend ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an:...")
+                    alert("Die Authentifizierung mit dem Backend ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
                     console.log(error.response.data.message)
                 }
 
@@ -205,11 +215,14 @@ const actions = {
 * Connects to the Drupal Backend and request a login
 * The Backend will give csrf_token a logout token and a current_user object
 */
-    async logoutDrupal({ commit, rootState }) {
-        console.log(rootState.drupal_api.csrf_token)
-        console.log(rootState.drupal_api.logout_token)
-        console.log(rootState.drupal_api.authToken)
-        console.log(sessionStorage)
+    async logoutDrupal({ state, commit, rootState }) {
+
+
+        //if the state is empty (because user closed the site/tab completely) the localstorage tokens will be used
+        if (rootState.drupal_api.csrf_token == null || rootState.drupal_api.logout_token == null) {
+            state.csrf_token = localStorage.getItem("csrf_token");
+            state.logout_token = localStorage.getItem("logout_token");
+        }
         const url = `user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
         const config = {
             method: 'post',
@@ -237,14 +250,14 @@ const actions = {
         ).catch((error) => {
             //error 403 -> requested resource is forbidden for user(role) user who logs out should be either lecturer or student and logged in. if one of those tries to log out (uses log out resource), while already logged out 
             //-> frontend "thinks" user is logged in, but he is already logged out at the backend i.e. cookie is deleted
+
+            console.log(error)
             if (error.response.status == 403) {
-                console.log("testlogout")
-                alert("Der Session Cookie ist wahrscheinlich abgelaufen bzw. bist du bereits vom Backend abgemeldet. Refreshe die Seite und logge dich erneut ein, um den Fehler zu beheben")
+                alert("Der Session Cookie ist wahrscheinlich abgelaufen bzw. bist du bereits vom Backend abgemeldet. Refreshe die Seite und logge dich erneut ein, um den Fehler zu beheben. Sollte dieser Fehler bestehen bleiben, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de ")
                 commit('REMOVE_SESSIONTOKENS_OF_USER')
                 state.validCredential = false;
             }
 
-            console.log(error)
         });
     },
 
@@ -280,7 +293,9 @@ const mutations = {
     */
     SAVE_CREATED_USER(state, user) {
         //TODO: maybe log user in after registration?
-        state.user = { uid: user.uid[0].value, username: user.field_fullname[0].value }
+        console.log(user)
+        //fullname, matrikelnummer, user_picture, concept_maps, name (displayname) auch verfügbar
+        state.user = { uid: user.uid[0].value, username: user.field_fullname[0].value, uuid: user.uuid[0].value }
         /*         console.log("jetzt csrf und user")
                 console.log(state.user)
                 console.log(state.csrf_token) */
@@ -295,12 +310,11 @@ const mutations = {
     SAVE_LOGIN_USER(state, login_data) {
 
         //in access_token
-        login_data
         const fullname = login_data.access_token.fullname
         const uuid = login_data.access_token.uuid
         const mail = login_data.access_token.mail
         const matrikelnummer = login_data.access_token.matrikelnumber
-        //only gets secoond role from roles array which is either student or dozent
+        //only gets secoond role from roles array which is either student or dozent - first role is authenticated user
         const role = login_data.access_token.roles[1]
         //for both array entries [authenticated, student/dozent]
         //const roles=login_data.access_token.roles
@@ -318,8 +332,8 @@ const mutations = {
                 login_data.access_token */
 
 
-        sessionStorage.setItem("csrf_token", login_data.csrf_token);
-        sessionStorage.setItem("logout_token", login_data.logout_token);
+        localStorage.setItem("csrf_token", login_data.csrf_token);
+        localStorage.setItem("logout_token", login_data.logout_token);
         sessionStorage.setItem("valid_credentials", "true");
         sessionStorage.setItem('current_user', JSON.stringify(current_user));
         //sessionStorage.setItem("current_user", login_data.current_user);
@@ -342,8 +356,8 @@ const mutations = {
         console.log("testsessions")
         if (sessionStorage.getItem("valid_credentials") == "true") {
             state.validCredential = true;
-            state.csrf_token = sessionStorage.getItem("csrf_token");
-            state.logout_token = sessionStorage.getItem("logout_token");
+            state.csrf_token = localStorage.getItem("csrf_token");
+            state.logout_token = localStorage.getItem("logout_token");
             state.authToken = sessionStorage.getItem("auth_token");
             state.user = JSON.parse(sessionStorage.getItem('current_user'));
             /*  console.log(state.user)
@@ -362,8 +376,8 @@ const mutations = {
 */
     REMOVE_SESSIONTOKENS_OF_USER(state) {
         state.validCredential = false;
-        sessionStorage.removeItem("csrf_token");
-        sessionStorage.removeItem("logout_token");
+        localStorage.removeItem("csrf_token");
+        localStorage.removeItem("logout_token");
         sessionStorage.removeItem("valid_credentials");
         sessionStorage.removeItem("current_user");
         sessionStorage.removeItem("auth_token");
@@ -378,5 +392,6 @@ export default {
     namespaced: true,
     state,
     mutations,
-    actions
+    actions,
+    getters,
 }
