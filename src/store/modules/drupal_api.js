@@ -17,6 +17,9 @@ const getters = {
     getUserRole(state) {
         return state.user.role;
     },
+    getCurrentUserInternalUID(state) {
+        return state.user.uid;
+    },
 }
 const actions = {
     //TO DO: Check if a user already exists

@@ -12,6 +12,11 @@ const state = () => ({
     imageData: ''
 
 })
+const getters = {
+    getCurrentUserID(state) {
+        return state.userData.uuid;
+    },
+}
 
 const actions = {
 
@@ -502,6 +507,7 @@ const mutations = {
 export default {
     namespaced: true,
     state,
+    getters,
     mutations,
     actions,
 
