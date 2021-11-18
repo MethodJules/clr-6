@@ -4,8 +4,6 @@
       <div v-for="(todos, index) in listOfTodos" :key="index">
         To Do {{ todos[0].project_title }}
         <h3 v-if="todos.length > 0"></h3>
-
-        <!-- Liste zum Erstellen der Todos  -->
         <div class="card p-0 m-1" v-for="(todo, index) in todos" :key="index">
           <div class="card-header text-center">
             <b> Fällig am: {{ todo.date }}</b>
@@ -141,10 +139,6 @@ export default {
           date: this.appointment,
           project_id: this.getProjectID,
         };
-        // Benutzereingabe wird in die Liste gespeichert
-        // this.listOfToDos.push(neueEingabe);
-
-        //Anbindung an die API
         this.$store.dispatch("todo/createToDo", neueEingabe);
         this.todoNeu = "";
       }
@@ -213,15 +207,6 @@ export default {
 
     todoAusgabe() {
       return this.todo.date + " " + this.todo.todo;
-      /* get: function(){
-                return this.listOfToDos.slice()
-            },
-            set: function(newTodo){
-                
-                newTodo.forEach((listOfToDos, key) =>{
-                    this.listOfToDos[key] = this.date + ': ' + this.todo
-                })
-            } */
     },
     loadToDo() {
       return this.$store.state.todo.listOfToDos;
