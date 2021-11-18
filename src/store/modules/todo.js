@@ -2,16 +2,13 @@ import axios from "@/config/custom_axios";
 
 
 const state = () => ({
-    listOfToDos: [
-        // array to store users todos with given deadline 
-    ],
+    listOfToDos: [], // array to store users todos with given deadline 
     todos: [],//array to store only the todo tasks from listOfToDos[] 
     dates: [],//array to store only the deadlines from listOfToDos[] 
     token: "",
     attributes: [],
     currentProject: "",
     todosOfProject: [],
-
 
 })
 
@@ -54,19 +51,10 @@ const getters = {
 
 const actions = {
     async loadTodosAllProjects({ commit, state, rootState }, projects) {
-
         state.listOfToDos = []
-        console.log(projects)
-
         var drupalUserUID = rootState.drupal_api.user.uid;
-
-
         for (const project of projects) {
             commit("loadingStatus", true, { root: true })
-            console.log(project)
-            // dispatch('loadToDoFromBackend', project )
-
-
             var config = {
                 method: 'get',
                 url: `jsonapi/node/to_dos?filter[field_projektid.id]=${project.id}&filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
@@ -80,28 +68,22 @@ const actions = {
 
             axios(config)
                 .then((response) => {
-                    console.log(project.attributes.title)
-                    console.log(response)
                     const data = response.data.data;
-                    console.log(data)
-                    //let to-dos = [];
-
-
                     if (data.length > 0) {
-                        var leeresTodoArray = [];
+                        let todos = []
                         data.forEach(element => {
-
                             const field_date = element.attributes.field_date;
-                            //console.log(field_date)
                             const field_id = element.id;
-                            //console.log(element.id)
                             const field_title = element.attributes.title;
                             const field_erledigt = element.attributes.field_erledigt;
-                            leeresTodoArray.push({ date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt, project_title: project.attributes.title })
+                            todos.push({ projectId: project.id, date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt, project_title: project.attributes.title })
                         });
 
-                        //gives array to mutation, which pushes array in state -> state has array of projects, which contain arrays of todos
-                        commit('SAVE_TODOS_ALL_PROJECTS', leeresTodoArray);
+                        let payload = {
+                            todos: todos,
+                            projectId: project.id
+                        }
+                        commit('SAVE_TODOS_ALL_PROJECTS', payload);
                     }
                 })
                 .catch(function (error) {
@@ -130,7 +112,11 @@ const actions = {
         axios(config)
             .then((response) => {
                 const data = response.data.data;
-                commit('SAVE_TODO', data);
+                let payload = {
+                    todo: data,
+                    projectId,
+                }
+                commit('SAVE_TODO', payload);
             })
             .catch(function (error) {
                 console.log(error)
@@ -189,7 +175,6 @@ const actions = {
     calls function to delete tool from Backend 
     */
     deleteTodo({ commit, rootState }, todoEntry) {
-        console.log(rootState)
         var config = {
             method: 'delete',
             url: `jsonapi/node/to_dos/${todoEntry.uuid}`,
@@ -270,7 +255,7 @@ const mutations = {
             const todos = state.listOfToDos[index];
             for (let index2 = 0; index2 < todos.length; index2++) {
                 const todo = todos[index2];
-                (todo.title == state.todosOfProject[0].title) ? myIndex = index : "";
+                (todo.projectId == state.todosOfProject[0].projectId) ? myIndex = index : "";
             }
         }
         state.todosOfProject.push(todoNew);
@@ -283,14 +268,14 @@ const mutations = {
      * @param {*} todo element to go through the array 
      *  
      */
-    SAVE_TODO(state, todo) {
+    SAVE_TODO(state, payload) {
         var leeresTodoArray = [];
-        todo.forEach(element => {
+        payload.todo.forEach(element => {
             const field_date = element.attributes.field_date;
             const field_id = element.id;
             const field_title = element.attributes.title;
             const field_erledigt = element.attributes.field_erledigt;
-            leeresTodoArray.push({ date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt })
+            leeresTodoArray.push({ projectId: payload.projectId, date: field_date, uuid: field_id, title: field_title, erledigt: field_erledigt })
             state.todos.push(element.attributes.title)
             state.dates.push(element.attributes.field_date)
         });
@@ -304,9 +289,8 @@ const mutations = {
      * @param {*} todo element to go through the array 
      *  
      */
-    SAVE_TODOS_ALL_PROJECTS(state, todoArray) {
-        state.listOfToDos.push(todoArray)
-        console.log(state.listOfToDos)
+    SAVE_TODOS_ALL_PROJECTS(state, payload) {
+        state.listOfToDos.push(payload.todos)
 
     },
 
