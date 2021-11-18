@@ -17,7 +17,6 @@ export default {
 
     computed: {
         ...mapGetters({
-            todo: "todo/getTodo",
             attributes: "todo/getAttributesForVcCalendar",
         }),
     },

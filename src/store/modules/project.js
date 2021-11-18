@@ -14,65 +14,33 @@ const state = () => ({
 
 })
 
-
-/*   const getters = {
-    getRowData(state) {
-        return state.rowData;
-
-    }
-} */
-/* 
 const getters = {
-
-  getLecturersFromUser(state, rootGetters) {
-    console.log(rootGetters.user.getLecturers)
-    return rootGetters["user/getLecturers"];
-
-
+  getCurrentProject(state) {
+    return state.currentProject;
   },
-
-  getStudentsFromUser(state, rootGetters) {
-    console.log(rootGetters.user.getStudents)
-    return rootGetters.user.getStudents
-
-  }
-
-} */
-
-const setters = {
-
-}
-const getters = {
-
-
-
-  /**
- * Getter to bringuploaded files in outputs array. 
- * @param state our state
- * @returns files, uploaded files in state
- * we send them reversed in order to see the last uploaded on top.
- */
-  /*        getOutputs(state) {
-          let files = state.outputs;
-          return files;
-      },
-   */
-
-
-
-
-
+  getGroupMembers(state) {
+    let unfiltered_members =
+      state.currentProject.gruppenmitglieder;
+    return unfiltered_members.filter(function (member) {
+      //TODO: change the filter criterium to match the static groupmember -> static user in backend has the name "System"
+      return member.username != "System";
+    });
+  },
+  getGroupAdmins(state) {
+    return state.currentProjectGroupAdmins;
+  },
+  getProjectLecturers(state) {
+    return state.currentProjectLecturers;
+  },
+  getCurrentProjectLecturers(state) {
+    return state.currentProjectLecturers;
+  },
 
 }
 
 
 
 const actions = {
-
-
-
-
-
   /**
 * loads all  projects from Backend and commits the mutation LOAD_ALL_PROJECTS
 * and passes drupal user id gotten from rootState on
@@ -86,11 +54,7 @@ const actions = {
     for (var i = 0; i < keywords.length; ++i) {
       keyword_filter += `&filter[keywords][condition][value][${i + 1}]=${keywords[i]}`
     }
-    console.log(keyword_filter)
-
-
     const full_filter = `?filter[keywords][condition][path]=field_schlagworter&filter[keywords][condition][operator]=IN${keyword_filter}`
-
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt/${full_filter}`,
@@ -106,8 +70,6 @@ const actions = {
       .then(function (response) {
         const projects = response.data.data
         commit('PROJECTS_FILTERED_BY_KEYWORD', { projects });
-
-
       })
       .catch(function (error) {
         console.log(error)
@@ -139,28 +101,13 @@ const actions = {
 
     axios(config)
       .then(function (response) {
-        //console.log(response)
-        /* console.log($store.state.sparky_api.validCredential)
-        console.log($store.state.sparky_api.drupalUserID) */
         const projects = response.data.data;
         commit('LOAD_ALL_KEYWORDS', { projects });
-
-
       })
       .catch(function (error) {
         console.log(error)
       })
-
   },
-
-
-
-
-
-
-
-
-
   /**
    * loads all those projects from Backend where the current user is recorded inside filed_gruppenmitglieder and commits the mutation LOAD_PROJECTs
    * and passes drupal user id gotten from rootState on
@@ -680,12 +627,9 @@ const actions = {
 
 
 const mutations = {
-
   loadingStatus(state, newLoadingStatus) {
     state.loadingStatus = newLoadingStatus
   },
-
-
 
   //TODO: authorization token ist noch statisch, dynamisch aus state holen
 
@@ -695,20 +639,11 @@ const mutations = {
 * @param state state as parameter for access and manipulation of state data
 */
   ADD_PROJECT(state, projEntry) {
-    console.log(projEntry)
-    console.log(state)
     state.myProjects.push(projEntry)
-    console.log(state.myProjects)
-
   },
 
-
   UPDATE_KEYWORDS(state, keywords) {
-    console.log(keywords)
-    console.log(state.keywordsInString)
-
     state.keywordsInString = keywords
-    console.log(state.keywordsInString)
   },
 
 
@@ -722,40 +657,21 @@ const mutations = {
 
 
   PROJECTS_FILTERED_BY_KEYWORD(state, { projects }) {
-    console.log(projects)
     state.projectsFilteredbyKeywords = []
     //TODO: maybe just save all the keywords for projectsearch and not everything, because every search is a new http request?
-
-
     projects.forEach(element => {
       console.log(element)
-      //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
-      //console.log(field_betreuender_dozent)
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
-      //console.log(field_externe_mitwirkende)
       const field_schlagworter = element.attributes.field_schlagworter;
-      //console.log(field_schlagworter)
       const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
-      //console.log(field_kurzbeschreibung)
       const field_id = element.id;
-      //console.log(element.id)
       const field_title = element.attributes.title;
-      //console.log(element.id)
       const field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
-
-      //console.log(field_gruppenmitglieder_IDs)
       let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
-      // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
       state.projectsFilteredbyKeywords.push(projectObject)
 
-      //console.log(projectObject)
-
     });
-
-    console.log(state.projectsFilteredbyKeywords)
-    //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array 
-    console.log(state.projectsFilteredbyKeywords)
   },
 
 
@@ -774,7 +690,6 @@ const mutations = {
         state.allKeywordsList.push(element)
       })
     });
-    console.log(state.allKeywordsList)
     //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array 
     state.allKeywordsList = state.allKeywordsList.filter(
       (item, index) => {
@@ -783,7 +698,6 @@ const mutations = {
         );
       }
     );
-    console.log(state.allKeywordsList)
   },
 
 
@@ -799,30 +713,16 @@ const mutations = {
     state.myProjects = []
 
     projects.forEach(element => {
-      //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
-      //console.log(field_betreuender_dozent)
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
-      //console.log(field_externe_mitwirkende)
       const field_schlagworter = element.attributes.field_schlagworter;
-      //console.log(field_schlagworter)
       const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
-      //console.log(field_kurzbeschreibung)
       const field_id = element.id;
-      //console.log(element.id)
       const field_title = element.attributes.title;
-      //console.log(element.id)
       let field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
-
-      //console.log(field_gruppenmitglieder_IDs)
       let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
-      // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
       state.myProjects.push(projectObject)
-
-      //console.log(projectObject)
-
     });
-    // console.log(state.myProjects)
   },
 
 
@@ -845,7 +745,6 @@ const mutations = {
         const username = element.attributes.field_fullname;
         const userid = element.id
         user_array.push({ username: username, userid: userid, internal_uid: internal_uid })
-        console.log(internal_uid)
       })
     }
 
@@ -853,79 +752,53 @@ const mutations = {
 
 
     projects.data.forEach(element => {
-
-      //const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.[0].id; -> gets the id, but not the name of the referenced user
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
-      //console.log(field_betreuender_dozent)
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
-      //console.log(field_externe_mitwirkende)
       const field_schlagworter = element.attributes.field_schlagworter;
-      //console.log(field_schlagworter)
       const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
-      //console.log(field_kurzbeschreibung)
       const field_id = element.id;
-      //console.log(element.id)
       const field_title = element.attributes.title;
-      //console.log(element.id)
       let field_gruppenmitglieder = user_array
       // TODO: in Action ändern -> response.data.data wird als parameter an diese funktion übergeben aber included user objects sind
       // unter response.data.included => also muss das schon in der action geändert werden müssen
-      //let includedUserObjects
-
-      // console.log(field_gruppenmitglieder)
       let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
       //TODO: remove second projectobject here and everywhere else, after projektbeschreibung is changed and cleaned up -> isnt needed anymore after that
 
       // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
 
       state.currentProject = projectObject
-      console.log(state.currentProject)
 
     });
     let keywords = state.currentProject.schlagworter;
-    console.log(keywords);
     let keywordsInString = keywords.join();
-    console.log(keywordsInString);
     state.keywordsInString = keywordsInString
   },
   LOAD_CURRENT_PROJECT_GROUP_ADMIN(state, { groupadmins }) {
     let groupadmins_array = []
-
     if (groupadmins != undefined) {
       let included_data = groupadmins
       included_data.forEach(element => {
-
         const username = element.attributes.field_fullname;
         const userid = element.id
         const internal_uid = element.attributes.drupal_internal__uid
         groupadmins_array.push({ username: username, userid: userid, internal_uid: internal_uid })
-
       })
-
     }
     state.currentProjectGroupAdmins = groupadmins_array
-    console.log(state.currentProjectGroupAdmins)
   },
 
   LOAD_CURRENT_PROJECT_LECTURERS(state, { lecturers }) {
     let lecturers_array = []
     let included_data = lecturers
-
     if (included_data != undefined) {
       included_data.forEach(element => {
-
         const name = element.attributes.field_fullname;
         const uuid = element.id
         lecturers_array.push({ name: name, uuid: uuid, })
-
       })
-
     }
     // TODO: error handling, in case there is nothing included?
-
     state.currentProjectLecturers = lecturers_array
-    console.log(state.currentProjectLecturers)
-    //console.log(lecturers_array)
   },
 
   ADD_GROUPMEMBER(state, mitglied) {
@@ -934,7 +807,6 @@ const mutations = {
 
   ADD_GROUPADMIN(state, mitglied) {
     state.currentProjectGroupAdmins.push(mitglied)
-
   }
 
 }
@@ -943,6 +815,5 @@ export default {
   state,
   mutations,
   actions,
-  setters,
   getters,
 }
