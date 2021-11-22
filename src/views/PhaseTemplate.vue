@@ -26,12 +26,11 @@
           <b-row>
             <!--               lazy loading allows dispatch methods in mounted hook of components to be synchronous -->
             <b-tabs content-class="mt-3" fill lazy>
-              <b-tab title="Documentation" active>
-                <b-form-textarea disabled v-model="getDocumentation">
-                  <DocumentationField /> </b-form-textarea
-              ></b-tab>
-              <b-tab title="Input Documents"> <InputDocuments /></b-tab>
-              <b-tab title="Output Documents">
+              <b-tab title="Dokumentation" active>
+                <DocumentationField />
+              </b-tab>
+              <b-tab title="Input"> <InputDocuments /></b-tab>
+              <b-tab title="Output">
                 <OutputDocuments />
               </b-tab>
               <b-tab title="Verwendete Tools">
@@ -39,7 +38,7 @@
               </b-tab>
             </b-tabs>
           </b-row>
-          <TemplateButtons></TemplateButtons>
+          <PhaseTemplateButtons></PhaseTemplateButtons>
         </b-card-text>
       </b-card>
     </b-container>
@@ -51,7 +50,7 @@ import DocumentationField from "@/components/DocumentationField.vue";
 import UsedTools from "@/components/UsedTools.vue";
 import OutputDocuments from "@/components/OutputDocuments.vue";
 import Assistent from "@/components/Assistent.vue";
-import TemplateButtons from "@/components/TemplateButtons.vue";
+import PhaseTemplateButtons from "@/components/PhaseTemplateButtons.vue";
 
 export default {
   //props: {
@@ -70,11 +69,11 @@ export default {
   }, */
   components: {
     InputDocuments,
-    DocumentationField,
     UsedTools,
     OutputDocuments,
     Assistent,
-    TemplateButtons,
+    PhaseTemplateButtons,
+    DocumentationField,
   },
 
   computed: {
@@ -106,17 +105,6 @@ export default {
     });
 
     //this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
-
-    this.$store.state.project_phases.current_phase.phase_name;
-    console.log(this.$store.state.project_phases.current_phase.phase_name);
-    console.log(this.$store.state.project_phases.current_phase);
-    console.log(this.$route.params.phase_number);
-
-    this.current_phase =
-      this.$store.state.project_phases.current_phase.documentationText;
-
-    this.current_phase =
-      this.$store.state.project_phases.current_phase.phase_name;
 
     //put back in so that phasetemplate buttons are shown again
     //const doc = this.$store.state.documentation.documentations;

@@ -46,7 +46,7 @@
       title="Bist du dir Sicher?"
       cancel-title="Abbrechen"
     >
-      <div class="container">
+      <div class="container" v-if="!isPhaseDone">
         <div>
           <div class="eingabe">
             <div class="inputcontainer">

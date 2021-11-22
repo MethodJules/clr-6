@@ -26,9 +26,7 @@ const getters = {
     */
 const actions = {
     async loadToolsFromBackend({ commit, rootState }) {
-        console.log(rootState.loadingStatus)
         commit("loadingStatus", true, { root: true })
-        console.log(rootState.loadingStatus)
         var phaseId = rootState.project_phases.current_phase.phase_id
         var config = {
             method: 'get',
@@ -45,10 +43,8 @@ const actions = {
                 console.log(response)
                 //if one of the tools has null in tool.relationships.field_phasenid.data.id -> breaks and no tools displayed
                 const toolsFromBackend = response.data.data;
-                console.log(response.data.data)
                 commit('SAVE_TOOLS', toolsFromBackend);
                 commit("loadingStatus", false, { root: true })
-                console.log(rootState.loadingStatus)
             })
             .catch(function (error) {
                 console.log(error)
@@ -59,8 +55,6 @@ const actions = {
     // method to add a new tool to backend
     createTool({ commit, rootState }, toolEntry) {
         var phaseId = rootState.project_phases.current_phase.phase_id
-        console.log(phaseId)
-        console.log(toolEntry)
         var data = `
         {
             "data": {

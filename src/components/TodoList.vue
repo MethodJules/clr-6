@@ -90,14 +90,14 @@
               :select-attribute="selectAttribute"
               class="mb-2"
             ></b-form-datepicker>
-            <b-button @click="ok()"> OK </b-button>
+            <b-button @click="ok()"> Hinzufügen </b-button>
           </b-modal>
           <!-- Zum öffnen des Modals -->
         </div>
       </div>
     </div>
 
-    <b-button v-if="!inProjectList" v-b-modal.to_do_edit_modal>+</b-button>
+    <b-button v-if="showTodoListButton" v-b-modal.to_do_edit_modal>+</b-button>
   </div>
 </template>
 
@@ -166,6 +166,15 @@ export default {
       listOfTodos: "todo/getListOfTodos",
       todosOfProject: "todo/getTodosOfProject",
     }),
+
+    showTodoListButton() {
+      return (
+        this.$route.name !== "ProjectList" &&
+        this.$route.name !== "Profil" &&
+        this.$route.name !== "Einstellungen" &&
+        this.$route.name !== "ProjectSearch"
+      );
+    },
 
     inProjectSearch() {
       // console.log(this.$route.name);

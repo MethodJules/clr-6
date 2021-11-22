@@ -1,7 +1,12 @@
 <template>
   <div class="projektAnlegen">
     <div>
-      <b-modal ref="create_project" title="Projekt anlegen" @ok="submitForm()" cancel-title="Abbrechen">
+      <b-modal
+        ref="create_project"
+        title="Projekt anlegen"
+        @ok="submitForm()"
+        cancel-title="Abbrechen"
+      >
         <form @submit.prevent="submitForm">
           <table>
             <tr>
@@ -45,28 +50,35 @@
               <td>
                 <div>
                   <div
+                    class="add-lecturer"
                     v-for="(betreuenderDozent, i) in project.betreuenderDozent"
                     :key="i"
                   >
-                    <select
-                      v-model="project.betreuenderDozent[i]"
-                      class="form-control"
+                    <b-form-input
+                      disabled
+                      v-model="project.betreuenderDozent[i].name"
+                      id="input-2"
                     >
+                    </b-form-input>
+                    <b-button variant="link" @click="deleteLecturer(i)"
+                      ><b-icon icon="x-circle"></b-icon
+                    ></b-button>
+                  </div>
+                  <div class="add-lecturer">
+                    <select v-model="selectedLecturer" class="form-control">
                       <option
                         v-for="lecturer in getLecturers"
-                        v-bind:value="lecturer.uuid"
+                        v-bind:value="lecturer"
                         v-bind:key="lecturer.uuid"
                       >
                         {{ lecturer.name }}
                       </option>
                     </select>
-
-                    <b-button variant="link" @click="deleteLecturer(i)"
-                      ><b-icon icon="x-circle"></b-icon
-                    ></b-button>
+                    <div style="width: 3rem"></div>
                   </div>
-                  <b-button @click="addLecturer('')"
-                    >Weitere Dozent*innen hinzufügen</b-button
+
+                  <b-button size="sm" @click="addLecturer(selectedLecturer)"
+                    >Dozenten hinzufügen</b-button
                   >
                   <!--  <span>Selected: {{ project.betreuenderDozent }}</span> -->
 
@@ -164,7 +176,8 @@
                       $v.project.kurzbeschreibung.$dirty
                     "
                     class="text-danger"
-                    >Die Beschreibung sollte mindestens 4 Zeichen lang sein.</span
+                    >Die Beschreibung sollte mindestens 4 Zeichen lang
+                    sein.</span
                   >
                 </div>
               </td>
@@ -192,6 +205,7 @@ export default {
   data() {
     return {
       chosen: "",
+      selectedLecturer: "",
       autoCompleteStyle: {
         vueSimpleSuggest: "position-relative",
         inputWrapper: "",
@@ -225,8 +239,13 @@ export default {
     showThisModal() {
       this.$refs["create_project"].show();
     },
+
     addLecturer(betreuenderDozent) {
-      this.project.betreuenderDozent.push(betreuenderDozent);
+      if (betreuenderDozent != "") {
+        this.project.betreuenderDozent.push(betreuenderDozent);
+      } else {
+        alert("Bitte wähle einen Dozenten aus");
+      }
     },
 
     deleteLecturer(index) {
@@ -253,13 +272,19 @@ export default {
       var keywords = Object.assign({}, keywords_filtered);
 
       //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array
-      let dozent_filtered = this.project.betreuenderDozent.filter(
-        (item, index) => {
-          return (
-            this.project.betreuenderDozent.indexOf(item) === index && item != ""
-          );
-        }
-      );
+
+      /*filter duplicate objects out, by using map to get userid from lecturers and then filtering by it, by looking if indexOf this value (userid) is already in the array. 
+        If indexof and index are not the same, this means the userid and respectively the object were already found before in the array, are therefore duplicates and will be removed.
+        the end result is an array of the ID attribute only
+        Solution from: https://stackoverflow.com/questions/15125920/how-to-get-distinct-values-from-an-array-of-objects-in-javascript*/
+
+      let dozent_filtered = this.project.betreuenderDozent
+        .map((item) => item.uuid)
+        .filter(
+          (value, index, self) =>
+            // && value != undefined -> redundant filtering? addLecturer already checks, that no empty values are added
+            self.indexOf(value) === index && value != undefined
+        );
       //make dozent object array for http request
       let dataArray = [];
       for (const dozent of dozent_filtered) {
@@ -283,7 +308,6 @@ export default {
         this.project.betreuenderDozent = [];
         this.project.externeMitwirkende = " ";
         this.project.schlagworter = " ";
-        alert("Dein neues Projekt wurde erstellt");
       });
     },
   },
@@ -309,3 +333,10 @@ export default {
   mounted() {},
 };
 </script>
+<style scoped>
+.add-lecturer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

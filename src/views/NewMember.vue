@@ -102,7 +102,7 @@ export default {
       //if current user is in group member array, he cant be a group admin -> current user is not allowed to add a member
       if (
         this.getGroupMembers.some(
-          (member) => member.userid === this.getCurrentUserID
+          (member) => member.userid === this.getCurrentUserUUID
         )
       ) {
         alert(
@@ -113,7 +113,7 @@ export default {
       // TODO: maybe check if user is not in groupadmins as well, in case of unforseeable errors
       else if (
         this.getGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserID
+          (member) => member.userid === this.getCurrentUserUUID
         )
       ) {
         //if new user is already in the group (is in member or admin array) he cant be added again
@@ -147,7 +147,7 @@ export default {
     getGroupAdmins() {
       return this.$store.state.project.currentProjectGroupAdmins;
     },
-    getCurrentUserID() {
+    getCurrentUserUUID() {
       return this.$store.state.profile.userData.uuid;
     },
   },

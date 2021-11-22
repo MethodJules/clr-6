@@ -101,7 +101,7 @@
         </b-navbar-nav>
 
         <b-navbar-nav v-if="inProjectList || inEinstellungen || inProfil">
-          <b-input-group size="sm" class="mb-2">
+          <b-input-group size="sm">
             <b-input-group-prepend is-text>
               <b-link
                 :to="{

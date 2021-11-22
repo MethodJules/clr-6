@@ -129,10 +129,10 @@ export default {
 
   validations: {
     getReflexionData: {
-      berichten_reagieren: { required, minLength: minLength(5) },
-      in_bezug_setzen: { required, minLength: minLength(5) },
-      schlussfolgern: { required, minLength: minLength(5) },
-      rekonstruieren: { required, minLength: minLength(5) },
+      berichten_reagieren: { minLength: minLength(5) },
+      in_bezug_setzen: { minLength: minLength(5) },
+      schlussfolgern: { minLength: minLength(5) },
+      rekonstruieren: { minLength: minLength(5) },
     },
   },
   methods: {

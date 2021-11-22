@@ -19,15 +19,7 @@ const actions = {
         var phaseId = rootState.project_phases.current_phase.phase_id;
         commit("loadingStatus", true, { root: true })
 
-
-        console.log(state);
-        console.log(rootState);
-        console.log("url datas ")
         // TODO: Phase id ist undefined wenn Seite neugeladen wird, aber nicht wenn beim neuladen die Startseite aufgerufen wird 
-        console.log(phaseId);
-        console.log(drupalUserUID);
-        console.log(sicht)
-
         var config = {
             method: 'get',
             url: `jsonapi/node/reflexionstemplate?filter[field_phasenid.id]=${phaseId}&filter[field_user.drupal_internal__uid]=${drupalUserUID}&filter[field_sichten.id]=${sicht}`,
@@ -61,12 +53,17 @@ const actions = {
 
         var phaseId = rootState.project_phases.current_phase.phase_id
         var drupalUserUID = rootState.profile.userData.uuid
-        console.log(drupalUserUID)
-        console.log(phaseId)
 
         // TODO Dynamisch mit Phase + UserName + Tab = Title
         var title = "Reflexion"
 
+        for (let attribute in reflexion) {
+            if (reflexion[attribute] == null) {
+                console.log(reflexion[attribute])
+                reflexion[attribute] = ""
+                console.log(reflexion[attribute])
+            }
+        }
 
         var data = `
         {
@@ -139,6 +136,14 @@ const actions = {
 
     updateReflexion({ state, rootState }, reflexion) {
 
+        for (let attribute in reflexion) {
+            if (reflexion[attribute] == null) {
+                console.log(reflexion[attribute])
+                reflexion[attribute] = ""
+                console.log(reflexion[attribute])
+            }
+        }
+
 
         var data = `
         {
@@ -184,13 +189,10 @@ const mutations = {
     SAVE_REFLEXION_AFTER_CREATION(state, reflexion) {
 
         const field_berichten_reagieren = reflexion.attributes.field_berichten_reagieren;
-        console.log(field_berichten_reagieren)
+
         const field_in_bezug_setzen = reflexion.attributes.field_in_bezug_setzen;
-        console.log(field_in_bezug_setzen)
         const field_rekonstruieren = reflexion.attributes.field_rekonstruieren;
-        console.log(field_rekonstruieren)
         const field_schlussfolgern = reflexion.attributes.field_schlussfolgern;
-        console.log(field_schlussfolgern)
         const field_id = reflexion.id;
         const field_title = reflexion.attributes.title;
 
@@ -200,20 +202,17 @@ const mutations = {
 
     SAVE_REFLEXION(state, { reflexion }) {
 
-        console.log(reflexion);
-
         if (reflexion.length == 0) {
             state.reflexionData = {}
         }
         reflexion.forEach(element => {
             const field_berichten_reagieren = element.attributes.field_berichten_reagieren;
-            console.log(field_berichten_reagieren)
+
             const field_in_bezug_setzen = element.attributes.field_in_bezug_setzen;
-            console.log(field_in_bezug_setzen)
+
             const field_rekonstruieren = element.attributes.field_rekonstruieren;
-            console.log(field_rekonstruieren)
+
             const field_schlussfolgern = element.attributes.field_schlussfolgern;
-            console.log(field_schlussfolgern)
             const field_id = element.id;
             const field_title = element.attributes.title;
 

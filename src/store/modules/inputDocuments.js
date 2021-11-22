@@ -33,11 +33,7 @@ const mutations = {
      */
 
     LOAD_FILES_TO_STATE_FROM_BACKEND(state, inputarrayPayload) {
-        console.log(state.inputs)
         state.inputs = inputarrayPayload;
-        console.log(state.inputs)
-
-
     },
 
     /**
@@ -47,7 +43,6 @@ const mutations = {
      */
 
     UPDATE_INPUTS(state, file) {
-        console.log(file)
         state.inputs.push(file);
     },
 
@@ -82,12 +77,8 @@ const actions = {
      */
 
     async loadInputdocumentsFromBackend({ rootState, commit }) {
-        var drupalUserUID = rootState.drupal_api.user.uid;
+        commit("loadingStatus", true, { root: true })
         var phaseId = rootState.project_phases.current_phase.phase_id
-        console.log(phaseId);
-        console.log(rootState.drupal_api);
-        console.log(drupalUserUID);
-
         var config = {
             method: 'get',
             url: `jsonapi/node/inputdateien?include=field_documentid&filter[field_phasenid.id]=${phaseId}`,
@@ -101,7 +92,6 @@ const actions = {
 
         axios(config)
             .then(function (response) {
-                console.log(response)
                 const urlBackend = "https://clr-backend.x-navi.de";
                 let files = response.data.included; // id, name, size and url of file from node file-file
                 let fileId = response.data.data; // the dataId of document from node --inputdateien
@@ -136,7 +126,7 @@ const actions = {
                 //this array 'inputarrayPayload' is passed as a parameter in the mutation method
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', inputarrayPayload);
 
-
+                commit("loadingStatus", false, { root: true })
 
             })
             .catch(function (error) {
@@ -153,14 +143,10 @@ const actions = {
      * 
      */
     async uploadFilesToDatabase({ dispatch, rootState }, files) {
-
         // sende state
         // commit("uploadFilesToState", files);
-        console.log(files);
 
 
-        var drupalUserUID = rootState.drupal_api.user.uid
-        console.log(drupalUserUID)
         for (const file of files) {
 
             var config = {
@@ -196,8 +182,6 @@ const actions = {
     },
 
     addInputDocument({ state, rootState, commit }, payload) {
-
-        console.log(state)
         var phaseId = rootState.project_phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
@@ -252,7 +236,11 @@ const actions = {
                 commit("UPDATE_INPUTS", file);
             })
             .catch(function (error) {
-                console.log(error)
+                if (error.response.status == 422) {
+                    alert("Dieser Dateityp wird nicht unterstützt")
+                } else {
+                    console.log(error)
+                }
             })
 
     },

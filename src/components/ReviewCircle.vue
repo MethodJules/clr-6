@@ -102,8 +102,6 @@ export default {
       }
     }, */
     goToPhase(phase_number) {
-      console.log(phase_number);
-      console.log(this.getProjectID);
       this.$router.push({
         name: "PhaseTemplate",
         params: { phase_number: phase_number, project_id: this.getProjectID },

@@ -81,7 +81,7 @@ const actions = {
     async getWhoamI({ dispatch, commit, state }, { username, password, matrikelnummer, token }) {
         console.log(token)
         //state.sparkyUserID = " response.data.id"
-        axios.get(
+        return axios.get(
             "stmgmt/auth/whoAmI",
             {
                 headers: {
@@ -96,8 +96,6 @@ const actions = {
                 if (response.status === 200) {
                     //sparky user id von nutzer holen der sich bei sparky mit rz kennung anmeldet
                     commit('setSparkyObject', response);
-                    console.log(state.sparkyUserID)
-                    console.log(state.sparkyUserObject)
                     dispatch("drupal_api/getSessionToken", { username, password, matrikelnummer }, { root: true })
                 }
             })
@@ -158,7 +156,7 @@ const actions = {
 * @param password input from getWhoamI
 */
     async registrate({ dispatch, commit }, { username, password, matrikelnummer }) {
-        let data = await axios.post(
+        return axios.post(
             "api/v1/authenticate", {
             "username": username,
             "password": password
@@ -181,7 +179,9 @@ const actions = {
             .catch((error) => {
                 console.log(error);
                 if (error.response.status == 401) {
+                    //in this case we throw the error again, it will be catched in the calling method "registrieren". We do this because the ".then" part of the method "registrieren" in "Login.vue" should not be executed. otherwise it would call "sendEmail" when the registering user is a lecturer, which should only happen if it is successful
                     alert("Du konntest nicht authorisiert werden. Bitte gib deine korrekte Rechenzentrumskennung ein")
+                    throw error;
                 } else {
                     alert("Die Authentifizierung mit dem SparkyService ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleibt, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
                 }

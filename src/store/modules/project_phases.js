@@ -133,7 +133,6 @@ const actions = {
     * @param state state as parameter for access and manipulation of state data
     */
     async loadPhasesFromBackend({ commit, rootState }, projectId) {
-        console.log(projectId)
         var config = {
             method: 'get',
             url: `jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}`,
@@ -160,8 +159,6 @@ const actions = {
 
     async loadSinglePhaseFromBackend({ commit, state, rootState, dispatch }, { projectId, phaseId }) {
         commit("loadingStatus", true, { root: true })
-        console.log(phaseId)
-        console.log(state)
         var config = {
             method: 'get',
             url: `jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phaseId}&include=field_assistent`,
@@ -176,7 +173,6 @@ const actions = {
             .then(function (response) {
                 const currentPhase = response.data.data;
                 commit('LOAD_SINGLE_PHASE', { currentPhase });
-                console.log(state.current_phase)
                 //loading all data which is connected to a single phase here, instead of mounted of the components, because of better synchronization
                 //we keep this initial loading of the reflexion in because
                 var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137"
@@ -197,8 +193,6 @@ const actions = {
 
     closePhase({ commit, rootState, dispatch }, { phase, open_close_phase }) {
         // commit("CLOSE_PHASE", phase);
-        console.log(phase)
-        console.log(phase.abschluss)
         // DATABASE REACTIONS
         var data = `{"data":{
             "type":"node--phase_vorgehensmodell", 
@@ -219,11 +213,6 @@ const actions = {
             data: data
         };
         axios(config).then((response) => {
-            console.log(response)
-            console.log(phase.projektId)
-            console.log(phase.phase_number)
-            console.log(response.data.data.attributes.field_phase_number)
-            console.log(response.data.data.relationships.field_projektid.data.id)
             dispatch("loadSinglePhaseFromBackend", { projectId: phase.projektId, phaseId: phase.phase_number })
         }).catch((error) => {
             console.log(error)
@@ -244,8 +233,6 @@ const actions = {
 * @param rootState rootState allows access to states of other modules in store
 */
     createAllPhasesforNewProject({ state, rootState }, id_newly_created_project) {
-        console.log(state)
-        console.log(id_newly_created_project)
         //field_assistent bekommt die assistent id vom standard assistenten - hier die ID de Assistenten als ein statischer string
         let assistent_id = "a6260ded-71e7-40c0-8e24-bf78caa8746e"
         //id_newly_created_project = "695c2f01-6de9-4456-988f-1fcf5db91dfb"
@@ -527,7 +514,6 @@ const mutations = {
         //console.log(state.current_phase)
 
         state.current_phase.documentationText = documentationText
-        console.log(state.current_phase)
     },
     /**
     * filters all received phases for project id of current project and saves the current phase in state
@@ -536,7 +522,6 @@ const mutations = {
     * @param state state as parameter for access and manipulation of state data
     */
     LOAD_PHASES(state, phases) {
-        console.log(phases);
         //  state.project_phases_this_project = phases
         let phaseArray = []
         phases.forEach(element => {

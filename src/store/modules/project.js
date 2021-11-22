@@ -87,7 +87,6 @@ const actions = {
 */
   async loadAllKeywords({ commit, state, rootState }) {
     //var drupalUserID = rootState.sparky_api.drupalUserID
-    console.log(rootState.drupal_api.user)
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt`,
@@ -117,10 +116,9 @@ const actions = {
   */
   async loadProjectsFromBackend({ commit, state, rootState, dispatch }) {
     let filter_joined = ""
-    console.log(rootState.drupal_api.user)
     //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
-    console.log(rootState.drupal_api.user)
+
     //console.log(drupalUserUID)
     //depending on role of a user (if user is student or lecturer) the filters are different: student -> filter by id in gruppenadministrator and gruppenmitglied; lecturer -> filter by id in betreuender_dozent
     //TODO: maybe make another else part for "superdozent" respectively "admin".
@@ -241,7 +239,7 @@ const actions = {
       },
     };
 
-    axios(config)
+    return axios(config)
       .then(function (response) {
         console.log(response)
         const groupadmins = response.data.included;
@@ -326,7 +324,6 @@ const actions = {
     let userID = rootState.profile.userData.uuid
     //the id of the system user, which is needed because of the filtering bug here https://www.drupal.org/project/drupal/issues/3072384
     let system_user_id = "bf1820d0-5477-4df6-b4dd-a1824d5e7794"
-    console.log(keywords)
 
     var data = `{
                 "data": {
@@ -363,8 +360,6 @@ const actions = {
                 }
               }`;
 
-    console.log(projEntry.schlagworter)
-    console.log(data)
     var config = {
       method: 'post',
       url: 'jsonapi/node/projekt',
@@ -383,7 +378,7 @@ const actions = {
         let id_newly_created_project = response.data.data.id
         console.log(id_newly_created_project)
         //createAllPhasesforNewProject creates all 8 Phases for this project, is in project_phases.js
-        //  dispatch('project_phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
+        dispatch('project_phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
 
         //addLecturer does not push one lecturer after the other. array of 3 lecturers -> only 1 lecturer is saved. maybe the quick sequence of post requests leads to a replacement instead of additrion
         /*         for (let gruppenadmin of projEntry.betreuenderDozent) {
@@ -391,9 +386,12 @@ const actions = {
                   dispatch('addLecturer', { gruppenadmin, id_newly_created_project })
                 } */
         //is the id for new project in frontend when pushing from frontend only? is it needed?
-        commit('ADD_PROJECT', projEntry)
+        let new_project = response.data.data
+        commit('ADD_PROJECT', new_project)
+        alert("Dein neues Projekt wurde erfolgreich erstellt");
       })
       .catch(function (error) {
+        alert("Dein neues Projekt konnte leider nicht erstellt werden");
         console.log(error)
       })
 
@@ -491,9 +489,6 @@ const actions = {
 
     /*     let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
         state.currentProject.gruppenmitglieder.splice(index, 1); */
-    console.log(mitglied)
-
-
     var data = `{ "data": [{
             "type": "user--user",
              "id": "${mitglied.userid}"
@@ -638,8 +633,17 @@ const mutations = {
 * @param projEntry project which will be added to the backend
 * @param state state as parameter for access and manipulation of state data
 */
-  ADD_PROJECT(state, projEntry) {
-    state.myProjects.push(projEntry)
+  ADD_PROJECT(state, new_project) {
+
+    const field_betreuender_dozent = new_project.relationships.field_betreuender_dozent.data;
+    const field_externe_mitwirkende = new_project.attributes.field_externe_mitwirkende;
+    const field_schlagworter = new_project.attributes.field_schlagworter;
+    const field_kurzbeschreibung = new_project.attributes.field_kurzbeschreibung;
+    const field_id = new_project.id;
+    const field_title = new_project.attributes.title;
+    let field_gruppenmitglieder_IDs = new_project.relationships.field_gruppenmitglieder.data
+    let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
+    state.myProjects.push(projectObject)
   },
 
   UPDATE_KEYWORDS(state, keywords) {
@@ -710,10 +714,11 @@ const mutations = {
 * @param state state as parameter for access and manipulation of state data
 */
   LOAD_MY_PROJECTS(state, { projects }) {
+    console.log(projects)
     state.myProjects = []
 
     projects.forEach(element => {
-      const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
+      const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data;
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
       const field_schlagworter = element.attributes.field_schlagworter;
       const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;

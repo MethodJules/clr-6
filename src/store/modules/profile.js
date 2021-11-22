@@ -13,7 +13,7 @@ const state = () => ({
 
 })
 const getters = {
-    getCurrentUserID(state) {
+    getCurrentUserUUID(state) {
         return state.userData.uuid;
     },
 }
@@ -45,7 +45,6 @@ const actions = {
 
         axios(config)
             .then(function (response) {
-                console.log(response);
                 /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data' 
                  * array with all field values. But here we also need the included data which is found in response.data.included. 
                  *  Therefore our paylod this time is response.data, 
@@ -71,9 +70,7 @@ const actions = {
 
     async loadProfileFromBackend({ commit, state, rootState }, user_internal_uid) {
         commit("loadingStatus", true, { root: true })
-        console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
-        console.log(drupalUserUID)
         //TODO: change/add user uuid instead of user uid and change field in backend from string field for user uid to relationship field with uuid
         //TODO: or change to get profile for user when no user_internal_uid is given
         var config = {
@@ -107,10 +104,6 @@ const actions = {
     },
 
     updateEmailCheckbox({ rootState, state }, profile) {
-
-        console.log(profile)
-
-
         var data = `
         {
             "data": {
@@ -142,10 +135,45 @@ const actions = {
             }).catch(function (error) {
                 console.log(error);
             });
-
-
-
     },
+
+
+    updatePhoneCheckbox({ rootState, state }, profile) {
+        var data = `
+        {
+            "data": {
+                "type": "node--profil", 
+                "id": "${profile.uuid}",
+                "attributes": {
+                    "field_show_phone_number": ${profile.show_phone_number}
+                    
+                }
+            }
+        }`;
+        var config = {
+            method: 'patch',
+            url: `jsonapi/node/profil/${profile.uuid}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': rootState.drupal_api.authToken,
+                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+            },
+            data: data
+
+        };
+        axios(config)
+            .then((response) => {
+                console.log(response);
+
+
+            }).catch(function (error) {
+                console.log(error);
+            });
+    },
+
+
+
 
     /* saves the profile with the date fields in the backend  */
 
@@ -153,9 +181,8 @@ const actions = {
         //console.log(state)
         var drupalUserUID = rootState.drupal_api.user.uid
         var drupalUserUUID = rootState.drupal_api.user.uuid
-        console.log(rootState.drupal_api.user)
+
         let username = rootState.drupal_api.user.username
-        console.log(drupalUserUID)
         var title = `Profil ${username}`
         //commented out, because a new profile is created when a user is created
         /*         var data = `{
@@ -181,11 +208,14 @@ const actions = {
                 "attributes": {
                     "title": "${title}",
                     "field_studiengang": "", 
-                    "field_anzahl_literaturreviews": "", 
+                    "field_anzahl_literaturreviews": 0, 
                     "field_datenbanken": "", 
                     "field_referenztool": "", 
                     "field_analysetool": "",
-                    "field_showemail": false     
+                    "field_abteilung": "",
+                    "field_telefonnummer": "",
+                    "field_showemail": false,
+                    "field_show_phone_number": false  
                 },
                 "relationships": {
 
@@ -214,7 +244,7 @@ const actions = {
             data: data
         };
 
-        axios(config)
+        return axios(config)
             .then(function (response) {
                 alert("Dein Benutzerkonto wurde erstellt. Du kannst dich nun anmelden")
 
@@ -227,7 +257,6 @@ const actions = {
                 alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an:...")
 
             })
-
 
     },
 
@@ -243,11 +272,7 @@ const actions = {
 
         const base64ImageData = await fetch(image);
         const binaryImageData = await base64ImageData.blob();
-
-
         var drupalUserUID = rootState.drupal_api.user.uid
-
-
         var config = {
             method: 'post',
             url: `jsonapi/media/image/field_media_image`,
@@ -262,30 +287,20 @@ const actions = {
             data: binaryImageData
 
         };
-
-
         axios(config)
             .then(function (response) {
-                console.log(response);
                 /**
                  * the imageID will be need for the method 'updateUserdataWithProfileImage' in order to add the right image to Userdata.
                  * 
                  * */
 
                 const imageID = response.data.data.id;
-                console.log(imageID)
 
                 dispatch('updateUserdataWithProfileImage', imageID)
-
-
-
-
             })
             .catch(function (error) {
                 console.log(error)
             })
-
-
     },
 
     /**
@@ -298,11 +313,6 @@ const actions = {
      */
     updateUserdataWithProfileImage({ state, rootState }, imageID) {
         var userID = rootState.profile.userData.uuid
-
-        console.log(userID)
-
-        console.log(state)
-        console.log(imageID)
         var data = `{
             "data": {
                 "type": "user--user", 
@@ -314,9 +324,7 @@ const actions = {
                             "id": "${imageID}"
                         }
                     }
-
-                }
-                
+                }  
             }
         }`;
 
@@ -330,21 +338,14 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data
-
-
         };
-
         axios(config)
             .then(function (response) {
-
                 console.log(response);
-
-
             })
             .catch(function (error) {
                 console.log(error)
             })
-
     },
 
 
@@ -355,9 +356,17 @@ const actions = {
 
     updateProfile({ state, rootState }, profile) {
 
+
+        for (let attribute in profile) {
+            if (profile[attribute] == null) {
+                // console.log(profile[attribute])
+                profile[attribute] = ""
+                // console.log(profile[attribute])
+            }
+
+        }
+
         console.log(state)
-
-
         var drupalUserUID = rootState.drupal_api.user.uid
 
         var data = `{
@@ -367,16 +376,16 @@ const actions = {
                 "attributes": {
                     "title": "${profile.title}", 
                     "field_studiengang": "${profile.studiengang}", 
-                    "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}" , 
+                    "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}", 
                     "field_datenbanken": "${profile.datenbanken}", 
                     "field_referenztool": "${profile.referenztool}", 
-                    "field_analysetool": "${profile.analysetool}"
+                    "field_analysetool": "${profile.analysetool}",
+                    "field_abteilung": "${profile.abteilung}",
+                    "field_telefonnummer": "${profile.telefonnummer}"
                 }
                 
             }
         }`;
-
-
         var config = {
             method: 'patch',
             url: `jsonapi/node/profil/${profile.uuid}`,
@@ -387,15 +396,10 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data
-
-
         };
-
         axios(config)
             .then(function (response) {
                 console.log(response)
-
-
             })
             .catch(function (error) {
                 console.log(error)
@@ -475,20 +479,23 @@ const mutations = {
         console.log(profiles);
         profiles.forEach(element => {
             const field_studiengang = element.attributes.field_studiengang;
-            console.log(field_studiengang)
             const field_anzahl_literaturreviews = element.attributes.field_anzahl_literaturreviews;
-            console.log(field_anzahl_literaturreviews)
             const field_datenbanken = element.attributes.field_datenbanken;
-            console.log(field_datenbanken)
             const field_analysetool = element.attributes.field_analysetool;
-            console.log(field_analysetool)
             const field_referenztool = element.attributes.field_referenztool;
-            console.log(field_referenztool)
             const field_id = element.id;
             const field_title = element.attributes.title;
+            const field_abteilung = element.attributes.field_abteilung
+            const field_telefonnummer = element.attributes.field_telefonnummer
+            const field_show_phone_number = element.attributes.field_show_phone_number
             const field_showemail = element.attributes.field_showemail
 
-            state.profileData = { studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews, datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool, uuid: field_id, title: field_title, show_email: field_showemail }
+
+            state.profileData = {
+                studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews,
+                datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool,
+                uuid: field_id, title: field_title, show_email: field_showemail, abteilung: field_abteilung, telefonnummer: field_telefonnummer, show_phone_number: field_show_phone_number
+            }
 
 
 

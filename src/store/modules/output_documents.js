@@ -62,11 +62,8 @@ const mutations = {
 const actions = {
 
     async loadOutputdocumentsFromBackend({ rootState, commit }) {
-        var drupalUserUID = rootState.drupal_api.user.uid;
+        commit("loadingStatus", true, { root: true })
         var phaseId = rootState.project_phases.current_phase.phase_id
-        console.log(rootState.drupal_api);
-        console.log(drupalUserUID);
-
         var config = {
             method: 'get',
             url: `jsonapi/node/outputdateien?include=field_output_datei&filter[field_phasenid.id]=${phaseId}`,
@@ -105,6 +102,7 @@ const actions = {
                 }
                 //this array 'outputarrayPayload' is passed as a parameter in the mutation method
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', outputarrayPayload);
+                commit("loadingStatus", false, { root: true })
 
             })
             .catch(function (error) {
@@ -122,14 +120,9 @@ const actions = {
      * Will be written later.... 
      */
     async uploadFilesToDatabase({ dispatch, rootState }, files) {
-
         // sende state
         // commit("uploadFilesToState", files);
-        console.log(files);
 
-
-        var drupalUserUID = rootState.drupal_api.user.uid
-        console.log(drupalUserUID)
         for (const file of files) {
 
             var config = {
@@ -220,16 +213,16 @@ const actions = {
                 commit("UPDATE_OUTPUTS", file);
             })
             .catch(function (error) {
-                console.log(error)
+                if (error.response.status == 422) {
+                    alert("Dieser Dateityp wird nicht unterstützt")
+                } else {
+                    console.log(error)
+                }
             })
-
     },
 
     deleteOutputDocuments({ rootState, commit }, payload) {
         commit('deleteOutput', payload);
-
-        console.log(payload.output.id);
-
         var config = {
             method: 'delete',
             url: `jsonapi/node/outputdateien/${payload.output.dataId}`,

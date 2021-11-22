@@ -42,8 +42,7 @@ const actions = {
     async getSessionToken({ commit, state, dispatch }, { username, password, matrikelnummer }) {
 
         //eigtl csrf token, nicht sessiontoken
-        console.log(state)
-        await axios.get('rest/session/token')
+        return axios.get('rest/session/token')
             .then((response) => {
                 console.log(response.data);
                 const token = response.data;
@@ -111,9 +110,8 @@ const actions = {
             data: data
         };
         //console.log(config)
-        axios(config)
+        return axios(config)
             .then((response) => {
-                console.log(response.data);
                 const user = response.data;
                 commit('SAVE_CREATED_USER', user);
                 //creates empty profile when user is created
@@ -295,9 +293,10 @@ const mutations = {
     * @param state state as parameter for access and manipulation of state data
     */
     SAVE_CREATED_USER(state, user) {
-        //TODO: maybe log user in after registration?
+
         console.log(user)
         //fullname, matrikelnummer, user_picture, concept_maps, name (displayname) auch verfügbar
+        //TODO: maybe we could provide the email as well, so that the email lecturers send to the admin when creating their accounts has a reply email for the admin
         state.user = { uid: user.uid[0].value, username: user.field_fullname[0].value, uuid: user.uuid[0].value }
         /*         console.log("jetzt csrf und user")
                 console.log(state.user)
