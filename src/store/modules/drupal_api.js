@@ -1,12 +1,14 @@
 import axios from "@/config/custom_axios";
 import router from '../../router';
+import emailjs from "emailjs-com";
 
 const state = () => ({
     user: null, //TODO Should we name it current_user? Would be more semantically correct
-    csrf_token: null, //TODO user individual token is to be used in all subsequent api requests instead of the admin token which is used at the moment
+    csrf_token: null,
     logout_token: null,
     validCredential: false,
     authToken: null,
+    isLecturer: false,
 
 
 })
@@ -22,46 +24,35 @@ const getters = {
     },
 }
 const actions = {
-    //TO DO: Check if a user already exists
-
-    /*1. session token von drupal holen
-    2. user json bauen -> mit feldern wie namen, sparky id, matrikelnummer etc
-    3. user json mit token an drupal um user zu registrierenn -> response ist user objekt mit uuid, namen, felder etc
-    */
 
     /**
-    * gets a session token which is used for subsequent registration of a user
-    * calls the mutation SAVE_SESSION_TOKEN after a token was successfully received
-    * after that another action createUser is called
+    * gets a session token (csrf) which is used for subsequent registration of a user
+    * calls the mutation SAVE_SESSION_TOKEN after a token was successfully received to save it in state
+    * after that another action createUser is called, which creates the user
     * @param username username the user gives as input in App.vue for registration
     * @param password password the user gives as input in App.vue for registration
-    * @param commit commit us used to call a mutation from this function
-    * @param state state as parameter for access and manipulation of state data
+    * @param matrikelnummer matrikelnummer students give as input in App.vue for registration
+    * @param commit commit is used to call a mutation from this function
     * @param dispatch dispatch is used to call another action from this function
     */
-    async getSessionToken({ commit, state, dispatch }, { username, password, matrikelnummer }) {
+    async getSessionToken({ commit, dispatch }, { username, password, matrikelnummer }) {
 
         //eigtl csrf token, nicht sessiontoken
         return axios.get('rest/session/token')
             .then((response) => {
-                console.log(response.data);
                 const token = response.data;
                 commit('SAVE_SESSION_TOKEN', token);
                 dispatch('createUser', { username, password, matrikelnummer })
-
             }).catch(error => {
-                console.log(error)
+                //console.log(error)
                 alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
-
             });
-
     },
 
     /**
-    * sends a request to sparky api to get user data, which will be saved in the user account for the registration, via getWhoAmI
+    * registers a user at the Drupal Backend
     * uses csrf token from getSessionToken()
     * @param username username the user gives as input in App.vue for registration
-    * @see {@link getSessionToken}
     * @param password password the user gives as input in App.vue for registration
     * @param state state as parameter for access and manipulation of state data
     * @param dispatch dispatch is used to call another action from this function
@@ -71,35 +62,15 @@ const actions = {
         //Todo: uncomment or delete later, after login and registration process is tested thoroughly
         //await dispatch("sparky_api/getWhoamI", { username, password }, { root: true })
         var sparkyUserObject = rootState.sparky_api.sparkyUserObject
-        /*         console.log(rootState.sparky_api.sparkyUserID)
-                console.log(rootState.sparky_api.sparkyUserObject)
-                console.log(username)
-                console.log(sparkyUserObject) */
-        //console.log(generatedPassword)
-
-
-        //TODO: Fehlerbehandlung: matrikelnummer ist bei mir null -> dann funzt das alles nicht -> wieso ist null, muss man so einen sonderfall normalerweise beachten
-        // TODO: unnötige felder sparky_id, evtl. fullname  entfernen
         // when a user is created his user picture is the same. it can be changed later on with other profiledata
         //the same user picture is used for all new accounts. it is linked to, directly from the backend
         const data = JSON.stringify({
             'name': { 'value': `${sparkyUserObject.data.username}` },
-            //'name': {'value': `${username}`},
             'mail': { 'value': `${sparkyUserObject.data.email}` },
             'pass': { 'value': `${password}` },
-            //'field_sparky_id': {'value': `${sparkyUserObject.data.id}`},
             'field_fullname': { 'value': `${sparkyUserObject.data.displayName}` },
             'field_matrikelnummer': { 'value': `${matrikelnummer}` },
-            /*            "user_picture": {
-                           "data": {
-                               "type": "file--file",
-                               "id": "dc9ea37b-5e91-4450-8d7c-91b8b84b5fad"
-                           }
-                       } */
-            //'field_matrikelnummer': {'value': `12345`},
-            //'field_matrikelnummer': {'value': `${sparkyUserObject.data.matrNr}`},
         })
-        //TODO: state.csrf_token testen und evtl gegen rootState.drupal_api.csrf_token austauschen
         var config = {
             method: 'post',
             url: 'user/register?_format=json',
@@ -109,17 +80,18 @@ const actions = {
             },
             data: data
         };
-        //console.log(config)
         return axios(config)
             .then((response) => {
                 const user = response.data;
                 commit('SAVE_CREATED_USER', user);
                 //creates empty profile when user is created
-                //test if userdata (user.uid) is saved by SAVE_CREATED_USER before createProfile is called (it needs uid)
                 //build auth token
                 var creds = username + ":" + password;
                 var base64 = btoa(creds);
                 let authorization_token = "Basic " + base64;
+                if (state.isLecturer) {
+                    dispatch('sendEmail')
+                }
                 dispatch("profile/createProfile", authorization_token, { root: true })
                 //TODO: call dispatch for loaduserdata to get user uuid -> create profil with user uuid and make a relatinoship field in backend
                 //TODO: then use useruuid for loading profile from backend -> then loadprofiledata can use the user uuid to get the profile
@@ -128,26 +100,61 @@ const actions = {
                 //TODO: dispatch userdata update profileimage or put in image url in const data above, so it is linked  with the user creation
 
             }).catch(error => {
-                console.log(error)
-                alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
+                alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Möglicherweise hast du dich bereits regisrtiert. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
 
             });
     },
 
+
+    /**
+    * sends an email to the "superdozent" if the registering user is a lecturer and asks for the role "lecturer"
+    * email template can be configured at email.js. IDs used below are also found there 
+    * @param rootState rootState allows access to states of other modules in store
+    */
+    sendEmail({ rootState }) {
+        var sparkyUserObject = rootState.sparky_api.sparkyUserObject
+        var templateParams = {
+            name: sparkyUserObject.data.username,
+            email: sparkyUserObject.data.email,
+        };
+        emailjs
+            .send(
+                "service_1h8ohmh", //SERVICE_ID
+                "template_8ala1li", //TEMPLATE_ID
+                templateParams,
+                "user_sECTHBIy6LTneEfcljkg9" //USER_ID
+            )
+            .then(
+                (result) => {
+                    alert(
+                        "Eine automatische Nachricht an stadtlaender@uni-hildesheim.de wurde versendet. Deine Rollenberechtigungen werden bald freigeschaltet. Bitte warte auf eine entsprechende Bestätigung bevor du dich einloggst"
+                    );
+                },
+                (error) => {
+                    alert(
+                        "Es konnte keine automatische Nachricht an stadtlaender@uni-hildesheim.de versendet werden. Bitte schreibe eine Email an die genannte Email-Adresse und bitte um eine Freischaltung deiner Rollenberechtigung als Dozent"
+                    );
+                }
+            );
+    },
+
     /**
     * Connects to the Drupal Backend and request a login
-    * The Backend will give csrf_token a logout token and a current_user object
+    * when successfull SAVE_LOGIN_USER is called and user is taken to his main/starting page. the Backend response includes csrf_token, logout token and an object with current_user data
+    * not successfull attempts alert the user with appropriate error messages
+    * @param username username the user gives as input in App.vue for registration
+    * @param password password the user gives as input in App.vue for registration
+    * @param commit commit is used to call a mutation from this function
+    * @param dispatch dispatch is used to call another action from this function
     */
-    async loginToDrupal({ commit, rootState, dispatch }, { username, password }) {
+    async loginToDrupal({ commit, dispatch }, { username, password }) {
         //authenticate with sparky_api at sparky backend is commented out for development purposes. thus testaccounts can be used without the need of real user data
-        //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished
-        //maybe change both functions -> sparky_api/authenticate calls loginToDrupal when it is finished, and App/Login.vue calls sparky_api/authenticate first
+        //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished or test accounts which work with sparkyservice can be used
         //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
-        const url = 'user/login?_format=json';
         const data = `{"name": "${username}", "pass": "${password}"}`;
         const config = {
             method: 'post',
-            url: url,
+            url: 'user/login?_format=json',
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json'
@@ -158,22 +165,14 @@ const actions = {
 
         await axios(config)
             .then((response) => {
-                console.log(response)
-                console.log(response.data.current_user)
-                console.log(response.data.access_token)
-                console.log(rootState.sparky_api.sparkylogin)
                 commit('SAVE_LOGIN_USER', response.data);
                 router.push("/");
-                //console.log(response.data.csrf_token);
-                //console.log(response.data.current_user);
-                //console.log(response.data.logout_token);   
             })
             .catch((error) => {
-                console.log(error)
                 //if the user was authorized by the SparkyService (this must be true if this method was called) and could not be authorized, and status is x -> this must mean he has not registered at the backend
                 if (error.response.status == 400) {
                     alert("Du konntest nicht authentifiziert werden. Registriere dich bitte, falls dies nicht bereits geschehen ist.")
-                    console.log(error.response.data.message)
+                    //console.log(error.response.data.message)
                 }
                 //error 403 -> requested resource is forbidden for user(role) user who logs in should be either lecturer or student. if one of those tries to log in (uses log in resource), while already logged in 
                 //-> user cant get the user data in state so frontend "thinks" he is logged in, but he is logged in at the backend via a cookie
@@ -182,29 +181,30 @@ const actions = {
                 //a logout button which could appear at the login page appears to be not possible as well. because csrf token and logout token are missing
                 //therefore the user receives a message, which tells him to log out manually at the backend
                 else if (error.response.status == 403) {
-                    // commit('SHO', response.data);
                     alert("Du konntest nicht authentifiziert werden. Bitte logge dich das nächste mal aus, bevor du die Seite verlässt, um diesen Fehler zu vermeiden. Versuche nun dich erneut einzuloggen. ")
                     dispatch('logoutDrupal')
-                    console.log(error.response.data.message)
+                    //console.log(error.response.data.message)
                 }
                 //if the user gets another status, it most likely means there is an error on the backend side -> the user is informed of contact emails for further help
                 else {
                     alert("Die Authentifizierung mit dem Backend ist leider fehlgeschlagen. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
-                    console.log(error.response.data.message)
+                    //console.log(error.response.data.message)
                 }
 
             });
     },
 
-    async loadTokensfromSessionStorage({ commit, dispatch }) {
+    /**
+* when refreshing the site all data in the state would be lost. But if a user has already logged in (in this session) the variable "valid_credentials" with value "true" is still stored in the sessionStorage.  if this value is true, all necessary tokens are loaded from session- and localstorage and the user is navigated to the main/starting page
+*Thus the user can refresh the page without having to log in again. is called in mainpage.vue
+* @param commit commit is used to call a mutation from this function
+*/
+    async loadTokensfromSessionStorage({ commit }) {
         if (sessionStorage.getItem("valid_credentials") == "true") {
-            console.log("from loadTokensfromSessionStorage")
             await commit('LOAD_TOKEN_SESSION_STORAGE');
             //await dispatch('loadUserFromBackend');
             await router.push("/")
-            console.log(router)
         } else {
-            console.log("session token")
             router.push("/Login");
             return false
         }
@@ -213,21 +213,21 @@ const actions = {
 
 
     /**
-* Connects to the Drupal Backend and request a login
-* The Backend will give csrf_token a logout token and a current_user object
+* logs a user out with csrf_token and logout_token. if a user has left the site/closed the tab those tokens are taken from localstorage to ensure the user can log out.
+* then all tokens are removed from local/sessionstorage and user is taken to login page
+    * @param state state as parameter for access and manipulation of state data
+    * @param commit commit is used to call a mutation from this function
+    * @param rootState rootState allows access to states of other modules in store
 */
     async logoutDrupal({ state, commit, rootState }) {
-
-
-        //if the state is empty (because user closed the site/tab completely) the localstorage tokens will be used
+        //if the state is empty (because user closed the site/tab completely) the localstorage tokens will be used instead
         if (rootState.drupal_api.csrf_token == null || rootState.drupal_api.logout_token == null) {
             state.csrf_token = localStorage.getItem("csrf_token");
             state.logout_token = localStorage.getItem("logout_token");
         }
-        const url = `user/logout?_format=json&token=${rootState.drupal_api.logout_token}`;
         const config = {
             method: 'post',
-            url: url,
+            url: `user/logout?_format=json&token=${rootState.drupal_api.logout_token}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -238,40 +238,44 @@ const actions = {
 
         await axios(config).then(
             (response) => {
-                console.log(response)
-                //console.log(response.data.csrf_token);
-                //console.log(response.data.current_user);
-                //console.log(response.data.logout_token);
                 commit('REMOVE_SESSIONTOKENS_OF_USER')
                 router.push('login')
-
-
-
             }
         ).catch((error) => {
             //error 403 -> requested resource is forbidden for user(role) user who logs out should be either lecturer or student and logged in. if one of those tries to log out (uses log out resource), while already logged out 
             //-> frontend "thinks" user is logged in, but he is already logged out at the backend i.e. cookie is deleted
-
-            console.log(error)
             if (error.response.status == 403) {
                 alert("Der Session Cookie ist wahrscheinlich abgelaufen bzw. bist du bereits vom Backend abgemeldet. Refreshe die Seite und logge dich erneut ein, um den Fehler zu beheben. Sollte dieser Fehler bestehen bleiben, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de ")
                 commit('REMOVE_SESSIONTOKENS_OF_USER')
                 state.validCredential = false;
             }
-
         });
     },
-
+    /**
+     * calls mutation which saves basic authorization token for later access in state
+    * @param commit commit is used to call a mutation from this function
+    * @param authorization_token token which is to be saved in state
+*/
     saveBasicAuth({ commit }, authorization_token) {
-
         commit('SAVE_BASIC_AUTH_TOKEN', authorization_token)
 
     }
-
-
 }
 const mutations = {
 
+    /**
+     * if a user (lecturer) checks/unchecks the checkbox while registering, this mutation saves value in state
+    * @param state state as parameter for access and manipulation of state data
+*/
+    SET_IS_LECTURER(state) {
+        state.isLecturer = !state.isLecturer
+    },
+
+    /**
+     * saves basic authorization token in state and in sessionstorage
+    * @param state state as parameter for access and manipulation of state data
+    * @param authorization_token token which is to be saved in state
+*/
     SAVE_BASIC_AUTH_TOKEN(state, authorization_token) {
         sessionStorage.setItem("auth_token", authorization_token);
         state.authToken = authorization_token
@@ -279,102 +283,75 @@ const mutations = {
 
     /**
     * gets the token from action and puts it in state 
-    * @param token token from
+    * @param token session/csrf token
     * @param state state as parameter for access and manipulation of state data
     */
     SAVE_SESSION_TOKEN(state, token) {
         state.csrf_token = token
-        //console.log(state.csrf_token)
     },
 
     /**
     * gets user object from action and puts it in state
-    * @param user
+    * @param user user object gotten after user was registered and created
     * @param state state as parameter for access and manipulation of state data
     */
     SAVE_CREATED_USER(state, user) {
-
-        console.log(user)
         //fullname, matrikelnummer, user_picture, concept_maps, name (displayname) auch verfügbar
-        //TODO: maybe we could provide the email as well, so that the email lecturers send to the admin when creating their accounts has a reply email for the admin
         state.user = { uid: user.uid[0].value, username: user.field_fullname[0].value, uuid: user.uuid[0].value }
-        /*         console.log("jetzt csrf und user")
-                console.log(state.user)
-                console.log(state.csrf_token) */
     },
 
     /**
-    * gets the csrf_token, user object and loguttoken from action 
+    * gets csrf_token, user object and loguttoken from action 
     * and puts it in 3 state objects and in sessionstorage
-    * @param {*} state 
-    * @param {*} login_data 
+    * @param state state as parameter for access and manipulation of state data
+    * @param login_data object with all response data from drupal backend after login
     */
     SAVE_LOGIN_USER(state, login_data) {
 
-        //in access_token
+        //from access_token
         const fullname = login_data.access_token.fullname
         const uuid = login_data.access_token.uuid
         const mail = login_data.access_token.mail
         const matrikelnummer = login_data.access_token.matrikelnumber
-        //only gets secoond role from roles array which is either student or dozent - first role is authenticated user
-        const role = login_data.access_token.roles[1]
+
+        //only gets second role from roles array which is either student or dozent - first role is authenticated user
         //for both array entries [authenticated, student/dozent]
         //const roles=login_data.access_token.roles
+        const role = login_data.access_token.roles[1]
 
-        // in current_user
+        // from current_user
         const display_name = login_data.current_user.name
         const uid = login_data.current_user.uid
-
         let current_user = { fullname: fullname, uuid: uuid, mail: mail, matrikelnummer: matrikelnummer, role: role, displayname: display_name, uid: uid }
-
-
-        /*         console.log(response.data.current_user)
-                console.log(response.data.access_token)
-                login_data.current_user
-                login_data.access_token */
-
 
         localStorage.setItem("csrf_token", login_data.csrf_token);
         localStorage.setItem("logout_token", login_data.logout_token);
         sessionStorage.setItem("valid_credentials", "true");
         sessionStorage.setItem('current_user', JSON.stringify(current_user));
-        //sessionStorage.setItem("current_user", login_data.current_user);
+
         state.csrf_token = login_data.csrf_token;
         state.user = current_user
         state.logout_token = login_data.logout_token;
-        /* console.log(state.csrf_token)
-        console.log(state.user)
-        console.log(state.logout_token) */
         state.validCredential = true;
-
     },
 
     /**
 * loads csrf_token, logout_token and autthentication token from session storage, so a user is still logged in after refreshing the site
-* is called on mounted lifecycle hook from App.vue so it is alwas loaded when the site is refreshed
-* @param {*} state 
+* action loadTokensfromSessionStorage which calls this mutation is called on mounted lifecycle hook from Mainpage.vue so it is alwas loaded when the site is refreshed
+    * @param state state as parameter for access and manipulation of state data
 */
     LOAD_TOKEN_SESSION_STORAGE(state) {
-        console.log("testsessions")
         if (sessionStorage.getItem("valid_credentials") == "true") {
             state.validCredential = true;
             state.csrf_token = localStorage.getItem("csrf_token");
             state.logout_token = localStorage.getItem("logout_token");
             state.authToken = sessionStorage.getItem("auth_token");
             state.user = JSON.parse(sessionStorage.getItem('current_user'));
-            /*  console.log(state.user)
-             console.log(JSON.parse(sessionStorage.getItem('current_user'))) */
-            //state.user= sessionStorage.getItem("current_user");
-
         }
-        // return true
-
     },
-
-
     /**
-* deletes csrf_token, logout_token and autthentication token from session storage
-* @param {*} state 
+* deletes csrf_token, logout_token and autthentication token from session storage, happens when user logs out
+    * @param state state as parameter for access and manipulation of state data
 */
     REMOVE_SESSIONTOKENS_OF_USER(state) {
         state.validCredential = false;
@@ -383,10 +360,7 @@ const mutations = {
         sessionStorage.removeItem("valid_credentials");
         sessionStorage.removeItem("current_user");
         sessionStorage.removeItem("auth_token");
-
-
     },
-
 }
 
 

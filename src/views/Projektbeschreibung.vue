@@ -21,30 +21,14 @@
         </b-col>
 
         <b-col sm="10">
-          <div
-            v-for="(betreuenderDozent, i) in getCurrentProjectLecturers"
-            :key="i"
-          >
+          <div v-for="(betreuenderDozent, i) in getProjectLecturers" :key="i">
             <b-form-input
               disabled
-              v-model="getCurrentProjectLecturers[i].name"
+              v-model="getProjectLecturers[i].name"
               id="input-2"
             >
             </b-form-input>
           </div>
-
-          <!-- <select v-model="project.betreuenderDozent" class="form-control"> -->
-          <!-- <option
-              v-for="lecturer in getLecturers"
-              v-bind:value="lecturer.uuid"
-              v-bind:key="lecturer.uuid"
-            > -->
-          <!-- {{
-              lecturer.name
-            }} -->
-          <!-- </option> -->
-          <!-- </select>
-          <span>Selected: {{ project.betreuenderDozent }}</span> -->
           <b-modal
             ref="add_lecturer"
             title="Dozent hinzufügen"
@@ -52,12 +36,12 @@
           >
             <div
               class="add-lecturer"
-              v-for="(betreuenderDozent, i) in getCurrentProjectLecturers"
+              v-for="(betreuenderDozent, i) in getProjectLecturers"
               :key="i"
             >
               <b-form-input
                 disabled
-                v-model="getCurrentProjectLecturers[i].name"
+                v-model="getProjectLecturers[i].name"
                 id="input-2"
               >
               </b-form-input>
@@ -225,13 +209,13 @@ export default {
 
     addLecturer(betreuenderDozent) {
       if (betreuenderDozent != "") {
-        this.getCurrentProjectLecturers.push(betreuenderDozent);
+        this.getProjectLecturers.push(betreuenderDozent);
       } else {
         alert("Bitte wähle einen Dozenten aus");
       }
     },
     deleteLecturer(index) {
-      this.getCurrentProjectLecturers.splice(index, 1);
+      this.getProjectLecturers.splice(index, 1);
     },
     lecturerLeaveGroup() {
       this.$store
@@ -272,7 +256,7 @@ export default {
         the end result is an array of the ID attribute only
         Solution from: https://stackoverflow.com/questions/15125920/how-to-get-distinct-values-from-an-array-of-objects-in-javascript*/
 
-        let dozent_filtered = this.getCurrentProjectLecturers
+        let dozent_filtered = this.getProjectLecturers
           .map((item) => item.uuid)
           .filter(
             (value, index, self) =>
@@ -299,7 +283,7 @@ export default {
 
         this.$store.dispatch("project/updateProject", updatedProj).then(() => {
           alert("Projektbeschreibung bearbeitet");
-          //TODO: load projectdata from backend again, to keep data as synchronous as possible
+          //TODO: load projectdata from backend again, to keep data as synchronous as possible?
         });
       } else {
         alert(
@@ -309,12 +293,10 @@ export default {
     },
   },
   async created() {
-    console.log(this.$route.params.project_id);
     await this.$store.dispatch(
       "project/loadCurrentProject",
       this.$route.params.project_id
     );
-    console.log(this.getCurrentProjectLecturers[0]);
   },
   computed: {
     ...mapGetters({
@@ -322,7 +304,7 @@ export default {
       getGroupMembers: "project/getGroupMembers",
       getGroupAdmins: "project/getGroupAdmins",
       getCurrentUserUUID: "profile/getCurrentUserUUID",
-      getCurrentProjectLecturers: "project/getCurrentProjectLecturers",
+      getProjectLecturers: "project/getProjectLecturers",
       getCurrentUserInternalUID: "drupal_api/getCurrentUserInternalUID",
       getLecturers: "user/getLecturers",
       getUserRole: "drupal_api/getUserRole",
@@ -341,7 +323,6 @@ export default {
         return this.$store.state.project.keywordsInString;
       },
       set(value) {
-        //TODO: keyword trimming somewhere?
         this.$store.commit("project/UPDATE_KEYWORDS", value);
       },
     },

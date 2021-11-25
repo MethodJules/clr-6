@@ -4,7 +4,7 @@
       <b-modal
         ref="create_project"
         title="Projekt anlegen"
-        @ok="submitForm()"
+        @ok="submitForm"
         cancel-title="Abbrechen"
       >
         <form @submit.prevent="submitForm">
@@ -80,15 +80,6 @@
                   <b-button size="sm" @click="addLecturer(selectedLecturer)"
                     >Dozenten hinzufügen</b-button
                   >
-                  <!--  <span>Selected: {{ project.betreuenderDozent }}</span> -->
-
-                  <!-- <select v-model="selected">
-  <option v-for="option in options" v-bind:value="option.value" v-bind:key="option.value">
-    {{ option.text }}
-  </option>
-</select>
-<span>Selected: {{ selected }}</span> -->
-
                   <span
                     v-if="
                       !$v.project.betreuenderDozent.required &&
@@ -97,14 +88,6 @@
                     class="text-danger"
                     >Bitte füge einen Betreuer oder eine Betreuerin hinzu.</span
                   >
-                  <!--                   <span
-                    v-if="
-                      !$v.project.betreuenderDozent.alpha &&
-                      $v.project.betreuenderDozent.$dirty
-                    "
-                    class="text-danger"
-                    >A name is only allowed to use letters</span
-                  > -->
                 </div>
               </td>
             </tr>
@@ -196,23 +179,11 @@
 </template>
 <script>
 import { required, minLength /* alpha */ } from "vuelidate/lib/validators";
-import VueSimpleSuggest from "vue-simple-suggest";
-import "vue-simple-suggest/dist/styles.css";
 export default {
-  components: {
-    VueSimpleSuggest,
-  },
+  components: {},
   data() {
     return {
-      chosen: "",
       selectedLecturer: "",
-      autoCompleteStyle: {
-        vueSimpleSuggest: "position-relative",
-        inputWrapper: "",
-        defaultInput: "form-control",
-        suggestions: "position-absolute list-group z-1000",
-        suggestItem: "list-group-item",
-      },
     };
   },
 
@@ -252,24 +223,30 @@ export default {
       this.project.betreuenderDozent.splice(index, 1);
     },
 
-    submitForm() {
+    submitForm(evt) {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.newProject();
+      } else {
+        evt.preventDefault();
       }
     },
     newProject() {
-      //split keyword string into array. seperated by comma
-      var schlagwortarray = this.project.schlagworter.split(",");
-      //trims whitespace
-      for (var i = 0; i < schlagwortarray.length; ++i) {
-        schlagwortarray[i] = schlagwortarray[i].trim();
+      var keywords = "";
+      //when keywords are not required, it is possible the user creating a problem does not set a single keyword. following operations would lead to an error, therefore we check if schlagworter.length>0
+      if (this.project.schlagworter.length > 0) {
+        //split keyword string into array. seperated by comma
+        var schlagwortarray = this.project.schlagworter.split(",");
+        //trims whitespace
+        for (var i = 0; i < schlagwortarray.length; ++i) {
+          schlagwortarray[i] = schlagwortarray[i].trim();
+        }
+        //removes duplicates and empty keywords
+        let keywords_filtered = schlagwortarray.filter((item, index) => {
+          return schlagwortarray.indexOf(item) === index && item != "";
+        });
+        keywords = Object.assign({}, keywords_filtered);
       }
-      //removes duplicates and empty keywords
-      let keywords_filtered = schlagwortarray.filter((item, index) => {
-        return schlagwortarray.indexOf(item) === index && item != "";
-      });
-      var keywords = Object.assign({}, keywords_filtered);
 
       //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array
 
@@ -313,19 +290,9 @@ export default {
   },
 
   computed: {
-    simpleSuggestionListLecturers() {
-      return this.$store.state.sparky_api.lecturers;
-    },
-
-    simpleSuggestionListLecturers2() {
-      // console.log(this.$store.state.user.lecturers);
-      return this.$store.state.user.lecturers;
-    },
-
     getLecturers() {
       return this.$store.getters["user/getLecturers"];
     },
-
     getStudents() {
       return this.$store.getters["user/getStudents"];
     },

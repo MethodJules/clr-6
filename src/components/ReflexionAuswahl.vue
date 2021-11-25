@@ -41,17 +41,16 @@ export default {
   },
 
   methods: {
-    loadCurrentPhase(phaseid) {
+    loadCurrentPhase(phase_number) {
       this.$store.dispatch("project/loadCurrentProject", this.projectId);
-      console.log(this.projectId);
       this.$store.dispatch("project_phases/loadSinglePhaseFromBackend", {
-        phaseId: phaseid,
+        phase_number: phase_number,
         projectId: this.projectId,
       });
       this.$router.push({
         name: "ReflexionView",
         params: {
-          reflexionsPhase: phaseid,
+          reflexionsPhase: phase_number,
           project_id: this.projectId,
         },
       });

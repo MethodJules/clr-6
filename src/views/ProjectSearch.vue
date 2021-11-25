@@ -7,12 +7,6 @@
       :filter-by-query="true"
       placeholder="Geben Sie ein Schlagwort ein, um die Projektliste zu filtern!"
     />
-    <!-- <div>
-            <vue-simple-suggest
-            placeholder
-            ="Dozenten eingeben"
-          />
-                      </div> -->
     <b-badge v-for="(keyword, index) in keywords" :key="index" variant="primary"
       >{{ keyword }}
       <BIconXCircleFill v-on:click="deletekeyword(keyword)"> </BIconXCircleFill
@@ -22,27 +16,8 @@
     <br />
     <b-button @click="keywordSearch(keyword)">Suchen</b-button>
 
-    <!-- {{keyword2}}  -->
-
     <b-card-group v-for="(project, index) in getFilteredProjects" :key="index">
       <b-card border-variant="dark" :header="project.title" align="center">
-        <!--               <b-card
-        border-variant="dark"
-        align="center"
-        text-variant="white"
-        overlay
-        img-src="https://picsum.photos/900/250/?image=3"
-      > -->
-        <!-- 
-        <b-img
-          v-bind="user"
-          src="https://picsum.photos/900/250/?image=3"
-          fluid
-          rounded="circle"
-          class="img-center shadow shadow-lg--hover"
-          style="height: 140px"
-        /> -->
-
         <b-card-text>
           <div v-if="'istDozent' == 'istDozent'">
             <p>Kurzbeschreibung: {{ project.kurzbeschreibung }}</p>
@@ -72,10 +47,6 @@ export default {
     BIconXCircleFill,
   },
 
-  props: {
-    keyword2: String,
-  },
-
   data() {
     return {
       user: { width: 200, height: 200, class: "m1" },
@@ -86,9 +57,6 @@ export default {
         schlagworter: "",
         id: "",
         title: "",
-        /* TODO: array in backend dafür machen schlagwörter: [],
-        TODO: array in backend dafür machen betreuenderDozent: [],
-        TODO: array in backend dafür machen externeMitwirkende: [], */
       },
 
       projectList: [],
@@ -102,7 +70,6 @@ export default {
 
   methods: {
     simpleSuggestionList() {
-      //return this.existingKeywordList
       return this.getKeyWords;
     },
 
@@ -122,16 +89,11 @@ export default {
         );
         this.keyword = "";
       }
-
-      //   console.log(this.searchResult);
-      //  this.adjustKeywords();
     },
 
     adjustKeywords() {
       this.searchResult = [];
       for (var project of this.projectList) {
-        console.log(project);
-
         for (var keyword of this.keywords) {
           if (project.schlagworter == keyword) {
             this.searchResult.push(project);
@@ -145,15 +107,6 @@ export default {
 
     fetchData(proj) {
       this.project.titel = proj.titel;
-    },
-    getProjectTitles: function () {
-      this.$http.get(
-        "https://clr-backend.x-navi.de/jsonapi/node/projekt",
-        function (titel) {
-          this.$set("titel", titel);
-          console.log(titel);
-        }
-      );
     },
   },
   computed: {
@@ -169,31 +122,12 @@ export default {
       return this.$store.state.project.projectsFilteredbyKeywords;
     },
   },
-  ready: function () {
-    this.getProjectTitles();
-  },
-  /* created(){
-    return this.$store.state.project[this.$route.params.titel]
-    
-  }, */
+
   async mounted() {
     if (this.$route.params.keyword.length > 0) {
       this.keywordSearch(this.$route.params.keyword.trim());
     }
     this.$store.dispatch("project/loadAllKeywords");
-
-    /* 
-    //this.$store.dispatch('project/loadProjectsFromBackend')
-    this.projectList = this.$store.state.project.projectList;
-    this.searchResult = this.projectList;
-
-    for (var keyword of this.projectList) {
-      console.log("test");
-      this.existingKeywordList.push(keyword.schlagworter[0]);
-    }
-    console.log("keywordlist");
-    console.log(this.existingKeywordList);
-    this.keywordSearch(this.keyword2); */
   },
   beforeDestroy() {
     this.$store.state.project.projectsFilteredbyKeywords = [];

@@ -52,7 +52,6 @@ import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
-//import ProjectList from "@/views/ProjectList.vue"
 
 export default {
   props: {
@@ -61,24 +60,13 @@ export default {
 
   components: {
     SeitenNavigation,
-
-    //ProjectList,
     TodoList,
     MenueLeiste,
     Kalender,
   },
   data() {
     return {
-      zugangsKennung: "",
-      passwort: "",
-      registrierungsKennung: "",
-      registrierungsPasswort: "",
-      matrikelnummer: "",
-      nameState: null,
       showMenu: true,
-      eintragTodo: {
-        todo: "",
-      },
     };
   },
 
@@ -95,11 +83,8 @@ export default {
       return this.$store.state.loadingStatus;
     },
     inProjectList() {
-      console.log(this.$route.name);
-      // console.log(this.$route.name);
       let result = false;
       this.$route.name === "ProjectList" ? (result = true) : (result = false);
-      console.log(result);
       return result;
     },
 
@@ -112,17 +97,7 @@ export default {
     this.$store.dispatch("drupal_api/loadTokensfromSessionStorage");
   },
 
-  mounted() {
-    //this.$store.dispatch("todo/loadToDoFromBackend");
-
-    this.listOfToDos = this.$store.state.todo.listOfToDos;
-
-    // we need to take some values one time from database.
-    // When we take them in cpomponent mounted or created, it brings the values every time we renew the component.
-    // this problem occurs the commits that we use push in it.
-    // When we set values then it brings again but it seems that nothing has changed in the page.
-    //this.$store.dispatch("daily_scrum/loadDailysFromBackend");
-  },
+  mounted() {},
 };
 </script>
 <style>

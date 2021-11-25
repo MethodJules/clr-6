@@ -2,19 +2,11 @@
   <b-form-textarea disabled v-model="getDocumentation"></b-form-textarea>
 </template>
 <script>
-//import TemplateButtons from "./TemplateButtons.vue";
 export default {
-  components: {
-    //TemplateButtons,
-  },
+  components: {},
 
   data() {
-    return {
-      //inDoku: {
-      //documentationText: " ",
-      //},
-      //documentationList: null,
-    };
+    return {};
   },
 
   methods: {},
@@ -32,7 +24,7 @@ export default {
 
   async mounted() {
     this.$store.dispatch("project_phases/loadSinglePhaseFromBackend", {
-      phaseId: this.$route.params.phase_number,
+      phase_number: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
     });
   },

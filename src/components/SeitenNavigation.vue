@@ -20,7 +20,7 @@
 
             <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
 
-            <SeitenNavigationButtons @statusChange="changeStatus($event)" />
+            <SeitenNavigationButtons />
           </div>
         </div>
       </div>
@@ -33,10 +33,7 @@ export default {
   name: "App",
   data: function () {
     return {
-      isDisabled: [false, false, false, false, false, false, false], // it was hard to control from another component.
-      votes: 2,
       status: 0,
-      gruppe: 1,
       phasen: [
         {
           id: "0",

@@ -53,10 +53,6 @@ import Assistent from "@/components/Assistent.vue";
 import PhaseTemplateButtons from "@/components/PhaseTemplateButtons.vue";
 
 export default {
-  //props: {
-  //    phase: String
-  //},
-
   data() {
     return {
       phaseId: this.$route.params.phase_number,
@@ -64,9 +60,6 @@ export default {
     };
   },
 
-  /*   props: {
-    inDoku: Object,
-  }, */
   components: {
     InputDocuments,
     UsedTools,
@@ -77,14 +70,7 @@ export default {
   },
 
   computed: {
-    /* xphase() {
-      return this.$store.state.project_phases.phases.find(
-        (phase) => phase.phase_number === this.$route.params.phase_number
-      ); */
-    //},
-
     getPhaseName() {
-      //return this.$store.state.project_phases.current_phase.label;
       return this.$store.state.project_phases.current_phase.title;
     },
 
@@ -98,19 +84,10 @@ export default {
     },
   },
   async mounted() {
-    //this.$store.dispatch('project_phasesloadSinglePhaseFromState', {phaseId: this.$route.params.phase_number})
     this.$store.dispatch("project_phases/loadSinglePhaseFromBackend", {
-      phaseId: this.$route.params.phase_number,
+      phase_number: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
     });
-
-    //this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
-
-    //put back in so that phasetemplate buttons are shown again
-    //const doc = this.$store.state.documentation.documentations;
-    //console.log(doc)
-    //console.log(typeof(doc))
-    //this.documentationList = doc;
   },
 };
 </script>

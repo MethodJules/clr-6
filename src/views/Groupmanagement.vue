@@ -178,7 +178,6 @@ export default {
     filter(memberId, memberList) {
       //filters the current user by id - is used in a function for leaving the group
       let filteredCollection = memberList.filter((item) => {
-        console.log(item);
         if (item.userid == memberId) {
           return true;
         }
@@ -191,12 +190,6 @@ export default {
         the filter function will filter out the correct member out of the array
         then the appropriate dispatch will be sent */
     leaveGroup() {
-      //if(me=gruppenadministrator AND nicht selbst letzte admin)
-      //this.$store.dispatch("members/deleteMembers", mitglied);
-      //put logic in project.js?
-      //TODO: either cant leave if last admin except no other member is in grp
-      // or has to give up grp admin role first, but giving up grp admin rights should not be possible, if there is no other admin, but grp members are still there
-
       let member;
 
       if (
@@ -205,7 +198,6 @@ export default {
         )
       ) {
         member = this.filter(this.getCurrentUserUUID, this.getGroupMembers);
-        console.log(member);
         this.$store.dispatch("project/deleteMembers", member).then(() => {
           this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
             title: "Du hast die Gruppe verlassen",
@@ -230,7 +222,6 @@ export default {
             this.$route.params.project_id
           )
           .then(() => {
-            console.log(this.getGroupAdmins);
             if (this.getGroupAdmins.length < 2) {
               alert(
                 "Mache erst ein anderes Gruppenmitglied zu einem Gruppenadministrator, bevor du die Gruppe verlässt. Falls du die letzte Person in der Gruppe bist, entferne deine Gruppenadministrator-Rechte bevor du die Gruppe verlässt "
@@ -256,7 +247,6 @@ export default {
     },
 
     giveAdminRights: function (new_admin) {
-      let member = this.filter(this.getCurrentUserUUID, this.getGroupAdmins);
       if (this.currentUserisAdmin) {
         this.$store
           .dispatch("project/addMember", {
@@ -264,9 +254,6 @@ export default {
             role: "field_gruppenadministrator",
           })
           .then(() => {
-            //then delete old group member
-            //sometimes the member is not deleted
-            //do a .then for the second dispatch?
             this.$store.dispatch("project/deleteMembers", new_admin);
           });
       } else {
@@ -277,8 +264,6 @@ export default {
     },
 
     removeOwnAdminRights: function () {
-      //TODO: make only possible if there is at least one other admin
-      //if letzter admin und noch ein grp mitglied außer system da , dann erst admin an anderen vergeben
       let member = this.filter(this.getCurrentUserUUID, this.getGroupAdmins);
       //evtl redundant?
       if (this.currentUserisAdmin) {
@@ -288,7 +273,6 @@ export default {
             this.$route.params.project_id
           )
           .then(() => {
-            console.log(this.getGroupAdmins);
             if (
               this.getGroupMembers.length > 0 &&
               this.getGroupAdmins.length < 2

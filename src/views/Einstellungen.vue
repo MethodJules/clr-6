@@ -158,7 +158,8 @@
                 }"
               >
               </picture-input>
-              <!-- <b-button class="upload-button" size="sm" @click="onUpload"
+              <!-- TODO: if needed put back in again. user can upload a picture seperate from updating the rest of his profile
+              <b-button class="upload-button" size="sm" @click="onUpload"
               >Upload!</b-button  >-->
             </td>
           </tr>
@@ -306,24 +307,8 @@ export default {
   data() {
     return {
       testButClicked: false,
-      selectedFile: null,
-      images: [],
       image: null,
       profilbild: null,
-      status: false,
-
-      /* getProfileData: {
-
-                studiengang: '',
-                anzahl_literaturreviews: '',
-                datenbanken: '',
-                referenztool: '',
-                analysetool: '',
-                profilbild: this.getProfileData.profilbild   
-
-            }
-            
-            */
     };
   },
 
@@ -345,60 +330,18 @@ export default {
 
   methods: {
     onFileChanged(image) {
-      //this.selectedFile = image.target.files[0]
-
       if (image) {
-        console.log(image);
         this.image = image;
       }
     },
 
     updateEmailCheckbox() {
-      console.log(this.getProfileData);
       this.$store.dispatch("profile/updateEmailCheckbox", this.getProfileData);
     },
 
     updatePhoneNumberCheckbox() {
-      console.log(this.getProfileData);
       this.$store.dispatch("profile/updatePhoneCheckbox", this.getProfileData);
     },
-
-    /*     onUpload() {
-      // upload file
-      //  const fd = new FormData();
-      //       fd.append = ('image', this.selectedFile, this.selectedFile.name)
-      //       axios.post('https://clr-backend.x-navi.de/jsonapi//media/image/field_media_image', fd)
-      //           .then(res => {
-      //               console.log(res)
-      //           }) 
-      console.log(this.$refs.pictureInput.file);
-      this.$store.dispatch("profile/uploadImage", {
-        image: this.image,
-        filename: this.$refs.pictureInput.file.name,
-      });
-    },
- */
-    /** In this method, we create an profile with all the profile data to the backend */
-    /*    addProfile() {
-      this.$v.$touch();
-
-      if (!this.$v.$invalid) {
-        var ausgabe = {
-          studiengang: this.getProfileData.studiengang,
-          anzahl_literaturreviews: this.getProfileData.anzahl_literaturreviews,
-          datenbanken: this.getProfileData.datenbanken,
-          referenztool: this.getProfileData.referenztool,
-          analysetool: this.getProfileData.analysetool,
-          profilbild: this.profilbild,
-        };
-
-        this.testButClicked = true;
-
-        this.$store.dispatch("profile/createProfile", ausgabe),
-          this.$store.dispatch("profile/uploadImage", ausgabe);
-      }
-    }, */
-
     /** In this method, we update the existing profile to the backend */
 
     updateProfile() {
@@ -422,7 +365,6 @@ export default {
         this.$store.dispatch("profile/updateProfile", ausgabe);
 
         if (this.image != null) {
-          console.log("upload");
           this.$store.dispatch("profile/uploadImage", {
             image: this.image,
             filename: this.$refs.pictureInput.file.name,
@@ -458,8 +400,6 @@ export default {
         "profile/loadUserFromBackend",
         this.getCurrentUserInternalUID
       );
-
-    console.log(this.$store.state.profile.profileData);
     this.profileData = this.$store.state.profile.profileData;
     this.userData = this.$store.state.profile.userData;
   },

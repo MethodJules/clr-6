@@ -155,8 +155,6 @@ export default {
       }
     },
     checkboxUpdate(index, todoErledigt) {
-      console.log(todoErledigt);
-
       this.$store.dispatch("todo/updateTodo", todoErledigt);
     },
   },
@@ -177,31 +175,22 @@ export default {
     },
 
     inProjectSearch() {
-      // console.log(this.$route.name);
       return this.$route.name === "ProjectSearch";
     },
     inProjectList() {
-      console.log(this.$route.name);
-      // console.log(this.$route.name);
       let result = false;
       this.$route.name === "ProjectList" ? (result = true) : (result = false);
-      console.log(result);
       return result;
     },
     inProfil() {
-      console.log(this.$route.name);
       // return this.$route.name === "Profil";
       let result = false;
       this.$route.name === "Profil" ? (result = true) : (result = false);
-      console.log(result);
       return result;
     },
     inEinstellungen() {
-      // console.log(this.$route.name);
-      // return this.$route.name === "Einstellungen";
       let result = false;
       this.$route.name === "Einstellungen" ? (result = true) : (result = false);
-      console.log(result);
       return result;
     },
 
@@ -210,7 +199,6 @@ export default {
     },
 
     getTodosForAllMyProjects() {
-      console.log(this.$store.state.todo.listOfToDos);
       return this.$store.state.todo.listOfToDos;
     },
 

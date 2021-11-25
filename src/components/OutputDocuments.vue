@@ -140,7 +140,6 @@ export default {
      * closes the modal
      */
     upload(files) {
-      console.log(files);
       // changing okButtonClicked for loading bar
       this.okButtonClicked = true;
       this.$store.dispatch("output_documents/uploadFilesToDatabase", files);

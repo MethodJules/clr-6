@@ -116,16 +116,8 @@ export default {
     };
   },
 
-  /* computed: {
-    // Anzahl der nicht erledigten Todos werden ausgegeben
-    übrig() {
-      return this.todos.filter((todo) => !todo.erledigt).length;
-    },
-  }, */
-
   methods: {
     ok() {
-      console.log(this.$store.state.project_phases.current_phase);
       this.$store.dispatch("project_phases/closePhase", {
         phase: this.$store.state.project_phases.current_phase,
         open_close_phase: !this.isPhaseDone,
@@ -146,17 +138,7 @@ export default {
       this.newTodo = "";
     },
   },
-  async mounted() {
-    /*     await this.$store.dispatch("documentation/loadDocusFromBackend");
-    const doc = this.$store.state.documentation.documentations;
-    //console.log(doc)
-    //console.log(typeof(doc))
-    this.documentationList = doc;
-    console.log(this.documentationList[0].uuid + "das ist in dokfield");
-
-    this.current_phase =
-      this.$store.state.project_phases.current_phase.documentationText; */
-  },
+  async mounted() {},
 
   computed: {
     getUserRole() {

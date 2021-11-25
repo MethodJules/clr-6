@@ -5,21 +5,21 @@ const state = () => ({
     /* Here we initialize an empty object for reflexionData, in order to have all the the inputs of textfields in one reflexion.
     Because we need only one reflexion for one person */
     reflexionData: {},
-    loadingStatus: false,
-
 })
 
 
 
 const actions = {
-
-    /*  We load the Reflexiondata from backend by filtering the phasenid to get the reflexionData of the right phase */
-    async loadReflexionFromBackend({ commit, state, rootState }, sicht) {
+    /**
+    * @param commit commit us used to call a mutation from this function
+    * @param rootState rootState allows access to states of other modules in store
+    * @param sicht a user can create reflexions for one of 3 sichten(ich, gruppe, kontext)
+    * We load the Reflexiondata from backend by filtering with phasenid, user uid and sicht id to get the correct reflexionData */
+    async loadReflexionFromBackend({ commit, rootState }, sicht) {
         var drupalUserUID = rootState.drupal_api.user.uid;
         var phaseId = rootState.project_phases.current_phase.phase_id;
         commit("loadingStatus", true, { root: true })
 
-        // TODO: Phase id ist undefined wenn Seite neugeladen wird, aber nicht wenn beim neuladen die Startseite aufgerufen wird 
         var config = {
             method: 'get',
             url: `jsonapi/node/reflexionstemplate?filter[field_phasenid.id]=${phaseId}&filter[field_user.drupal_internal__uid]=${drupalUserUID}&filter[field_sichten.id]=${sicht}`,
@@ -30,10 +30,8 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
-
         axios(config)
             .then(function (response) {
-                console.log(response)
                 const reflexion = response.data.data;
                 commit('SAVE_REFLEXION', { reflexion });
                 commit("loadingStatus", false, { root: true })
@@ -43,25 +41,23 @@ const actions = {
                 // Fehler wird abgefangen, wenn eine Reflexion zur einer Sicht nicht existiert. Sonst bleibt die alte Reflexion vom Backend in der falschen Sicht erhalten, da der http Request nicht korrekt funktioniert und nur der Catch teil ausgeführt wird, und das state daher nie geändert wird und der alte inhalt im state erhalten bleibt
 
             });
-
     },
 
-    /* saves the reflexiondata in the backend  */
-
-
-    createReflexion({ state, rootState, commit }, reflexion) {
+    /**
+    * @param commit commit us used to call a mutation from this function
+    * @param rootState rootState allows access to states of other modules in store
+    * @param reflexion created reflexion to be uploaded to backend
+    * saves the reflexiondata in the backend  */
+    createReflexion({ rootState, commit }, reflexion) {
 
         var phaseId = rootState.project_phases.current_phase.phase_id
         var drupalUserUID = rootState.profile.userData.uuid
-
-        // TODO Dynamisch mit Phase + UserName + Tab = Title
+        // TODO make dynamic mit Phase + UserName + Tab = Title?
         var title = "Reflexion"
 
         for (let attribute in reflexion) {
             if (reflexion[attribute] == null) {
-                console.log(reflexion[attribute])
                 reflexion[attribute] = ""
-                console.log(reflexion[attribute])
             }
         }
 
@@ -122,7 +118,6 @@ const actions = {
 
         axios(config)
             .then(function (response) {
-                console.log(response)
                 let reflexion = response.data.data;
                 commit('SAVE_REFLEXION_AFTER_CREATION', reflexion);
             })
@@ -131,20 +126,19 @@ const actions = {
             })
     },
 
-    /* makes changes of the existing reflexion in the backend and overwrites the existing reflexionstemplate. Herefore we need the reflexionstemplate.uuid
-    that the backend knows which reflexionstemplate should be exactly updated/overwritten */
 
-    updateReflexion({ state, rootState }, reflexion) {
+    /**
+    * @param rootState rootState allows access to states of other modules in store
+    * @param reflexion created reflexion to be uploaded to backend
+    * makes changes of the existing reflexion in the backend and overwrites the existing reflexionstemplate. Herefore we need the reflexionstemplate.uuid
+    that the backend knows which reflexionstemplate should be exactly updated/overwritten */
+    updateReflexion({ rootState }, reflexion) {
 
         for (let attribute in reflexion) {
             if (reflexion[attribute] == null) {
-                console.log(reflexion[attribute])
                 reflexion[attribute] = ""
-                console.log(reflexion[attribute])
             }
         }
-
-
         var data = `
         {
             "data": {
@@ -172,7 +166,6 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                console.log(response)
             })
             .catch(function (error) {
                 console.log(error)
@@ -183,13 +176,14 @@ const actions = {
 }
 
 const mutations = {
-    loadingStatus(state, newLoadingStatus) {
-        state.loadingStatus = newLoadingStatus
-    },
+    /**
+    * @param state state as parameter for access and manipulation of state data
+    * @param reflexion created reflexion put in state after creation
+    * saves created reflexion in state (object gotten from response, because uuid of reflexion is needed)
+    */
     SAVE_REFLEXION_AFTER_CREATION(state, reflexion) {
 
         const field_berichten_reagieren = reflexion.attributes.field_berichten_reagieren;
-
         const field_in_bezug_setzen = reflexion.attributes.field_in_bezug_setzen;
         const field_rekonstruieren = reflexion.attributes.field_rekonstruieren;
         const field_schlussfolgern = reflexion.attributes.field_schlussfolgern;
@@ -197,9 +191,13 @@ const mutations = {
         const field_title = reflexion.attributes.title;
 
         state.reflexionData = { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, uuid: field_id, title: field_title }
-
     },
 
+    /**
+* @param state state as parameter for access and manipulation of state data
+* @param reflexion reflexion loaded from backend
+* saves cloaded reflexion from backend in state 
+*/
     SAVE_REFLEXION(state, { reflexion }) {
 
         if (reflexion.length == 0) {
@@ -207,19 +205,14 @@ const mutations = {
         }
         reflexion.forEach(element => {
             const field_berichten_reagieren = element.attributes.field_berichten_reagieren;
-
             const field_in_bezug_setzen = element.attributes.field_in_bezug_setzen;
-
             const field_rekonstruieren = element.attributes.field_rekonstruieren;
-
             const field_schlussfolgern = element.attributes.field_schlussfolgern;
             const field_id = element.id;
             const field_title = element.attributes.title;
 
             state.reflexionData = { berichten_reagieren: field_berichten_reagieren, in_bezug_setzen: field_in_bezug_setzen, rekonstruieren: field_rekonstruieren, schlussfolgern: field_schlussfolgern, uuid: field_id, title: field_title }
-
         });
-
     }
 
 }

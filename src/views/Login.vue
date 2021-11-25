@@ -78,8 +78,7 @@
                     <b-form-checkbox
                       style="margin-left: 0.5rem"
                       name="checkbox-is-lecturer"
-                      @click="confirmIsLecturer"
-                      v-model="isLecturer"
+                      v-model="getIsLecturer"
                     >
                     </b-form-checkbox>
                   </td>
@@ -139,7 +138,7 @@
                   </td>
                   <td>
                     <b-form-input
-                      :disabled="isLecturer"
+                      :disabled="getIsLecturer"
                       v-model="matrikelnummer"
                       v-on:input="$v.matrikelnummer.$touch"
                       v-bind:class="{
@@ -206,11 +205,10 @@ import {
   maxLength,
 } from "vuelidate/lib/validators";
 import Gdpr from "@/components/Gdpr.vue";
-import EmailComponent from "@/components/EmailComponent.vue";
 import emailjs from "emailjs-com";
 
 export default {
-  components: { Gdpr, EmailComponent },
+  components: { Gdpr },
 
   data() {
     return {
@@ -258,7 +256,7 @@ export default {
     },
     matrikelnummer: {
       required: requiredIf(function () {
-        return !this.isLecturer && this.tabIndex == 1;
+        return !this.getIsLecturer && this.tabIndex == 1;
       }),
       integer,
       minLength: minLength(1),
@@ -267,28 +265,25 @@ export default {
     },
   },
   computed: {
-    account() {
-      return this.$store.state.sparky_api.account;
+    getIsLecturer: {
+      get() {
+        return this.$store.state.drupal_api.isLecturer;
+      },
+      set(value) {
+        this.$store.commit("drupal_api/SET_IS_LECTURER"), value;
+      },
     },
 
-    validCredential() {
-      return true;
-      // return this.$store.state.sparky_api.validCredential;
-      // When we login, it breaks the z-circle at the main page.
-      // Zircle is hidden when we double click outside of the zcircle
-
-      // return this.$store.state.drupal_api.validCredential;
+    account() {
+      return this.$store.state.sparky_api.account;
     },
   },
   methods: {
     sendEmail(username) {
-      // const user_name = this.$store.state.drupal_api.user.displayname;
-      //console.log(user_name);
-      //  const email = this.$store.state.drupal_api.user.email;
-      //TODO: add email, if/when the response message from the registration includes the user email
+      //TODO: get username from state as well, to make it more uniform?
       var templateParams = {
         name: `${username}`,
-        email: "fakemail@mail.de",
+        email: this.$store.state.sparky_api.sparkyUserObject.data.email,
       };
 
       emailjs
@@ -303,19 +298,13 @@ export default {
             alert(
               "Eine automatische Nachricht an stadtlaender@uni-hildesheim.de wurde versendet. Deine Rollenberechtigungen werden bald freigeschaltet. Bitte warte auf eine entsprechende Bestätigung bevor du dich einloggst"
             );
-            console.log("SUCCESS!", result.text);
           },
           (error) => {
-            console.log("FAILED...", error.text);
             alert(
               "Es konnte keine automatische Nachricht an stadtlaender@uni-hildesheim.de versendet werden. Bitte schreibe eine Email an die genannte Email-Adresse und bitte um eine Freischaltung deiner Rollenberechtigung als Dozent"
             );
           }
         );
-    },
-
-    confirmIsLecturer() {
-      this.isLecturer = !this.isLecturer;
     },
 
     // enable buttons after data protection has been accepted
@@ -342,7 +331,7 @@ export default {
       }
       return ausgabe;
     },
-    /* registrates a user first at sparky backend and then uses the data from sparky backend to register/create a new user at clr drupal backend
+    /* registers a user first at sparky backend and then uses the data from sparky backend to register/create a new user at clr drupal backend
      * students have to put in their matrikelnummer, lecturers don't
      * functions called in sequence: sparky_api/registrate -> sparky_api/getWhoamI -> drupal_api/getSessionToken -> drupal_api/createUser
      */
@@ -350,7 +339,7 @@ export default {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        if (this.isLecturer) {
+        if (this.getIsLecturer) {
           this.matrikelnummer = "";
         }
         const username = this.registrierungsKennung;
@@ -361,35 +350,16 @@ export default {
             matrikelnummer: this.matrikelnummer,
           })
           .then(() => {
-            if (this.isLecturer) {
-              this.sendEmail(username);
-            }
+            //remove so username and password arent saved after login
+
             this.registrierungsKennung = "";
             this.registrierungsPasswort = "";
             this.matrikelnummer = "";
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch((error) => {});
       } else {
         alert("Bitte Registrierungsdaten eingeben");
       }
-      //remove so username and password arent saved after login
-
-      /*       this.$store.dispatch('drupal_api/getSessionToken', {
-        username: this.registrierungsKennung,
-        password: this.registrierungsPasswort,
-        generatedPassword: this.generatePassword(this.registrierungsKennung)
-      })  */
-    },
-
-    generatePassword(username) {
-      const crypto = require("crypto");
-      const md5sum = crypto.createHash("md5");
-      let str = username;
-      const res = md5sum.update(str).digest("hex");
-      console.log(res);
-      return res;
     },
 
     /* logs a user in at drupal backend
@@ -398,6 +368,8 @@ export default {
      * a log in message is displayed when user is logged in
      */
     login() {
+      // When we login, it breaks the z-circle at the main page.
+      // Zircle is hidden when we double click outside of the zcircle
       this.$v.$touch();
       //checks if the given user data is valid i.e. username is string only(rechenzentrumskennung only uses letters) and password are filled out , both have min length requirement
       if (!this.$v.$invalid) {
