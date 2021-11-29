@@ -156,6 +156,7 @@ export default {
     padding: 0 !important;
     min-width: 25rem;
     /* min-height: 80vh; */
+    flex: 1;
     width: 100%;
 }
 .postfach {
