@@ -101,7 +101,7 @@
         </b-navbar-nav>
 
         <b-navbar-nav v-if="inProjectList || inEinstellungen || inProfil">
-          <b-input-group size="sm" class="mb-2">
+          <b-input-group size="sm">
             <b-input-group-prepend is-text>
               <b-link
                 :to="{
@@ -154,8 +154,7 @@ export default {
   },
   methods: {
     logout() {
-      //wieso ist state.csrf_token bei aufruf von logout in drupal_api undefined
-      //in dieser Komponente den csrf_token aus drupal_api state zu holen funktioniert aber wiederum
+      //TODO: maybe clear the state after logout, so nothing unexpected happens, when another user logs in afterwards
       this.$store.dispatch("drupal_api/logoutDrupal").then(() => {
         this.makeToast();
       });
@@ -184,7 +183,7 @@ export default {
     getCurrentUserUUID() {
       return this.$store.state.profile.userData.uuid;
     },
-    //pprovided user uid is taken from the state, where the currentuuser uid is saved, because this navigation should only lead to the own profile
+    //provided user uid is taken from the state, where the currentuuser uid is saved, because this navigation should only lead to the own profile
     getCurrentUserInternalUID() {
       return this.$store.state.drupal_api.user.uid;
     },
@@ -192,27 +191,21 @@ export default {
       return this.$route.name === "ProjectList";
     },
     inProjectList() {
-      // console.log(this.$route.name);
       return this.$route.name === "ProjectList";
     },
     inProfil() {
-      // console.log(this.$route.name);
       return this.$route.name === "Profil";
     },
     inProjectSearch() {
-      // console.log(this.$route.name);
       return this.$route.name === "ProjectSearch";
     },
     inEinstellungen() {
-      // console.log(this.$route.name);
       return this.$route.name === "Einstellungen";
     },
 
     getProjectName() {
-      let projektname = this.$store.state.project.currentProject.title;
-
       // return this.$store.state.project.currentProject.title.slice(0, 15);
-      return projektname;
+      return this.$store.state.project.currentProject.title;
     },
   },
   filters: {

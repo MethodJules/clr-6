@@ -78,6 +78,7 @@
                 <div>
                     <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist. 
             Es wird nur die zu erledigende Aufgabe angezeigt -->
+
                     <b-modal id="to_do_edit_modal" hide-footer title="To Do">
                         <label for="neueTodo">zu erledigende Aufgabe: </label>
                         <input
@@ -107,10 +108,12 @@
                     <!-- Zum öffnen des Modals -->
                 </div>
             </div>
+
         </div>
 
         <b-button v-if="!inProjectList" v-b-modal.to_do_edit_modal>+</b-button>
     </div>
+
 </template>
 
 
@@ -141,6 +144,7 @@ export default {
     validations: {
         todoNeu: { required, maxLength: maxLength(250) },
     },
+
     methods: {
         ok() {
             this.$v.$touch();
@@ -158,6 +162,12 @@ export default {
         deleteTodo(todo) {
             alert("Delete");
 
+    checkboxUpdate(index, todoErledigt) {
+      this.$store.dispatch("todo/updateTodo", todoErledigt);
+    },
+  },
+
+
             this.$store.dispatch("todo/deleteTodo", todo);
         },
         diffMonth() {
@@ -169,8 +179,11 @@ export default {
         checkboxUpdate(index, todoErledigt) {
             console.log(todoErledigt);
 
+
             this.$store.dispatch("todo/updateTodo", todoErledigt);
         },
+
+
     },
 
     computed: {
@@ -178,6 +191,7 @@ export default {
             listOfTodos: "todo/getListOfTodos",
             todosOfProject: "todo/getTodosOfProject",
         }),
+
 
         inProjectSearch() {
             // console.log(this.$route.name);
@@ -211,26 +225,15 @@ export default {
             console.log(result);
             return result;
         },
+            showTodoListButton() {
+      return (
+        this.$route.name !== "ProjectList" &&
+        this.$route.name !== "Profil" &&
+        this.$route.name !== "Einstellungen" &&
+        this.$route.name !== "ProjectSearch"
+      );
+    },
 
-        getMyProjectlist() {
-            return this.$store.state.project.myProjects;
-        },
-
-        getTodosForAllMyProjects() {
-            console.log(this.$store.state.todo.listOfToDos);
-            return this.$store.state.todo.listOfToDos;
-        },
-
-        todoAusgabe() {
-            return this.todo.date + " " + this.todo.todo;
-        },
-        loadToDo() {
-            return this.$store.state.todo.listOfToDos;
-        },
-
-        getProjectID() {
-            return this.$route.params.project_id;
-        },
     },
 };
 </script>

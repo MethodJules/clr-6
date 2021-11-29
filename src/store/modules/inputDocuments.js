@@ -13,7 +13,6 @@ const getters = {
      * @returns files, uploaded files in state
      */
     getInputs(state) {
-
         let files = state.inputs;
         return files;
     },
@@ -33,11 +32,7 @@ const mutations = {
      */
 
     LOAD_FILES_TO_STATE_FROM_BACKEND(state, inputarrayPayload) {
-        console.log(state.inputs)
         state.inputs = inputarrayPayload;
-        console.log(state.inputs)
-
-
     },
 
     /**
@@ -47,10 +42,8 @@ const mutations = {
      */
 
     UPDATE_INPUTS(state, file) {
-        console.log(file)
         state.inputs.push(file);
     },
-
 
     /**
      * 
@@ -68,26 +61,20 @@ const mutations = {
     setOkButtonClicked(state, isClicked) {
         state.okButtonClicked = isClicked;
     }
-
-
-
 }
 
 const actions = {
 
     /**
-     * 
+     * @param commit commit is used to call a mutation from this function
+     * @param rootState rootState allows access to states of other modules in store
      * In this action method, we load the uploaded inputdocuments from backend filtered by the right phase id. For this load method, we included 
      * the entity reference to file, in order to get the information about the file size and file url.
      */
 
     async loadInputdocumentsFromBackend({ rootState, commit }) {
-        var drupalUserUID = rootState.drupal_api.user.uid;
+        commit("loadingStatus", true, { root: true })
         var phaseId = rootState.project_phases.current_phase.phase_id
-        console.log(phaseId);
-        console.log(rootState.drupal_api);
-        console.log(drupalUserUID);
-
         var config = {
             method: 'get',
             url: `jsonapi/node/inputdateien?include=field_documentid&filter[field_phasenid.id]=${phaseId}`,
@@ -101,21 +88,16 @@ const actions = {
 
         axios(config)
             .then(function (response) {
-                console.log(response)
-                const urlBackend = "https://clr-backend.x-navi.de";
+                const urlBackend = axios.defaults.baseURL;
                 let files = response.data.included; // id, name, size and url of file from node file-file
                 let fileId = response.data.data; // the dataId of document from node --inputdateien
+
                 /* 
-                
                 We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend 
                 with the foreach loop are pushed one after the other in the initialized array 'inputarrayPayload'. This means that the 
                 array does not remain empty. If Wenn die dokumente im response vorhanden sind (im Backend existieren in der jeweiligen Phase), wenn kein dokument angelegt 
                 ist, bleibt das array leer.
-
-
-                 The array consists of the file objects, from the backend.
-
-                D.h. das das a
+                The array consists of the file objects, from the backend.
                 */
                 let inputarrayPayload = []
                 for (let index = 0; index < files.length; index++) {
@@ -126,43 +108,30 @@ const actions = {
                         size: files[index].attributes.filesize, // included data --> file-file
                         url: urlBackend + files[index].attributes.uri.url, // included data --> file-file
                     }
-
                     inputarrayPayload.push(payload)
-
                 }
-
-
-
                 //this array 'inputarrayPayload' is passed as a parameter in the mutation method
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', inputarrayPayload);
-
-
-
+                commit("loadingStatus", false, { root: true })
             })
             .catch(function (error) {
                 let leeresInputArray = []
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', leeresInputArray);
+                commit("loadingStatus", false, { root: true })
             })
 
 
     },
     /**
+    * @param dispatch dispatch is used to call another action from this function
+    * @param rootState rootState allows access to states of other modules in store
+    * @param files files to upload
      * 
-     * @param state we send our state to method
-     * To upload files to database. 
+     * uploads every file from files array to drupal backend and calls addInputDocument for every file, which links the content type inputdocuments to the file
      * 
      */
     async uploadFilesToDatabase({ dispatch, rootState }, files) {
-
-        // sende state
-        // commit("uploadFilesToState", files);
-        console.log(files);
-
-
-        var drupalUserUID = rootState.drupal_api.user.uid
-        console.log(drupalUserUID)
         for (const file of files) {
-
             var config = {
                 method: 'post',
                 url: `jsonapi/media/document/field_media_document`,
@@ -172,21 +141,16 @@ const actions = {
                     'Authorization': rootState.drupal_api.authToken,
                     'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
                     'Content-Disposition': 'file; filename="' + file.name + '"',
-
                 },
                 data: file
             };
             await axios(config)
                 .then(function (response) {
-                    console.log(response);
-                    console.log(file.name)
-                    //commit('SAVE_FILES', { file });
                     let payload = {
                         file: file,
                         id: response.data.data.id
                     }
                     dispatch('addInputDocument', payload);
-
                 })
                 .catch(function (error) {
                     console.log(error)
@@ -195,9 +159,13 @@ const actions = {
 
     },
 
-    addInputDocument({ state, rootState, commit }, payload) {
-
-        console.log(state)
+    /**
+     * @param commit commit is used to call a mutation from this function
+     * @param rootState rootState allows access to states of other modules in store
+     * @param payload payload is exactly one file object
+     * saves every uploaded file as a relation in the content type inputdocuments
+     */
+    addInputDocument({ rootState, commit }, payload) {
         var phaseId = rootState.project_phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
@@ -211,8 +179,7 @@ const actions = {
                         "data": {
                             "type": "file--file",
                             "id": "${payload.id}"
-                        }
-                        
+                        }          
                     },
                     "field_phasenid": {
                         "data": {
@@ -224,7 +191,6 @@ const actions = {
                 
             }
         }`;
-
         var config = {
             method: 'post',
             url: `jsonapi/node/inputdateien?include=field_documentid`,
@@ -235,33 +201,36 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data
-
-
         };
-
         axios(config)
             .then(function (response) {
-                const urlBackend = "https://clr-backend.x-navi.de";
+                const urlBackend = axios.defaults.baseURL;
                 let file = {
                     name: payload.file.name,
                     size: payload.file.size,
                     id: response.data.data.id,
                     url: urlBackend + response.data.included[0].attributes.uri.url
-
                 }
                 commit("UPDATE_INPUTS", file);
             })
             .catch(function (error) {
-                console.log(error)
+                if (error.response.status == 422) {
+                    alert("Dieser Dateityp wird nicht unterstützt")
+                } else {
+                    console.log(error)
+                }
             })
 
     },
 
+    /**
+     * @param commit commit is used to call a mutation from this function
+     * @param rootState rootState allows access to states of other modules in store
+     * @param payload payload is exactly one file object
+     * deletes file from backend and deletes it from state
+     */
     deleteInputDocuments({ rootState, commit }, payload) {
         commit('deleteInput', payload);
-
-        console.log(payload.input.dataId);
-
         var config = {
             method: 'delete',
             url: `jsonapi/node/inputdateien/${payload.input.dataId}`,
@@ -269,22 +238,16 @@ const actions = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                //'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-                // 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
         axios(config)
             .then((response) => {
-                console.log(response);
             }).catch(function (error) {
                 console.log(error);
             });
-
     },
-
-
 }
 
 

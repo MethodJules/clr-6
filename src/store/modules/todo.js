@@ -3,13 +3,10 @@ import axios from "@/config/custom_axios";
 
 const state = () => ({
     listOfToDos: [], // array to store users todos with given deadline 
-    todos: [],//array to store only the todo tasks from listOfToDos[] 
-    dates: [],//array to store only the deadlines from listOfToDos[] 
-    token: "",
+    todos: [],//array to store only the todo tasks from listOfToDos[] //TODO: check if still needed
+    dates: [],//array to store only the deadlines from listOfToDos[] //TODO: check if still needed
     attributes: [],
-    currentProject: "",
     todosOfProject: [],
-
 })
 
 
@@ -18,6 +15,10 @@ getter to call the arrays todos[] and dates[]
 */
 const getters = {
 
+    /**
+  * @param state state as parameter for access and manipulation of state data
+  * getter for calendar
+  */
     getAttributesForVcCalendar(state) {
         state.attributes = []
         let todos = state.listOfToDos;
@@ -38,19 +39,34 @@ const getters = {
         });
         return state.attributes;
     },
-
+    /**
+  * @param state state as parameter for access and manipulation of state data
+  * getter for all todos of user
+  */
     getListOfTodos(state) {
         return state.listOfToDos
     },
 
+    /**
+  * @param state state as parameter for access and manipulation of state data
+  * getter for todos of current project
+  */
     getTodosOfProject(state) {
         return state.todosOfProject;
     }
-
 }
 
 const actions = {
+
+    /**
+* @param commit commit us used to call a mutation from this function
+* @param dispatch dispatch is used to call another action from this function
+* @param rootState rootState allows access to states of other modules in store
+* @param projects all projects of current user
+* loads all todos of all projects of current user
+*/
     async loadTodosAllProjects({ commit, state, rootState }, projects) {
+        //TODO: put state.listOfToDos = [] in a mutation to make state manipulation seperate from actions. -> consistent with all other functions
         state.listOfToDos = []
         var drupalUserUID = rootState.drupal_api.user.uid;
         for (const project of projects) {
@@ -90,13 +106,16 @@ const actions = {
                     console.log(error)
                 })
             commit("loadingStatus", false, { root: true })
-
-
         }
 
 
     },
-
+    /**
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+* @param projectId id of current project
+* loads all todos of current project of current user
+*/
     async loadToDoFromBackend({ commit, rootState }, projectId) {
         var drupalUserUID = rootState.drupal_api.user.uid;
         var config = {
@@ -123,8 +142,14 @@ const actions = {
             })
 
     },
-    createToDo({ commit, rootState, state }, todoEntry) {
-        state.token = rootState.drupal_api.csrf_token
+
+    /**
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+* @param todoEntry new created todo
+* uploads new todo to backend
+*/
+    createToDo({ commit, rootState }, todoEntry) {
         var drupalUserUID = rootState.profile.userData.uuid
         var data = `
         {
@@ -171,9 +196,13 @@ const actions = {
             })
 
     },
-    /*  
-    calls function to delete tool from Backend 
-    */
+
+    /**
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+* @param todoEntry todo to be deleted
+* calls function to delete tool from Backend 
+*/
     deleteTodo({ commit, rootState }, todoEntry) {
         var config = {
             method: 'delete',
@@ -188,13 +217,17 @@ const actions = {
         };
         axios(config)
             .then((response) => {
-                console.log(response);
             }).catch(function (error) {
                 console.log(error);
             });
         commit('DELETE_TODO_ENTRY', todoEntry);
     },
 
+    /**
+* @param rootState rootState allows access to states of other modules in store
+* @param todoEntry todo to be updated
+* updates todo backend checkbox
+*/
     updateTodo({ rootState }, todoEntry) {
         var data = `
         {
@@ -220,7 +253,6 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                console.log(response)
             })
             .catch(function (error) {
                 console.log(error)
@@ -229,7 +261,12 @@ const actions = {
 }
 
 const mutations = {
-    /* delete one entry from state list OfToDos */
+
+    /**
+* @param state state as parameter for access and manipulation of state data
+* @param todoEntry todo to be deleted in frontend
+*  delete one entry from state list OfToDos 
+*/
     DELETE_TODO_ENTRY(state, todoEntry) {
         let index = state.todosOfProject.indexOf(todoEntry);
         state.todosOfProject.splice(index, 1);
@@ -243,6 +280,12 @@ const mutations = {
             }
         }
     },
+
+    /**
+* @param state state as parameter for access and manipulation of state data
+* @param newTodo todo to be deleted
+*  save new todo in frontend 
+*/
     SAVE_NEW_TODO(state, newTodo) {
         let myIndex;
         let todoNew = {
@@ -265,7 +308,7 @@ const mutations = {
     /** 
      * to fill the listOfToDos[] with all entries in the backend 
      * @param {*} state we send our state to the method 
-     * @param {*} todo element to go through the array 
+     * @param {*} payload element to go through the array 
      *  
      */
     SAVE_TODO(state, payload) {
@@ -286,7 +329,7 @@ const mutations = {
     /** 
      * to fill the listOfToDos[] with all entries in the backend 
      * @param {*} state we send our state to the method 
-     * @param {*} todo element to go through the array 
+     * @param {*} payload element to go through the array 
      *  
      */
     SAVE_TODOS_ALL_PROJECTS(state, payload) {

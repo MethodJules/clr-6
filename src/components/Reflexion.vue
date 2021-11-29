@@ -5,8 +5,6 @@
         Erfolgreich Gespeichert !
       </div>
     </transition>
-    <!--  <h2>Reflexion zu Phase: {{ phaseId }}</h2> -->
-
     <b-container class="reflexion">
       <b-row class="reflexion-item">
         <!-- Textfeld 1 -->
@@ -114,25 +112,16 @@ export default {
 
   data() {
     return {
-      phaseId: this.$route.params.phase_number,
-      projectId: this.$route.params.project_id,
       testButClicked: false,
-      reflexionList: [],
-
-      /*  berichten_reagieren: "",
-      in_bezug_setzen: "",
-      schlussfolgern: "",
-      rekonstruieren: "", */
-      phaseId: this.$route.params.reflexionsPhase,
     };
   },
 
   validations: {
     getReflexionData: {
-      berichten_reagieren: { required, minLength: minLength(5) },
-      in_bezug_setzen: { required, minLength: minLength(5) },
-      schlussfolgern: { required, minLength: minLength(5) },
-      rekonstruieren: { required, minLength: minLength(5) },
+      berichten_reagieren: { minLength: minLength(5) },
+      in_bezug_setzen: { minLength: minLength(5) },
+      schlussfolgern: { minLength: minLength(5) },
+      rekonstruieren: { minLength: minLength(5) },
     },
   },
   methods: {
@@ -153,7 +142,6 @@ export default {
 
     /** Reflexion wird in das Backend geladen */
     addItem() {
-      console.log("add item");
       if (!this.$v.$invalid) {
         var ausgabe = {
           sichten: this.sicht,
@@ -162,7 +150,6 @@ export default {
           schlussfolgern: this.getReflexionData.schlussfolgern,
           rekonstruieren: this.getReflexionData.rekonstruieren,
         };
-
         this.testButClicked = true;
 
         this.$store.dispatch("reflexion/createReflexion", ausgabe);
@@ -172,10 +159,7 @@ export default {
     },
 
     updateReflexion() {
-      console.log("update");
       if (!this.$v.$invalid) {
-        console.log("title: ${this.titela}");
-
         var ausgabe = {
           sichten: this.sicht,
           title: this.getReflexionData.title,
@@ -203,24 +187,8 @@ export default {
     },
   },
 
-  /** lädt alle Reflexionen aus dem Backend */
   async mounted() {
-    // var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137";
-    // this.$store.dispatch(
-    //     "reflexion/loadReflexionFromBackend",
-    //     "325fd0af-838c-49f5-92d3-2fcc987e6137"
-    // );
-
-    /* 
-would be helfpul to load it here in mounted with lazy loading, but takes way too long
-      -> put lazy here -> <b-tabs content-class="mt-3" lazy> in reflexionview*/
     this.$store.dispatch("reflexion/loadReflexionFromBackend", this.sicht);
-
-    this.reflexionData = this.$store.state.reflexion.reflexionData;
-    /*  this.reflexionList=this.rowData */
-    // TO DO: nur die Daten laden die der Phase und der Nutzer ID entsprechen
-    //console.log(this.reflexionList)
-    //console.log(typeof(this.reflexionList))
   },
 
   computed: {

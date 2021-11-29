@@ -3,7 +3,6 @@ import axios from "@/config/custom_axios";
 
 const state = () => ({
     outputs: [], // we are using this array to store the file names and sizes only
-    outputsForDatabase: [], // we are going to use this array in order to upload our files to database
 })
 
 const getters = {
@@ -17,7 +16,6 @@ const getters = {
         let files = state.outputs;
         return files;
     },
-
 }
 
 const mutations = {
@@ -35,6 +33,12 @@ const mutations = {
         state.outputs = outputarrayPayload;
     },
 
+    /**
+      * 
+      * @param state our state which we used to add a new inputdocument.
+      * @param file uploaded file will be pushed to the state
+      */
+
     UPDATE_OUTPUTS(state, file) {
         state.outputs.push(file);
     },
@@ -51,22 +55,24 @@ const mutations = {
         state.outputs.splice(payload.index, 1);
     },
 
+    // TODO: Comment for this ? 
     setOkButtonClicked(state, isClicked) {
         state.okButtonClicked = isClicked;
     }
-
-
 
 }
 
 const actions = {
 
+    /**
+ * @param commit commit is used to call a mutation from this function
+ * @param rootState rootState allows access to states of other modules in store
+ * In this action method, we load the uploaded outputdocuments from backend filtered by the right phase id. For this load method, we included 
+ * the entity reference to file, in order to get the information about the file size and file url.
+ */
     async loadOutputdocumentsFromBackend({ rootState, commit }) {
-        var drupalUserUID = rootState.drupal_api.user.uid;
+        commit("loadingStatus", true, { root: true })
         var phaseId = rootState.project_phases.current_phase.phase_id
-        console.log(rootState.drupal_api);
-        console.log(drupalUserUID);
-
         var config = {
             method: 'get',
             url: `jsonapi/node/outputdateien?include=field_output_datei&filter[field_phasenid.id]=${phaseId}`,
@@ -77,19 +83,15 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
         };
-
         axios(config)
             .then(function (response) {
-                console.log(response)
-                const urlBackend = "https://clr-backend.x-navi.de";
+                const urlBackend = axios.defaults.baseURL;
                 let files = response.data.included; // id, name, size and url of file from node file-file
                 let fileDataId = response.data.data; // the fileDataId from node --outputdateien
                 /* 
-               
                We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend 
                with the foreach loop are pushed one after the other in the initialized array 'outputarrayPayload'. This means that the 
                array does not remain empty. The array consists of the file objects, from the backend.
-
                */
                 var outputarrayPayload = []
                 for (let index = 0; index < files.length; index++) {
@@ -100,36 +102,30 @@ const actions = {
                         size: files[index].attributes.filesize, // included data --> file-file
                         url: urlBackend + files[index].attributes.uri.url, // included data --> file-file
                     }
-
                     outputarrayPayload.push(payload)
                 }
                 //this array 'outputarrayPayload' is passed as a parameter in the mutation method
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', outputarrayPayload);
-
+                commit("loadingStatus", false, { root: true })
             })
             .catch(function (error) {
-                console.log(error)
                 let leeresOutputArray = []
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', leeresOutputArray);
+                commit("loadingStatus", false, { root: true })
             })
-
-
     },
     /**
+    * @param dispatch dispatch is used to call another action from this function
+    * @param rootState rootState allows access to states of other modules in store
+    * @param files files to upload
      * 
-     * @param state we send our state to method
-     * To upload files to database. 
-     * Will be written later.... 
+     * uploads every file from files array to drupal backend and calls addOutputDocument for every file, which links the content type outputDocument to the file
+     * 
      */
     async uploadFilesToDatabase({ dispatch, rootState }, files) {
-
         // sende state
         // commit("uploadFilesToState", files);
-        console.log(files);
 
-
-        var drupalUserUID = rootState.drupal_api.user.uid
-        console.log(drupalUserUID)
         for (const file of files) {
 
             var config = {
@@ -164,9 +160,13 @@ const actions = {
 
     },
 
-    addOutputDocument({ state, rootState, commit }, payload) {
-
-        console.log(state)
+    /**
+ * @param commit commit is used to call a mutation from this function
+ * @param rootState rootState allows access to states of other modules in store
+ * @param payload payload is exactly one file object
+ * saves every uploaded file as a relation in the content type outputdocuments
+ */
+    addOutputDocument({ rootState, commit }, payload) {
         var phaseId = rootState.project_phases.current_phase.phase_id
         var title = payload.file.name
         var data = `{
@@ -204,13 +204,10 @@ const actions = {
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },
             data: data
-
-
         };
-
         axios(config)
             .then(function (response) {
-                const urlBackend = "https://clr-backend.x-navi.de";
+                const urlBackend = axios.defaults.baseURL;
                 let file = {
                     name: payload.file.name,
                     size: payload.file.size,
@@ -220,16 +217,22 @@ const actions = {
                 commit("UPDATE_OUTPUTS", file);
             })
             .catch(function (error) {
-                console.log(error)
+                if (error.response.status == 422) {
+                    alert("Dieser Dateityp wird nicht unterstützt")
+                } else {
+                    console.log(error)
+                }
             })
-
     },
 
+    /**
+ * @param commit commit is used to call a mutation from this function
+ * @param rootState rootState allows access to states of other modules in store
+ * @param payload payload is exactly one file object
+ * deletes file from backend and deletes it from state
+ */
     deleteOutputDocuments({ rootState, commit }, payload) {
         commit('deleteOutput', payload);
-
-        console.log(payload.output.id);
-
         var config = {
             method: 'delete',
             url: `jsonapi/node/outputdateien/${payload.output.dataId}`,
@@ -245,14 +248,10 @@ const actions = {
         };
         axios(config)
             .then((response) => {
-                console.log(response);
             }).catch(function (error) {
                 console.log(error);
             });
-
     },
-
-
 }
 
 

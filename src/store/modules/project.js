@@ -1,7 +1,5 @@
 import axios from "@/config/custom_axios";
 
-//TO DO: comments
-
 const state = () => ({
   allKeywordsList: [],
   myProjects: [],
@@ -10,46 +8,57 @@ const state = () => ({
   currentProjectLecturers: [],
   keywordsInString: "",
   projectsFilteredbyKeywords: [],
-
-
 })
 
 const getters = {
+
+  /**
+* @param state state as parameter for access and manipulation of state data
+* getter for current project
+*/
   getCurrentProject(state) {
     return state.currentProject;
   },
+
+  /**
+  * @param state state as parameter for access and manipulation of state data
+  * getter for group members of current project. filters the system user out. see function create_project for clarification why this user exists
+  */
   getGroupMembers(state) {
     let unfiltered_members =
       state.currentProject.gruppenmitglieder;
     return unfiltered_members.filter(function (member) {
-      //TODO: change the filter criterium to match the static groupmember -> static user in backend has the name "System"
       return member.username != "System";
     });
   },
+
+  /**
+* @param state state as parameter for access and manipulation of state data
+* getter for group admins of current project
+*/
   getGroupAdmins(state) {
     return state.currentProjectGroupAdmins;
   },
+
+  /**
+* @param state state as parameter for access and manipulation of state data
+* getter for lecturers of current project
+*/
   getProjectLecturers(state) {
     return state.currentProjectLecturers;
   },
-  getCurrentProjectLecturers(state) {
-    return state.currentProjectLecturers;
-  },
-
 }
 
 
 
 const actions = {
   /**
-* loads all  projects from Backend and commits the mutation LOAD_ALL_PROJECTS
-* and passes drupal user id gotten from rootState on
-* @param state state as parameter for access and manipulation of state data
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
+* @param keywords keyword string array for filtering/searching projects
+* loads all projects from Backend filtered by keywords given as params
 */
   async loadProjectFilterbyKeyword({ commit, rootState }, keywords) {
-    //var drupalUserID = rootState.sparky_api.drupalUserID
     let keyword_filter = ""
     for (var i = 0; i < keywords.length; ++i) {
       keyword_filter += `&filter[keywords][condition][value][${i + 1}]=${keywords[i]}`
@@ -74,20 +83,15 @@ const actions = {
       .catch(function (error) {
         console.log(error)
       })
-
   },
 
 
   /**
- * loads all  projects from Backend and commits the mutation LOAD_ALL_KEYWORDS
- * and passes drupal user id gotten from rootState on
-* @param state state as parameter for access and manipulation of state data
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
+ * loads all  projects from Backend and commits mutation which only saves all unique keywords given for projects
 */
-  async loadAllKeywords({ commit, state, rootState }) {
-    //var drupalUserID = rootState.sparky_api.drupalUserID
-    console.log(rootState.drupal_api.user)
+  async loadAllKeywords({ commit, rootState }) {
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt`,
@@ -108,24 +112,20 @@ const actions = {
         console.log(error)
       })
   },
+
   /**
-   * loads all those projects from Backend where the current user is recorded inside filed_gruppenmitglieder and commits the mutation LOAD_PROJECTs
-   * and passes drupal user id gotten from rootState on
-  * @param state state as parameter for access and manipulation of state data
-  * @param commit commit us used to call a mutation from this function
+   * loads all those projects from Backend where the current user is recorded inside filed_gruppenmitglieder and commits the mutation LOAD_MY_PROJECTs
+   * also calls loadTodosAllProjects, which loads all todos of all projects
   * @param rootState rootState allows access to states of other modules in store
+  * @param commit commit us used to call a mutation from this function
+  * @param dispatch dispatch is used to call another action from this function
   */
-  async loadProjectsFromBackend({ commit, state, rootState, dispatch }) {
+  async loadProjectsFromBackend({ commit, rootState, dispatch }) {
     let filter_joined = ""
-    console.log(rootState.drupal_api.user)
-    //var drupalUserID = rootState.sparky_api.drupalUserID
     var drupalUserUID = rootState.drupal_api.user.uid
-    console.log(rootState.drupal_api.user)
-    //console.log(drupalUserUID)
     //depending on role of a user (if user is student or lecturer) the filters are different: student -> filter by id in gruppenadministrator and gruppenmitglied; lecturer -> filter by id in betreuender_dozent
-    //TODO: maybe make another else part for "superdozent" respectively "admin".
+    //TODO: maybe make another else part for "superdozent/admin" role.
     if (rootState.drupal_api.user.role == "student") {
-      //BUG: filter does not find projects where user is group admin, but no group member can be found -> afterwards createproject() can be changed so that the creating user only is groupadmin and not both member and admin
       const filter_or_group = `?filter[or-group][group][conjunction]=OR`
       const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
       const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
@@ -149,37 +149,28 @@ const actions = {
         'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
       },
     };
-    console.log(config)
     axios(config)
       .then(function (response) {
-
         const projects = response.data.data;
         commit('LOAD_MY_PROJECTS', { projects });
         dispatch('todo/loadTodosAllProjects', projects, { root: true })
         commit("loadingStatus", false, { root: true })
-
-
       })
       .catch(function (error) {
         console.log(error)
       })
-
   },
 
 
   /**
-* loads chosen project from backend
-* and passes drupal user id gotten from rootState on
-* @param state state as parameter for access and manipulation of state data
+* @param dispatch dispatch is used to call another action from this function
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
+* @param projectId id of project to load
+* loads chosen project from backend, then dispatches 2 other functions which load groupadmins and lecturers of chosen project (done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
-  async loadCurrentProject({ commit, rootState, dispatch, rootGetters }, projectId) {
+  async loadCurrentProject({ commit, rootState, dispatch }, projectId) {
     commit("loadingStatus", true, { root: true })
-    console.log(projectId)
-
-    //console.log(state)
-    //console.log(projectId)
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt?include=field_gruppenmitglieder&filter[id]=${projectId}`,
@@ -190,31 +181,13 @@ const actions = {
         'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
       },
     };
-    console.log(config)
     axios(config)
       .then(function (response) {
-        console.log(response)
-        // console.log("single project")
-        /* console.log($store.state.sparky_api.validCredential)
-        console.log($store.state.sparky_api.drupalUserID) */
-
-        /*         console.log(rootGetters["user/getLecturers"])
-                let lecturer_array = rootGetters["user/getLecturers"]
-        
-                console.log(rootGetters["user/getStudents"])
-                let student_array = rootGetters["user/getStudents"]
-                console.log(response.data.included)
-                var intersection = response.data.included.filter(element => student_array.includes(element));
-                //intersection = lecturer_array.filter(e => response.data.included.indexOf(e) !== -1);
-                console.log(intersection) */
-
         const projects = response.data;
-        console.log(projectId)
         dispatch('loadCurrentProjectWithGroupAdmins', projectId)
         dispatch('loadCurrentProjectWithLecturers', projectId)
         commit('LOAD_CURRENT_PROJECT', { projects });
         commit("loadingStatus", false, { root: true })
-
       })
       .catch(function (error) {
         console.log(error)
@@ -223,13 +196,12 @@ const actions = {
   },
 
   /**
-* @param state state as parameter for access and manipulation of state data
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
+* @param projectId id of project to load
+* loads chosen project from backend and saves groupadmins of chosen project(done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
   async loadCurrentProjectWithGroupAdmins({ commit, rootState }, projectId) {
-    //console.log(state)
-    //console.log(projectId)
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
@@ -240,28 +212,24 @@ const actions = {
         'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
       },
     };
-
-    axios(config)
+    return axios(config)
       .then(function (response) {
-        console.log(response)
         const groupadmins = response.data.included;
         commit('LOAD_CURRENT_PROJECT_GROUP_ADMIN', { groupadmins });
       })
       .catch(function (error) {
         console.log(error)
       })
-
   },
 
 
   /**
-* @param state state as parameter for access and manipulation of state data
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
+* @param projectId id of project to load
+* loads chosen project from backend and saves lecturers of chosen project(done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
   async loadCurrentProjectWithLecturers({ commit, rootState }, projectId) {
-    //console.log(state)
-    //console.log(projectId)
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
@@ -272,61 +240,30 @@ const actions = {
         'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
       },
     };
-
     axios(config)
       .then(function (response) {
-        console.log(response)
-
         const lecturers = response.data.included;
         commit('LOAD_CURRENT_PROJECT_LECTURERS', { lecturers });
       })
       .catch(function (error) {
         console.log(error)
       })
-
   },
 
   /**
-* @param state state as parameter for access and manipulation of state data
 * @param dispatch calls another action
 * @param commit commit us used to call a mutation from this function
 * @param rootState rootState allows access to states of other modules in store
-* creates a project and makes the person who created it a group admin and a group member. then creates all 8 phases for the project
+* @param projEntry project object which shall be created in backend
+* creates a project and makes the person who created it a group admin. The user "System" is put in as a group member (needed because of issue described here https://www.drupal.org/project/drupal/issues/3072384). 
+*then creates all 8 phases for the project
 */
   createProject({ commit, dispatch, rootState }, projEntry) {
     const keywords = JSON.stringify(projEntry.schlagworter)
     const dozenten = JSON.stringify(projEntry.betreuenderDozent)
-
-    // { "data": [{ "type": "user--user", "id": <user1> }, { "type": "user--user", "id": <user2> }, .... ]};
-
-
-    //projEntry.betreuenderDozent= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-    //projEntry.gruppenadmin = "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-    //"field_schlagworter": `${keywords}`,
-    //drupal_internal__uid
-    //user id of currently logged in user
-    //TODO: when a project is created the user is groupadmin and member nobody else - but it should be possible to include multiple dozenten
-    //remove groupmember - only admin needed when filter works correctly with admin only
-
-    // { "data": [{ "type": "user--user", "id": <user1> }, { "type": "user--user", "id": <user2> }, .... ]};
-
-    /* 
-       let dataArray = [];
-    for (const lecturer of allLecturers) {
-        dataArray.push({"type": "user--user", "id": lecturerId});
-    }
-    
-    const data = {"data": dataArray};
-    
-       let dozenten = "["
-       for(dozent in projEntry.betreuenderDozent){
-         dozenten+= `{ "type": "user--user", "id": <user1> }`,
-       } */
-
     let userID = rootState.profile.userData.uuid
     //the id of the system user, which is needed because of the filtering bug here https://www.drupal.org/project/drupal/issues/3072384
     let system_user_id = "bf1820d0-5477-4df6-b4dd-a1824d5e7794"
-    console.log(keywords)
 
     var data = `{
                 "data": {
@@ -362,9 +299,6 @@ const actions = {
                   }
                 }
               }`;
-
-    console.log(projEntry.schlagworter)
-    console.log(data)
     var config = {
       method: 'post',
       url: 'jsonapi/node/projekt',
@@ -376,40 +310,27 @@ const actions = {
       },
       data: data
     };
-
     axios(config)
       .then(function (response) {
-        console.log(response)
         let id_newly_created_project = response.data.data.id
-        console.log(id_newly_created_project)
         //createAllPhasesforNewProject creates all 8 Phases for this project, is in project_phases.js
-        //  dispatch('project_phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
-
-        //addLecturer does not push one lecturer after the other. array of 3 lecturers -> only 1 lecturer is saved. maybe the quick sequence of post requests leads to a replacement instead of additrion
-        /*         for (let gruppenadmin of projEntry.betreuenderDozent) {
-                  console.log(gruppenadmin)
-                  dispatch('addLecturer', { gruppenadmin, id_newly_created_project })
-                } */
-        //is the id for new project in frontend when pushing from frontend only? is it needed?
-        commit('ADD_PROJECT', projEntry)
+        dispatch('project_phases/createAllPhasesforNewProject', id_newly_created_project, { root: true })
+        let new_project = response.data.data
+        commit('ADD_PROJECT', new_project)
+        alert("Dein neues Projekt wurde erfolgreich erstellt");
       })
       .catch(function (error) {
+        alert("Dein neues Projekt konnte leider nicht erstellt werden");
         console.log(error)
       })
-
-
-
   },
-
-  updateProject({ commit, rootState }, projEntry) {
-    let userID = rootState.profile.userData.uuid
+  /**
+* @param rootState rootState allows access to states of other modules in store
+* @param projEntry project object which is about to be updated
+* updates a project in projektbeschreibung.vue (not all values can be changed here)
+*/
+  updateProject({ rootState }, projEntry) {
     const dozenten = JSON.stringify(projEntry.betreuenderDozent)
-
-    //let index = state.myProjects.indexOf(projEntry);
-    //state.myProjects[index]=projEntry;
-    //projEntry.gruppenadmin = "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-    //projEntry.betreuenderDozent= "b0e1c888-6304-4fe0-83fc-255bb4a3cfe3"
-    //TODO: remove gruppenadmin and gruppenadministrator, or change it -> they can be changed in another function
     const keywords = JSON.stringify(projEntry.schlagworter)
     var data = `{
         "data": {
@@ -441,58 +362,21 @@ const actions = {
     };
     axios(config)
       .then(function (response) {
-        commit('UPDATE_PROJECT', projEntry);
-        console.log(response)
       })
       .catch(function (error) {
         console.log(error)
       })
-
-
   },
 
-  /*   addLecturer({ state, rootState, commit }, { gruppenadmin, id_newly_created_project }) {
-      //TODO: Gruppenadministrator in Backend zu array ändern
-  
-      //    let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
-        //  state.currentProject.gruppenmitglieder.splice(index, 1); 
-      console.log(gruppenadmin)
-      console.log(id_newly_created_project)
-  
-  
-      var data = `{ "data": [{
-              "type": "user--user",
-               "id": "${gruppenadmin}"
-            }]}`;
-  
-      var config = {
-        method: 'post',
-        url: `jsonapi/node/projekt/${id_newly_created_project}/relationships/field_betreuender_dozent`,
-        headers: {
-          'Accept': 'application/vnd.api+json',
-          'Content-Type': 'application/vnd.api+json',
-          'Authorization': rootState.drupal_api.authToken,
-          'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
-        },
-        data: data
-      };
-      axios(config)
-        .then((response) => {
-          console.log(response);
-  
-        }).catch(function (error) {
-          console.log(error);
-        });
-  
-    }, */
-
-
+  /**
+* @param state state as parameter for access and manipulation of state data
+* @param commit commit us used to call a mutation from this function
+* @param rootState rootState allows access to states of other modules in store
+* @param mitglied member to be added
+* @param role role the member is should have (gruppenmitglied or gruppenadministrator)
+* adds a new member to the group/project
+*/
   addMember({ state, rootState, commit }, { mitglied, role }) {
-
-    /*     let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
-        state.currentProject.gruppenmitglieder.splice(index, 1); */
-    console.log(mitglied)
-
 
     var data = `{ "data": [{
             "type": "user--user",
@@ -512,8 +396,6 @@ const actions = {
     };
     axios(config)
       .then((response) => {
-        console.log(response);
-        console.log(mitglied)
         if (role == "field_gruppenmitglieder") {
           commit('ADD_GROUPMEMBER', mitglied);
         } else {
@@ -527,11 +409,13 @@ const actions = {
   },
 
 
-
+  /**
+* @param state state as parameter for access and manipulation of state data
+* @param rootState rootState allows access to states of other modules in store
+* @param mitglied member to be deleted (only gruppenmitglieder) 
+* deletes a member from group/project
+*/
   deleteMembers({ rootState, state }, mitglied) {
-
-
-    console.log(mitglied)
 
     var data = `{ "data": [{
             "type": "user--user",
@@ -551,21 +435,23 @@ const actions = {
     };
     axios(config)
       .then((response) => {
-        console.log(response);
         let index = state.currentProject.gruppenmitglieder.indexOf(mitglied)
         state.currentProject.gruppenmitglieder.splice(index, 1);
-        // commit('deleteMemberFrontend', payload);
       }).catch(function (error) {
         console.log(error);
       });
 
   },
 
-  /*works not before groupadmins is an array in the backend*/
+  /**
+* @param state state as parameter for access and manipulation of state data
+* @param rootState rootState allows access to states of other modules in store
+* @param mitglied member to be deleted (only gruppenadministratoren) 
+* deletes an admin from group/project
+*/
   deleteAdmin({ rootState, state }, mitglied) {
     let index = state.currentProjectGroupAdmins.indexOf(mitglied)
     state.currentProjectGroupAdmins.splice(index, 1);
-
     var data = `{ "data": [{
             "type": "user--user",
              "id": "${mitglied.userid}"
@@ -584,18 +470,19 @@ const actions = {
     };
     axios(config)
       .then((response) => {
-        console.log(response);
-        // commit('deleteMemberFrontend', payload);
       }).catch(function (error) {
         console.log(error);
       });
 
   },
 
+  /**
+* @param state state as parameter for access and manipulation of state data
+* @param rootState rootState allows access to states of other modules in store
+* @param mitglied member to be deleted (only lecturers) 
+* deletes a lecturer from group/project
+*/
   leaveGroupLecturer({ rootState, state }, mitglied) {
-
-
-    console.log(mitglied)
 
     var data = `{ "data": [{
             "type": "user--user",
@@ -615,52 +502,52 @@ const actions = {
     };
     axios(config)
       .then((response) => {
-        console.log(response);
-        // commit('deleteMemberFrontend', payload);
       }).catch(function (error) {
         console.log(error);
       });
-
   },
-
 }
 
 
 const mutations = {
-  loadingStatus(state, newLoadingStatus) {
-    state.loadingStatus = newLoadingStatus
-  },
-
-  //TODO: authorization token ist noch statisch, dynamisch aus state holen
 
   /**
-* saves the new project in the backend
-* @param projEntry project which will be added to the backend
+* @param new_project project which will be added to the backend
 * @param state state as parameter for access and manipulation of state data
+* saves the new project in state, pushes it in myproject array
 */
-  ADD_PROJECT(state, projEntry) {
-    state.myProjects.push(projEntry)
+  ADD_PROJECT(state, new_project) {
+
+    const field_betreuender_dozent = new_project.relationships.field_betreuender_dozent.data;
+    const field_externe_mitwirkende = new_project.attributes.field_externe_mitwirkende;
+    const field_schlagworter = new_project.attributes.field_schlagworter;
+    const field_kurzbeschreibung = new_project.attributes.field_kurzbeschreibung;
+    const field_id = new_project.id;
+    const field_title = new_project.attributes.title;
+    let field_gruppenmitglieder_IDs = new_project.relationships.field_gruppenmitglieder.data
+    let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
+    state.myProjects.push(projectObject)
   },
 
+  /**
+* @param keywords keywords to be updated
+* @param state state as parameter for access and manipulation of state data
+* setter for keywords in projektbeschreibung
+*/
   UPDATE_KEYWORDS(state, keywords) {
     state.keywordsInString = keywords
   },
 
 
-  UPDATE_PROJECT(state, projEntry) {
-    console.table(projEntry)
-    console.table(state)
-  },
 
-
-
-
-
+  /**
+* @param projects projects filtered by keywords
+* @param state state as parameter for access and manipulation of state data
+* projects filtered by keywords saved in state to show user projects that match his search result
+*/
   PROJECTS_FILTERED_BY_KEYWORD(state, { projects }) {
     state.projectsFilteredbyKeywords = []
-    //TODO: maybe just save all the keywords for projectsearch and not everything, because every search is a new http request?
     projects.forEach(element => {
-      console.log(element)
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
       const field_schlagworter = element.attributes.field_schlagworter;
@@ -670,21 +557,17 @@ const mutations = {
       const field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
       let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder_IDs }
       state.projectsFilteredbyKeywords.push(projectObject)
-
     });
   },
 
 
   /**
-* takes all projects and puts all relevant data of the project in state.projectList
-* filters through all projects and puts all projects of the user in state.myProjects
-* @param projects all project existing in the backend
-* @param drupalUserID id of the user in drupal backend
+* @param projects all projects existing in the backend
 * @param state state as parameter for access and manipulation of state data
+* saves only keywords from all projects in state
 */
   LOAD_ALL_KEYWORDS(state, { projects }) {
     state.allKeywordsList = []
-    //TODO: maybe just save all the keywords for projectsearch and not everything, because every search is a new http request?
     projects.forEach(element => {
       element.attributes.field_schlagworter.forEach(element => {
         state.allKeywordsList.push(element)
@@ -703,17 +586,14 @@ const mutations = {
 
 
   /**
-* takes all projects and puts all relevant data of the project in state.projectList
 * filters through all projects and puts all projects of the user in state.myProjects
 * @param projects all project existing in the backend
-* @param drupalUserID id of the user in drupal backend
 * @param state state as parameter for access and manipulation of state data
 */
   LOAD_MY_PROJECTS(state, { projects }) {
     state.myProjects = []
-
     projects.forEach(element => {
-      const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
+      const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data;
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
       const field_schlagworter = element.attributes.field_schlagworter;
       const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
@@ -727,18 +607,14 @@ const mutations = {
 
 
   /**
-* takes all projects and puts all relevant data of the project in state.projectList
-* filters through all projects and puts all projects of the user in state.myProjects
+* puts current project with all its data in state
 * @param projects all project existing in the backend
-* @param drupalUserID id of the user in drupal backend
 * @param state state as parameter for access and manipulation of state data
 */
   LOAD_CURRENT_PROJECT(state, { projects }) {
 
     let included_data = projects.included
     let user_array = []
-    // TODO: error handling, in case there is nothing included?
-
     if (included_data != undefined) {
       included_data.forEach(element => {
         const internal_uid = element.attributes.drupal_internal__uid
@@ -748,9 +624,6 @@ const mutations = {
       })
     }
 
-
-
-
     projects.data.forEach(element => {
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
@@ -759,20 +632,20 @@ const mutations = {
       const field_id = element.id;
       const field_title = element.attributes.title;
       let field_gruppenmitglieder = user_array
-      // TODO: in Action ändern -> response.data.data wird als parameter an diese funktion übergeben aber included user objects sind
-      // unter response.data.included => also muss das schon in der action geändert werden müssen
       let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
-      //TODO: remove second projectobject here and everywhere else, after projektbeschreibung is changed and cleaned up -> isnt needed anymore after that
-
-      // hier vorübergehend in myProjects gepusht, um neuen Login zu testen
 
       state.currentProject = projectObject
-
     });
     let keywords = state.currentProject.schlagworter;
     let keywordsInString = keywords.join();
     state.keywordsInString = keywordsInString
   },
+
+  /**
+* puts current project/group admins in state
+* @param groupadmins all project existing in the backend
+* @param state state as parameter for access and manipulation of state data
+*/
   LOAD_CURRENT_PROJECT_GROUP_ADMIN(state, { groupadmins }) {
     let groupadmins_array = []
     if (groupadmins != undefined) {
@@ -787,6 +660,11 @@ const mutations = {
     state.currentProjectGroupAdmins = groupadmins_array
   },
 
+  /**
+* puts current project/group lecturers in state
+* @param mitglied member to be deleted (only gruppenmitglieder) 
+* @param state state as parameter for access and manipulation of state data
+*/
   LOAD_CURRENT_PROJECT_LECTURERS(state, { lecturers }) {
     let lecturers_array = []
     let included_data = lecturers
@@ -797,14 +675,23 @@ const mutations = {
         lecturers_array.push({ name: name, uuid: uuid, })
       })
     }
-    // TODO: error handling, in case there is nothing included?
     state.currentProjectLecturers = lecturers_array
   },
 
+  /**
+* adds new groupmember/gruppenmitglied to state, after it was uploaded to backend in action
+* @param projects all project existing in the backend
+* @param state state as parameter for access and manipulation of state data
+*/
   ADD_GROUPMEMBER(state, mitglied) {
     state.currentProject.gruppenmitglieder.push(mitglied)
   },
 
+  /**
+* adds new groupadmin/gruppenadministrator to state, after it was uploaded to backend in action
+* @param mitglied member to be deleted (only gruppenadministratoren) 
+* @param state state as parameter for access and manipulation of state data
+*/
   ADD_GROUPADMIN(state, mitglied) {
     state.currentProjectGroupAdmins.push(mitglied)
   }

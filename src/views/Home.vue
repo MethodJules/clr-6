@@ -42,7 +42,6 @@ export default {
     this.$store.dispatch("todo/loadToDoFromBackend", this.getProjectID);
     this.$zircle.setView("ReviewCircle");
     this.$store.dispatch("project/loadCurrentProject", this.getProjectID);
-
     this.$store.dispatch(
       "project_phases/loadPhasesFromBackend",
       this.$route.params.project_id

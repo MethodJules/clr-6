@@ -4,18 +4,6 @@
     <b-form @submit.prevent="save">
       <div class="form-group">
         Benutzer:
-        <!-- <label for="input-with-list"></label> -->
-        <!--                 <div container>
-                <input list="input-list"
-                       id=""
-                       class="form-input"
-                       v-model="member"
-                       placeholder="Benutzer*in suchen"
-                       
-                       
-                       />
-                <b-form-datalist id="input-list" :options="options"></b-form-datalist>
-                </div> -->
         <select v-model="member" class="form-control">
           <option
             v-for="student in getStudents"
@@ -25,18 +13,8 @@
             {{ student.name }}
           </option>
         </select>
-
         Rolle:
-        <!-- <label for="input-with-list"></label> -->
         <div container>
-          <!--           <input
-            list="input-list"
-            id=""
-            class="form-input"
-            v-model="roles"
-            placeholder="Benutzer*in suchen"
-          />
-          <b-form-datalist id="input-list" :options="roles"></b-form-datalist> -->
           <select v-model="role" class="form-control">
             <option
               v-for="role in roles"
@@ -47,9 +25,6 @@
             </option>
           </select>
         </div>
-
-        <!--         Rolle:
-        <input name="" id="" class="form-input" v-model="role" /> -->
       </div>
 
       <b-container>
@@ -102,7 +77,7 @@ export default {
       //if current user is in group member array, he cant be a group admin -> current user is not allowed to add a member
       if (
         this.getGroupMembers.some(
-          (member) => member.userid === this.getCurrentUserID
+          (member) => member.userid === this.getCurrentUserUUID
         )
       ) {
         alert(
@@ -113,7 +88,7 @@ export default {
       // TODO: maybe check if user is not in groupadmins as well, in case of unforseeable errors
       else if (
         this.getGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserID
+          (member) => member.userid === this.getCurrentUserUUID
         )
       ) {
         //if new user is already in the group (is in member or admin array) he cant be added again
@@ -131,10 +106,6 @@ export default {
           this.$router.push({ name: "Groupmanagement" });
         }
       }
-
-      console.log(this.member);
-      console.log(this.role);
-      //gruppenadmins doesnt work for now, because in addMember the body is for arrays in the backend
     },
   },
   computed: {
@@ -147,7 +118,7 @@ export default {
     getGroupAdmins() {
       return this.$store.state.project.currentProjectGroupAdmins;
     },
-    getCurrentUserID() {
+    getCurrentUserUUID() {
       return this.$store.state.profile.userData.uuid;
     },
   },

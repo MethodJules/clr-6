@@ -41,15 +41,11 @@ export default {
       var neueEingabe = {
         usedTool: this.tool,
       };
-
       this.$store.dispatch("tool/createTool", neueEingabe);
-
       this.tool = "";
     },
 
     checkboxUpdate(index, toolGeaendert) {
-      console.log(toolGeaendert);
-
       this.$store.dispatch("tool/updateToolWithCheckbox", toolGeaendert);
     },
   },
