@@ -4,11 +4,12 @@ html {
     margin: 0px;
     width: 100%;
     box-sizing: border-box;
+    min-height: 100%;
 }
 
 body {
     background-color: #F6F8FF;
-    min-height: 100vh;
+    min-height: 100%;
     margin: 0px;
     padding: 0px !important;
     width: 100%;
@@ -2472,6 +2473,7 @@ body {
     line-height: 1.5;
     overflow-x: hidden;
     box-sizing: border-box;
+  
 }
 
 @media (min-width: 240px) and (max-width: 720px) {
