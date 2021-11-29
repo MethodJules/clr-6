@@ -1,7 +1,7 @@
 <template>
     <!-- TODO: main page burada olacak -->
     <b-overlay :show="getLoadingStatus" rounded="sm">
-        <b-container fluid class="p-0 m-0">
+        <b-container fluid class="p-0 m-0 appContainer">
             <MenueLeiste />
 
             <b-row class="page-container">
@@ -118,6 +118,12 @@ export default {
 };
 </script>
 <style>
+.appContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .v-card__title,
 .v-card__subtitle,
 .v-card__text {
@@ -132,6 +138,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin-top: 1rem !important;
+    flex: 1;
 }
 @media (max-width: 765px) {
     .page-container {
@@ -148,7 +155,7 @@ export default {
 .mainContent {
     padding: 0 !important;
     min-width: 25rem;
-    min-height: 100vh;
+    /* min-height: 80vh; */
     width: 100%;
 }
 .postfach {

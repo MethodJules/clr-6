@@ -36,9 +36,6 @@
 
 <style scoped>
 footer {
-    position: fixed;
-    bottom: 0pt;
-    background-position: 0% 0%;
     width: 100% !important;
 }
 
