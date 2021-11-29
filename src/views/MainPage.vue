@@ -56,13 +56,12 @@ import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
-
-
+import Footer from "@/components/Footer.vue";
 
 export default {
-  props: {
-    showRightMenu: Boolean,
-  },
+    props: {
+        showRightMenu: Boolean,
+    },
 
     components: {
         SeitenNavigation,
@@ -90,7 +89,7 @@ export default {
         closeMenu() {
             this.showMenu = false;
         },
-
+    },
     computed: {
         account() {
             return this.$store.state.sparky_api.account;
@@ -100,7 +99,6 @@ export default {
         },
         inProjectList() {
             console.log(this.$route.name);
-            // console.log(this.$route.name);
             let result = false;
             this.$route.name === "ProjectList"
                 ? (result = true)
@@ -117,9 +115,6 @@ export default {
     beforeMount() {
         this.$store.dispatch("drupal_api/loadTokensfromSessionStorage");
     },
-
-
-  mounted() {},
 };
 </script>
 <style>

@@ -108,12 +108,10 @@
                     <!-- Zum öffnen des Modals -->
                 </div>
             </div>
-
         </div>
 
         <b-button v-if="!inProjectList" v-b-modal.to_do_edit_modal>+</b-button>
     </div>
-
 </template>
 
 
@@ -148,7 +146,6 @@ export default {
     methods: {
         ok() {
             this.$v.$touch();
-
             if (!this.$v.$invalid) {
                 var neueEingabe = {
                     todo: this.todoNeu,
@@ -161,29 +158,18 @@ export default {
         },
         deleteTodo(todo) {
             alert("Delete");
-
-    checkboxUpdate(index, todoErledigt) {
-      this.$store.dispatch("todo/updateTodo", todoErledigt);
-    },
-  },
-
-
             this.$store.dispatch("todo/deleteTodo", todo);
         },
+        checkboxUpdate(index, todoErledigt) {
+            this.$store.dispatch("todo/updateTodo", todoErledigt);
+        },
+
         diffMonth() {
             //Soll die Todos ausgeben deren Frist im aktuellen Monat endet
             if (this.date === new Date().getMonth()) {
                 return this.date;
             }
         },
-        checkboxUpdate(index, todoErledigt) {
-            console.log(todoErledigt);
-
-
-            this.$store.dispatch("todo/updateTodo", todoErledigt);
-        },
-
-
     },
 
     computed: {
@@ -191,7 +177,6 @@ export default {
             listOfTodos: "todo/getListOfTodos",
             todosOfProject: "todo/getTodosOfProject",
         }),
-
 
         inProjectSearch() {
             // console.log(this.$route.name);
@@ -225,15 +210,14 @@ export default {
             console.log(result);
             return result;
         },
-            showTodoListButton() {
-      return (
-        this.$route.name !== "ProjectList" &&
-        this.$route.name !== "Profil" &&
-        this.$route.name !== "Einstellungen" &&
-        this.$route.name !== "ProjectSearch"
-      );
-    },
-
+        showTodoListButton() {
+            return (
+                this.$route.name !== "ProjectList" &&
+                this.$route.name !== "Profil" &&
+                this.$route.name !== "Einstellungen" &&
+                this.$route.name !== "ProjectSearch"
+            );
+        },
     },
 };
 </script>
@@ -259,14 +243,6 @@ export default {
     background-color: lightgreen;
     padding: 15px;
 }
-
-/* input {
-  border: 1px solid silver;
-  border-radius: 4px;
-  background: white;
-  padding: 5px 10px;
-} */
-
 .error {
     border-color: red;
     background: #fdd;
