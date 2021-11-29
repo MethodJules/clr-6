@@ -215,7 +215,7 @@ const actions = {
 * creates all phases for a newly created project in the backend
 */
     createAllPhasesforNewProject({ state, rootState }, id_newly_created_project) {
-        //TODO: refactor with correctly functioning for loop
+        //TODO: refactor with correctly functioning and more elegant for loop
         /*                         
         removed assistent relationship from phase creation because of changes to the data model
         'field_assistent': {

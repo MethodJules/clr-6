@@ -184,13 +184,6 @@ export default {
   },
 
   mounted() {
-    /* Because of the loading issues, we doesn't use the mounted function. We had the issue, that 
-    the outputdocuments from backend to state could not be loaded, the state was always empty, where the outputarray of Documents are stored
-    
-    PLEASE NOTE: 
-    Therefore we did not use the get request in mounted(), but in phases.js with (line 113), so that the output documents of the respective phases 
-    are loaded easily after the individual phases are loaded */
-    //this.$store.dispatch("output_documents/loadOutputdocumentsFromBackend");
     this.$store.dispatch("output_documents/loadOutputdocumentsFromBackend");
   },
 };

@@ -143,8 +143,7 @@ const actions = {
             };
             await axios(config)
                 .then(function (response) {
-                    console.log(response);
-                    console.log(file.name)
+
                     //commit('SAVE_FILES', { file });
                     let payload = {
                         file: file,

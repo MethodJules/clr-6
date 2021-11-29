@@ -114,7 +114,7 @@
             </b-input-group-prepend>
             <b-form-input
               type="search"
-              placeholder="Projekte durchsuchen"
+              placeholder="Alle Projekte durchsuchen"
               v-model="keyword"
             ></b-form-input>
           </b-input-group>
@@ -148,7 +148,9 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      keyword: " ",
+      //TODO: empty keyword leads to error, but a single whitespace ruins the placeholder -> change so that both works
+      //keyword: " ",
+      keyword: "",
       projectId: this.$route.params.project_id,
     };
   },
@@ -204,6 +206,7 @@ export default {
     },
 
     getProjectName() {
+      //use this instead if truncate filter works not as intended
       // return this.$store.state.project.currentProject.title.slice(0, 15);
       return this.$store.state.project.currentProject.title;
     },

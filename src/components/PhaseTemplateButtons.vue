@@ -128,6 +128,7 @@ export default {
     },
 
     /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
+    //TODO: remove todo functionality, when real checklist is available
     addTodo() {
       let todo = {
         id: ++this.lastEntry_id,

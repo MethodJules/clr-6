@@ -7,6 +7,8 @@
       :filter-by-query="true"
       placeholder="Geben Sie ein Schlagwort ein, um die Projektliste zu filtern!"
     />
+    <!--     Vue error here -> index of both v-for loops are numbers and at least index 0 exists in both loops, if not more. does not lead to any problems for now. fix?
+ -->
     <b-badge v-for="(keyword, index) in keywords" :key="index" variant="primary"
       >{{ keyword }}
       <BIconXCircleFill v-on:click="deletekeyword(keyword)"> </BIconXCircleFill
@@ -50,19 +52,9 @@ export default {
   data() {
     return {
       user: { width: 200, height: 200, class: "m1" },
-      project: {
-        kurzbeschreibung: "",
-        betreuenderDozent: "",
-        externeMitwirkende: "",
-        schlagworter: "",
-        id: "",
-        title: "",
-      },
-
-      projectList: [],
-      searchResult: [],
-      existingKeywordList: [],
-
+      // projectList: [],
+      //searchResult: [],
+      // existingKeywordList: [],
       keywords: [],
       keyword: "",
     };
@@ -91,7 +83,8 @@ export default {
       }
     },
 
-    adjustKeywords() {
+    /*  
+   adjustKeywords() {
       this.searchResult = [];
       for (var project of this.projectList) {
         for (var keyword of this.keywords) {
@@ -103,11 +96,7 @@ export default {
           this.searchResult = this.projectList;
         }
       }
-    },
-
-    fetchData(proj) {
-      this.project.titel = proj.titel;
-    },
+    }, */
   },
   computed: {
     getUserRole() {

@@ -93,12 +93,6 @@ const actions = {
                     dispatch('sendEmail')
                 }
                 dispatch("profile/createProfile", authorization_token, { root: true })
-                //TODO: call dispatch for loaduserdata to get user uuid -> create profil with user uuid and make a relatinoship field in backend
-                //TODO: then use useruuid for loading profile from backend -> then loadprofiledata can use the user uuid to get the profile
-                //TODO: -> with different uuids from group members and admins profiles can be filtered and shown. - atm it is done with uids
-                //TODO: do it like this: first createuser.then so here -> dispatch(loaduserdata).then(here call createprofile) <- this is still here in function
-                //TODO: dispatch userdata update profileimage or put in image url in const data above, so it is linked  with the user creation
-
             }).catch(error => {
                 alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Möglicherweise hast du dich bereits regisrtiert. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de")
 

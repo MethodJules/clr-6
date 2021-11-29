@@ -175,8 +175,8 @@ export default {
       }
     },
 
+    //filters the current user by id and looks if it is in the provided memberList - is used in a function for leaving the group
     filter(memberId, memberList) {
-      //filters the current user by id - is used in a function for leaving the group
       let filteredCollection = memberList.filter((item) => {
         if (item.userid == memberId) {
           return true;

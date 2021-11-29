@@ -228,6 +228,7 @@ export default {
       if (!this.$v.$invalid) {
         this.newProject();
       } else {
+        //prevents form from closing, when inputs are invalid
         evt.preventDefault();
       }
     },
