@@ -1,0 +1,11 @@
+.git
+.gitignore
+.dockerignore
+.vs
+.idea
+node_modules
+dist
+error.log
+cypress
+cypress.json
+

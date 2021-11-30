@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  clr-frontend:
+    container_name: clr-frontend-dev
+    build:
+      context: ../../
+      dockerfile: docker/local-development/Dockerfile
+    volumes:
+      - '../../:/app'
+      - '/app/node_modules'
+    ports:
+      - '8080:8080'

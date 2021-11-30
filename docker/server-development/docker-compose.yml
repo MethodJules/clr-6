@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  clr-frontend:
+    container_name: clr-frontend-dev
+    build:
+      context: ../../
+      dockerfile: docker/server-development/Dockerfile
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.clr_frontend_vue.entrypoints=http"
+      - "traefik.http.routers.clr_frontend_vue.rule=Host(`clr-frontend.ddns.net`, `collaborative-literature-review.uni-hildesheim.de`)"
+      - "traefik.http.middlewares.clr_frontend_vue-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.clr_frontend_vue.middlewares=clr_frontend_vue-https-redirect"
+      - "traefik.http.routers.clr_frontend_vue-secure.entrypoints=https"
+      - "traefik.http.routers.clr_frontend_vue-secure.rule=Host(`clr-frontend.ddns.net`, `collaborative-literature-review.uni-hildesheim.de`)"
+      - "traefik.http.routers.clr_frontend_vue-secure.tls=true"
+      - "traefik.http.routers.clr_frontend_vue-secure.tls.certresolver=http"
+      - "traefik.http.routers.clr_frontend_vue-secure.service=clr_frontend_vue"
+      - "traefik.http.services.clr_frontend_vue.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+    networks:
+      - proxy
+      - default
+    volumes:
+      - './:/app'
+      - '/app/node_modules'
+networks:
+  proxy:
+    external:
+      name: proxy
