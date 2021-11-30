@@ -18,13 +18,13 @@ services:
       - "traefik.http.routers.clr_frontend_vue-secure.tls=true"
       - "traefik.http.routers.clr_frontend_vue-secure.tls.certresolver=http"
       - "traefik.http.routers.clr_frontend_vue-secure.service=clr_frontend_vue"
-      - "traefik.http.services.clr_frontend_vue.loadbalancer.server.port=80"
+      - "traefik.http.services.clr_frontend_vue.loadbalancer.server.port=8080"
       - "traefik.docker.network=proxy"
     networks:
       - proxy
       - default
     volumes:
-      - './:/app'
+      - '../../:/app'
       - '/app/node_modules'
 networks:
   proxy:
