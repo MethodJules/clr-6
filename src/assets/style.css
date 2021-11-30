@@ -117,6 +117,11 @@ hr {
     padding-right: 3px;
 }
 
+.card-title,
+.mainContent h1 {
+    color: unset;
+}
+
 #app {
     background: #F5F8FE;
     min-height: 100vh;
