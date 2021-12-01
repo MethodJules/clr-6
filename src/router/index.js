@@ -94,11 +94,6 @@ const routes = [
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
             },
             {
-                path: '/showchat',
-                name: 'ShowChat',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ShowChat.vue')
-            },
-            {
                 path: '/projectsearch/:keyword',
                 name: 'ProjectSearch',
                 props: true,
