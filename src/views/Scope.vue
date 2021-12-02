@@ -17,13 +17,13 @@ export default {
 </script>
 <style>
     .home {
-        width: 70%;
+        width: 100vw;
         background-color: white;
-        height: 85%;
+        height: 100vw;
         position: absolute;
-        top: 10%;
-        left: 5%;
-        padding: 30px
+        /* top: 10%;
+        left: 5%; */
+        /* padding: 30px; */
     }
     h1 {
         color: #c93e37;

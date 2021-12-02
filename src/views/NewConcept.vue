@@ -1,15 +1,10 @@
 <template>
-    
+
     <div class="home">
         <h1>
             CONCEPT VERSIONS
         </h1>
-        <div v-if="newconcept" @click="openConcept()" class="newConcept">
-            <h1 class="centerText">
-                +
-            </h1>
-        </div>
-        <div v-if="concept" @click="openConcept()" class="conceptMap">
+        <div class="conceptMap">
             <div class="showElements">
                 <div class="scrollbar">
                     <vuescroll :ops="ops">
@@ -27,10 +22,10 @@
 
             </div>
             <div class="viewConcept">
-       
-                    <div class="modalView" v-if="showModal">                    
+
+                    <div class="modalView" v-if="showModal">
                         <h2 class="center"> CONNECTION </h2>
-                       
+
                         <table>
                             <tr>
                                 <td class="tableName"> Concept: </td>
@@ -58,65 +53,51 @@
                                     <input type="text" />
                                 </td>
                             </tr>
-                  
+
                         </table>
-                       
-                       
+
+
 
                     </div>
-         
+
             </div>
         </div>
 
     </div>
 </template>
-
-
-
 <script>
-
 import vuescroll from 'vuescroll';
 
-    export default {
-        name: 'Home',
-        data: function () {
-            return {
-                newconcept: true,
-                concept: false,
-                showModal: false,
+export default {
+    data: function() {
+        return {
                 items: [
-                    {name: "Rivers"},
+                    {name: "Riers"},
                     { name: "Desserts" },
                     {name: "Minerals"}
 
                 ],
-                ops: {           
+                ops: {
                     rail: {
-                        background: '#bababa',                      
+                        background: '#bababa',
                         border: '1px solid #000',
-                        opacity: 0.5, 
-                        size: "10px"                        
+                        opacity: 0.5,
+                        size: "10px"
                     },
                     bar: {
                         background: 'white',
                         size: "8px",
                         keepShow: true,
                     }
-                }
-                
-            }
-        },
-        components: {
-            vuescroll
-        },
-        methods: {
-            openConcept() {
-                this.newconcept = false;
-                this.concept = true;
-                
-            },
+                },
+        }
+    },
+    components: {
+        vuescroll
+    },
+    methods: {
             addElement() {
-                alert("Hinzufügen");
+                alert("Hinzufï¿½gen");
                 this.$store.dispatch('items/addItem', { text: "Item"});
                 console.log(this.$store.state.items);
             },
@@ -126,11 +107,12 @@ import vuescroll from 'vuescroll';
             deleteItem() {
                 alert("Delete");
             }
-        }
+    }
 }
 </script>
-<style>
-    .home {
+
+<style scoped>
+.home {
         width: 70%;
         background-color: white;
         height: 85%;
@@ -250,6 +232,6 @@ import vuescroll from 'vuescroll';
 
     }
         input[type=text]:focus {
-            outline: 2px solid #c93e37; 
+            outline: 2px solid #c93e37;
         }
 </style>

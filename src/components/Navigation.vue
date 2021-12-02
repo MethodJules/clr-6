@@ -1,32 +1,49 @@
 <template>
-    
+
     <div class="navigation">
-        <router-link tag="div" to="/scope" class="element">
-            <p><b>Scope </b></p>
-        </router-link>
+        <!--  <router-link tag="div" to="/scope" class="element">
+        <p><b>Scope </b></p>
+    </router-link> -->
         <router-link tag="div" to="/concept" class="element">
             <p><b>Concept </b></p>
         </router-link>
-        <router-link tag="div" to="/search" class="element">
-            <p><b>Search </b></p>
+        <router-link tag="div" to="/review" class="element">
+            <p><b>Review </b></p>
         </router-link>
-        <router-link tag="div" to="/analysis" class="element">
-            <p><b>Analysis </b></p>
-        </router-link>
-        <router-link tag="div" to="/agenda" class="element">
-            <p><b>Agenda </b></p>
-        </router-link>
+        <router-link tag="div" to="/groupmanagement" class="element">
+        <p><b>Groupmanagement </b></p>
+        </router-link> 
+        <!-- <router-link tag="div" to="/analysis" class="element">
+        <p><b>Analysis </b></p>
+    </router-link> -->
+        <!-- <router-link tag="div" to="/agenda" class="element">
+        <p><b>Agenda </b></p>
+    </router-link> -->
 
-        <div>
-            <beautiful-chat :participants="participants"
+        <div class="search">
+            <beautiful-chat class="chat"
+                            :participants="participants"
                             :isOpen="isChatOpen"
                             :open="openChat"
                             :close="closeChat"
                             :onMessageWasSent="onMessageWasSent"
                             :colors="colors"
-                            :messageList="messageList" />
+                            :messageList="messageList">
+
+                <template v-slot:header class="chat-header">
+                    Helper
+                </template>
+                <template v-slot:user-avatar="{ message, user }">
+                    <div style="margin: 5px;" v-if="message.type === 'text' && user && user.name">
+
+                    </div>
+                </template>
+            </beautiful-chat>
         </div>
-            <!--      
+        <router-link tag="div" to="/forum" class="forum">
+            <p><b>Forum </b></p>
+        </router-link> -->
+        <!--
          :newMessagesCount="newMessagesCount"
 
          :showEmoji="true"
@@ -42,7 +59,7 @@
          @onType="handleOnType"
          @edit="editMessage"
     -->
-            <!--
+        <!--
             <div class="search" @click="showDiv()">
                 <p><b>&#9993; </b></p>
             </div>
@@ -52,7 +69,7 @@
 
             </div>
     -->
-        </div>
+    </div>
 </template>
 <script>
 
@@ -60,8 +77,8 @@
         name: 'App',
         data: function () {
             return {
-                showSearch: false, 
-           
+                showSearch: false,
+
                 participants: [
                     {
                         id: 'user1',
@@ -70,13 +87,12 @@
                     {
                         id: 'user2',
                         name: 'User',
-    
+
                     }
                 ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
-                titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
-                messageList: [
-                    { type: 'text', author: `me`, data: { text: `Say yes!` } },
-                    { type: 'text', author: `user1`, data: { text: `No.` } }
+                  messageList: [
+                    { type: 'text', author: `me`, data: { text: `Ich habe eine Frage...` } },
+                    { type: 'text', author: `user1`, data: { text: `Da helfe ich dir gern!` } }
                 ], // the list of the messages to show, can be paginated and adjusted dynamically
                 newMessagesCount: 0,
                 isChatOpen: false, // to determine whether the chat window should be open or closed
@@ -90,15 +106,15 @@
                         bg: '#c93e37'
                     },
                     messageList: {
-                        bg: '#ffffff'
+                        bg: '#c93e37'
                     },
                     sentMessage: {
-                        bg: '#c93e37',
-                        text: '#ffffff'
+                        bg: '#ffffff',
+                        text: '#222222'
                     },
                     receivedMessage: {
                         bg: '#eaeaea',
-                        text: '#222222'
+                        text: '#c93e37'
                     },
                     userInput: {
                         bg: '#f4f7f9',
@@ -161,8 +177,8 @@
         right: 10px;
         position: absolute;
         height: 99%;
-        margin-top: 5px;    
-        
+        margin-top: 5px;
+
     }
     .element {
         background-color: white;
@@ -176,8 +192,9 @@
         cursor: pointer;
     }
     .router-link-active {
-        background: #c93e37;
+        background: #c93e37 !important;
         color: white;
+       
     }
 
     p {
@@ -185,7 +202,6 @@
         vertical-align: middle;
     }
     .search {
-        background-color: #c93e37;
         width: 30%;
         margin-left: 30%;
         position: absolute;
@@ -212,5 +228,33 @@
         position: absolute;
         right: 5px;
     }
+    .forum {
+        position: absolute;
+        bottom: 0;
+        margin-left: 65%;
+        width: 30%;
+        height: 60px;
+        background-color: #c93e37;
+        text-align: center;
+        margin-bottom: 20px;
+        display: table;
+        cursor: pointer;
+        color: white;
+        border-radius: 50%;
+    }
+
+    .element {
+        background-color: white;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        height: 12%;
+        display: table;
+        margin-top: 25px;
+        cursor: pointer;
+    }
+
+
 </style>
 
