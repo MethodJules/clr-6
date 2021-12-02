@@ -1,0 +1,136 @@
+﻿@charset "UTF-8";
+
+html {
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 100%;
+}
+
+body {
+    background-color: #F6F8FF;
+    min-height: 100%;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0 !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body a {
+    color: #57AD8D;
+    text-decoration: none;
+    transition: all .6s ease;
+}
+
+body a:hover {
+    color: #41826a;
+    cursor: pointer;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: linear-gradient(to right, #F7F9FE, #D1D3D7, #F7F9FE);
+    margin-bottom: 20px;
+}
+
+li {
+    list-style: none;
+}
+
+@media (min-width: 1024px) {
+    html {
+        font-size: 16px;
+        margin: 0;
+        box-sizing: border-box;
+        width: 100%;
+    }
+}
+
+@media (min-width: 240px) and (max-width: 1023px) {
+    html {
+        font-size: 14px;
+        margin: 0;
+        box-sizing: border-box;
+        width: 100%;
+    }
+}
+
+
+
+.card {
+    background: white;
+    margin-top: 20px;
+}
+
+@media (min-width: 240px) and (max-width: 720px) {
+    .card {
+        margin-bottom: 20px;
+    }
+}
+
+.card-form {
+    padding: 40px 60px;
+    position: relative;
+    z-index: 1;
+    margin-top: 40px;
+}
+
+@media (min-width: 1360px) {
+    .card-form {
+        padding: 60px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+    .card-form {
+        padding: 40px;
+    }
+}
+
+@media (min-width: 240px) and (max-width: 720px) {
+    .card-form {
+        padding: 40px 20px;
+        margin-top: 10px;
+    }
+}
+
+
+a>img:hover {
+    opacity: 0.8;
+}
+
+a>img {
+    transition: all .6s ease;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    margin-bottom: 20px;
+}
+
+.fa-btn {
+    padding-right: 3px;
+}
+
+.card-title,
+.mainContent h1 {
+    color: unset;
+}
+
+#app {
+    background: #F5F8FE;
+    min-height: 100vh;
+}
+
+.w-background {
+    background-image: url("../assets/background2.jpg");
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
