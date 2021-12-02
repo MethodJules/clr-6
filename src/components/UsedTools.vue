@@ -8,7 +8,7 @@
       >
         <div>
           <b-form-checkbox
-            :id="tool.idd"
+            :id="tool.uuid"
             name="checkbox-1"
             @input="checkboxUpdate(index, tool)"
             v-model="tool.benutzt"
@@ -17,17 +17,15 @@
         </div>
       </div>
     </b-row>
-    <b-row>
-      <b-col cols="6"> </b-col>
-      <b-col>
-        <b-modal id="tools_edit_modal" title="tools">
-          <label for="neueTools">Benutztes Tool: </label>
-          <input v-model="tool" type="text" placeholder="Tool" />
-          <b-button @click="ok()"> OK </b-button>
-        </b-modal>
-        <b-button v-b-modal.tools_edit_modal>+</b-button>
-      </b-col>
+    <b-row class="buttons">
+      <b-button v-b-modal.tools_edit_modal v-if="getUserRole != 'lecturer'"
+        >+</b-button
+      >
     </b-row>
+    <b-modal id="tools_edit_modal" title="tools" @ok="ok">
+      <label for="neueTools">Benutztes Tool: </label>
+      <input v-model="tool" type="text" placeholder="Tool" />
+    </b-modal>
   </div>
 </template> 
 <script>
@@ -43,24 +41,23 @@ export default {
       var neueEingabe = {
         usedTool: this.tool,
       };
-
       this.$store.dispatch("tool/createTool", neueEingabe);
-
       this.tool = "";
     },
 
     checkboxUpdate(index, toolGeaendert) {
-      console.log(toolGeaendert);
-
       this.$store.dispatch("tool/updateToolWithCheckbox", toolGeaendert);
     },
   },
 
-  /* mounted() {
+  mounted() {
     this.$store.dispatch("tool/loadToolsFromBackend");
-  }, */
+  },
 
   computed: {
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
     ...mapGetters({ listOfTools: "tool/getTools" }),
   },
 };
@@ -73,5 +70,10 @@ export default {
 }
 h4 {
   color: white;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

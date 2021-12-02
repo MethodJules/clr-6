@@ -8,8 +8,15 @@
       sticky
     >
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
-      <b-navbar-brand>CLR Tool</b-navbar-brand>
 
+      <b-navbar-brand
+        v-if="inProjectList || inEinstellungen || inProfil || inProjectSearch"
+        >eCLR Tool</b-navbar-brand
+      >
+
+      <b-navbar-brand v-else>{{
+        getProjectName | truncate(19)
+      }}</b-navbar-brand>
       <b-navbar-nav>
         <b-nav-item to="/">
           <b-icon icon="house-fill" to="/">Startseite </b-icon></b-nav-item
@@ -20,10 +27,13 @@
         <b-navbar-nav>
           <!-- Es gibt kein Profil in router.. -->
           <b-nav-item
+            v-if="
+              inProjectList || inEinstellungen || inProfil || inProjectSearch
+            "
             :to="{
               name: 'Profil',
               params: {
-                project_id: this.$route.params.project_id,
+                user_internal_uid: this.getCurrentUserInternalUID,
               },
             }"
             >Profil</b-nav-item
@@ -66,7 +76,7 @@
               >Projektforum</b-nav-item
             >
           </b-navbar-nav>
-          <b-navbar-nav>
+          <b-navbar-nav v-if="getUserRole != 'lecturer'">
             <b-nav-item
               :to="{
                 name: 'Groupmanagement',
@@ -79,25 +89,24 @@
           </b-navbar-nav>
         </template>
 
-        <b-navbar-nav>
+        <b-navbar-nav
+          v-if="inProjectList || inEinstellungen || inProfil || inProjectSearch"
+        >
           <b-nav-item
             :to="{
               name: 'Einstellungen',
-              params: {
-                project_id: this.$route.params.project_id,
-              },
             }"
             >Einstellungen</b-nav-item
           >
         </b-navbar-nav>
 
-        <b-navbar-nav v-if="!startpage">
-          <b-input-group size="sm" class="mb-2">
+        <b-navbar-nav v-if="inProjectList || inEinstellungen || inProfil">
+          <b-input-group size="sm">
             <b-input-group-prepend is-text>
               <b-link
                 :to="{
                   name: 'ProjectSearch',
-                  params: { keyword2: keyword2 },
+                  params: { keyword: keyword },
                 }"
               >
                 <b-icon icon="search"></b-icon>
@@ -105,8 +114,8 @@
             </b-input-group-prepend>
             <b-form-input
               type="search"
-              placeholder="Projekte durchsuchen"
-              v-model="keyword2"
+              placeholder="Alle Projekte durchsuchen"
+              v-model="keyword"
             ></b-form-input>
           </b-input-group>
         </b-navbar-nav>
@@ -134,27 +143,29 @@
 }
 </style>
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
-      schlagwort: "Hallo",
-      keyword2: "",
+      //TODO: empty keyword leads to error, but a single whitespace ruins the placeholder -> change so that both works
+      //keyword: " ",
+      keyword: "",
       projectId: this.$route.params.project_id,
     };
   },
   methods: {
     logout() {
-      //wieso ist state.csrf_token bei aufruf von logout in drupal_api undefined
-      //in dieser Komponente den csrf_token aus drupal_api state zu holen funktioniert aber wiederum
-      this.$store.dispatch("drupal_api/logoutDrupal");
-      this.makeToast();
+      //TODO: maybe clear the state after logout, so nothing unexpected happens, when another user logs in afterwards
+      this.$store.dispatch("drupal_api/logoutDrupal").then(() => {
+        this.makeToast();
+      });
     },
     makeToast() {
       this.$root.$bvToast.toast(
-        `Auf Wiedersehen ${this.$store.state.drupal_api.user.name}`,
+        `Auf Wiedersehen ${this.$store.state.drupal_api.user.fullname}`,
         {
           title: "Bis zum nächsten Mal",
-          autoHideDelay: 4000,
           variant: "info",
         }
       );
@@ -162,8 +173,51 @@ export default {
   },
 
   computed: {
+    ...mapGetters({ getUserRole: "drupal_api/getUserRole" }),
+
+    showProfileSettingsLinks() {
+      return (
+        this.$route.name === "ProjectList" ||
+        this.$route.name === "Profil" ||
+        this.$route.name === "Einstellungen"
+      );
+    },
+    getCurrentUserUUID() {
+      return this.$store.state.profile.userData.uuid;
+    },
+    //provided user uid is taken from the state, where the currentuuser uid is saved, because this navigation should only lead to the own profile
+    getCurrentUserInternalUID() {
+      return this.$store.state.drupal_api.user.uid;
+    },
     startpage() {
       return this.$route.name === "ProjectList";
+    },
+    inProjectList() {
+      return this.$route.name === "ProjectList";
+    },
+    inProfil() {
+      return this.$route.name === "Profil";
+    },
+    inProjectSearch() {
+      return this.$route.name === "ProjectSearch";
+    },
+    inEinstellungen() {
+      return this.$route.name === "Einstellungen";
+    },
+
+    getProjectName() {
+      //use this instead if truncate filter works not as intended
+      // return this.$store.state.project.currentProject.title.slice(0, 15);
+      return this.$store.state.project.currentProject.title;
+    },
+  },
+  filters: {
+    //truncates when the length of given value (project title) is longer than the given cutoff threshold
+    truncate: function (value, cutoff) {
+      if (value.length > cutoff) {
+        return value.slice(0, cutoff) + "...";
+      }
+      return value;
     },
   },
 };

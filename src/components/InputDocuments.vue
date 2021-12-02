@@ -13,7 +13,9 @@
             <h3>Input</h3>
         </b-row> -->
     <b-row class="d-flex justify-content-end">
-      <b-button v-b-modal.fileUpload>+</b-button>
+      <b-button v-if="getUserRole != 'lecturer'" v-b-modal.fileUpload
+        >+</b-button
+      >
       <!-- For Database upload. This button may be activated later...     -->
       <!-- <b-button @click="uploadToDatabase()">Database Hochladen</b-button> -->
     </b-row>
@@ -119,6 +121,9 @@ export default {
     };
   },
   computed: {
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
     ...mapGetters({ getInputs: "inputDocuments/getInputs" }),
     isLoading() {
       if (this.okButtonClicked) {
@@ -127,9 +132,6 @@ export default {
         return { display: "none" };
       }
     },
-    /* getInputs() {
-      this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
-    }, */
   },
   methods: {
     /**
@@ -139,7 +141,6 @@ export default {
      * closes the modal
      */
     upload(files) {
-      console.log(files);
       // changing okButtonClicked for loading bar
       this.okButtonClicked = true;
       this.$store.dispatch("inputDocuments/uploadFilesToDatabase", files);
@@ -183,13 +184,7 @@ export default {
   },
 
   mounted() {
-    /* Because of the loading issues, we doesn't use the mounted function. We had the issue, that 
-    the inputdocuments from backend to state could not be loaded, the state was always empty, where the inputarray of Documents are stored
-    
-    PLEASE NOTE: 
-    Therefore we did not use the get request in mounted(), but in phases.js with (line 113), so that the input documents of the respective phases 
-    are loaded easily after the individual phases are loaded */
-    //this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
+    this.$store.dispatch("inputDocuments/loadInputdocumentsFromBackend");
   },
 };
 </script>

@@ -1,12 +1,17 @@
 <template>
   <div class="projektAnlegen">
     <div>
-      <b-modal ref="create_project" title="Projekt anlegen">
+      <b-modal
+        ref="create_project"
+        title="Projekt anlegen"
+        @ok="submitForm"
+        cancel-title="Abbrechen"
+      >
         <form @submit.prevent="submitForm">
           <table>
             <tr>
               <td>
-                <label for="title">Projekttitel: </label>
+                <label for="title">Projekttitel</label>
               </td>
             </tr>
             <tr>
@@ -22,14 +27,14 @@
                   <span
                     v-if="!$v.project.title.required && $v.project.title.$dirty"
                     class="text-danger"
-                    >Title is required!</span
+                    >Bitte trage einen Titel ein!</span
                   >
                   <span
                     v-if="
                       !$v.project.title.minLength && $v.project.title.$dirty
                     "
                     class="text-danger"
-                    >Title should be at least 4 letters long</span
+                    >Der Titel sollte mindestens 4 Zeichen lang sein.</span
                   >
                 </div>
               </td>
@@ -37,69 +42,59 @@
             <tr>
               <td>
                 <label for="betreuenderDozent"
-                  >Betreuer: mehrere eingeben möglich</label
+                  >Betreuer*innen (Mehrfachauswahl möglich)</label
                 >
               </td>
             </tr>
             <tr>
               <td>
                 <div>
-                  <!-- simple list instead of simplesuggest -> map name to id 
-TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
--->
-
                   <div
+                    class="add-lecturer"
                     v-for="(betreuenderDozent, i) in project.betreuenderDozent"
                     :key="i"
                   >
-                    <select
-                      v-model="project.betreuenderDozent[i]"
-                      class="form-control"
+                    <b-form-input
+                      disabled
+                      v-model="project.betreuenderDozent[i].name"
+                      id="input-2"
                     >
+                    </b-form-input>
+                    <b-button variant="link" @click="deleteLecturer(i)"
+                      ><b-icon icon="x-circle"></b-icon
+                    ></b-button>
+                  </div>
+                  <div class="add-lecturer">
+                    <select v-model="selectedLecturer" class="form-control">
                       <option
                         v-for="lecturer in getLecturers"
-                        v-bind:value="lecturer.uuid"
+                        v-bind:value="lecturer"
                         v-bind:key="lecturer.uuid"
                       >
                         {{ lecturer.name }}
                       </option>
                     </select>
+                    <div style="width: 3rem"></div>
                   </div>
-                  <b-button @click="addLecturer('')"
-                    >Weiteren Dozenten hinzufügen</b-button
+
+                  <b-button size="sm" @click="addLecturer(selectedLecturer)"
+                    >Dozenten hinzufügen</b-button
                   >
-                  <!--  <span>Selected: {{ project.betreuenderDozent }}</span> -->
-
-                  <!-- <select v-model="selected">
-  <option v-for="option in options" v-bind:value="option.value" v-bind:key="option.value">
-    {{ option.text }}
-  </option>
-</select>
-<span>Selected: {{ selected }}</span> -->
-
                   <span
                     v-if="
                       !$v.project.betreuenderDozent.required &&
                       $v.project.betreuenderDozent.$dirty
                     "
                     class="text-danger"
-                    >Dozent is required!</span
+                    >Bitte füge einen Betreuer oder eine Betreuerin hinzu.</span
                   >
-                  <!--                   <span
-                    v-if="
-                      !$v.project.betreuenderDozent.alpha &&
-                      $v.project.betreuenderDozent.$dirty
-                    "
-                    class="text-danger"
-                    >A name is only allowed to use letters</span
-                  > -->
                 </div>
               </td>
             </tr>
             <tr>
               <td>
                 <label for="externeMitwirkende"
-                  >Externe Partner*innen(bitte mit Komma trennen)
+                  >Externe Partner*innen (bitte mit Komma trennen)
                 </label>
               </td>
             </tr>
@@ -119,7 +114,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             <tr>
               <td>
                 <label for="schlagworter"
-                  >Schlagwörter(bitte mit Komma trennen)
+                  >Schlagwörter (bitte mit Komma trennen)
                 </label>
               </td>
             </tr>
@@ -137,7 +132,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
             </tr>
             <tr>
               <td>
-                <label for="kurzbeschreibung">Projektbeschreibung: </label>
+                <label for="kurzbeschreibung">Projektbeschreibung</label>
               </td>
             </tr>
             <tr>
@@ -156,7 +151,7 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                       $v.project.kurzbeschreibung.$dirty
                     "
                     class="text-danger"
-                    >Kurzbeschreibung is required!</span
+                    >Bitte gebe deinem Projekt eine kurze Beschreibung.</span
                   >
                   <span
                     v-if="
@@ -164,31 +159,16 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
                       $v.project.kurzbeschreibung.$dirty
                     "
                     class="text-danger"
-                    >A Kurzbeschreibung must be at least 4 letters long</span
+                    >Die Beschreibung sollte mindestens 4 Zeichen lang
+                    sein.</span
                   >
                 </div>
               </td>
             </tr>
           </table>
-          <div v-if="inProjektbeschreibung">
-            <b-button @click="updateProject()"
-              >Projektbeschreibung bearbeiten</b-button
-            >
-          </div>
-          <div v-else>
-            <b-button @click="submitForm()">Projekt anlegen</b-button>
-            <!-- <b-button @click="newProject()">Projekt anlegen</b-button> -->
-          </div>
         </form>
       </b-modal>
-
-      <div v-if="inProjektbeschreibung">
-        <b-button @click="showThisModal()" size="lg" v-b-modal.create_project
-          >Beschreibung bearbeiten</b-button
-        >
-      </div>
-      <!-- TODO: remove else part for stuff in projektbeschreibung -->
-      <div v-else>
+      <div>
         <!--         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project>{{getLecturers}}</b-button> -->
         <b-button @click="showThisModal()" size="lg" v-b-modal.create_project
           >+</b-button
@@ -199,23 +179,11 @@ TODO: V-For über dozentenarray, jeder neue eintrag wird gepusht
 </template>
 <script>
 import { required, minLength /* alpha */ } from "vuelidate/lib/validators";
-import VueSimpleSuggest from "vue-simple-suggest";
-import "vue-simple-suggest/dist/styles.css";
 export default {
-  components: {
-    VueSimpleSuggest,
-  },
+  components: {},
   data() {
     return {
-      lecturer_array: [this.project.betreuenderDozent],
-      chosen: "",
-      autoCompleteStyle: {
-        vueSimpleSuggest: "position-relative",
-        inputWrapper: "",
-        defaultInput: "form-control",
-        suggestions: "position-absolute list-group z-1000",
-        suggestItem: "list-group-item",
-      },
+      selectedLecturer: "",
     };
   },
 
@@ -242,31 +210,59 @@ export default {
     showThisModal() {
       this.$refs["create_project"].show();
     },
+
     addLecturer(betreuenderDozent) {
-      this.project.betreuenderDozent.push(betreuenderDozent);
+      if (betreuenderDozent != "") {
+        this.project.betreuenderDozent.push(betreuenderDozent);
+      } else {
+        alert("Bitte wähle einen Dozenten aus");
+      }
     },
 
-    submitForm() {
+    deleteLecturer(index) {
+      this.project.betreuenderDozent.splice(index, 1);
+    },
+
+    submitForm(evt) {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.newProject();
+      } else {
+        //prevents form from closing, when inputs are invalid
+        evt.preventDefault();
       }
     },
     newProject() {
-      var schlagwortarray = this.project.schlagworter.split(",");
-      for (var i = 0; i < schlagwortarray.length; ++i) {
-        schlagwortarray[i] = schlagwortarray[i].trim();
+      var keywords = "";
+      //when keywords are not required, it is possible the user creating a problem does not set a single keyword. following operations would lead to an error, therefore we check if schlagworter.length>0
+      if (this.project.schlagworter.length > 0) {
+        //split keyword string into array. seperated by comma
+        var schlagwortarray = this.project.schlagworter.split(",");
+        //trims whitespace
+        for (var i = 0; i < schlagwortarray.length; ++i) {
+          schlagwortarray[i] = schlagwortarray[i].trim();
+        }
+        //removes duplicates and empty keywords
+        let keywords_filtered = schlagwortarray.filter((item, index) => {
+          return schlagwortarray.indexOf(item) === index && item != "";
+        });
+        keywords = Object.assign({}, keywords_filtered);
       }
-      var keywords = Object.assign({}, schlagwortarray);
 
       //filter duplicates (indexof) and empty entries (item != "") from array before making an dozent object array
-      let dozent_filtered = this.project.betreuenderDozent.filter(
-        (item, index) => {
-          return (
-            this.project.betreuenderDozent.indexOf(item) === index && item != ""
-          );
-        }
-      );
+
+      /*filter duplicate objects out, by using map to get userid from lecturers and then filtering by it, by looking if indexOf this value (userid) is already in the array. 
+        If indexof and index are not the same, this means the userid and respectively the object were already found before in the array, are therefore duplicates and will be removed.
+        the end result is an array of the ID attribute only
+        Solution from: https://stackoverflow.com/questions/15125920/how-to-get-distinct-values-from-an-array-of-objects-in-javascript*/
+
+      let dozent_filtered = this.project.betreuenderDozent
+        .map((item) => item.uuid)
+        .filter(
+          (value, index, self) =>
+            // && value != undefined -> redundant filtering? addLecturer already checks, that no empty values are added
+            self.indexOf(value) === index && value != undefined
+        );
       //make dozent object array for http request
       let dataArray = [];
       for (const dozent of dozent_filtered) {
@@ -274,7 +270,6 @@ export default {
       }
 
       const dozenten = Object.assign({}, dataArray);
-      console.log(dozenten);
 
       var addProj = {
         title: this.project.title,
@@ -284,79 +279,32 @@ export default {
         schlagworter: keywords,
         gruppenadmin: this.$store.state.sparky_api.drupalUserID,
       };
-
-      this.$store.dispatch("project/createProject", addProj);
-      //this.projectList.push(addProj)
-      this.$refs["create_project"].hide();
-      this.project.title = " ";
-      this.project.kurzbeschreibung = "";
-      this.project.betreuenderDozent = [];
-      this.project.externeMitwirkende = " ";
-      this.project.schlagworter = " ";
-      //this.projectList.length + 1
-    },
-
-    updateProject() {
-      this.$v.$touch();
-      if (!this.$v.$invalid) {
-        console.log("title: ${this.titela}");
-        //this.updateForm()
-        var schlagwortarray = this.project.schlagworter.split(",");
-        var keywords = Object.assign({}, schlagwortarray);
-        console.log(keywords);
-
-        var updatedProj = {
-          title: this.project.title,
-          kurzbeschreibung: this.project.kurzbeschreibung,
-          betreuenderDozent: this.project.betreuenderDozent,
-          externeMitwirkende: this.project.externeMitwirkende,
-          schlagworter: keywords,
-          gruppenadmin: this.$store.state.sparky_api.drupalUserID,
-          projectIdd: this.$route.params.project_id,
-        };
-
-        this.$store.dispatch("project/updateProject", updatedProj);
-      }
+      this.$store.dispatch("project/createProject", addProj).then(() => {
+        this.$refs["create_project"].hide();
+        this.project.title = " ";
+        this.project.kurzbeschreibung = "";
+        this.project.betreuenderDozent = [];
+        this.project.externeMitwirkende = " ";
+        this.project.schlagworter = " ";
+      });
     },
   },
 
   computed: {
-    simpleSuggestionListLecturers() {
-      return this.$store.state.sparky_api.lecturers;
-    },
-
-    simpleSuggestionListLecturers2() {
-      // console.log(this.$store.state.user.lecturers);
-      return this.$store.state.user.lecturers;
-    },
-
-    inProjektbeschreibung() {
-      // console.log(this.$route.name);
-      return this.$route.name === "Projektbeschreibung";
-    },
-
     getLecturers() {
-      /*    console.log(this.$store);
-      console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getLecturers"]); */
-
       return this.$store.getters["user/getLecturers"];
     },
-
     getStudents() {
-      /*console.log(this.$store);
-      console.log(this.$store.getters);
-      console.log(this.$store.getters["user/getStudents"]); */
-
       return this.$store.getters["user/getStudents"];
     },
   },
-  mounted() {
-    this.$store.dispatch("user/loadLecturersFromBackend");
-    this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadUserFromBackend");
-    /*     console.log(this.$store.state.user.lecturers);
-    console.log(this.$store.state.user.students); */
-  },
+  mounted() {},
 };
 </script>
+<style scoped>
+.add-lecturer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

@@ -1,8 +1,11 @@
 <template>
     <div class="home">
+        <b-alert show>Die Forums-Funktionalität wird zur Zeit noch erstellt!</b-alert>
+    </div>
+    <!-- <div class="home">
         <h1>Welcome to the Forum</h1>
         <CategoryList :categories="categories" />
-    </div>
+    </div> -->
 </template>
 
 <script>

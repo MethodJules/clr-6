@@ -13,7 +13,9 @@
             <h3>Output</h3>
         </b-row> -->
     <b-row class="d-flex justify-content-end">
-      <b-button v-b-modal.outputfileUpload>+</b-button>
+      <b-button v-if="getUserRole != 'lecturer'" v-b-modal.outputfileUpload
+        >+</b-button
+      >
       <!-- For Database upload. This button may be activated later...     -->
       <!-- <b-button @click="uploadToDatabase()">Database Hochladen</b-button> -->
     </b-row>
@@ -117,6 +119,10 @@ export default {
     };
   },
   computed: {
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
+
     ...mapGetters({ getOutputs: "output_documents/getOutputs" }),
     isLoading() {
       if (this.okButtonClicked) {
@@ -134,7 +140,6 @@ export default {
      * closes the modal
      */
     upload(files) {
-      console.log(files);
       // changing okButtonClicked for loading bar
       this.okButtonClicked = true;
       this.$store.dispatch("output_documents/uploadFilesToDatabase", files);
@@ -179,13 +184,7 @@ export default {
   },
 
   mounted() {
-    /* Because of the loading issues, we doesn't use the mounted function. We had the issue, that 
-    the outputdocuments from backend to state could not be loaded, the state was always empty, where the outputarray of Documents are stored
-    
-    PLEASE NOTE: 
-    Therefore we did not use the get request in mounted(), but in phases.js with (line 113), so that the output documents of the respective phases 
-    are loaded easily after the individual phases are loaded */
-    //this.$store.dispatch("output_documents/loadOutputdocumentsFromBackend");
+    this.$store.dispatch("output_documents/loadOutputdocumentsFromBackend");
   },
 };
 </script>

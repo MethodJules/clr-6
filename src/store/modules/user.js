@@ -1,4 +1,5 @@
-import axios from 'axios';
+import axios from "@/config/custom_axios";
+
 
 const state = {
     lecturers: [],
@@ -13,9 +14,7 @@ const getters = {
             if ((typeof lecturer[1].field_fullname[0]) !== 'undefined') {
                 lecturer_array.push({ name: lecturer[1].field_fullname[0].value, uid: lecturer[1].uid[0].value, uuid: lecturer[1].uuid[0].value })
             }
-
         }
-        console.log(lecturer_array)
         return lecturer_array
     },
 
@@ -26,7 +25,6 @@ const getters = {
                 student_array.push({ name: student[1].field_fullname[0].value, uid: student[1].uid[0].value, uuid: student[1].uuid[0].value })
             }
         }
-        console.log(student_array)
         return student_array
 
     }
@@ -35,12 +33,11 @@ const getters = {
 const actions = {
 
 
-    async loadLecturersFromBackend({ commit, state, rootState }) {
-        // console.log(state)
+    async loadLecturersFromBackend({ commit, rootState }) {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/clr/clr_resource/lecturer?_format=json`,
+            url: `clr/clr_resource/lecturer?_format=json`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -50,14 +47,8 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                //console.log(response)
-
                 let lecturers = response;
-                //console.log(response.data.users)
-                //das hier ist korrekt
-                // console.log(response.data.users[13].field_fullname[0].value)
                 lecturers = Object.entries(response.data.users)
-                //console.log(lecturers)
                 commit('LOAD_LECTURERS', lecturers);
 
             })
@@ -67,12 +58,11 @@ const actions = {
 
     },
 
-    async loadStudentsFromBackend({ commit, state, rootState }) {
-        // console.log(state)
+    async loadStudentsFromBackend({ commit, rootState }) {
 
         var config = {
             method: 'get',
-            url: `https://clr-backend.x-navi.de/clr/clr_resource/student?_format=json`,
+            url: `clr/clr_resource/student?_format=json`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -82,8 +72,6 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                // console.log(response)
-                // console.log(Object.entries(response.data.users))
                 const students = Object.entries(response.data.users)
                 commit('LOAD_STUDENTS', students);
 

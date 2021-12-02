@@ -2,77 +2,37 @@
   <div>
     <h1>Meine Projekte</h1>
     <br />
-    <b-overlay :show="getLoadingStatus" rounded="sm">
-      <b-row>
-        <!-- <b-card class="m-2"
-        v-for="proj in projectList"
-        :key="proj.projectId"
-        :title="proj.titel"
-      > -->
-        <div>
-          <b-row>
-            <b-col>
-              <div>
-                <table>
-                  <tr v-for="project in getMyProjectlist" :key="project.idd">
-                    <b-card style="max-height: 20rem">
-                      <b-col>
-                        <b-row>
-                          <b-col>
-                            <h3>{{ project.title }}</h3>
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col>
-                            <!--                         <b-link
-                          :to="{ name: 'Home', params: { user_id: getUserID } }"
-                          class="btn btn-outline-dark btn-block mb-2"
-                          >Dashboard</b-link
-                        >
-                      </b-col> -->
-                            <b-link
-                              :to="{
-                                name: 'Home',
-                                params: { project_id: project.idd },
-                              }"
-                              class="btn btn-outline-dark btn-block mb-2"
-                              >Dashboard</b-link
-                            >
-                          </b-col>
-                        </b-row>
-                        <b-row>
-                          <b-col>
-                            <ReflexionAuswahl :projectId="project.idd" />
-                          </b-col>
-                        </b-row>
-                      </b-col>
-                    </b-card>
-                  </tr>
-                </table>
-              </div>
-            </b-col>
-          </b-row>
-        </div>
-        <!-- </b-card> -->
+    <b-row class="projectlist-container">
+      <b-card title="Neues Projekt" v-if="getUserRole != 'lecturer'">
+        <ProjectForm :project="project"></ProjectForm>
+      </b-card>
 
-        <b-card title="Neues Projekt" style="max-height: 10rem" class="m-2">
-          <b-row>
-            <b-col cols="3">
-              <ProjectForm :project="project"></ProjectForm>
+      <div v-for="project in getMyProjectlist" :key="project.uuid">
+        <b-card class="projects">
+          <h3>
+            {{ project.title }}
+          </h3>
 
-              <!-- <b-link class=" btn btn-outline-dark mt-5">Neues Projekt</b-link> -->
-            </b-col>
-          </b-row>
+          <b-link
+            :to="{
+              name: 'Home',
+              params: {
+                project_id: project.uuid,
+              },
+            }"
+            class="btn btn-outline-dark btn-block mb-2"
+            >Dashboard</b-link
+          >
+          <ReflexionAuswahl :projectId="project.uuid" />
         </b-card>
-      </b-row>
-    </b-overlay>
+      </div>
+    </b-row>
   </div>
 </template>
 
 <script>
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 import ProjectForm from "@/components/ProjectForm";
-
 export default {
   name: "ProjectList",
 
@@ -84,14 +44,12 @@ export default {
     return {
       project: {
         kurzbeschreibung: "",
-        betreuenderDozent: [""],
+        betreuenderDozent: [],
         externeMitwirkende: "",
         schlagworter: [],
-        idd: "",
+        uuid: "",
         title: "",
       },
-
-      //projectList: this.getMyProjectlist,
     };
   },
 
@@ -99,43 +57,47 @@ export default {
     fetchData(proj) {
       this.project.title = proj.title;
     },
-    getProjectTitles: function () {
-      this.$http.get(
-        "https://clr-backend.x-navi.de/jsonapi/node/projekt",
-        function (title) {
-          this.$set("title", title);
-          console.log(title);
-        }
-      );
-    },
   },
 
   computed: {
-    getUserID() {
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
+    getCurrentUserInternalUID() {
       // return true
-      return this.$store.state.sparky_api.drupalUserID;
+      return this.$store.state.drupal_api.user.uid;
+    },
+
+    getLoadingStatus() {
+      return this.$store.state.loadingStatus;
     },
     getMyProjectlist() {
       return this.$store.state.project.myProjects;
     },
-    getLoadingStatus() {
-      return this.$store.state.project.loadingStatus;
-    },
   },
 
-  ready: function () {
-    this.getProjectTitles();
-  },
-  /* created(){
-    return this.$store.state.project[this.$route.params.titel]
-    
-  }, */
   async mounted() {
     this.$store.dispatch("project/loadProjectsFromBackend").then(() => {});
 
-    //this.projectList = this.$store.state.project.myProjects;
-    //console.log(this.projectList);
-    console.log("mount projectList");
+    //load lecturer student and user for different lists
+    this.$store.dispatch("user/loadLecturersFromBackend");
+    this.$store.dispatch("user/loadStudentsFromBackend");
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getCurrentUserInternalUID
+    );
   },
 };
 </script>
+<style scoped>
+.projectlist-container {
+  display: flex;
+}
+.projectlist-container * {
+  margin-right: 1rem;
+  max-width: 15rem;
+}
+.projects * {
+  width: 100%;
+}
+</style>

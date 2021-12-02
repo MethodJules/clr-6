@@ -1,6 +1,6 @@
 <template>
   <b-row class="buttons-container">
-    <b-link :to="{ name: 'Home' }" class="btn btn-secondary mb-2"
+    <b-link :to="{ name: 'Home' }" class="btn btn-secondary"
       >Zum Dashboard</b-link
     >
 
@@ -17,22 +17,36 @@
       ></b-form-textarea>
       <b-button @click="updateDocu(getDocumentation)">Speichern</b-button>
     </b-modal>
-    <b-button v-b-modal.documentation_edit_modal
+    <b-button
+      v-if="getUserRole != 'lecturer'"
+      v-b-modal.documentation_edit_modal
       >Dokumentation bearbeiten</b-button
     >
     <!-- <b-link :to="{name: 'Concept'}" class="btn btn-outline-dark btn-block mb-2">Dokumentation bearbeiten</b-link>   -->
     <!-- <div>{{inDoku.documentationText}}</div> -->
     <!-- v-model="inDoku.documentation" Zeile 15 -->
-    <b-button v-b-modal.modal-phase class="mb-phase">
+    <b-button
+      v-if="!isPhaseDone && getUserRole != 'lecturer'"
+      v-b-modal.modal-phase
+      class="mb-phase"
+    >
       Phase abschließen
+    </b-button>
+    <b-button
+      v-if="isPhaseDone && getUserRole != 'lecturer'"
+      v-b-modal.modal-phase
+      class="mb-phase"
+    >
+      Phase wieder öffnen
     </b-button>
 
     <b-modal
+      @ok="ok"
       id="modal-phase"
       title="Bist du dir Sicher?"
       cancel-title="Abbrechen"
     >
-      <div class="container">
+      <div class="container" v-if="!isPhaseDone">
         <div>
           <div class="eingabe">
             <div class="inputcontainer">
@@ -102,21 +116,19 @@ export default {
     };
   },
 
-  /* computed: {
-    // Anzahl der nicht erledigten Todos werden ausgegeben
-    übrig() {
-      return this.todos.filter((todo) => !todo.erledigt).length;
-    },
-  }, */
-
   methods: {
+    ok() {
+      this.$store.dispatch("project_phases/closePhase", {
+        phase: this.$store.state.project_phases.current_phase,
+        open_close_phase: !this.isPhaseDone,
+      });
+    },
     updateDocu(inDoku) {
-      console.log(inDoku + "das ist in templatebuttons");
-      //this.$store.dispatch("documentation/updateDocumentation", inDoku);
-      this.$store.dispatch("phases/updateDocumentation", inDoku);
+      this.$store.dispatch("project_phases/updateDocumentation", inDoku);
     },
 
     /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
+    //TODO: remove todo functionality, when real checklist is available
     addTodo() {
       let todo = {
         id: ++this.lastEntry_id,
@@ -127,25 +139,21 @@ export default {
       this.newTodo = "";
     },
   },
-  async mounted() {
-    await this.$store.dispatch("documentation/loadDocusFromBackend");
-    const doc = this.$store.state.documentation.documentations;
-    //console.log(doc)
-    //console.log(typeof(doc))
-    this.documentationList = doc;
-    console.log(this.documentationList[0].idd + "das ist in dokfield");
-
-    this.current_phase =
-      this.$store.state.phases.current_phase.documentationText;
-  },
+  async mounted() {},
 
   computed: {
+    getUserRole() {
+      return this.$store.state.drupal_api.user.role;
+    },
+    isPhaseDone() {
+      return this.$store.state.project_phases.current_phase.abschluss;
+    },
     getDocumentation: {
       get() {
-        return this.$store.state.phases.current_phase.documentationText;
+        return this.$store.state.project_phases.current_phase.documentationText;
       },
       set(value) {
-        this.$store.commit("phases/UPDATE_DOCUMENTATION", value);
+        this.$store.commit("project_phases/UPDATE_DOCUMENTATION", value);
       },
     },
   },
@@ -156,6 +164,12 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-top: 1rem !important;
+}
+
+.buttons-container * {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  max-width: 15rem;
 }
 
 footer {

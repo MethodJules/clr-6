@@ -1,19 +1,6 @@
 <template>
   <div>
     <div class="buttons-container">
-      <div>
-        <b-dropdown text="Phasen" right>
-          <b-dropdown-item
-            v-for="(phase, i) in phasen"
-            :key="i"
-            v-on:click="phaseAbschliessen(phase.id)"
-            ><b-icon :icon="phase.iconType" class="mr-3"></b-icon> "{{
-              phase.title
-            }}" abschließen
-          </b-dropdown-item>
-        </b-dropdown>
-      </div>
-
       <Postfach />
       <div>
         <!-- open modal -->
@@ -22,15 +9,27 @@
           <b-icon icon="chat"></b-icon>
         </b-button>
         <b-popover
+          :show.sync="show"
           target="popover-chat"
           triggers="click"
-          placement="bottomright"
+          placement="leftbottom"
         >
-          <ChatAdvanced />
+          <b-row>
+            <b-button
+              type="button"
+              class="close"
+              aria-label="Close"
+              @click="show = !show"
+            >
+              <span aria-hidden="true">&times;</span>
+            </b-button>
+          </b-row>
+          <b-row>
+            <ChatAdvanced />
+          </b-row>
         </b-popover>
       </div>
     </div>
-    ´
   </div>
 </template>
 <script>
@@ -39,77 +38,14 @@ import Postfach from "@/views/Postfach.vue";
 export default {
   data() {
     return {
-      phasen: [
-        {
-          id: "0",
-          title: "Gruppe Bilden",
-          status: true,
-          to: "PhaseTemplate",
-          iconType: "people",
-        },
-        {
-          id: "1",
-          title: "Ziel & Umfang definieren",
-          status: true,
-          to: "PhaseTemplate",
-          iconType: "signpost-split",
-        },
-        {
-          id: "2",
-          title: "Konzepte & Definitionen identifizieren",
-          status: true,
-          to: "PhaseTemplate",
-          iconType: "diagram3",
-        },
-        {
-          id: "3",
-          title: "Literatur Suchen",
-          status: true,
-          to: "PhaseTemplate",
-          iconType: "book",
-        },
-        {
-          id: "4",
-          title: "Daten Extrahieren",
-          status: true,
-          to: "PhaseTemplate",
-          iconType: "arrow-left-right",
-        },
-        {
-          id: "5",
-          title: "Literatur Analysieren & Syntheisieren",
-          status: true,
-          to: "PhaseTemplate",
-          iconType: "vector-pen",
-        },
-        {
-          id: "6",
-          title: "Ergebnisse Kommunizieren",
-          status: true,
-          to: "PhaseTemplate",
-          iconType: "card-checklist",
-        },
-        {
-          id: "7",
-          title: "Gruppe Auflösen",
-          status: true,
-          to: "PhaseTemplate",
-          iconType: "columns-gap",
-        },
-      ],
+      show: false,
     };
   },
   components: {
     ChatAdvanced,
     Postfach,
   },
-  methods: {
-    phaseAbschliessen(id) {
-      this.phasen[id].status = false;
-      this.$emit("statusChange", this.phasen[id]);
-      console.log(this.phasen);
-    },
-  },
+  methods: {},
 };
 </script>
 <style scoped>

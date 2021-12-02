@@ -1,102 +1,147 @@
 <template>
   <div class="home">
-    <b-row>
-      <h2>{{ getCurrentProject.title }}</h2>
-    </b-row>
     <br />
 
     <div>
-      <div v-for="mitglied in getGroupMembers" :key="mitglied.userid">
-        <b-row>
-          <b-col>
-            <h5>Gruppenmitglied</h5>
-          </b-col>
-          <b-col>
-            <h5>{{ mitglied.username }}</h5>
-          </b-col>
-          <b-col>
-            <b-button
-              v-if="getCurrentUserID != mitglied.userid"
-              @click="deleteMember(mitglied)"
-            >
-              X
-            </b-button>
-            <b-button variant="link" @click="giveAdminRights(mitglied)"
-              ><b-icon icon="flag-fill"></b-icon
-            ></b-button>
-            <br />
-          </b-col>
-        </b-row>
-      </div>
-
-      <div v-for="admin in getGroupAdmins" :key="admin.userid">
-        <b-row>
-          <b-col>
-            <h5>Gruppenadmin</h5>
-          </b-col>
-          <b-col>
-            <h5>{{ admin.username }}</h5>
-          </b-col>
-          <b-col>
-            <b-button
-              v-if="getCurrentUserID != admin.userid"
-              @click="deleteAdmin(admin)"
-            >
-              X
-            </b-button>
-            <br />
-          </b-col>
-        </b-row>
-      </div>
-      <br />
-
-      <b-container>
-        <b-row>
-          <b-col>
-            <b-button>
-              <router-link :to="{ name: 'NewMember' }" tag="div">
-                Neues Mitglied hinzufügen
-              </router-link>
-            </b-button>
-          </b-col>
-          <b-col>
-            <b-button @click="removeOwnAdminRights"
-              >Admin-Rechte entfernen
-            </b-button>
-          </b-col>
-          <b-col>
-            <b-button @click="$bvModal.show('modal-scoped')"
-              >Gruppe verlassen
-            </b-button>
-          </b-col>
-        </b-row>
-
-        <!--  <b-button v-b-modal.leave_group>Gruppe verlassen</b-button>       
-        <b-modal
-          id="leave_group"
-          title="Bist du dir sicher?"
-          cancel-title="Abbrechen"
+      <b-card-group deck>
+        <b-card
+          header-tag="header"
+          footer-tag="footer"
+          border-variant="primary"
         >
-        </b-modal> -->
-
-        <b-modal id="modal-scoped" title="Bist du dir sicher?">
-          <template #modal-footer="{ cancel }">
-            <!-- Emulate built in modal footer ok and cancel button actions -->
-            <b-button size="sm" variant="danger" @click="cancel()">
-              Cancel
-            </b-button>
-            <b-button size="sm" variant="success" @click="leaveGroup()">
-              OK
-            </b-button>
+          <template #header>
+            <h6 class="mb-0">
+              <b> {{ getCurrentProject.title }} </b>
+            </h6>
           </template>
-        </b-modal>
-      </b-container>
+          <b-card-text>
+            <div v-for="mitglied in getGroupMembers" :key="mitglied.userid">
+              <b-row>
+                <b-col>
+                  <p>Gruppenmitglied</p>
+                </b-col>
+                <b-col>
+                  <b-nav-item
+                    :to="{
+                      name: 'Profil',
+                      params: {
+                        user_internal_uid: mitglied.internal_uid,
+                      },
+                    }"
+                  >
+                    <p class="mitglied">
+                      <b> {{ mitglied.username }} </b>
+                    </p>
+                  </b-nav-item>
+                </b-col>
+                <b-col>
+                  <b-button
+                    v-if="
+                      (getCurrentUserUUID != mitglied.userid) &
+                      currentUserisAdmin
+                    "
+                    variant="link"
+                    @click="deleteMember(mitglied)"
+                  >
+                    <b-icon icon="x"></b-icon>
+                  </b-button>
+                  <b-button
+                    v-if="
+                      (getCurrentUserUUID != mitglied.userid) &
+                      currentUserisAdmin
+                    "
+                    variant="link"
+                    @click="giveAdminRights(mitglied)"
+                    ><b-icon icon="person-check-fill"></b-icon
+                  ></b-button>
+                  <br />
+                </b-col>
+              </b-row>
+            </div>
+
+            <div v-for="admin in getGroupAdmins" :key="admin.userid">
+              <b-row>
+                <b-col>
+                  <p>Gruppenadministrator</p>
+                </b-col>
+                <b-col>
+                  <b-nav-item
+                    :to="{
+                      name: 'Profil',
+                      params: {
+                        user_internal_uid: admin.internal_uid,
+                      },
+                    }"
+                    ><p class="admin">
+                      <b>{{ admin.username }}</b>
+                    </p>
+                  </b-nav-item>
+                </b-col>
+                <b-col>
+                  <b-button
+                    variant="link"
+                    v-if="
+                      (getCurrentUserUUID != admin.userid) & currentUserisAdmin
+                    "
+                    @click="deleteAdmin(admin)"
+                  >
+                    <b-icon icon="x"></b-icon>
+                  </b-button>
+                  <br />
+                </b-col>
+              </b-row>
+            </div>
+            <br />
+
+            <b-row class="groupmanagement-buttons">
+              <b-button
+                v-if="currentUserisAdmin"
+                :to="{ name: 'NewMember' }"
+                tag="div"
+              >
+                Neues Mitglied hinzufügen
+              </b-button>
+
+              <b-button
+                v-if="currentUserisAdmin"
+                @click="$bvModal.show('admin-removes-rights')"
+                >Admin-Rechte abgeben
+              </b-button>
+              <b-modal
+                @ok="removeOwnAdminRights"
+                id="admin-removes-rights"
+                title="Bist du dir sicher?"
+                cancel-title="Abbrechen"
+                ><p>
+                  Du kannst dieses Projekt nicht mehr verwalten, wenn du deine
+                  Administrationsrechte aufgibst!
+                </p>
+              </b-modal>
+
+              <b-button @click="$bvModal.show('student-leave-group')"
+                >Gruppe verlassen
+              </b-button>
+            </b-row>
+
+            <b-modal
+              @ok="leaveGroup"
+              id="student-leave-group"
+              title="Bist du dir sicher?"
+              cancel-title="Abbrechen"
+              ><p>
+                Du kannst nicht mehr auf das Projekt zugreifen, wenn du das
+                Projekt verlässt!
+              </p>
+            </b-modal>
+          </b-card-text>
+        </b-card>
+      </b-card-group>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "Home",
@@ -105,16 +150,10 @@ export default {
     return {};
   },
   methods: {
-    addMember: function (mitglied) {
-      //let role_field = "field_gruppenmitglieder";
-      this.$store.dispatch("project/addMembers", mitglied);
-      //this.$store.dispatch("project/deleteMembers", { mitglied, role_field });
-    },
     /* checks if current user is in group admin array, because he needs the rights to remove another member.
-    then sends dispatch to delete member*/
+        then sends dispatch to delete member*/
     deleteMember: function (mitglied) {
-      //let role_field = "field_gruppenmitglieder";
-      if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
+      if (this.currentUserisAdmin) {
         alert("Das Gruppenmitglied wurde gelöscht");
         this.$store.dispatch("project/deleteMembers", mitglied);
       } else {
@@ -122,15 +161,12 @@ export default {
           "Du musst Gruppenadministrator sein, um Gruppenmitglieder zu entfernen"
         );
       }
-
-      //this.$store.dispatch("project/deleteMembers", { mitglied, role_field });
     },
 
     /* checks if current user is in group admin array, because he needs the rights to remove another member.
-    then sends dispatch to delete admin*/
+        then sends dispatch to delete admin*/
     deleteAdmin: function (mitglied) {
-      //if(me=gruppenadministrator AND nicht selbst letzte admin)
-      if (this.getGroupAdmins.some((e) => e.userid === this.getCurrentUserID)) {
+      if (this.currentUserisAdmin) {
         this.$store.dispatch("project/deleteAdmin", mitglied);
       } else {
         alert(
@@ -139,97 +175,85 @@ export default {
       }
     },
 
+    //filters the current user by id and looks if it is in the provided memberList - is used in a function for leaving the group
     filter(memberId, memberList) {
-      //filters the current user by id - is used in a function for leaving the group
       let filteredCollection = memberList.filter((item) => {
-        console.log(item);
         if (item.userid == memberId) {
           return true;
         }
         return false;
       });
-      //console.log(filteredCollection);
-      //a user should exist only once, so first index should return the user correctly
       return filteredCollection[0];
     },
 
     /* checks first if current user is an group admin or group member with getGroup__.some. If a user in one of those arrays
-the filter function will filter out the correct member out of the array
-then the appropriate dispatch will be sent */
+        the filter function will filter out the correct member out of the array
+        then the appropriate dispatch will be sent */
     leaveGroup() {
-      //if(me=gruppenadministrator AND nicht selbst letzte admin)
-      //this.$store.dispatch("members/deleteMembers", mitglied);
-      //put logic in project.js?
-      //TODO: either cant leave if last admin except no other member is in grp
-      // or has to give up grp admin role first, but giving up grp admin rights should not be possible, if there is no other admin, but grp members are still there
-
       let member;
 
       if (
         this.getGroupMembers.some(
-          (member) => member.userid === this.getCurrentUserID
+          (member) => member.userid === this.getCurrentUserUUID
         )
       ) {
-        console.log("member funzt");
-        member = this.filter(this.getCurrentUserID, this.getGroupMembers);
-        console.log(member);
+        member = this.filter(this.getCurrentUserUUID, this.getGroupMembers);
         this.$store.dispatch("project/deleteMembers", member).then(() => {
           this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
             title: "Du hast die Gruppe verlassen",
             autoHideDelay: 4000,
             variant: "warning",
           });
+          //we call this method, to update the projects in state. otherwise the user will still see the project he left in his projectlist
+          this.$store.dispatch("project/loadProjectsFromBackend");
         });
-        this.$store.dispatch("project/loadProjectsFromBackend");
+
         this.$router.push("/");
       }
 
-      if (
-        this.getGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserID
-        )
-      ) {
-        if (this.getGroupAdmins.length < 2) {
-          alert(
-            "Mache erst ein anderes Gruppenmitglied zu einem Gruppenadministrator, bevor du die Gruppe verlässt. Falls du die letzte Person in der Gruppe bist, entferne deine Gruppenadministrator-Rechte bevor du die Gruppe verlässt "
-          );
-        } else {
-          console.log("admin funzt");
-          member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
-          this.$store.dispatch("project/deleteAdmin", member).then(() => {
-            this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
-              title: "Du hast die Gruppe verlassen",
-              autoHideDelay: 4000,
-              variant: "warning",
-            });
-          });
-          this.$store.dispatch("project/loadProjectsFromBackend");
-          this.$router.push("/");
-        }
-      }
-      //this.$store.dispatch("project/deleteMembers", userID);
+      if (this.currentUserisAdmin) {
+        /*get the newest data from backend to ensure, that the person leaving the group does not have old group data in the state. otherwise this could lead to this situations:
+       there are 2 group admins in the local state of group admin 1. Group admin 2 leaves the group, after group admin got the group data. group admin 2 now tries to leave the group as well. 
+        He should not be allowed to leave the group now, because there would be now group admin left, but he can because the latest state is not present locally.*/
 
-      //go to Projectlist
+        this.$store
+          .dispatch(
+            "project/loadCurrentProjectWithGroupAdmins",
+            this.$route.params.project_id
+          )
+          .then(() => {
+            if (this.getGroupAdmins.length < 2) {
+              alert(
+                "Mache erst ein anderes Gruppenmitglied zu einem Gruppenadministrator, bevor du die Gruppe verlässt. Falls du die letzte Person in der Gruppe bist, entferne deine Gruppenadministrator-Rechte bevor du die Gruppe verlässt "
+              );
+            } else {
+              member = this.filter(
+                this.getCurrentUserUUID,
+                this.getGroupAdmins
+              );
+              this.$store.dispatch("project/deleteAdmin", member).then(() => {
+                this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
+                  title: "Du hast die Gruppe verlassen",
+                  autoHideDelay: 4000,
+                  variant: "warning",
+                });
+                this.$store.dispatch("project/loadProjectsFromBackend");
+              });
+
+              this.$router.push("/");
+            }
+          });
+      }
     },
 
     giveAdminRights: function (new_admin) {
-      let member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
-      //evtl redundant?
-      if (
-        this.getGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserID
-        )
-      ) {
-        //first add new admin
+      if (this.currentUserisAdmin) {
         this.$store
           .dispatch("project/addMember", {
             mitglied: new_admin,
             role: "field_gruppenadministrator",
           })
           .then(() => {
-            //then delete old group member
-            //sometimes the member is not deleted
-            //do a .then for the second dispatch?
             this.$store.dispatch("project/deleteMembers", new_admin);
           });
       } else {
@@ -240,34 +264,41 @@ then the appropriate dispatch will be sent */
     },
 
     removeOwnAdminRights: function () {
-      //TODO: make only possible if there is at least one other admin
-      //if letzter admin und noch ein grp mitglied außer system da , dann erst admin an anderen vergeben
-      let member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
+      let member = this.filter(this.getCurrentUserUUID, this.getGroupAdmins);
       //evtl redundant?
-      if (
-        this.getGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserID
-        )
-      ) {
-        //if user ist letzter admin and there are still groupmembers left, user has to promote someone first. otherwise the group has no admins left but there are still other group members left
-        if (this.getGroupMembers.length > 0 && this.getGroupAdmins.length < 2) {
-          alert(
-            "Du musst erst ein anderes Gruppenmitglied zum Gruppenadministrator machen, um deine Administratorrechte aufzugeben"
-          );
-        } else {
-          alert(
-            "Du bist kein Gruppenadministrator mehr, du hast keine Rechte die du aufgeben kannst"
-          );
-          member = this.filter(this.getCurrentUserID, this.getGroupAdmins);
-          //first delete user in groupadmin array
-          this.$store.dispatch("project/deleteAdmin", member);
-          //then add in groupmember array
-          this.$store.dispatch("project/addMember", {
-            mitglied: member,
-            role: "field_gruppenmitglieder",
+      if (this.currentUserisAdmin) {
+        this.$store
+          .dispatch(
+            "project/loadCurrentProjectWithGroupAdmins",
+            this.$route.params.project_id
+          )
+          .then(() => {
+            if (
+              this.getGroupMembers.length > 0 &&
+              this.getGroupAdmins.length < 2
+            ) {
+              alert(
+                "Du musst erst ein anderes Gruppenmitglied zum Gruppenadministrator machen, um deine Administratorrechte aufzugeben"
+              );
+            } else {
+              member = this.filter(
+                this.getCurrentUserUUID,
+                this.getGroupAdmins
+              );
+              //first delete user in groupadmin array
+              this.$store.dispatch("project/deleteAdmin", member).then(() => {
+                this.$store.dispatch("project/addMember", {
+                  mitglied: member,
+                  role: "field_gruppenmitglieder",
+                });
+                //then delete old group member
+                alert("Du bist nun kein Gruppenadministrator mehr");
+              });
+              //then add in groupmember array
+            }
           });
-          //then delete old group member
-        }
+
+        //if user ist letzter admin and there are still groupmembers left, user has to promote someone first. otherwise the group has no admins left but there are still other group members left
       } else {
         alert(
           "Du musst Gruppenadministrator sein, um deine Administratorrechte aufgeben zu können"
@@ -279,61 +310,68 @@ then the appropriate dispatch will be sent */
     ...mapState({
       members: (state) => state.members,
     }),
-    getCurrentProject() {
-      return this.$store.state.project.currentProject;
+    ...mapGetters({
+      getCurrentProject: "project/getCurrentProject",
+      getGroupMembers: "project/getGroupMembers",
+      getGroupAdmins: "project/getGroupAdmins",
+      getProjectLecturers: "project/getProjectLecturers",
+      getCurrentUserUUID: "profile/getCurrentUserUUID",
+      getCurrentUserInternalUID: "drupal_api/getCurrentUserInternalUID",
+    }),
+
+    currentUserisAdmin() {
+      return this.getGroupAdmins.some(
+        (e) => e.userid === this.getCurrentUserUUID
+      );
     },
-    /*filters static groupmember out(same person in all groups), who  has to be included because, of error shown here https://www.drupal.org/project/drupal/issues/3072384
-    without this groupmember a user who is 'only' groupadministrator in a group does not get this group from a get request*/
-    getGroupMembers() {
-      let unfiltered_members =
-        this.$store.state.project.currentProject.gruppenmitglieder;
-      return unfiltered_members.filter(function (member) {
-        //TODO: change the filter criterium to match the static groupmember -> static user in backend has the name "System"
-        return member.username != "System";
-      });
-    },
-    getGroupAdmins() {
-      return this.$store.state.project.currentProjectGroupAdmins;
-    },
-    getProjectLecturers() {
-      return this.$store.state.project.currentProjectLecturers;
-    },
-    getCurrentUserID() {
-      return this.$store.state.profile.userData.idd;
-    },
+  },
+  async mounted() {
+    this.$store.dispatch("user/loadStudentsFromBackend");
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.getCurrentUserInternalUID
+    );
+    this.$store.dispatch(
+      "project/loadCurrentProject",
+      this.$route.params.project_id
+    );
   },
 };
 </script>
-
 <style scoped>
+.nav-link {
+  padding: 0;
+}
+
+.mitglied {
+  color: black;
+  text-align: justify;
+  display: inline-block;
+}
+.admin {
+  color: #c93e37;
+  text-align: justify;
+  display: inline-block;
+}
+.groupmanagement-buttons {
+  display: flex;
+  justify-content: center;
+}
+.groupmanagement-buttons * {
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  max-width: 15rem;
+}
 h1 {
   text-align: right;
 }
-
 h5 {
   text-align: right;
-  float: left;
   margin: 3px;
   margin-left: 10%;
   display: inline-block;
 }
-
 button {
   float: right;
-}
-
-.groupCard {
-  color: black;
-  margin: 5px;
-  width: 30%;
-  text-align: center;
-}
-
-.card {
-  display: inline-block;
-}
-
-img {
-  width: 60%;
 }
 </style>

@@ -10,7 +10,7 @@
               :disabled="!phase.status"
               :to="{
                 name: 'PhaseTemplate',
-                params: { phase_id: i, project_id: getProjectID },
+                params: { phase_number: i, project_id: getProjectID },
               }"
               class="btn btn-danger mb-2 btn-block text-left"
             >
@@ -20,7 +20,7 @@
 
             <!-- wenn man sich bereits in einer phase befindet ist es bisher nciht möglich in eine andere phase zu wechseln -->
 
-            <SeitenNavigationButtons @statusChange="changeStatus($event)" />
+            <SeitenNavigationButtons />
           </div>
         </div>
       </div>
@@ -33,10 +33,7 @@ export default {
   name: "App",
   data: function () {
     return {
-      isDisabled: [false, false, false, false, false, false, false], // it was hard to control from another component.
-      votes: 2,
       status: 0,
-      gruppe: 1,
       phasen: [
         {
           id: "0",
@@ -105,53 +102,9 @@ export default {
     changeStatus(phase) {
       this.phasen[phase.id].status = false;
     },
-
-    /**Abstimmung über die Beendigung einer Phase wird gestartet */
-    abstimmungPhaseAbschließen(phase) {
-      //to do: Nachricht an alle Gruppenmitglieder (in Postfach) dort Feld zur Abstimmung von abschluss oder eine checkbox für jedes mitglied
-      // checkbox oder mail zählt votes hoch und speichert in backend - weitere funktion gibt boolean aus ob abgeschlossen ist und speichert in backend
-      // in welchem content type speichern? phasetemplate oder Gruppenbereich?
-      // hier checken ob phase abgeschlossen werden kann ->  eine phase kann nur abgeschlossen werden wenn die vorherige abgeschlossen wurde
-      console.log(phase);
-    },
-    /**Phase wird hier wieder geöffnet, wenn erfolgreich über die Reaktivierung abgestimmt wurde */
-    phaseWiederOeffnen(phase) {
-      /*TODO:
-       */
-      console.log(phase);
-      if (/*phase==aktuellephase-1*/ phase == 1) {
-        this.isDisabled[phase] = false;
-      } else {
-        var ausgabe =
-          "Bitte erst die letzte abgeschlossene Phase wieder öffnen";
-        console.log(ausgabe);
-      }
-    },
-    /**parameter: Int
-     * Ein Button der eine Phase verlinkt wird hier deaktiviert. Ist der Button bereits aktiviert, wird die Phase reaktiviert.
-     */
-    phaseAbschließen(phase) {
-      /*TODO: phase wird abgeschlossen wenn mehr als n/2 Gruppenmitglieder abgestimmt haben 
-            -> diese methode hier wird dann bei jeder änderung aufrufen (welche änderungen?) -> jedes mal wenn ein mitglied abstimmt
-            wo wird die Anzahl der Gruppenmitglieder gespeichert? -> immer updaten und hier abrufen für berechnung
-            */
-      console.log(phase);
-      if (this.isDisabled[phase] == false) {
-        this.isDisabled.splice(phase, 1, true);
-      } else if (this.isDisabled[phase] == true) {
-        this.isDisabled.splice(phase, 1, false);
-      }
-    },
   },
   computed: {
-    /** Gibt einen Int zurück, der aussagt wieviele Gruppenmitglieder schon abgestimmt haben ob eine Phase beendet werden soll */
-    voted() {
-      return this.votes + +this.status;
-    },
-
     getProjectID() {
-      console.log("Bu ne yav:");
-      console.log(this.$route);
       return this.$route.params.project_id;
     },
     startpage() {
@@ -165,7 +118,6 @@ export default {
       return this.$route.name === "Einstellungen";
     },
     projektsuche() {
-      console.log(this.$route.name);
       return this.$route.name === "ProjectSearch";
     },
   },

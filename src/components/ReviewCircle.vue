@@ -18,7 +18,7 @@
         :angle="el.angle"
         :key="index"
         :image-path="el.image"
-        @click.native="changeStyle(el)"
+        @click.native="goToPhase(index)"
         :id="el.id"
         :class="{ isDone: el.done === true, red: el.done !== true }"
         :label-pos="el.labelPosition"
@@ -39,63 +39,19 @@ export default {
   },
   computed: {
     ...mapGetters({
-      phases: "phases/getPhasesOfProject",
+      phases: "project_phases/getPhasesOfProject",
     }),
+
+    getProjectID() {
+      return this.$route.params.project_id;
+    },
   },
   methods: {
-    changeStyle(el) {
-      let changeColor = true;
-      //this if is for when the clicked phase is not finished - looks if all phases before where finished, thus no phase can be skipped -> if yes then closes the phase
-      if (el.done == false) {
-        for (let element of this.phases) {
-          if (element !== el) {
-            if (element.done == false) {
-              changeColor = false;
-            }
-          } else {
-            console.log("Ende erreicht");
-            break;
-          }
-        }
-        if (changeColor) {
-          console.log(changeColor);
-          el.done = true;
-          this.$store.dispatch("phases/closePhase", {
-            phase: el,
-            open_close_phase: true,
-          });
-        }
-        //this if is for when the clicked phase is already finished - looks if all phases after are not finished,
-        //thus not a random phase can be opened again but only the latest finished phase-> if yes then reopens the phase
-      } else if (el.done == true) {
-        for (var i = this.phases.length - 1; i >= 0; i--) {
-          if (this.phases[i] !== el) {
-            if (this.phases[i].done == true) {
-              changeColor = false;
-            }
-          } else {
-            console.log("Ende erreicht");
-            break;
-          }
-        }
-
-        if (changeColor) {
-          console.log(changeColor);
-          //el.done=false does not work. Why? el.done=true works as expected
-          el.done = false;
-          //actually reopens the phase now
-          this.$store
-            .dispatch("phases/closePhase", {
-              phase: el,
-              open_close_phase: false,
-            })
-            .then(() => {
-              //but this works now??
-              el.done = false;
-              console.log(el.done);
-            });
-        }
-      }
+    goToPhase(phase_number) {
+      this.$router.push({
+        name: "PhaseTemplate",
+        params: { phase_number: phase_number, project_id: this.getProjectID },
+      });
     },
   },
 };
