@@ -194,7 +194,7 @@ const actions = {
             .catch(function (error) {
                 console.log(error)
             })
-
+        
     },
 
     /**

@@ -98,7 +98,7 @@
       </div>
     </div>
 
-    <b-button v-if="!inProjectList" v-b-modal.to_do_edit_modal>+</b-button>
+    <b-button v-if="!inEinstellungen && !inProjectList && !inProfil && !inProjectSearch" v-b-modal.to_do_edit_modal>+</b-button>
   </div>
 </template>
 
