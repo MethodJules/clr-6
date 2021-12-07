@@ -27,6 +27,7 @@
     <!-- v-model="inDoku.documentation" Zeile 15 -->
     <b-button
       v-if="!isPhaseDone && getUserRole != 'lecturer'"
+      @click="filterByPhase(phases[phase_number])"
       v-b-modal.modal-phase
       class="mb-phase"
     >
@@ -43,50 +44,18 @@
     <b-modal
       @ok="ok"
       id="modal-phase"
-      title="Bist du dir Sicher?"
+      title="Bist du dir sicher?"
       cancel-title="Abbrechen"
     >
       <div class="container" v-if="!isPhaseDone">
         <div>
-          <div class="eingabe">
-            <div class="inputcontainer">
-              <!-- Input Feld für die Erstellung der Todos. Jede neue Todo wird durch Enter-Taste in die Liste mit der Methode addTodo eingefügt -->
-              <input
-                type="text"
-                placeholder="Aufgaben, die zu erledigen"
-                v-model="newTodo"
-                @keyup.enter="addTodo"
-              />
+          <strong>Hast du die folgenen Schritte abgeschlossen?</strong>
+            <div>
+                <ol>
+                  <li v-for="(task, i) in tasks" :key="i">{{ task }}</li>
+                </ol>
             </div>
-            <div class="border"></div>
-          </div>
-
-          <div class="todo-list">
-            <!-- for-Schleife: über alle To-dos durchgelaufen -->
-            <div v-for="todo in todos" :key="todo.id" class="list">
-              <!-- Einträge werden sichtbar und in die Auflistung übertragen -->
-              <label class="material-checkbox">
-                <input type="checkbox" v-model="todo.erledigt" />
-                <span></span>
-              </label>
-              <div
-                class="text"
-                :class="{ erledigt: todo.erledigt }"
-                v-if="!todo.zuerledigen"
-                @dblclick="
-                  todo.zuerledigen = true;
-                  TodoList = todo.text;
-                "
-              >
-                {{ todo.text }}
-              </div>
-            </div>
-          </div>
         </div>
-        <!-- Gibt die Anzahl der noch zu erledigenden Aufgaben -->
-        <footer>
-          <!-- <span>{{ übrig }} Aufgaben sind zu erledigen.</span> -->
-        </footer>
       </div>
     </b-modal>
   </b-row>
@@ -97,22 +66,7 @@ export default {
   data() {
     return {
       lastEntry_id: 2,
-      newTodo: "",
-      TodoList: "",
-      todos: [
-        {
-          id: 1,
-          text: "Aufgabe 1",
-          erledigt: false,
-          zuerledigen: false,
-        },
-        {
-          id: 2,
-          text: "Aufgabe 2",
-          erledigt: false,
-          zuerledigen: false,
-        },
-      ],
+      tasks: []
     };
   },
 
@@ -127,16 +81,16 @@ export default {
       this.$store.dispatch("project_phases/updateDocumentation", inDoku);
     },
 
-    /* neue Todo wird eingefügt und als Checkliste ausgegeben bzw in die Liste übertragen. Die bereits vorhandene Liste wird durch die neuen Eingaben ergänzt */
-    //TODO: remove todo functionality, when real checklist is available
-    addTodo() {
-      let todo = {
-        id: ++this.lastEntry_id,
-        text: this.newTodo,
-        zuerledigen: false,
-      };
-      this.todos.push(todo);
-      this.newTodo = "";
+    filterByPhase(id) {
+      const data = this.assistentData.filter(
+        (item) => item.relationships.field_phase.data.id == id
+      );
+      if (data[0] == undefined) {
+        this.body =
+          "<p>Der Dozent hat hier noch keinen Hinweis eingegeben.</p>";
+      } else {
+        this.tasks = data[0].attributes.field_aufgaben;
+      }
     },
   },
   async mounted() {},
@@ -156,6 +110,15 @@ export default {
         this.$store.commit("project_phases/UPDATE_DOCUMENTATION", value);
       },
     },
+    assistentData() {
+      return this.$store.state.assistent.assistentData;
+    },
+    phase_number() {
+      return this.$route.params.phase_number;
+    },
+    phases() {
+      return this.$store.getters["phases/getPhasesIds"];
+    }
   },
 };
 </script>
