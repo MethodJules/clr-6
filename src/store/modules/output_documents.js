@@ -153,7 +153,11 @@ const actions = {
 
                 })
                 .catch(function (error) {
-                    console.log(error)
+                    if (error.response.status == 422 || error.response.status == 402) {
+                        alert("Dieser Dateityp wird nicht unterstützt")
+                    } else {
+                        console.log(error)
+                    }
                 })
         }
 
@@ -216,7 +220,7 @@ const actions = {
                 commit("UPDATE_OUTPUTS", file);
             })
             .catch(function (error) {
-                if (error.response.status == 422) {
+                if (error.response.status == 422 || error.response.status == 402) {
                     alert("Dieser Dateityp wird nicht unterstützt")
                 } else {
                     console.log(error)
