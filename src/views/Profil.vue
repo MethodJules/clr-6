@@ -73,8 +73,8 @@ are shown here as a profile view and if the user has uploaded a profile picture 
       </b-row>
 
       <b-row v-if="getProfileData.show_phone_number">
-        <b-col> <strong> E-Mail </strong> </b-col>
-        <b-col> {{ getUser.telefonnummer }} </b-col>
+        <b-col> <strong> Telefon </strong> </b-col>
+        <b-col> {{ getProfileData.telefonnummer }} </b-col>
       </b-row>
 
       <b-row>
@@ -93,7 +93,7 @@ are shown here as a profile view and if the user has uploaded a profile picture 
 export default {
   data() {
     return {
-      user: { width: 200, height: 200, class: "m1" },
+      user: { class: "m1" },
       //profileId: this.$route.params.profile_id,
     };
   },
