@@ -65,7 +65,7 @@
         </div>
 
         <div>
-          <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist. 
+          <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist.
             Es wird nur die zu erledigende Aufgabe angezeigt -->
 
           <b-modal id="to_do_edit_modal" hide-footer title="To Do">
@@ -98,7 +98,7 @@
       </div>
     </div>
 
-    <b-button v-if="!inProjectList" v-b-modal.to_do_edit_modal>+</b-button>
+    <b-button v-if="!inEinstellungen && !inProjectList && !inProfil && !inProjectSearch" v-b-modal.to_do_edit_modal>+</b-button>
   </div>
 </template>
 
@@ -165,6 +165,10 @@ export default {
       listOfTodos: "todo/getListOfTodos",
       todosOfProject: "todo/getTodosOfProject",
     }),
+
+    getProjectID() {
+      return this.$route.params.project_id;
+    },
 
     inProjectSearch() {
       return this.$route.name === "ProjectSearch";

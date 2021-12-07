@@ -12,6 +12,7 @@
             name="checkbox-1"
             @input="checkboxUpdate(index, tool)"
             v-model="tool.benutzt"
+            :disabled="getUserRole == 'lecturer'"
             >{{ tool.title }}
           </b-form-checkbox>
         </div>

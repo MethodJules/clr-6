@@ -234,7 +234,6 @@ import {
     requiredIf,
     minLength,
     integer,
-    alpha,
     alphaNum,
     minValue,
     maxLength,
@@ -257,7 +256,7 @@ export default {
             isLecturer: false,
         };
     },
-    /* 
+    /*
   validations for log in input fields
   input is only valid, when either log in data or registration data is complete
   requiredIF takes the boolean returned by a function to determine if this field is required. true means it is required

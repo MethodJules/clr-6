@@ -9,7 +9,7 @@
         </b-col>
 
         <b-col sm="10">
-          <b-form-input v-model="getCurrentProject.title" id="input-1">
+          <b-form-input :disabled="getUserRole == 'lecturer' || !currentUserIsAdmin" v-model="getCurrentProject.title" id="input-1">
           </b-form-input>
 
           <br />
@@ -88,6 +88,7 @@
 
         <b-col sm="10">
           <b-form-input
+            :disabled="getUserRole == 'lecturer' || !currentUserIsAdmin"
             v-model="getCurrentProject.externeMitwirkende"
             id="input-1"
           >
@@ -101,7 +102,9 @@
             <strong> Schlagwörter </strong>
           </label>
           <b-row>
-            <b-form-input v-model="getKeywords" id="input-2"> </b-form-input>
+            <b-form-input 
+            :disabled="getUserRole == 'lecturer' || !currentUserIsAdmin"
+            v-model="getKeywords" id="input-2"> </b-form-input>
           </b-row>
         </b-col>
 
@@ -117,6 +120,7 @@
 
         <b-col sm="10">
           <b-form-textarea
+            :disabled="getUserRole == 'lecturer' || !currentUserIsAdmin"
             v-model="getCurrentProject.kurzbeschreibung"
             id="input-1"
           >
