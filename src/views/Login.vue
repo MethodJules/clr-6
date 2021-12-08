@@ -267,7 +267,6 @@ export default {
                 return this.validate_login();
             }),
             minLength: minLength(1),
-            alphaNum,
         },
         passwort: {
             required: requiredIf(function () {
@@ -280,7 +279,6 @@ export default {
                 return this.validate_login();
             }),
             minLength: minLength(1),
-            alphaNum,
         },
         registrierungsPasswort: {
             required: requiredIf(function () {
