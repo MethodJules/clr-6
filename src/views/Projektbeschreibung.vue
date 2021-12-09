@@ -1,5 +1,10 @@
 <template>
   <div>
+    <transition name="fade" mode="out-in">
+      <div v-if="testButClicked" class="alert" role="alert">
+        Erfolgreich gespeichert!
+      </div>
+    </transition>
     <b-container fluid>
       <b-row>
         <b-col sm="5">
@@ -9,7 +14,7 @@
         </b-col>
 
         <b-col sm="10">
-          <b-form-input :disabled="getUserRole == 'lecturer' || !currentUserIsAdmin" v-model="getCurrentProject.title" id="input-1">
+          <b-form-input :disabled="getUserRole == 'lecturer' || !currentUserisAdmin" v-model="getCurrentProject.title" id="input-1">
           </b-form-input>
 
           <br />
@@ -88,7 +93,7 @@
 
         <b-col sm="10">
           <b-form-input
-            :disabled="getUserRole == 'lecturer' || !currentUserIsAdmin"
+            :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
             v-model="getCurrentProject.externeMitwirkende"
             id="input-1"
           >
@@ -103,7 +108,7 @@
           </label>
           <b-row>
             <b-form-input 
-            :disabled="getUserRole == 'lecturer' || !currentUserIsAdmin"
+            :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
             v-model="getKeywords" id="input-2"> </b-form-input>
           </b-row>
         </b-col>
@@ -120,7 +125,7 @@
 
         <b-col sm="10">
           <b-form-textarea
-            :disabled="getUserRole == 'lecturer' || !currentUserIsAdmin"
+            :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
             v-model="getCurrentProject.kurzbeschreibung"
             id="input-1"
           >
@@ -160,7 +165,7 @@
         <b-button :to="{ name: 'Home' }">Zum Dashboard</b-button>
 
         <b-button v-if="currentUserisAdmin" @click="updateProject()"
-          >Beschreibung bearbeiten</b-button
+          >Änderungen speichern</b-button
         >
         <b-button
           v-if="getUserRole != 'lecturer'"
@@ -204,6 +209,7 @@ export default {
       rightIndex,
       lecturersToAdd: [],
       selectedLecturer: "",
+      testButClicked: false,
     };
   },
   methods: {
@@ -286,7 +292,7 @@ export default {
         };
 
         this.$store.dispatch("project/updateProject", updatedProj).then(() => {
-          alert("Projektbeschreibung bearbeitet");
+          this.testButClicked = true;
           //TODO: load projectdata from backend again, to keep data as synchronous as possible?
         });
       } else {
@@ -331,6 +337,14 @@ export default {
       },
     },
   },
+
+  watch: {
+    testButClicked(val) {
+      if (val) {
+        setTimeout(() => (this.testButClicked = false), 1000);
+      }
+    },
+  },
   mounted() {
     this.$store.dispatch("user/loadLecturersFromBackend");
     this.$store.dispatch(
@@ -355,5 +369,20 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.alert {
+  background-color: lightgreen;
+  padding: 15px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1.3s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

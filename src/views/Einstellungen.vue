@@ -3,7 +3,7 @@
     <b-row v-if="getUserRole != 'lecturer'">
       <transition name="fade" mode="out-in">
         <div v-if="testButClicked" class="alert" role="alert">
-          Erfolgreich gespeichert !
+          Erfolgreich gespeichert!
         </div>
       </transition>
       <table class="table table-borderless table-sm table-hover">
