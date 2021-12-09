@@ -49,6 +49,7 @@ const actions = {
                  * which is an object with both 'data' and 'included' as attributes. 
                   */
                 const user = response.data;
+                console.log(user);
                 commit('SAVE_USER_IN_STATE', { user });
             })
             .catch(function (error) {
