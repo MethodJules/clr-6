@@ -15,7 +15,7 @@ const actions = {
     async loadDocusFromBackend({ commit }) {
         await axios.get('jsonapi/node/documentation')
             .then((response) => {
-                //console.log(response);
+
                 const data = response.data.data; //TODO: Anpassen wie bei concepts.js so dass hier das Array mit Objekten aufgebaut wird, s. concepts.js Zeile 53
                 //console.log(data)
                 let documentations = [];
@@ -74,8 +74,36 @@ const actions = {
 * @param docuEntry newly created documentation
 */
     updateDocumentation({ commit }, docuEntry) {
-
+        console.log(docuEntry)
         commit('UPDATE_DOCUMENTATION', docuEntry);
+        var data = `{
+            "data": {
+                "type": "node--documentation", 
+                "id": "${docuEntry.uuid}", 
+                "attributes": {
+                    "title": "${docuEntry.title}", 
+                    "field_documentationtext": "${docuEntry.documentation}" 
+                }
+            }
+        }`;
+        var config = {
+            method: 'patch',
+            url: `jsonapi/node/documentation/${docuEntry.uuid}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
+            },
+            data: data
+        };
+        axios(config)
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+
     },
 
 }
@@ -148,36 +176,9 @@ const mutations = {
 * @param docuEntry existing documentation, which is about to get updated
 */
     UPDATE_DOCUMENTATION(state, docuEntry) {
-        //let index = state.rowData.indexOf(dailyEntry);
-        //state.rowData[index]=dailyEntry;
-        //console.log(dailyEntry.todaydoings)
-        var data = `{
-            "data": {
-                "type": "node--documentation", 
-                "id": "${docuEntry.uuid}", 
-                "attributes": {
-                    "title": "${docuEntry.title}", 
-                    "field_documentationtext": "${docuEntry.documentation}" 
-                }
-            }
-        }`;
-        var config = {
-            method: 'patch',
-            url: `jsonapi/node/documentation/${docuEntry.uuid}`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-            },
-            data: data
-        };
-        axios(config)
-            .then(function (response) {
-                console.log(response)
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
+
+        console.log(state)
+        console.log(docuEntry)
     },
 }
 

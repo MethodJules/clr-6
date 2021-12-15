@@ -98,7 +98,7 @@ const getters = {
                 phaseNumber: sorted_array[index].phase_number,
                 id: sorted_array[index].phase_id,
             }
-            phases.push(phase)
+            phases.push(phase);
 
         }
         state.project_phases_this_project = phases;
@@ -441,15 +441,16 @@ const actions = {
 * updates the documentation of a phase
 */
     updateDocumentation({ rootState }, documentationText) {
-
+        console.log(documentationText)
+        const text = documentationText.replace(/(\r\n|\r|\n)/g, '<br>')
+        console.log(text)
         var phaseId = rootState.project_phases.current_phase.phase_id
-
         var data = `{
                 "data": {
                     "type": "node--phase_vorgehensmodell", 
                     "id": "${phaseId}",
                     "attributes": { 
-                        "field_documentationtext": "${documentationText}" 
+                        "field_documentationtext": "${text}" 
                     }                 
                 }
             }`;
@@ -467,7 +468,7 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-
+                console.log(response)
             })
             .catch(function (error) {
                 console.log(error)
@@ -522,7 +523,7 @@ const mutations = {
 
             let phaseObject = {
                 abschluss: element.attributes.field_abschluss,
-                documentationText: element.attributes.field_documentationtext,
+                documentationText: element.attributes.field_documentationtext.replace('<br>', '\n'),
                 phase_number: element.attributes.field_phase_number,
                 // assistent: element.relationships.field_assistent.data.id,
                 phase_id: element.id,
@@ -534,6 +535,7 @@ const mutations = {
         state.current_phase = currentPhaseFlattened
     },
 }
+
 
 export default {
     namespaced: true,
