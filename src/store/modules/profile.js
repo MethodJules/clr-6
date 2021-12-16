@@ -1,35 +1,36 @@
 import axios from "@/config/custom_axios";
-
-
 const state = () => ({
-
-    /* Here we initialize an empty dataobject for profileData and userData, because we don't use here arrays for these data.
-    We need only a dataobject for one profile of one user, in order to store it */
+    memberProfiles: [],
     profileData: {},
     userData: {},
-    imageData: ''
-
+    imageData: '',
+    memberChoosen: {},
 })
 const getters = {
-
     /**
-* @param state state as parameter for access and manipulation of state data  
-* returns user uuid from state
-*/
+    * @param state state as parameter for access and manipulation of state data  
+    * returns user uuid from state
+    */
     getCurrentUserUUID(state) {
         return state.userData.uuid;
     },
+    /**
+     * 
+     * @param {object} state 
+     * @returns {object} memberChoosen, it is the group member that we want to see and click at group management page.
+     */
+    getMemberProfile(state) {
+        return state.memberChoosen;
+    }
 }
 
 const actions = {
-
     /**
     * @param commit commit is used to call a mutation from this function
     * @param rootState rootState allows access to states of other modules in store
     * @param user_internal_uid user uid used for getting associated user data from backend
     * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user 
     */
-
     async loadUserFromBackend({ commit, rootState }, user_internal_uid) {
         var config = {
             method: 'get',
@@ -44,28 +45,63 @@ const actions = {
         axios(config)
             .then(function (response) {
                 /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data' 
-                 * array with all field values. But here we also need the included data which is found in response.data.included. 
-                 *  Therefore our paylod this time is response.data, 
-                 * which is an object with both 'data' and 'included' as attributes. 
-                  */
+                * array with all field values. But here we also need the included data which is found in response.data.included. 
+                *  Therefore our paylod this time is response.data, 
+                * which is an object with both 'data' and 'included' as attributes. 
+                */
                 const user = response.data;
-                console.log(user);
                 commit('SAVE_USER_IN_STATE', { user });
             })
             .catch(function (error) {
                 console.log(error)
             })
     },
+    loadGroupMembersProfiles({ commit, rootState }) {
+        let profiles = []
+        let groupMembers = rootState.project.currentProject.gruppenmitglieder;
 
-
-
+        groupMembers.forEach(member => {
+            var config = {
+                method: 'get',
+                url: `jsonapi/node/profil?filter[field_nutzer.drupal_internal__uid]=${member.internal_uid}`,
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                    'Authorization': rootState.drupal_api.authToken,
+                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                },
+            };
+            axios(config)
+                .then(function (response) {
+                    console.log(response)
+                    let profile = {
+                        name: response.data.data[0].attributes.title,
+                        abteilung: response.data.data[0].attributes.field_abteilung,
+                        analysetool: response.data.data[0].attributes.field_analysetool,
+                        anzahlLiteraturreviews: response.data.data[0].attributes.field_anzahl_literaturreviews,
+                        datenbanken: response.data.data[0].attributes.field_datenbanken,
+                        referenztool: response.data.data[0].attributes.field_referenztool,
+                        showPhoneNumber: response.data.data[0].attributes.field_show_phone_number,
+                        showEmail: response.data.data[0].attributes.field_showemail,
+                        studiengang: response.data.data[0].attributes.field_studiengang,
+                        user_uid: response.data.data[0].attributes.field_user_uid,
+                        telefonnummer: response.data.data[0].attributes.field_telefonnummer,
+                    }
+                    profiles.push(profile)
+                    commit('SAVE_GROUP_MEMBERS_PROFILES', profiles);
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        });
+    },
     /**
-     * @param commit commit is used to call a mutation from this function
-     * @param rootState rootState allows access to states of other modules in store
-     * @param user_internal_uid user uid used for getting associated user data from backend
-     * We load the Profiledata from backend by filtering the user_internal_uid to get the right profile of the user which belongs to the userdata
-     * In the backend we have a field "field_nutzer" in this content type. we filter by the user_internal_uid, given as a paremeter to get the correct profile
-     */
+    * @param commit commit is used to call a mutation from this function
+    * @param rootState rootState allows access to states of other modules in store
+    * @param user_internal_uid user uid used for getting associated user data from backend
+    * We load the Profiledata from backend by filtering the user_internal_uid to get the right profile of the user which belongs to the userdata
+    * In the backend we have a field "field_nutzer" in this content type. we filter by the user_internal_uid, given as a paremeter to get the correct profile
+    */
     async loadProfileFromBackend({ commit, rootState }, user_internal_uid) {
         commit("loadingStatus", true, { root: true })
         var config = {
@@ -90,10 +126,10 @@ const actions = {
     },
 
     /**
- * @param rootState rootState allows access to states of other modules in store
- * @param profile user uid used for getting associated user data from backend
- * We upload the state of the show email checkbox to backend
- */
+    * @param rootState rootState allows access to states of other modules in store
+    * @param profile user uid used for getting associated user data from backend
+    * We upload the state of the show email checkbox to backend
+    */
     updateEmailCheckbox({ rootState }, profile) {
         var data = `
         {
@@ -125,10 +161,10 @@ const actions = {
     },
 
     /**
- * @param rootState rootState allows access to states of other modules in store
- * @param profile user uid used for getting associated user data from backend
- * We upload the state of the show phone number checkbox to backend
- */
+    * @param rootState rootState allows access to states of other modules in store
+    * @param profile user uid used for getting associated user data from backend
+    * We upload the state of the show phone number checkbox to backend
+    */
     updatePhoneCheckbox({ rootState }, profile) {
         var data = `
         {
@@ -158,15 +194,11 @@ const actions = {
             });
     },
 
-
-
-
-
     /**
- * @param rootState rootState allows access to states of other modules in store
- * @param authorization_token auth token given as param, because auth token in state is undefined when registering
- * creates the profile when user is created/registers. auth token in state is at this point undefined, therefore it is given as param
- */
+    * @param rootState rootState allows access to states of other modules in store
+    * @param authorization_token auth token given as param, because auth token in state is undefined when registering
+    * creates the profile when user is created/registers. auth token in state is at this point undefined, therefore it is given as param
+    */
     createProfile({ rootState }, authorization_token) {
         var drupalUserUUID = rootState.drupal_api.user.uuid
         let username = rootState.drupal_api.user.username
@@ -187,14 +219,14 @@ const actions = {
                     "field_show_phone_number": false  
                 },
                 "relationships": {
-
+                    
                     "field_nutzer": {
-                      "data": {
-                        "0": {
-                          "type": "user--user",
-                          "id": "${drupalUserUUID}"
+                        "data": {
+                            "0": {
+                                "type": "user--user",
+                                "id": "${drupalUserUUID}"
+                            }
                         }
-                      }
                     }
                 }  
             }
@@ -219,23 +251,21 @@ const actions = {
             .catch(function (error) {
                 alert("Dein Benutzerkonto konnte leider nicht erstellt werden. Wenn dieses Problem bestehen bleiben sollte, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an:...")
             })
-
     },
 
 
     /**
-* @param dispatch dispatch is used to call another action from this function
-* @param rootState rootState allows access to states of other modules in store
-* @param iamge image to upload
-* @param filename filename of image to upload
- * @object image will be send to the upload method, where the uploaded image will be converted from base64 format to binary format, in
- * order to send it to backend to media and not as usual to the content type in backend. After converting process, the uploaded 
- * image will be send to the next method below, which will be dispatched to the userdata.
- * @object filename is dynamically, not static.
- */
+    * @param dispatch dispatch is used to call another action from this function
+    * @param rootState rootState allows access to states of other modules in store
+    * @param iamge image to upload
+    * @param filename filename of image to upload
+    * @object image will be send to the upload method, where the uploaded image will be converted from base64 format to binary format, in
+    * order to send it to backend to media and not as usual to the content type in backend. After converting process, the uploaded 
+    * image will be send to the next method below, which will be dispatched to the userdata.
+    * @object filename is dynamically, not static.
+    */
 
     async uploadImage({ dispatch, rootState }, { image, filename }) {
-
         const base64ImageData = await fetch(image);
         const binaryImageData = await base64ImageData.blob();
         var config = {
@@ -247,19 +277,16 @@ const actions = {
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`,
                 'Content-Disposition': 'file; filename="' + filename + '"',
-
             },
             data: binaryImageData
         };
         axios(config)
             .then(function (response) {
                 /**
-                 * the imageID will be need for the method 'updateUserdataWithProfileImage' in order to add the right image to Userdata.
-                 * 
-                 * */
-
+                * the imageID will be need for the method 'updateUserdataWithProfileImage' in order to add the right image to Userdata.
+                * 
+                * */
                 const imageID = response.data.data.id;
-
                 dispatch('updateUserdataWithProfileImage', imageID)
             })
             .catch(function (error) {
@@ -268,11 +295,11 @@ const actions = {
     },
 
     /**
-     * @param rootState rootState allows access to states of other modules in store
-     * @param imageID will be send to this method, in order to add the right profile image to the user data in the backend.
-     * Here the userdata will be updated by uploading a profile image. To referencing the image to the right user, we declared the userID,
-     * which we defined dynamically. The profile image will be added to the userdata of the user by the userID
-     */
+    * @param rootState rootState allows access to states of other modules in store
+    * @param imageID will be send to this method, in order to add the right profile image to the user data in the backend.
+    * Here the userdata will be updated by uploading a profile image. To referencing the image to the right user, we declared the userID,
+    * which we defined dynamically. The profile image will be added to the userdata of the user by the userID
+    */
     updateUserdataWithProfileImage({ rootState }, imageID) {
         var userID = rootState.profile.userData.uuid
         var data = `{
@@ -289,7 +316,6 @@ const actions = {
                 }  
             }
         }`;
-
         var config = {
             method: 'patch',
             url: `jsonapi/user/user/${userID}`,
@@ -308,10 +334,6 @@ const actions = {
                 console.log(error)
             })
     },
-
-
-
-
     /**
     * @param rootState rootState allows access to states of other modules in store
     * @param profile profile to be uploaded
@@ -326,7 +348,6 @@ const actions = {
             if (profile[attribute] == null) {
                 profile[attribute] = ""
             }
-
         }
         var data = `{
             "data": {
@@ -361,10 +382,7 @@ const actions = {
             .catch(function (error) {
                 console.log(error)
             })
-
     },
-
-
 }
 
 const mutations = {
@@ -376,27 +394,24 @@ const mutations = {
     */
 
     SAVE_USER_IN_STATE(state, { user }) {
-
         const urlBackend = axios.defaults.baseURL;
         /**
-         * consists the data of user only, which will be stored as object 'userObject' in the state userData
-         */
+        * consists the data of user only, which will be stored as object 'userObject' in the state userData
+        */
         user.data.forEach(element => {
             const field_fullname = element.attributes.field_fullname;
             const field_matrikelnummer = element.attributes.field_matrikelnummer;
             const field_id = element.id;
             const field_title = element.attributes.title;
             const mail = element.attributes.mail;
-
             state.userData = { fullname: field_fullname, matrikelnummer: field_matrikelnummer, uuid: field_id, title: field_title, mail: mail }
         });
-
         /**
-         * consist the object user with included data: the url of the profile image.
-         * from the response included, we get the second part of the url of the profilimage. 
-         * The first part of the url is defined statically above in line 2. 
-         * We get the fullurl by uniting the first and second part of the url. The full url will be pushed in to the state imageData.
-         */
+        * consist the object user with included data: the url of the profile image.
+        * from the response included, we get the second part of the url of the profilimage. 
+        * The first part of the url is defined statically above in line 2. 
+        * We get the fullurl by uniting the first and second part of the url. The full url will be pushed in to the state imageData.
+        */
         if (user.included != undefined) {
             user.included.forEach(element => {
                 const url = element.attributes.uri.url;
@@ -433,7 +448,25 @@ const mutations = {
                 uuid: field_id, title: field_title, show_email: field_showemail, abteilung: field_abteilung, telefonnummer: field_telefonnummer, show_phone_number: field_show_phone_number
             }
         });
-    }
+    },
+    /**
+     * @param {object} state, state as parameter for access and manipulation of state data
+     * @param {object} profiles, profiles of the group members for the chosen project 
+     */
+    SAVE_GROUP_MEMBERS_PROFILES(state, profiles) {
+        state.memberProfiles = profiles;
+    },
+    /**
+    * @param {object} state, state as parameter for access and manipulation of state data
+    * @param {object} mitglied, member that we want to have the profile of it 
+    */
+    SET_MEMBER_TO_SHOW(state, mitglied) {
+        state.memberChoosen = {}
+        console.log(state.memberProfiles)
+        console.log(mitglied)
+        let memberChoosen = state.memberProfiles.find(profile => profile.user_uid == mitglied.internal_uid);
+        state.memberChoosen = memberChoosen;
+    },
 }
 
 export default {
@@ -442,9 +475,4 @@ export default {
     getters,
     mutations,
     actions,
-
 }
-
-
-
-
