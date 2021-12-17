@@ -523,7 +523,7 @@ const mutations = {
 
             let phaseObject = {
                 abschluss: element.attributes.field_abschluss,
-                documentationText: element.attributes.field_documentationtext.replace('<br>', '\n'),
+                documentationText: element.attributes.field_documentationtext.replace(/<br>/gi, '\n'),
                 phase_number: element.attributes.field_phase_number,
                 // assistent: element.relationships.field_assistent.data.id,
                 phase_id: element.id,
