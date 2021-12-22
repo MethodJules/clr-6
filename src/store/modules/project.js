@@ -261,6 +261,7 @@ const actions = {
   createProject({ commit, dispatch, rootState }, projEntry) {
     const keywords = JSON.stringify(projEntry.schlagworter)
     const dozenten = JSON.stringify(projEntry.betreuenderDozent)
+    let beschreibung = projEntry.kurzbeschreibung.replace(/(\r\n|\r|\n)/g, '<br>');
     let userID = rootState.profile.userData.uuid
     //the id of the system user, which is needed because of the filtering bug here https://www.drupal.org/project/drupal/issues/3072384
     let system_user_id = "bf1820d0-5477-4df6-b4dd-a1824d5e7794"
@@ -271,7 +272,7 @@ const actions = {
                   "attributes": {
                     "title": "${projEntry.title}",
                     "field_schlagworter": ${keywords},
-                    "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
+                    "field_kurzbeschreibung": "${beschreibung}",
                     "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
                   },
                   "relationships": {
@@ -596,7 +597,7 @@ const mutations = {
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data;
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
       const field_schlagworter = element.attributes.field_schlagworter;
-      const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
+      const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung.replace(/<br>/gi, '\n');
       const field_id = element.id;
       const field_title = element.attributes.title;
       let field_gruppenmitglieder_IDs = element.relationships.field_gruppenmitglieder.data
@@ -628,7 +629,7 @@ const mutations = {
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
       const field_schlagworter = element.attributes.field_schlagworter;
-      const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung;
+      const field_kurzbeschreibung = element.attributes.field_kurzbeschreibung.replace(/<br>/gi, '\n');
       const field_id = element.id;
       const field_title = element.attributes.title;
       let field_gruppenmitglieder = user_array

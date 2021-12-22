@@ -33,28 +33,6 @@ const actions = {
 
     },
 
-    /*     async loadSingleDocuFromBackend({commit}, documentID) {
-    
-            var config = {
-                method: 'get',
-                url: `jsonapi/node/documentation/${docuEntry.uuid}`,
-                headers: {
-                    'Accept': 'application/vnd.api+json',
-                    'Content-Type': 'application/vnd.api+json',
-                    'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-                },
-            };
-            axios(config)
-            .then(function(response){
-                console.log("dies ist einzelne doku")
-                console.log(response)
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
-            }, */
-
-
 
 
     /**
@@ -117,6 +95,7 @@ const mutations = {
     */
     ADD_DOCUMENTATION(state, docuEntry) {
         console.log(docuEntry.documentation)
+        console.log("hello")
         var data = `
         {
             "data": {
