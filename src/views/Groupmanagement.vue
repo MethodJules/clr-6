@@ -340,7 +340,6 @@ export default {
       "project/loadCurrentProject",
       this.$route.params.project_id
     );
-    // this.$store.dispatch("profile/loadGroupMembersProfiles");
   },
 };
 </script>
