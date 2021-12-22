@@ -5,7 +5,8 @@ ENV NODE_ENV=development
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package*.json ./
-RUN npm install
+
+RUN apk add --no-cache --virtual .gyp \        python \        make \        g++ \    && npm install \    && apk del .gyp
 
 # start app
 CMD ["npm", "run", "serve"]

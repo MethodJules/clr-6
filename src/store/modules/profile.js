@@ -1,10 +1,8 @@
 import axios from "@/config/custom_axios";
 const state = () => ({
-    memberProfiles: [],
     profileData: {},
     userData: {},
     imageData: '',
-    memberChoosen: {},
 })
 const getters = {
     /**
@@ -14,13 +12,9 @@ const getters = {
     getCurrentUserUUID(state) {
         return state.userData.uuid;
     },
-    /**
-     * 
-     * @param {object} state 
-     * @returns {object} memberChoosen, it is the group member that we want to see and click at group management page.
-     */
-    getMemberProfile(state) {
-        return state.memberChoosen;
+
+    getProfileData(state) {
+        return state.profileData;
     }
 }
 
@@ -56,45 +50,6 @@ const actions = {
                 console.log(error)
             })
     },
-    loadGroupMembersProfiles({ commit, rootState }) {
-        let profiles = []
-        let groupMembers = rootState.project.currentProject.gruppenmitglieder;
-
-        groupMembers.forEach(member => {
-            var config = {
-                method: 'get',
-                url: `jsonapi/node/profil?filter[field_nutzer.drupal_internal__uid]=${member.internal_uid}`,
-                headers: {
-                    'Accept': 'application/vnd.api+json',
-                    'Content-Type': 'application/vnd.api+json',
-                    'Authorization': rootState.drupal_api.authToken,
-                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
-                },
-            };
-            axios(config)
-                .then(function (response) {
-                    console.log(response)
-                    let profile = {
-                        name: response.data.data[0].attributes.title,
-                        abteilung: response.data.data[0].attributes.field_abteilung,
-                        analysetool: response.data.data[0].attributes.field_analysetool,
-                        anzahlLiteraturreviews: response.data.data[0].attributes.field_anzahl_literaturreviews,
-                        datenbanken: response.data.data[0].attributes.field_datenbanken,
-                        referenztool: response.data.data[0].attributes.field_referenztool,
-                        showPhoneNumber: response.data.data[0].attributes.field_show_phone_number,
-                        showEmail: response.data.data[0].attributes.field_showemail,
-                        studiengang: response.data.data[0].attributes.field_studiengang,
-                        user_uid: response.data.data[0].attributes.field_user_uid,
-                        telefonnummer: response.data.data[0].attributes.field_telefonnummer,
-                    }
-                    profiles.push(profile)
-                    commit('SAVE_GROUP_MEMBERS_PROFILES', profiles);
-                })
-                .catch(function (error) {
-                    console.log(error)
-                })
-        });
-    },
     /**
     * @param commit commit is used to call a mutation from this function
     * @param rootState rootState allows access to states of other modules in store
@@ -116,8 +71,23 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                const profiles = response.data.data;
-                commit('SAVE_PROFILE', { profiles });
+                console.log(response)
+                // const profiles = response.data.data;
+                // console.log(profiles)
+                let profile = {
+                    name: response.data.data[0].attributes.title,
+                    abteilung: response.data.data[0].attributes.field_abteilung,
+                    analysetool: response.data.data[0].attributes.field_analysetool,
+                    anzahlLiteraturreviews: response.data.data[0].attributes.field_anzahl_literaturreviews,
+                    datenbanken: response.data.data[0].attributes.field_datenbanken,
+                    referenztool: response.data.data[0].attributes.field_referenztool,
+                    showPhoneNumber: response.data.data[0].attributes.field_show_phone_number,
+                    showEmail: response.data.data[0].attributes.field_showemail,
+                    studiengang: response.data.data[0].attributes.field_studiengang,
+                    user_uid: response.data.data[0].attributes.field_user_uid,
+                    telefonnummer: response.data.data[0].attributes.field_telefonnummer,
+                }
+                commit('SAVE_PROFILE', profile);
                 commit("loadingStatus", false, { root: true })
             })
             .catch(function (error) {
@@ -429,44 +399,10 @@ const mutations = {
     * takes profile array and puts all relevant data of the profile in state.profileData (actually only one profile)
     *
     */
-    SAVE_PROFILE(state, { profiles }) {
-        profiles.forEach(element => {
-            const field_studiengang = element.attributes.field_studiengang;
-            const field_anzahl_literaturreviews = element.attributes.field_anzahl_literaturreviews;
-            const field_datenbanken = element.attributes.field_datenbanken;
-            const field_analysetool = element.attributes.field_analysetool;
-            const field_referenztool = element.attributes.field_referenztool;
-            const field_id = element.id;
-            const field_title = element.attributes.title;
-            const field_abteilung = element.attributes.field_abteilung
-            const field_telefonnummer = element.attributes.field_telefonnummer
-            const field_show_phone_number = element.attributes.field_show_phone_number
-            const field_showemail = element.attributes.field_showemail
-            state.profileData = {
-                studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews,
-                datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool,
-                uuid: field_id, title: field_title, show_email: field_showemail, abteilung: field_abteilung, telefonnummer: field_telefonnummer, show_phone_number: field_show_phone_number
-            }
-        });
+    SAVE_PROFILE(state, profile) {
+        state.profileData = profile;
     },
-    /**
-     * @param {object} state, state as parameter for access and manipulation of state data
-     * @param {object} profiles, profiles of the group members for the chosen project 
-     */
-    SAVE_GROUP_MEMBERS_PROFILES(state, profiles) {
-        state.memberProfiles = profiles;
-    },
-    /**
-    * @param {object} state, state as parameter for access and manipulation of state data
-    * @param {object} mitglied, member that we want to have the profile of it 
-    */
-    SET_MEMBER_TO_SHOW(state, mitglied) {
-        state.memberChoosen = {}
-        console.log(state.memberProfiles)
-        console.log(mitglied)
-        let memberChoosen = state.memberProfiles.find(profile => profile.user_uid == mitglied.internal_uid);
-        state.memberChoosen = memberChoosen;
-    },
+
 }
 
 export default {
