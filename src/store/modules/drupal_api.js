@@ -38,7 +38,7 @@ const actions = {
     async getSessionToken({ commit, dispatch }, { username, password, matrikelnummer }) {
 
         //eigtl csrf token, nicht sessiontoken
-        return axios.get('rest/session/token')
+        return axios.get('session/token')
             .then((response) => {
                 const token = response.data;
                 commit('SAVE_SESSION_TOKEN', token);

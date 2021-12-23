@@ -68,7 +68,7 @@
           <!-- Modal zum eingeben der neuen todos, beinhaltet todo und abgabefrist.
             Es wird nur die zu erledigende Aufgabe angezeigt -->
 
-          <b-modal id="to_do_edit_modal" hide-footer title="To Do">
+          <b-modal id="to_do_edit_modal" @ok="ok()" cancel-title="Abbrechen" title="To Do">
             <label for="neueTodo">zu erledigende Aufgabe: </label>
             <input
               v-model="todoNeu"
@@ -91,7 +91,6 @@
               :select-attribute="selectAttribute"
               class="mb-2"
             ></b-form-datepicker>
-            <b-button @click="ok()"> OK </b-button>
           </b-modal>
           <!-- Zum öffnen des Modals -->
         </div>
@@ -123,7 +122,7 @@ export default {
       appointment: "",
       status: "",
       //msg: "Datum:" + { date } + { todo }
-      todo: "",
+      todo: ""
     };
   },
 
@@ -141,11 +140,12 @@ export default {
           project_id: this.getProjectID,
         };
         this.$store.dispatch("todo/createToDo", neueEingabe);
+        alert("ToDo " + this.todoNeu + " wurde angelegt");
         this.todoNeu = "";
       }
     },
     deleteTodo(todo) {
-      alert("Delete");
+      alert("ToDo " + todo.title + " wurde gelöscht");
       this.$store.dispatch("todo/deleteTodo", todo);
     },
     checkboxUpdate(index, todoErledigt) {
