@@ -17,14 +17,11 @@ const actions = {
     addMember({ commit }, member) {
         commit('addMember', member)
     },
-    deleteMembers({ commit }, member) {
-        commit('deleteMembers', member)
-    },
 
 
     /**
     *
-    
+
      loadUsersFromBackend({ commit, state, dispatch }) {
         console.log(commit)
         console.log(state)
@@ -35,8 +32,8 @@ const actions = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
             },
+            withCredentials: true,
         };
         axios(config)
             .then(function (response) {
@@ -46,7 +43,7 @@ const actions = {
 //                 })
 //                 response.data.data.forEach((user) => {
 //                     state.lecturers.push({id: user.attributes.id, name: user.attributes.display_name })
-//                 }) 
+//                 })
             })
             .catch(function (error) {
                 console.log(error)
