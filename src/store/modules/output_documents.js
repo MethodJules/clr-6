@@ -7,7 +7,7 @@ const state = () => ({
 
 const getters = {
     /**
-     * Getter to bringuploaded files in outputs array. 
+     * Getter to bringuploaded files in outputs array.
      * @param state our state
      * @returns files, uploaded files in state
      * we send them reversed in order to see the last uploaded on top.
@@ -21,12 +21,12 @@ const getters = {
 const mutations = {
 
     /**
-     * 
+     *
      * @param state we send our state to the method
-     * @param {array} inputarrayPayload array with the fileobjects(payload) that we are going to use 
-     * 
-     * uploads the name, size and url of the fileobject (payload) in the array to the state. 
-     * 'outputs' array from the state is exchanged with the 'outputarrayPayload' array from the action method 'loadOutputdocumentsFromBackend' 
+     * @param {array} inputarrayPayload array with the fileobjects(payload) that we are going to use
+     *
+     * uploads the name, size and url of the fileobject (payload) in the array to the state.
+     * 'outputs' array from the state is exchanged with the 'outputarrayPayload' array from the action method 'loadOutputdocumentsFromBackend'
      */
 
     LOAD_FILES_TO_STATE_FROM_BACKEND(state, outputarrayPayload) {
@@ -34,7 +34,7 @@ const mutations = {
     },
 
     /**
-      * 
+      *
       * @param state our state which we used to add a new inputdocument.
       * @param file uploaded file will be pushed to the state
       */
@@ -45,17 +45,17 @@ const mutations = {
 
 
     /**
-     * 
+     *
      * @param state we send our state to the method
      * @param payload file that we are going to delete
-     * 
+     *
      * Deletes the file from state
      */
     deleteOutput(state, payload) {
         state.outputs.splice(payload.index, 1);
     },
 
-    // TODO: Comment for this ? 
+    // TODO: Comment for this ?
     setOkButtonClicked(state, isClicked) {
         state.okButtonClicked = isClicked;
     }
@@ -67,7 +67,7 @@ const actions = {
     /**
  * @param commit commit is used to call a mutation from this function
  * @param rootState rootState allows access to states of other modules in store
- * In this action method, we load the uploaded outputdocuments from backend filtered by the right phase id. For this load method, we included 
+ * In this action method, we load the uploaded outputdocuments from backend filtered by the right phase id. For this load method, we included
  * the entity reference to file, in order to get the information about the file size and file url.
  */
     async loadOutputdocumentsFromBackend({ rootState, commit }) {
@@ -88,9 +88,9 @@ const actions = {
                 const urlBackend = axios.defaults.baseURL;
                 let files = response.data.included; // id, name, size and url of file from node file-file
                 let fileDataId = response.data.data; // the fileDataId from node --outputdateien
-                /* 
-               We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend 
-               with the foreach loop are pushed one after the other in the initialized array 'outputarrayPayload'. This means that the 
+                /*
+               We initialize an empty array here, so that the objects (payload), that are fetched one after the other from the backend
+               with the foreach loop are pushed one after the other in the initialized array 'outputarrayPayload'. This means that the
                array does not remain empty. The array consists of the file objects, from the backend.
                */
                 var outputarrayPayload = []
@@ -118,9 +118,9 @@ const actions = {
     * @param dispatch dispatch is used to call another action from this function
     * @param rootState rootState allows access to states of other modules in store
     * @param files files to upload
-     * 
+     *
      * uploads every file from files array to drupal backend and calls addOutputDocument for every file, which links the content type outputDocument to the file
-     * 
+     *
      */
     async uploadFilesToDatabase({ dispatch, rootState }, files) {
         // sende state
@@ -243,8 +243,6 @@ const actions = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                //'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
-                // 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
                 'Authorization': rootState.drupal_api.authToken,
                 'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
             },

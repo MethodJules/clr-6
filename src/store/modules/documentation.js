@@ -34,9 +34,33 @@ const actions = {
     },
 
 
+    /*     async loadSingleDocuFromBackend({commit}, documentID) {
+
+            var config = {
+                method: 'get',
+                url: `jsonapi/node/documentation/${docuEntry.uuid}`,
+                headers: {
+                    'Accept': 'application/vnd.api+json',
+                    'Content-Type': 'application/vnd.api+json',
+                },
+                withCredentials: true,
+            };
+            axios(config)
+            .then(function(response){
+                console.log("dies ist einzelne doku")
+                console.log(response)
+            })
+            .catch(function(error) {
+                console.log(error)
+            })
+            }, */
+
+
+
+
 
     /**
-    * takes a new documentation as param and passes it on to mutation 
+    * takes a new documentation as param and passes it on to mutation
     * @param commit commit is used to call a mutation from this function
     * @param docuEntry newly created documentation
     */
@@ -47,12 +71,12 @@ const actions = {
     },
 
     /**
-* takes existing documentation as param and passes it on to mutation 
+* takes existing documentation as param and passes it on to mutation
 * @param commit commit is used to call a mutation from this function
 * @param docuEntry newly created documentation
 */
     updateDocumentation({ commit }, docuEntry) {
-        console.log(docuEntry)
+
         commit('UPDATE_DOCUMENTATION', docuEntry);
         var data = `{
             "data": {
@@ -89,7 +113,7 @@ const actions = {
 const mutations = {
 
     /**
-    * takes a new documentation param and saves it in drupal backend 
+    * takes a new documentation param and saves it in drupal backend
     * @param state state as parameter for access and manipulation of state data
     * @param docuEntry newly created documentation
     */
@@ -112,8 +136,8 @@ const mutations = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': 'Basic YWRtaW46cGFzc3dvcmQ='
             },
+            withCredentials: true,
             data: data
 
         };
@@ -155,9 +179,36 @@ const mutations = {
 * @param docuEntry existing documentation, which is about to get updated
 */
     UPDATE_DOCUMENTATION(state, docuEntry) {
-
-        console.log(state)
-        console.log(docuEntry)
+        //let index = state.rowData.indexOf(dailyEntry);
+        //state.rowData[index]=dailyEntry;
+        //console.log(dailyEntry.todaydoings)
+        var data = `{
+            "data": {
+                "type": "node--documentation", 
+                "id": "${docuEntry.uuid}", 
+                "attributes": {
+                    "title": "${docuEntry.title}", 
+                    "field_documentationtext": "${docuEntry.documentation}" 
+                }
+            }
+        }`;
+        var config = {
+            method: 'patch',
+            url: `jsonapi/node/documentation/${docuEntry.uuid}`,
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+            },
+            withCredentials: true,
+            data: data
+        };
+        axios(config)
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
     },
 }
 

@@ -38,7 +38,7 @@ const actions = {
     async getSessionToken({ commit, dispatch }, { username, password, matrikelnummer }) {
 
         //eigtl csrf token, nicht sessiontoken
-        return axios.get('rest/session/token')
+        return axios.get('session/token')
             .then((response) => {
                 const token = response.data;
                 commit('SAVE_SESSION_TOKEN', token);
@@ -102,7 +102,7 @@ const actions = {
 
     /**
     * sends an email to the "superdozent" if the registering user is a lecturer and asks for the role "lecturer"
-    * email template can be configured at email.js. IDs used below are also found there 
+    * email template can be configured at email.js. IDs used below are also found there
     * @param rootState rootState allows access to states of other modules in store
     */
     sendEmail({ rootState }) {
@@ -145,7 +145,7 @@ const actions = {
         //authenticate with sparky_api at sparky backend is commented out for development purposes. thus testaccounts can be used without the need of real user data
         //TODO: uncomment sparky_api/authenticate to authenticate real users when development is finished or test accounts which work with sparkyservice can be used
         //await dispatch("sparky_api/authenticate", { username, password }, { root: true })
-        const data = `{"name": "${username}", "pass": "${password}"}`;
+        const data = `{"name": "${username}", "pass": ${JSON.stringify(password)}}`;
         const config = {
             method: 'post',
             url: 'user/login?_format=json',
@@ -168,7 +168,7 @@ const actions = {
                     alert("Du konntest nicht authentifiziert werden. Registriere dich bitte, falls dies nicht bereits geschehen ist.")
                     //console.log(error.response.data.message)
                 }
-                //error 403 -> requested resource is forbidden for user(role) user who logs in should be either lecturer or student. if one of those tries to log in (uses log in resource), while already logged in 
+                //error 403 -> requested resource is forbidden for user(role) user who logs in should be either lecturer or student. if one of those tries to log in (uses log in resource), while already logged in
                 //-> user cant get the user data in state so frontend "thinks" he is logged in, but he is logged in at the backend via a cookie
                 //cookie is only seen in web storage, while at the drupal backend site (https://clr-backend.x-navi.de/) but cant be seen while on frontend site.
                 //user could be authenticated automatically, when this error message comes, but this might be too insecure (there might be some other cases where this error could happen)
@@ -236,7 +236,7 @@ const actions = {
                 router.push('login')
             }
         ).catch((error) => {
-            //error 403 -> requested resource is forbidden for user(role) user who logs out should be either lecturer or student and logged in. if one of those tries to log out (uses log out resource), while already logged out 
+            //error 403 -> requested resource is forbidden for user(role) user who logs out should be either lecturer or student and logged in. if one of those tries to log out (uses log out resource), while already logged out
             //-> frontend "thinks" user is logged in, but he is already logged out at the backend i.e. cookie is deleted
             if (error.response.status == 403) {
                 alert("Der Session Cookie ist wahrscheinlich abgelaufen bzw. bist du bereits vom Backend abgemeldet. Refreshe die Seite und logge dich erneut ein, um den Fehler zu beheben. Sollte dieser Fehler bestehen bleiben, wende dich an deinen betreuenden Dozenten oder schreibe eine Email an stadtlaender@uni-hildesheim.de ")
@@ -276,7 +276,7 @@ const mutations = {
     },
 
     /**
-    * gets the token from action and puts it in state 
+    * gets the token from action and puts it in state
     * @param token session/csrf token
     * @param state state as parameter for access and manipulation of state data
     */
@@ -295,7 +295,7 @@ const mutations = {
     },
 
     /**
-    * gets csrf_token, user object and loguttoken from action 
+    * gets csrf_token, user object and loguttoken from action
     * and puts it in 3 state objects and in sessionstorage
     * @param state state as parameter for access and manipulation of state data
     * @param login_data object with all response data from drupal backend after login

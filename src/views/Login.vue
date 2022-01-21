@@ -414,8 +414,8 @@ export default {
                 //first calls authenticate from sparky api, then logs user in backend
                 this.$store
                     //TODO: uncomment next line and comment out the line after, when project goes in production -> authenticate with sparkyservice
-                    // .dispatch("sparky_api/authenticate", {
-                    .dispatch("drupal_api/loginToDrupal", {
+                    .dispatch("sparky_api/authenticate", {
+                    //.dispatch("drupal_api/loginToDrupal", {
                         username,
                         password,
                     })
