@@ -119,14 +119,6 @@ export default {
       return this.$store.state.project.myProjects;
     },
 
-    getProfileData() {
-      return this.$store.state.profile.profileData;
-    },
-
-    getUser() {
-      return this.$store.state.profile.userData;
-    },
-
     getImage() {
       return this.$store.state.profile.imageData;
     },
