@@ -15,7 +15,7 @@
       >
 
       <b-navbar-brand v-else>{{
-        getProjectName | truncate(19)
+        getCurrentProject.title | truncate(19)
       }}</b-navbar-brand>
       <b-navbar-nav>
         <b-nav-item to="/">
@@ -173,7 +173,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters({ getUserRole: "drupal_api/getUserRole" }),
+    ...mapGetters({
+      getUserRole: "drupal_api/getUserRole",
+      getCurrentProject: "project/getCurrentProject",
+    }),
 
     showProfileSettingsLinks() {
       return (
@@ -206,18 +209,8 @@ export default {
     },
 
     getProjectName() {
-      //use this instead if truncate filter works not as intended
-      // return this.$store.state.project.currentProject.title.slice(0, 15);
+      console.log(this.$store.state.project.currentProject.title);
       return this.$store.state.project.currentProject.title;
-    },
-  },
-  filters: {
-    //truncates when the length of given value (project title) is longer than the given cutoff threshold
-    truncate: function (value, cutoff) {
-      if (value.length > cutoff) {
-        return value.slice(0, cutoff) + "...";
-      }
-      return value;
     },
   },
 };
