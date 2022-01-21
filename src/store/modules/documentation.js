@@ -33,6 +33,7 @@ const actions = {
 
     },
 
+
     /*     async loadSingleDocuFromBackend({commit}, documentID) {
 
             var config = {
@@ -53,6 +54,7 @@ const actions = {
                 console.log(error)
             })
             }, */
+
 
 
 
@@ -117,6 +119,7 @@ const mutations = {
     */
     ADD_DOCUMENTATION(state, docuEntry) {
         console.log(docuEntry.documentation)
+        console.log("hello")
         var data = `
         {
             "data": {
