@@ -1,6 +1,4 @@
 <template>
-  <!-- All the profile data of the user, who put his profile data in the input fields in the component "Einstellungen" and the user data,
-are shown here as a profile view and if the user has uploaded a profile picture in the "Einstellungen", it will also be shown here -->
   <div class="profil-container">
     <b-container v-if="getUserRole != 'lecturer'">
       <table class="table table-striped table-hover">
@@ -95,21 +93,21 @@ export default {
     };
   },
 
-  /** load the profile data and the user data from backend */
-
   async mounted() {
-    this.$store.dispatch(
-      "profile/loadProfileFromBackend",
-      this.getUserInternalUID
-    );
-    this.$store.dispatch(
-      "profile/loadUserFromBackend",
-      this.getUserInternalUID
-    );
+    // THESE are not NEEDED. WE MADE IT IN projectList.vue
+    // this.$store.dispatch(
+    //   "profile/loadProfileFromBackend",
+    //   this.getUserInternalUID
+    // );
+    // this.$store.dispatch(
+    //   "profile/loadUserFromBackend",
+    //   this.getUserInternalUID
+    // );
   },
   computed: {
     ...mapGetters({
       memberProfile: "profile/getProfileData",
+      userUID: "drupal_api/getCurrentUserInternalUID",
     }),
 
     getUserRole() {
@@ -123,9 +121,9 @@ export default {
       return this.$store.state.profile.imageData;
     },
     //here getCurrentUserInternalUID returns the uid provided by the params -> this is because profiles of other students should also be visitable
-    getUserInternalUID() {
-      return this.$route.params.user_internal_uid;
-    },
+    // getUserInternalUID() {
+    //   return this.$route.params.user_internal_uid;
+    // },
   },
 };
 </script>

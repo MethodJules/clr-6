@@ -33,7 +33,7 @@
             :to="{
               name: 'Profil',
               params: {
-                user_internal_uid: this.getCurrentUserInternalUID,
+                user_internal_uid: userUID,
               },
             }"
             >Profil</b-nav-item
@@ -128,20 +128,7 @@
     </b-navbar>
   </div>
 </template>
-<style scoped>
-.navbar-dark .navbar-nav .nav-link {
-  font-size: 1.2em;
-}
-.navbar-dark .navbar-nav .nav-link:active {
-  color: white !important;
-}
-.navbar-dark .navbar-brand {
-  font-size: 1.6em !important;
-}
-.navbar-top {
-  padding: 1rem;
-}
-</style>
+
 <script>
 import { mapGetters } from "vuex";
 
@@ -176,6 +163,7 @@ export default {
     ...mapGetters({
       getUserRole: "drupal_api/getUserRole",
       getCurrentProject: "project/getCurrentProject",
+      userUID: "drupal_api/getCurrentUserInternalUID",
     }),
 
     showProfileSettingsLinks() {
@@ -185,13 +173,7 @@ export default {
         this.$route.name === "Einstellungen"
       );
     },
-    getCurrentUserUUID() {
-      return this.$store.state.profile.userData.uuid;
-    },
-    //provided user uid is taken from the state, where the currentuuser uid is saved, because this navigation should only lead to the own profile
-    getCurrentUserInternalUID() {
-      return this.$store.state.drupal_api.user.uid;
-    },
+
     startpage() {
       return this.$route.name === "ProjectList";
     },
@@ -207,11 +189,20 @@ export default {
     inEinstellungen() {
       return this.$route.name === "Einstellungen";
     },
-
-    getProjectName() {
-      console.log(this.$store.state.project.currentProject.title);
-      return this.$store.state.project.currentProject.title;
-    },
   },
 };
 </script>
+<style scoped>
+.navbar-dark .navbar-nav .nav-link {
+  font-size: 1.2em;
+}
+.navbar-dark .navbar-nav .nav-link:active {
+  color: white !important;
+}
+.navbar-dark .navbar-brand {
+  font-size: 1.6em !important;
+}
+.navbar-top {
+  padding: 1rem;
+}
+</style>

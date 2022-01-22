@@ -1,52 +1,48 @@
 <template>
-  <!-- TODO: main page burada olacak -->
-  <b-overlay :show="getLoadingStatus" rounded="sm">
-    <b-container fluid class="p-0 m-0 appContainer">
-      <MenueLeiste />
+  <!-- <b-overlay :show="getLoadingStatus" opacity="1" rounded="sm"> -->
+  <b-container fluid class="p-0 m-0 appContainer">
+    <MenueLeiste />
+    <b-row class="page-container">
+      <b-col v-if="getUserRole != 'lecturer'" class="linkeSeite m-0 p-0" md="2">
+        <b-row class="m-0 p-0">
+          <b-col class="m-0">
+            <TodoList v-if="inMainPage" />
+            <TodoListForProjekt v-if="!inMainPage" />
+          </b-col>
+        </b-row>
 
-      <b-row class="page-container">
-        <b-col
-          v-if="getUserRole != 'lecturer'"
-          class="linkeSeite m-0 p-0"
-          md="2"
-        >
-          <b-row class="m-0 p-0">
-            <b-col class="m-0">
-              <TodoList />
-            </b-col>
-          </b-row>
+        <b-row class="calendar-box">
+          <b-col class="d-flex m-0">
+            <Kalender />
+          </b-col>
+        </b-row>
+      </b-col>
 
-          <b-row class="calendar-box">
-            <b-col class="d-flex m-0">
-              <Kalender />
-            </b-col>
-          </b-row>
-        </b-col>
-
-        <b-col class="mainContent m-0 p-0">
-          <router-view :key="$route.path"></router-view>
-        </b-col>
-        <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
+      <b-col class="mainContent m-0 p-0">
+        <router-view :key="$route.path"></router-view>
+      </b-col>
+      <!-- Sobald der Nutzer auf die Projektliste geht, blendet er 
         die Komponente SeitenNavigation aus . Siehe https://stackoverflow.com/questions/56681106/vue-hide-view-components-conditionally-based-on-url-->
-        <b-col
-          v-if="!inProjectList & !inProfil"
-          class="d-flex flex-column justify-content-between p-0 m-0 rechtseite"
-          md="1"
-        >
-          <b-row>
-            <b-col class="m-0">
-              <SeitenNavigation />
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <Footer />
-    </b-container>
-  </b-overlay>
+      <b-col
+        v-if="!inMainPage"
+        class="d-flex flex-column justify-content-between p-0 m-0 rechtseite"
+        md="1"
+      >
+        <b-row>
+          <b-col class="m-0">
+            <SeitenNavigation />
+          </b-col>
+        </b-row>
+      </b-col>
+    </b-row>
+    <Footer />
+  </b-container>
+  <!-- </b-overlay> -->
 </template>
 <script>
 import SeitenNavigation from "@/components/SeitenNavigation.vue";
 import TodoList from "@/components/TodoList.vue";
+import TodoListForProjekt from "@/components/TodoListForProjekt.vue";
 import MenueLeiste from "@/components/MenueLeiste.vue";
 import Kalender from "@/components/Kalender.vue";
 import Footer from "@/components/Footer.vue";
@@ -61,6 +57,7 @@ export default {
     TodoList,
     MenueLeiste,
     Kalender,
+    TodoListForProjekt,
   },
   data() {
     return {};
@@ -77,6 +74,23 @@ export default {
     getLoadingStatus() {
       return this.$store.state.loadingStatus;
     },
+
+    /**
+     * returns True if we are on these pages: projektList.vue, einstellungen.vue, profil.vue
+     */
+    inMainPage() {
+      let result = false;
+      if (
+        (this.$route.name === "ProjectList") |
+        (this.$route.name === "Profil") |
+        (this.$route.name === "Einstellungen")
+      ) {
+        result = true;
+      }
+      console.log(result);
+      return result;
+    },
+
     inProjectList() {
       let result = false;
       this.$route.name === "ProjectList" ? (result = true) : (result = false);

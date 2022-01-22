@@ -33,6 +33,8 @@
 <script>
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 import ProjectForm from "@/components/ProjectForm";
+import { mapGetters } from "vuex";
+
 export default {
   name: "ProjectList",
 
@@ -60,32 +62,32 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      getUserRole: "drupal_api/getUserRole",
+      getCurrentProject: "project/getCurrentProject",
+      userUID: "drupal_api/getCurrentUserInternalUID",
+    }),
+
     getUserRole() {
       return this.$store.state.drupal_api.user.role;
     },
     getCurrentUserInternalUID() {
-      // return true
       return this.$store.state.drupal_api.user.uid;
     },
 
-    getLoadingStatus() {
-      return this.$store.state.loadingStatus;
-    },
     getMyProjectlist() {
       return this.$store.state.project.myProjects;
     },
   },
 
-  async mounted() {
-    this.$store.dispatch("project/loadProjectsFromBackend").then(() => {});
-
-    //load lecturer student and user for different lists
+  mounted() {
+    // why there is a then here. there is nothing in it....
+    // this.$store.dispatch("project/loadProjectsFromBackend").then(() => {});
+    this.$store.dispatch("project/loadProjectsFromBackend");
     this.$store.dispatch("user/loadLecturersFromBackend");
     this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch(
-      "profile/loadUserFromBackend",
-      this.getCurrentUserInternalUID
-    );
+    this.$store.dispatch("profile/loadProfileFromBackend", this.userUID);
+    this.$store.dispatch("profile/loadUserFromBackend", this.userUID);
   },
 };
 </script>
