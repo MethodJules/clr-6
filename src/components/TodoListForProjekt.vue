@@ -1,29 +1,28 @@
 <template>
   <div id="todoList">
-    <div v-for="(todos, index) in listOfTodos" :key="index">
-      <h3 v-if="todos.length > 0"></h3>
-      <div class="card" v-for="(todo, index2) in todos" :key="index2">
-        <div class="card-header" :class="getHeaderClass(index)">
-          <strong>
-            {{ todos[0].project_title }}
-          </strong>
-          <b> {{ todo.date }}</b>
-          <b-button @click="deleteTodo(todo)" size="sm">
-            <b-icon icon="trash"></b-icon>
-          </b-button>
-        </div>
-        <div class="card-body p-2">
-          <b-form-checkbox
-            :id="todo.uuid"
-            name="checkbox-1"
-            @input="checkboxUpdate(index, todo)"
-            v-model="todo.erledigt"
-          >
-            <p>
-              {{ todo.title }}
-            </p>
-          </b-form-checkbox>
-        </div>
+    <div class="todoList-header"></div>
+    <AddTodoButton />
+    <div class="card" v-for="(todo, index) in todosOfProject" :key="index">
+      <div class="card-header">
+        <strong>
+          {{ getCurrentProject.title }}
+        </strong>
+        <b> {{ todo.date }}</b>
+        <b-button @click="deleteTodo(todo)" size="sm">
+          <b-icon icon="trash"></b-icon>
+        </b-button>
+      </div>
+      <div class="card-body p-2">
+        <b-form-checkbox
+          :id="todo.uuid"
+          name="checkbox-1"
+          @input="checkboxUpdate(todo)"
+          v-model="todo.erledigt"
+        >
+          <p>
+            {{ todo.title }}
+          </p>
+        </b-form-checkbox>
       </div>
     </div>
   </div>
@@ -31,32 +30,31 @@
 <script>
 import { required, maxLength } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
-
+import AddTodoButton from "@/components/buttons/AddTodoButton.vue";
 export default {
   props: {
     date: String,
   },
+
   data() {
     return {
-      // listOfToDos: [],
-      status: "",
       // todo: "",
     };
   },
+
+  components: {
+    AddTodoButton,
+  },
+
   validations: {
     todoNeu: { required, maxLength: maxLength(250) },
   },
-  computed: {
-    ...mapGetters({
-      listOfTodos: "todo/getListOfTodos",
-    }),
-  },
+
   methods: {
     deleteTodo(todo) {
-      alert("ToDo " + todo.title + " wurde gelöscht");
       this.$store.dispatch("todo/deleteTodo", todo);
     },
-    checkboxUpdate(index, todoErledigt) {
+    checkboxUpdate(todoErledigt) {
       this.$store.dispatch("todo/updateTodo", todoErledigt);
     },
 
@@ -66,10 +64,16 @@ export default {
         return this.date;
       }
     },
-    getHeaderClass(index) {
-      if (index % 2 == 0) {
-        return "backgroundHeader";
-      }
+  },
+
+  computed: {
+    ...mapGetters({
+      todosOfProject: "todo/getTodosOfProject",
+      getCurrentProject: "project/getCurrentProject",
+    }),
+
+    getProjectID() {
+      return this.$route.params.project_id;
     },
   },
 };
@@ -80,11 +84,10 @@ export default {
   height: 46vh;
   padding: 0;
 }
-.backgroundHeader {
-  background-color: #6c757d;
-  color: #f7f7f7;
+.todoList-header {
+  display: flex;
+  justify-content: space-between;
 }
-
 .checkbox p {
   margin-bottom: 0.3rem;
 }

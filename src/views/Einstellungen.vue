@@ -376,10 +376,7 @@ export default {
     },
 
     cancelUpdate() {
-      this.$store.dispatch(
-        "profile/loadProfileFromBackend",
-        this.getCurrentUserInternalUID
-      );
+      this.$store.dispatch("profile/loadProfileFromBackend", this.userUID);
     },
   },
   watch: {
@@ -389,36 +386,31 @@ export default {
       }
     },
   },
-
-  /** load the profile data and the user data from backend */
   mounted() {
-    this.$store.dispatch(
-      "profile/loadProfileFromBackend",
-      this.getCurrentUserInternalUID
-    ),
-      this.$store.dispatch(
-        "profile/loadUserFromBackend",
-        this.getCurrentUserInternalUID
-      );
-    this.profileData = this.$store.state.profile.profileData;
-    this.userData = this.$store.state.profile.userData;
+    // THESE are not NEEDED. WE MADE IT IN projectList.vue
+    // this.$store.dispatch(
+    //   "profile/loadProfileFromBackend",
+    //   this.getCurrentUserInternalUID
+    // ),
+    //   this.$store.dispatch(
+    //     "profile/loadUserFromBackend",
+    //     this.getCurrentUserInternalUID
+    //   );
+    // this.profileData = this.$store.state.profile.profileData;
+    // this.userData = this.$store.state.profile.userData;
   },
 
-  /* With the getters, we can show the loading data from the backend, that it can be visible in the frontend for the users */
-
   computed: {
-    ...mapGetters({ getUserRole: "drupal_api/getUserRole" }),
+    ...mapGetters({
+      getUserRole: "drupal_api/getUserRole",
+      userUID: "drupal_api/getCurrentUserInternalUID",
+    }),
     getUser() {
       return this.$store.state.profile.userData;
     },
 
     getProfileData() {
       return this.$store.state.profile.profileData;
-    },
-
-    getCurrentUserInternalUID() {
-      // return true
-      return this.$store.state.drupal_api.user.uid;
     },
   },
 };

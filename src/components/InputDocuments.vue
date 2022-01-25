@@ -6,20 +6,12 @@
         <div></div>
       </div>
     </div>
-
-    <!-- Input Box 
-    The uploaded files shown in here.  -->
-    <!-- <b-row class="title">
-            <h3>Input</h3>
-        </b-row> -->
     <b-row class="d-flex justify-content-end">
       <b-button v-if="getUserRole != 'lecturer'" v-b-modal.fileUpload
         >+</b-button
       >
-      <!-- For Database upload. This button may be activated later...     -->
-      <!-- <b-button @click="uploadToDatabase()">Database Hochladen</b-button> -->
     </b-row>
-    <!-- Zeige im Frontend -->
+
     <b-row>
       <div
         v-for="(input, index) in getInputs"
@@ -28,16 +20,13 @@
       >
         <div>
           <p class="m-0">
-            <!-- <p class="m-0"> -->
             {{ input.name }}
           </p>
           <span class="float-right sizeBox"
             >{{ input.size | convertSize }}
           </span>
           <a size="sm" :href="input.url"> Dokument ansehen</a>
-          <!-- <b-button variant="success" size="sm" @click="input.url">
-                        Show File button
-                    </b-button> -->
+
           <b-button
             block
             variant="outline-danger"
