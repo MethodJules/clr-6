@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <b-button id="popover-postfach">
-      <b-icon icon="envelope"></b-icon>
-    </b-button>
+  <b-button id="popover-postfach">
+    <b-icon icon="envelope"></b-icon>
     <b-popover target="popover-postfach" triggers="click" placement="bottom">
       <template #title>Benachrichtigung</template>
       <div class="card" v-for="postfach in listOfPostfach" :key="postfach.date">
@@ -17,7 +15,7 @@
         </div>
       </div>
     </b-popover>
-  </div>
+  </b-button>
 </template>
 
 <script>
@@ -37,10 +35,6 @@ export default {
 
   methods: {
     deletePostfach(postfach) {
-      //Löschen einer Benachrichtigung
-      //this.listOfPostfach.splice(this.listOfPostfach.indexOf(postfach), 1)
-      //alert("Delete");
-
       this.$store.dispatch("postfach/deletePostfach", postfach);
     },
   },

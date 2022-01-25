@@ -133,7 +133,7 @@ export default {
 .page-container {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 1rem !important;
+  margin-top: 0.5rem !important;
   flex: 1;
 }
 @media (max-width: 765px) {
@@ -143,6 +143,9 @@ export default {
 }
 .linkeSeite {
   min-width: 25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .rechtseite {
