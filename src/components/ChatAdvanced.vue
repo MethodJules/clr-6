@@ -5,8 +5,8 @@
   <iframe
     src="https://chat-clrbackend.ddns.net"
     title="myframe"
-    width="500rem"
-    height="500rem"
+    width="100%"
+    height="535rem"
   ></iframe>
 </template>
 <script>
