@@ -87,7 +87,6 @@ export default {
       ) {
         result = true;
       }
-      console.log(result);
       return result;
     },
 

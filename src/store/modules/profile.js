@@ -71,9 +71,6 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                console.log(response)
-                // const profiles = response.data.data;
-                // console.log(profiles)
                 let profile = {
                     name: response.data.data[0].attributes.title,
                     abteilung: response.data.data[0].attributes.field_abteilung,

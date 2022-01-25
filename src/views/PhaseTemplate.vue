@@ -3,7 +3,7 @@
     <b-container fluid>
       <b-row class="mb-4">
         <b-col cols="10">
-          <h2>Phase: {{ getPhaseName }}</h2>
+          <h2>Phase: {{ currentPhase.title }}</h2>
         </b-col>
         <b-col cols="2" class="d-flex align-center">
           <Assistent />
@@ -40,12 +40,13 @@ import UsedTools from "@/components/UsedTools.vue";
 import OutputDocuments from "@/components/OutputDocuments.vue";
 import Assistent from "@/components/Assistent.vue";
 import PhaseTemplateButtons from "@/components/PhaseTemplateButtons.vue";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      phaseId: this.$route.params.phase_number,
-      projectId: this.$route.params.project_id,
+      // phaseId: this.$route.params.phase_number,
+      // projectId: this.$route.params.project_id,
     };
   },
 
@@ -59,9 +60,9 @@ export default {
   },
 
   computed: {
-    getPhaseName() {
-      return this.$store.state.project_phases.current_phase.title;
-    },
+    ...mapGetters({
+      currentPhase: "project_phases/getCurrentPhase",
+    }),
 
     getDocumentation: {
       get() {
@@ -72,7 +73,7 @@ export default {
       },
     },
   },
-  async mounted() {
+  mounted() {
     this.$store.dispatch("project_phases/loadSinglePhaseFromBackend", {
       phase_number: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
