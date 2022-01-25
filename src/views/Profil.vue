@@ -8,12 +8,12 @@ are shown here as a profile view and if the user has uploaded a profile picture 
           <tr>
             <th scope="row">Name</th>
             <td>
-              {{ memberProfile.name }}
+              {{ getUser.fullname }}
             </td>
           </tr>
           <tr v-if="memberProfile.showEmail">
             <th scope="row">Email</th>
-            <td>{{ memberProfile.mail }}</td>
+            <td>{{ getUser.mail }}</td>
           </tr>
           <tr>
             <th scope="row">Studiengang</th>
@@ -52,7 +52,7 @@ are shown here as a profile view and if the user has uploaded a profile picture 
           <tr>
             <th scope="row">Name</th>
             <td>
-              {{ memberProfile.name }}
+              {{ getUser.fullname }}
             </td>
           </tr>
           <tr>
@@ -61,10 +61,10 @@ are shown here as a profile view and if the user has uploaded a profile picture 
           </tr>
           <tr v-if="memberProfile.showEmail">
             <th scope="row">Email</th>
-            <td>{{ memberProfile.mail }}</td>
+            <td>{{ getUser.mail }}</td>
           </tr>
           <tr v-if="memberProfile.showPhoneNumber">
-            <th scope="row">Email</th>
+            <th scope="row">Telefonnummer</th>
             <td>{{ memberProfile.telefonnummer }}</td>
           </tr>
           <tr>
@@ -111,7 +111,9 @@ export default {
     ...mapGetters({
       memberProfile: "profile/getProfileData",
     }),
-
+    getUser() {
+      return this.$store.state.profile.userData;
+    },
     getUserRole() {
       return this.$store.state.drupal_api.user.role;
     },

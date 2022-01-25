@@ -27,7 +27,7 @@
             <td>{{ getUser.mail }}</td>
           </tr>
 
-          <!-- In this part [line 32-158] we load all the profile data from the backend by filtering the drupaluserID 
+          <!-- In this part [line 32-158] we load all the profile data from the backend by filtering the drupaluserID
             to have the right profile of the user who creates that profile  ) -->
           <thead>
             <tr>
@@ -56,13 +56,13 @@
             <th scope="row">Durchgeführte Literaturreviews</th>
             <td>
               <b-form-input
-                v-model="getProfileData.anzahl_literaturreviews"
-                v-on:input="$v.getProfileData.anzahl_literaturreviews.$touch"
+                v-model="getProfileData.anzahlLiteraturreviews"
+                v-on:input="$v.getProfileData.anzahlLiteraturreviews.$touch"
                 v-bind:class="{
-                  error: $v.getProfileData.anzahl_literaturreviews.$error,
+                  error: $v.getProfileData.anzahlLiteraturreviews.$error,
                   valid:
-                    $v.getProfileData.anzahl_literaturreviews.$dirty &&
-                    !$v.getProfileData.anzahl_literaturreviews.$invalid,
+                    $v.getProfileData.anzahlLiteraturreviews.$dirty &&
+                    !$v.getProfileData.anzahlLiteraturreviews.$invalid,
                 }"
                 id="input-2"
               >
@@ -75,7 +75,7 @@
               <b-form-checkbox
                 name="checkbox-email"
                 @input="updateEmailCheckbox()"
-                v-model="getProfileData.show_email"
+                v-model="getProfileData.showEmail"
               >
               </b-form-checkbox>
             </td>
@@ -197,7 +197,7 @@
             <td>{{ getUser.mail }}</td>
           </tr>
 
-          <!-- In this part [line 32-158] we load all the profile data from the backend by filtering the drupaluserID 
+          <!-- In this part [line 32-158] we load all the profile data from the backend by filtering the drupaluserID
             to have the right profile of the user who creates that profile  ) -->
           <thead>
             <tr>
@@ -245,7 +245,7 @@
               <b-form-checkbox
                 name="checkbox-email"
                 @input="updateEmailCheckbox()"
-                v-model="getProfileData.show_email"
+                v-model="getProfileData.showEmail"
               >
               </b-form-checkbox>
             </td>
@@ -256,7 +256,7 @@
               <b-form-checkbox
                 name="checkbox-phone"
                 @input="updatePhoneNumberCheckbox()"
-                v-model="getProfileData.show_phone_number"
+                v-model="getProfileData.showPhoneNumber"
               >
               </b-form-checkbox>
             </td>
@@ -315,7 +315,7 @@ export default {
   validations: {
     getProfileData: {
       studiengang: { minLength: minLength(1) },
-      anzahl_literaturreviews: { integer, minLength: minLength(1) },
+      anzahlLiteraturreviews: { integer, minLength: minLength(1) },
       datenbanken: { minLength: minLength(1) },
       referenztool: { minLength: minLength(1) },
       analysetool: { minLength: minLength(1) },
@@ -351,7 +351,7 @@ export default {
         var ausgabe = {
           title: this.getProfileData.title,
           studiengang: this.getProfileData.studiengang,
-          anzahl_literaturreviews: this.getProfileData.anzahl_literaturreviews,
+          anzahlLiteraturreviews: this.getProfileData.anzahlLiteraturreviews,
           datenbanken: this.getProfileData.datenbanken,
           referenztool: this.getProfileData.referenztool,
           analysetool: this.getProfileData.analysetool,

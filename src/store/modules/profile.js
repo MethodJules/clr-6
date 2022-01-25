@@ -6,7 +6,7 @@ const state = () => ({
 })
 const getters = {
     /**
-    * @param state state as parameter for access and manipulation of state data  
+    * @param state state as parameter for access and manipulation of state data
     * returns user uuid from state
     */
     getCurrentUserUUID(state) {
@@ -23,7 +23,7 @@ const actions = {
     * @param commit commit is used to call a mutation from this function
     * @param rootState rootState allows access to states of other modules in store
     * @param user_internal_uid user uid used for getting associated user data from backend
-    * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user 
+    * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user
     */
     async loadUserFromBackend({ commit, rootState }, user_internal_uid) {
         var config = {
@@ -38,10 +38,10 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data' 
-                * array with all field values. But here we also need the included data which is found in response.data.included. 
-                *  Therefore our paylod this time is response.data, 
-                * which is an object with both 'data' and 'included' as attributes. 
+                /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data'
+                * array with all field values. But here we also need the included data which is found in response.data.included.
+                *  Therefore our paylod this time is response.data,
+                * which is an object with both 'data' and 'included' as attributes.
                 */
                 const user = response.data;
                 commit('SAVE_USER_IN_STATE', { user });
@@ -75,6 +75,10 @@ const actions = {
                 // const profiles = response.data.data;
                 // console.log(profiles)
                 let profile = {
+                    uuid: response.data.data[0].id,
+                    title: response.data.data[0].attributes.title,
+
+                    // TODO: this is not the user's full name. Only keeping it for now to prevent possible side effects.
                     name: response.data.data[0].attributes.title,
                     abteilung: response.data.data[0].attributes.field_abteilung,
                     analysetool: response.data.data[0].attributes.field_analysetool,
@@ -107,7 +111,7 @@ const actions = {
                 "type": "node--profil", 
                 "id": "${profile.uuid}",
                 "attributes": {
-                    "field_showemail": ${profile.show_email} 
+                    "field_showemail": ${profile.showEmail} 
                 }
             }
         }`;
@@ -142,7 +146,7 @@ const actions = {
                 "type": "node--profil", 
                 "id": "${profile.uuid}",
                 "attributes": {
-                    "field_show_phone_number": ${profile.show_phone_number}               
+                    "field_show_phone_number": ${profile.showPhoneNumber}               
                 }
             }
         }`;
@@ -230,7 +234,7 @@ const actions = {
     * @param iamge image to upload
     * @param filename filename of image to upload
     * @object image will be send to the upload method, where the uploaded image will be converted from base64 format to binary format, in
-    * order to send it to backend to media and not as usual to the content type in backend. After converting process, the uploaded 
+    * order to send it to backend to media and not as usual to the content type in backend. After converting process, the uploaded
     * image will be send to the next method below, which will be dispatched to the userdata.
     * @object filename is dynamically, not static.
     */
@@ -254,7 +258,7 @@ const actions = {
             .then(function (response) {
                 /**
                 * the imageID will be need for the method 'updateUserdataWithProfileImage' in order to add the right image to Userdata.
-                * 
+                *
                 * */
                 const imageID = response.data.data.id;
                 dispatch('updateUserdataWithProfileImage', imageID)
@@ -308,7 +312,7 @@ const actions = {
     * @param rootState rootState allows access to states of other modules in store
     * @param profile profile to be uploaded
     makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.uuid
-    that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata 
+    that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata
     rigth user */
 
     updateProfile({ rootState }, profile) {
@@ -326,7 +330,7 @@ const actions = {
                 "attributes": {
                     "title": "${profile.title}", 
                     "field_studiengang": "${profile.studiengang}", 
-                    "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}", 
+                    "field_anzahl_literaturreviews": "${profile.anzahlLiteraturreviews}", 
                     "field_datenbanken": "${profile.datenbanken}", 
                     "field_referenztool": "${profile.referenztool}", 
                     "field_analysetool": "${profile.analysetool}",
@@ -359,8 +363,8 @@ const mutations = {
 
     /**
     * @param state state as parameter for access and manipulation of state data
-    * @param user user from backend saved local in state 
-    *takes user object and saves it in state with user picture 
+    * @param user user from backend saved local in state
+    *takes user object and saves it in state with user picture
     */
 
     SAVE_USER_IN_STATE(state, { user }) {
@@ -378,8 +382,8 @@ const mutations = {
         });
         /**
         * consist the object user with included data: the url of the profile image.
-        * from the response included, we get the second part of the url of the profilimage. 
-        * The first part of the url is defined statically above in line 2. 
+        * from the response included, we get the second part of the url of the profilimage.
+        * The first part of the url is defined statically above in line 2.
         * We get the fullurl by uniting the first and second part of the url. The full url will be pushed in to the state imageData.
         */
         if (user.included != undefined) {
@@ -393,7 +397,7 @@ const mutations = {
         }
     },
 
-    /** 
+    /**
     * @param state state as parameter for access and manipulation of state data
     * @param profiles profile of current user
     * takes profile array and puts all relevant data of the profile in state.profileData (actually only one profile)
