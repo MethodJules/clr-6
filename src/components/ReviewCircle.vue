@@ -1,7 +1,6 @@
 ﻿<template>
   <!-- Für extra Informationen über z-view 
     https://zircleui.github.io/docs/api/z-view.html#organize-your-content -->
-
   <z-view size="xxl">
     <div class="inside">
       <b> Kollaboratives Literarurreview: </b>
@@ -58,9 +57,6 @@ export default {
   },
 };
 </script>
-
-
-
 <style scoped>
 .z-shape {
   background-color: white !important;

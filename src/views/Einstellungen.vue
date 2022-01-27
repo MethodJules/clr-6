@@ -7,7 +7,6 @@
         </div>
       </transition>
       <table class="table table-borderless table-sm table-hover">
-        <!-- In this part [line 14-23] we load all the user data of testacc (name, matrikelnummer and email from the backend ) -->
         <thead>
           <tr>
             <th>Persönliche Daten:</th>
@@ -26,9 +25,6 @@
             <th scope="row">E-Mail</th>
             <td>{{ getUser.mail }}</td>
           </tr>
-
-          <!-- In this part [line 32-158] we load all the profile data from the backend by filtering the drupaluserID
-            to have the right profile of the user who creates that profile  ) -->
           <thead>
             <tr>
               <th>Profildaten:</th>
@@ -158,16 +154,12 @@
                 }"
               >
               </picture-input>
-              <!-- TODO: if needed put back in again. user can upload a picture seperate from updating the rest of his profile
-              <b-button class="upload-button" size="sm" @click="onUpload"
-              >Upload!</b-button  >-->
             </td>
           </tr>
         </tbody>
       </table>
       <b-row>
         <b-row class="buttons">
-          <!-- <input type="file" @change="onFileChanged" accept="image/jpeg,image/png"> -->
           <b-button @click="updateProfile()">Änderungen speichern</b-button>
           <b-button @click="cancelUpdate()">Änderungen verwerfen</b-button>
         </b-row>
@@ -181,7 +173,6 @@
         </div>
       </transition>
       <table class="table table-borderless table-sm table-hover">
-        <!-- In this part [line 14-23] we load all the user data of testacc (name, matrikelnummer and email from the backend ) -->
         <thead>
           <tr>
             <th>Persönliche Daten:</th>
@@ -196,9 +187,6 @@
             <th scope="row">E-Mail</th>
             <td>{{ getUser.mail }}</td>
           </tr>
-
-          <!-- In this part [line 32-158] we load all the profile data from the backend by filtering the drupaluserID
-            to have the right profile of the user who creates that profile  ) -->
           <thead>
             <tr>
               <th>Profildaten:</th>
@@ -280,15 +268,12 @@
                 }"
               >
               </picture-input>
-              <!-- <b-button class="upload-button" size="sm" @click="onUpload"
-              >Upload!</b-button  >-->
             </td>
           </tr>
         </tbody>
       </table>
       <b-row>
         <b-row class="buttons">
-          <!-- <input type="file" @change="onFileChanged" accept="image/jpeg,image/png"> -->
           <b-button @click="updateProfile()">Änderungen speichern</b-button>
           <b-button @click="cancelUpdate()">Änderungen verwerfen</b-button>
         </b-row>
@@ -301,8 +286,6 @@
 import PictureInput from "vue-picture-input";
 import { required, minLength, integer } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
-//import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -326,6 +309,19 @@ export default {
 
   components: {
     PictureInput,
+  },
+  computed: {
+    ...mapGetters({
+      getUserRole: "drupal_api/getUserRole",
+      userUID: "drupal_api/getCurrentUserInternalUID",
+    }),
+    getUser() {
+      return this.$store.state.profile.userData;
+    },
+
+    getProfileData() {
+      return this.$store.state.profile.profileData;
+    },
   },
 
   methods: {
@@ -384,33 +380,6 @@ export default {
       if (val) {
         setTimeout(() => (this.testButClicked = false), 1000);
       }
-    },
-  },
-  mounted() {
-    // THESE are not NEEDED. WE MADE IT IN projectList.vue
-    // this.$store.dispatch(
-    //   "profile/loadProfileFromBackend",
-    //   this.getCurrentUserInternalUID
-    // ),
-    //   this.$store.dispatch(
-    //     "profile/loadUserFromBackend",
-    //     this.getCurrentUserInternalUID
-    //   );
-    // this.profileData = this.$store.state.profile.profileData;
-    // this.userData = this.$store.state.profile.userData;
-  },
-
-  computed: {
-    ...mapGetters({
-      getUserRole: "drupal_api/getUserRole",
-      userUID: "drupal_api/getCurrentUserInternalUID",
-    }),
-    getUser() {
-      return this.$store.state.profile.userData;
-    },
-
-    getProfileData() {
-      return this.$store.state.profile.profileData;
     },
   },
 };

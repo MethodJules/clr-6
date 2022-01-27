@@ -1,70 +1,36 @@
 <template>
-  <div>
-    <div class="card">
-      <div class="card-header">
-        <b-form-datepicker
-          id="example-datepicker"
-          size="sm"
-          right
-          v-model="appointment"
-          :select-attribute="selectAttribute"
-        ></b-form-datepicker>
-      </div>
-      <div class="card-body p-2">
-        <b-form-input
-          v-model="todoNeu"
-          v-bind:class="{
-            error: $v.todoNeu.$error,
-            valid: $v.todoNeu.$dirty && !$v.todoNeu.$invalid,
-          }"
-          @keydown.enter="ok()"
-          type="text"
-          placeholder="Schreiben Sie ihre Todo hier, max. 250 Zeichen"
-        ></b-form-input>
-        <p class="card-warning">
-          {{ todoNeuError }}
-        </p>
-        <p class="card-warning">
-          {{ appointmentError }}
-        </p>
-      </div>
-      <div class="card-footer">
-        <b-button size="sm" @click="ok()">Add</b-button>
-        <b-button size="sm" @click="reset()">Reset</b-button>
-      </div>
+  <div class="card">
+    <div class="card-header">
+      <b-form-datepicker
+        id="example-datepicker"
+        size="sm"
+        right
+        v-model="appointment"
+        :select-attribute="selectAttribute"
+      ></b-form-datepicker>
     </div>
-
-    <!-- <b-button v-b-modal.to_do_edit_modal>+</b-button>
-
-    <b-modal
-      id="to_do_edit_modal"
-      @ok="ok()"
-      cancel-title="Abbrechen"
-      title="To Do"
-    >
-      <label for="neueTodo">zu erledigende Aufgabe: </label>
-      <input
+    <div class="card-body p-2">
+      <b-form-input
         v-model="todoNeu"
-        v-on:input="$v.todoNeu.$touch"
         v-bind:class="{
           error: $v.todoNeu.$error,
           valid: $v.todoNeu.$dirty && !$v.todoNeu.$invalid,
         }"
+        @keydown.enter="ok()"
         type="text"
-        placeholder="max. 250 Zeichen"
-      />
-      <br />
-      <label for="example-datepicker">
-        <br />
-        Frist:
-      </label>
-      <b-form-datepicker
-        id="example-datepicker"
-        v-model="appointment"
-        :select-attribute="selectAttribute"
-        class="mb-2"
-      ></b-form-datepicker>
-    </b-modal> -->
+        placeholder="Schreiben Sie ihre Todo hier, max. 250 Zeichen"
+      ></b-form-input>
+      <p class="card-warning">
+        {{ todoNeuError }}
+      </p>
+      <p class="card-warning">
+        {{ appointmentError }}
+      </p>
+    </div>
+    <div class="card-footer">
+      <b-button size="sm" @click="ok()">Add</b-button>
+      <b-button size="sm" @click="reset()">Reset</b-button>
+    </div>
   </div>
 </template>
 <script>

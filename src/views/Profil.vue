@@ -92,18 +92,6 @@ export default {
       user: { class: "m1" },
     };
   },
-
-  async mounted() {
-    // THESE are not NEEDED. WE MADE IT IN projectList.vue
-    // this.$store.dispatch(
-    //   "profile/loadProfileFromBackend",
-    //   this.getUserInternalUID
-    // );
-    // this.$store.dispatch(
-    //   "profile/loadUserFromBackend",
-    //   this.getUserInternalUID
-    // );
-  },
   computed: {
     ...mapGetters({
       memberProfile: "profile/getProfileData",
@@ -122,10 +110,6 @@ export default {
     getImage() {
       return this.$store.state.profile.imageData;
     },
-    //here getCurrentUserInternalUID returns the uid provided by the params -> this is because profiles of other students should also be visitable
-    // getUserInternalUID() {
-    //   return this.$route.params.user_internal_uid;
-    // },
   },
 };
 </script>

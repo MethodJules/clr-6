@@ -1,7 +1,5 @@
 <template>
   <div class="home-container">
-    <!-- Bildet den Review Zirkel ab und hat ein Dropdown menü der 
-    den Nutzer zu den Reflexionen weiterleitet -->
     <div class="canvas-container">
       <z-canvas :views="$options.components">
         <ReviewCircle> </ReviewCircle>
