@@ -7,6 +7,10 @@
           size="sm"
           right
           v-model="appointment"
+          v-bind:class="{
+            error: $v.appointment.$error,
+            valid: !$v.appointment.$invalid,
+          }"
           :select-attribute="selectAttribute"
         ></b-form-datepicker>
       </div>
@@ -19,7 +23,7 @@
           }"
           @keydown.enter="ok()"
           type="text"
-          placeholder="Schreiben Sie ihre Todo hier, max. 250 Zeichen"
+          placeholder="Beschreibe, was zu tun ist (max. 250 Zeichen)"
         ></b-form-input>
         <p class="card-warning">
           {{ todoNeuError }}
@@ -29,42 +33,10 @@
         </p>
       </div>
       <div class="card-footer">
-        <b-button size="sm" @click="ok()">Add</b-button>
-        <b-button size="sm" @click="reset()">Reset</b-button>
+        <b-button size="sm" @click="ok()">Hinzufügen</b-button>
+        <b-button size="sm" @click="reset()">Zurücksetzen</b-button>
       </div>
     </div>
-
-    <!-- <b-button v-b-modal.to_do_edit_modal>+</b-button>
-
-    <b-modal
-      id="to_do_edit_modal"
-      @ok="ok()"
-      cancel-title="Abbrechen"
-      title="To Do"
-    >
-      <label for="neueTodo">zu erledigende Aufgabe: </label>
-      <input
-        v-model="todoNeu"
-        v-on:input="$v.todoNeu.$touch"
-        v-bind:class="{
-          error: $v.todoNeu.$error,
-          valid: $v.todoNeu.$dirty && !$v.todoNeu.$invalid,
-        }"
-        type="text"
-        placeholder="max. 250 Zeichen"
-      />
-      <br />
-      <label for="example-datepicker">
-        <br />
-        Frist:
-      </label>
-      <b-form-datepicker
-        id="example-datepicker"
-        v-model="appointment"
-        :select-attribute="selectAttribute"
-        class="mb-2"
-      ></b-form-datepicker>
-    </b-modal> -->
   </div>
 </template>
 <script>
@@ -107,17 +79,20 @@ export default {
         this.appointmentError = "";
         this.todoNeuError = "";
       } else {
-        !this.$v.todoNeu.$error
-          ? (this.todoNeuError = "Bitte schreiben Sie einen Todo")
+        this.$v.todoNeu.$invalid
+          ? (this.todoNeuError = "Bitte gib eine Aufgabe ein")
           : (this.todoNeuError = "");
-        !this.$v.appointment.$error
-          ? (this.appointmentError = "Bitte wählen Sie einen Datum aus")
+        this.$v.appointment.$invalid
+          ? (this.appointmentError = "Bitte wähle eine Frist aus")
           : (this.appointmentError = "");
       }
     },
     reset() {
       this.todoNeu = "";
       this.appointment = "";
+      this.todoNeuError="";
+      this.appointmentError="";
+      this.$v.$reset;
     },
   },
 };
