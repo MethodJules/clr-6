@@ -44,12 +44,12 @@
   </b-overlay>
 </template>
 <script>
-import SeitenNavigation from "@/components/SeitenNavigation.vue";
-import TodoList from "@/components/TodoList.vue";
-import TodoListForProjekt from "@/components/TodoListForProjekt.vue";
-import MenueLeiste from "@/components/MenueLeiste.vue";
-import Kalender from "@/components/Kalender.vue";
-import Footer from "@/components/Footer.vue";
+import SeitenNavigation from "@/components/sidebarRight/SeitenNavigation.vue";
+import TodoList from "@/components/sidebarLeft/TodoList.vue";
+import TodoListForProjekt from "@/components/sidebarLeft/TodoListForProjekt.vue";
+import MenueLeiste from "@/components/shared/MenueLeiste.vue";
+import Kalender from "@/components/sidebarLeft/Kalender.vue";
+import Footer from "@/components/shared/Footer.vue";
 
 export default {
   props: {
@@ -154,7 +154,6 @@ export default {
 .mainContent {
   padding: 0 !important;
   min-width: 25rem;
-  /* min-height: 80vh; */
   flex: 1;
   width: 100%;
 }
