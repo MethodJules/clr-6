@@ -73,6 +73,7 @@
                         user_internal_uid: admin.internal_uid,
                       },
                     }"
+                    @click="setMemberToShow(admin)"
                     ><p class="admin">
                       <b>{{ admin.username }}</b>
                     </p>
@@ -307,7 +308,6 @@ export default {
       }
     },
     setMemberToShow(mitglied) {
-      console.log(mitglied);
       this.$store.commit("profile/SET_MEMBER_TO_SHOW", mitglied);
     },
   },

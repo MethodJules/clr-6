@@ -31,6 +31,7 @@
       <b-button size="sm" @click="ok()">Add</b-button>
       <b-button size="sm" @click="reset()">Reset</b-button>
     </div>
+
   </div>
 </template>
 <script>
@@ -73,17 +74,20 @@ export default {
         this.appointmentError = "";
         this.todoNeuError = "";
       } else {
-        !this.$v.todoNeu.$error
-          ? (this.todoNeuError = "Bitte schreiben Sie einen Todo")
+        this.$v.todoNeu.$invalid
+          ? (this.todoNeuError = "Bitte gib eine Aufgabe ein")
           : (this.todoNeuError = "");
-        !this.$v.appointment.$error
-          ? (this.appointmentError = "Bitte wählen Sie einen Datum aus")
+        this.$v.appointment.$invalid
+          ? (this.appointmentError = "Bitte wähle eine Frist aus")
           : (this.appointmentError = "");
       }
     },
     reset() {
       this.todoNeu = "";
       this.appointment = "";
+      this.todoNeuError="";
+      this.appointmentError="";
+      this.$v.$reset;
     },
   },
 };
