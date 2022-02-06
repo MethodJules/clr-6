@@ -81,8 +81,6 @@ export default {
   },
 
   mounted() {
-    // why there is a then here. there is nothing in it....
-    // this.$store.dispatch("project/loadProjectsFromBackend").then(() => {});
     this.$store.dispatch("project/loadProjectsFromBackend");
     this.$store.dispatch("user/loadLecturersFromBackend");
     this.$store.dispatch("user/loadStudentsFromBackend");

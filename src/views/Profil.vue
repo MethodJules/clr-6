@@ -111,6 +111,12 @@ export default {
       return this.$store.state.profile.imageData;
     },
   },
+  mounted() {
+    this.$store.dispatch(
+      "profile/loadUserFromBackend",
+      this.$route.params.user_internal_uid
+    );
+  },
 };
 </script>
 <style scoped>
