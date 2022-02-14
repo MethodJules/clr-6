@@ -7,7 +7,6 @@
         </div>
       </transition>
       <table class="table table-borderless table-sm table-hover">
-        <!-- In this part [line 14-23] we load all the user data of testacc (name, matrikelnummer and email from the backend ) -->
         <thead>
           <tr>
             <th>Persönliche Daten:</th>
@@ -26,9 +25,6 @@
             <th scope="row">E-Mail</th>
             <td>{{ getUser.mail }}</td>
           </tr>
-
-          <!-- In this part [line 32-158] we load all the profile data from the backend by filtering the drupaluserID 
-            to have the right profile of the user who creates that profile  ) -->
           <thead>
             <tr>
               <th>Profildaten:</th>
@@ -56,13 +52,13 @@
             <th scope="row">Durchgeführte Literaturreviews</th>
             <td>
               <b-form-input
-                v-model="getProfileData.anzahl_literaturreviews"
-                v-on:input="$v.getProfileData.anzahl_literaturreviews.$touch"
+                v-model="getProfileData.anzahlLiteraturreviews"
+                v-on:input="$v.getProfileData.anzahlLiteraturreviews.$touch"
                 v-bind:class="{
-                  error: $v.getProfileData.anzahl_literaturreviews.$error,
+                  error: $v.getProfileData.anzahlLiteraturreviews.$error,
                   valid:
-                    $v.getProfileData.anzahl_literaturreviews.$dirty &&
-                    !$v.getProfileData.anzahl_literaturreviews.$invalid,
+                    $v.getProfileData.anzahlLiteraturreviews.$dirty &&
+                    !$v.getProfileData.anzahlLiteraturreviews.$invalid,
                 }"
                 id="input-2"
               >
@@ -75,7 +71,7 @@
               <b-form-checkbox
                 name="checkbox-email"
                 @input="updateEmailCheckbox()"
-                v-model="getProfileData.show_email"
+                v-model="getProfileData.showEmail"
               >
               </b-form-checkbox>
             </td>
@@ -158,16 +154,12 @@
                 }"
               >
               </picture-input>
-              <!-- TODO: if needed put back in again. user can upload a picture seperate from updating the rest of his profile
-              <b-button class="upload-button" size="sm" @click="onUpload"
-              >Upload!</b-button  >-->
             </td>
           </tr>
         </tbody>
       </table>
       <b-row>
         <b-row class="buttons">
-          <!-- <input type="file" @change="onFileChanged" accept="image/jpeg,image/png"> -->
           <b-button @click="updateProfile()">Änderungen speichern</b-button>
           <b-button @click="cancelUpdate()">Änderungen verwerfen</b-button>
         </b-row>
@@ -181,7 +173,6 @@
         </div>
       </transition>
       <table class="table table-borderless table-sm table-hover">
-        <!-- In this part [line 14-23] we load all the user data of testacc (name, matrikelnummer and email from the backend ) -->
         <thead>
           <tr>
             <th>Persönliche Daten:</th>
@@ -196,9 +187,6 @@
             <th scope="row">E-Mail</th>
             <td>{{ getUser.mail }}</td>
           </tr>
-
-          <!-- In this part [line 32-158] we load all the profile data from the backend by filtering the drupaluserID 
-            to have the right profile of the user who creates that profile  ) -->
           <thead>
             <tr>
               <th>Profildaten:</th>
@@ -245,7 +233,7 @@
               <b-form-checkbox
                 name="checkbox-email"
                 @input="updateEmailCheckbox()"
-                v-model="getProfileData.show_email"
+                v-model="getProfileData.showEmail"
               >
               </b-form-checkbox>
             </td>
@@ -256,7 +244,7 @@
               <b-form-checkbox
                 name="checkbox-phone"
                 @input="updatePhoneNumberCheckbox()"
-                v-model="getProfileData.show_phone_number"
+                v-model="getProfileData.showPhoneNumber"
               >
               </b-form-checkbox>
             </td>
@@ -280,15 +268,12 @@
                 }"
               >
               </picture-input>
-              <!-- <b-button class="upload-button" size="sm" @click="onUpload"
-              >Upload!</b-button  >-->
             </td>
           </tr>
         </tbody>
       </table>
       <b-row>
         <b-row class="buttons">
-          <!-- <input type="file" @change="onFileChanged" accept="image/jpeg,image/png"> -->
           <b-button @click="updateProfile()">Änderungen speichern</b-button>
           <b-button @click="cancelUpdate()">Änderungen verwerfen</b-button>
         </b-row>
@@ -301,8 +286,6 @@
 import PictureInput from "vue-picture-input";
 import { required, minLength, integer } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
-//import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -315,7 +298,7 @@ export default {
   validations: {
     getProfileData: {
       studiengang: { minLength: minLength(1) },
-      anzahl_literaturreviews: { integer, minLength: minLength(1) },
+      anzahlLiteraturreviews: { integer, minLength: minLength(1) },
       datenbanken: { minLength: minLength(1) },
       referenztool: { minLength: minLength(1) },
       analysetool: { minLength: minLength(1) },
@@ -326,6 +309,19 @@ export default {
 
   components: {
     PictureInput,
+  },
+  computed: {
+    ...mapGetters({
+      getUserRole: "drupal_api/getUserRole",
+      userUID: "drupal_api/getCurrentUserInternalUID",
+    }),
+    getUser() {
+      return this.$store.state.profile.userData;
+    },
+
+    getProfileData() {
+      return this.$store.state.profile.profileData;
+    },
   },
 
   methods: {
@@ -351,7 +347,7 @@ export default {
         var ausgabe = {
           title: this.getProfileData.title,
           studiengang: this.getProfileData.studiengang,
-          anzahl_literaturreviews: this.getProfileData.anzahl_literaturreviews,
+          anzahlLiteraturreviews: this.getProfileData.anzahlLiteraturreviews,
           datenbanken: this.getProfileData.datenbanken,
           referenztool: this.getProfileData.referenztool,
           analysetool: this.getProfileData.analysetool,
@@ -376,10 +372,7 @@ export default {
     },
 
     cancelUpdate() {
-      this.$store.dispatch(
-        "profile/loadProfileFromBackend",
-        this.getCurrentUserInternalUID
-      );
+      this.$store.dispatch("profile/loadProfileFromBackend", this.userUID);
     },
   },
   watch: {
@@ -387,38 +380,6 @@ export default {
       if (val) {
         setTimeout(() => (this.testButClicked = false), 1000);
       }
-    },
-  },
-
-  /** load the profile data and the user data from backend */
-  mounted() {
-    this.$store.dispatch(
-      "profile/loadProfileFromBackend",
-      this.getCurrentUserInternalUID
-    ),
-      this.$store.dispatch(
-        "profile/loadUserFromBackend",
-        this.getCurrentUserInternalUID
-      );
-    this.profileData = this.$store.state.profile.profileData;
-    this.userData = this.$store.state.profile.userData;
-  },
-
-  /* With the getters, we can show the loading data from the backend, that it can be visible in the frontend for the users */
-
-  computed: {
-    ...mapGetters({ getUserRole: "drupal_api/getUserRole" }),
-    getUser() {
-      return this.$store.state.profile.userData;
-    },
-
-    getProfileData() {
-      return this.$store.state.profile.profileData;
-    },
-
-    getCurrentUserInternalUID() {
-      // return true
-      return this.$store.state.drupal_api.user.uid;
     },
   },
 };

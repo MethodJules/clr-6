@@ -9,7 +9,6 @@ import Vue from "vue";
 // Usage: see inputDocuments.vue line 72
 // Usage Example: {{ input.size | convertSize }}
 const filter = Vue.filter("convertSize", (value) => {
-
     if (value > 100000000) {
         value /= 1073741824;
         value = value.toFixed(2);
@@ -22,4 +21,12 @@ const filter = Vue.filter("convertSize", (value) => {
     return value;
 });
 
-export default filter;
+const filter2 = Vue.filter("truncate", (value, cutoff) => {
+    if (value.length > cutoff) {
+        return value.slice(0, cutoff) + "...";
+    }
+    return value;
+
+})
+
+export default { filter, filter2 };
