@@ -7,7 +7,10 @@
     </transition>
     <b-container class="reflexion">
       <b-row class="reflexion-item">
+        <!-- Textfeld 1 -->
+
         <label for="textfeld-1"><b>Berichten/Reagieren </b></label>
+
         <b-form-textarea
           v-model="getReflexionData.berichten_reagieren"
           v-on:input="$v.getReflexionData.berichten_reagieren.$touch"
@@ -20,10 +23,13 @@
           id="textfeld-1"
           placeholder="Wählen Sie aus, worüber Sie reflektieren wollen: Gab es einen Vorfall, der Ihnen besonders positiv im Gedächtnis geblieben ist? Ist ein Problem oder eine Herausforderung aufgetreten? Fassen Sie zusammen, was vorgefallen ist. Warum ist dieser Vorfall für Sie relevant?"
         >
+          <!-- <span v-if="!$v.berichten_reagieren.required && $v.project.berichten_reagieren.$dirty" class="text-danger">Bitte ausfülen!</span> -->
         </b-form-textarea>
       </b-row>
       <b-row class="reflexion-item">
+        <!-- Textfeld 2 -->
         <label for="textfeld-2"><b>In Bezug setzen</b> </label>
+
         <b-form-textarea
           v-model="getReflexionData.in_bezug_setzen"
           v-on:input="$v.getReflexionData.in_bezug_setzen.$touch"
@@ -36,9 +42,11 @@
           id="textfeld-2"
           placeholder="Setzen Sie den Vorfall bzw. das Problem mit Ihren eigenen Kenntnissen, Fertigkeiten, Erfahrung oder fachlichem Wissen in Verbindung. Ist Ihnen ein ähnlicher Vorfall schon einmal begegnet? Waren die Umstände gleich oder unterschiedlich? Haben Sie die Fähigkeiten und das Wissen, um damit umzugehen? Erläutern Sie."
         >
+          <!--  <span v-if="!$v.in_bezug_setzen.required && $v.project.in_bezug_setzen.$dirty" class="text-danger">Bitte ausfülen!</span> -->
         </b-form-textarea>
       </b-row>
       <b-row class="reflexion-item">
+        <!-- Textfeld 3 -->
         <label for="textfeld-3"><b>Schlussfolgern </b></label>
 
         <b-form-textarea
@@ -53,9 +61,11 @@
           id="textfeld-3"
           placeholder="Beleuchten Sie mögliche Ursachen oder Erklärungen für den Vorfall bzw. das Problem. Welche Faktoren waren ausschlaggebend? Setzen Sie Ihre Überlegungen ggf. mit relevanten Theorien oder Wissen in Verbindung und berücksichtigen Sie verschiedene Perspektiven."
         >
+          <!--   <span v-if="!$v.schlussfolgern.required && $v.schlussfolgern.$dirty" class="text-danger">Bitte ausfülen!</span> -->
         </b-form-textarea>
       </b-row>
       <b-row class="reflexion-item">
+        <!-- Textfeld 4 -->
         <label for="textfeld-4"><b>Rekonstruieren</b> </label>
 
         <b-form-textarea
@@ -70,6 +80,7 @@
           id="textfeld-4"
           placeholder="Rekonstruieren Sie zukünftiges Handeln in Bezug auf den Vorfall bzw. das Problem. Wie würden Sie beim nächsten Mal vorgehen? Welche Ansätze könnten funktionieren und wieso? Gibt es verschiedene Optionen, aus denen Sie wählen können? Welches Ergebnis erwarten Sie?"
         >
+          <!--  <span v-if="!$v.rekonstruieren.required && $v.rekonstruieren.$dirty" class="text-danger">Bitte ausfülen!</span> -->
         </b-form-textarea>
       </b-row>
 
@@ -114,8 +125,18 @@ export default {
     },
   },
   methods: {
+    /**
+     * if there is an uuid, execute the update method, otherwise execute the add method because there is no reflexion or no uuid.
+     * Long Form:
+     * if(uuid) {
+     *  this.updateReflexion();
+     * }else{
+     *  this.addItem();
+     * }
+     */
     saveReflexion() {
       let uuid = this.getReflexionData.uuid;
+      //short form of if-condition
       uuid ? this.updateReflexion() : this.addItem();
     },
 
@@ -130,6 +151,7 @@ export default {
           rekonstruieren: this.getReflexionData.rekonstruieren,
         };
         this.testButClicked = true;
+
         this.$store.dispatch("reflexion/createReflexion", ausgabe);
       } else {
         alert("Bitte alles ausfüllen");
@@ -147,7 +169,9 @@ export default {
           rekonstruieren: this.getReflexionData.rekonstruieren,
           uuid: this.getReflexionData.uuid,
         };
+
         this.testButClicked = true;
+
         this.$store.dispatch("reflexion/updateReflexion", ausgabe);
       } else {
         alert("Bitte alles ausfüllen");
@@ -168,6 +192,7 @@ export default {
   },
 
   computed: {
+    // ...mapGetters({ getReflexionData: "reflexion/getReflexionData" }),
     getReflexionData() {
       return this.$store.state.reflexion.reflexionData;
     },

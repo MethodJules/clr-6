@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+//import BegruessungPage from '../views/BegruessungPage.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -18,30 +20,30 @@ const routes = [
             {
                 path: '/forum',
                 name: 'Forum',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/forum/Forum.vue')
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Forum.vue')
             },
             {
                 path: '/category/:id',
                 name: 'Category',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/forum/ForumCategory.vue'),
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumCategory.vue'),
                 props: true
             },
             {
                 path: '/forum/:id',
                 name: 'ForumThreads',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/forum/ForumCategoryThreads.vue'),
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumCategoryThreads.vue'),
                 props: true
             },
             {
                 path: '/thread/:id',
                 name: 'ThreadShow',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/forum/ForumThreadShow.vue'),
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ForumThreadShow.vue'),
                 props: true
             },
             {
                 path: '/newThread/:id',
                 name: 'NewThread',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/forum/NewThread.vue'),
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewThread.vue'),
                 props: true
             },
             {
@@ -53,25 +55,29 @@ const routes = [
             {
                 path: '/newMember/:project_id',
                 name: 'NewMember',
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/NewMember.vue')
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/NewMember.vue')
             },
 
             {
                 path: '/phasetemplate/:phase_number/:project_id',
                 name: 'PhaseTemplate',
                 //props: true,
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/phaseTemplate/PhaseTemplate.vue')
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/PhaseTemplate.vue')
             },
             {
                 path: '/projectlist',
                 name: 'ProjectList',
-                component: () => import(/*webpackChunkName: "projectlist" */ '../views/project/ProjectList.vue')
+                component: () => import(/*webpackChunkName: "projectlist" */ '../views/ProjectList.vue')
             },
-
+            {
+                path: '/documentation',
+                name: 'Documentation',
+                component: () => import(/*webpackChunkName: "projectlist" */ '../views/Documentation.vue')
+            },
             {
                 path: '/projectDescription/:project_id',
                 name: 'Projektbeschreibung',
-                component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/project/Projektbeschreibung.vue')
+                component: () => import(/*webpackChunkName: "projektbeschreibung" */ '../views/Projektbeschreibung.vue')
             },
             {
                 path: '/reflexion/:reflexionsPhase/:project_id',
@@ -81,7 +87,8 @@ const routes = [
             },
 
             {
-
+                // Dashboard
+                //path: '/home:user_id',
                 path: '/home/:project_id',
                 name: 'Home',
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Home.vue')
@@ -90,19 +97,21 @@ const routes = [
                 path: '/projectsearch/:keyword',
                 name: 'ProjectSearch',
                 props: true,
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/project/ProjectSearch.vue')
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/ProjectSearch.vue')
             },
-            // {
-            //     path: '/postfach',
-            //     name: 'Postfach',
-            //     component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/buttons/PostfachButton.vue')
-            // },
+            {
+                path: '/postfach',
+                name: 'Postfach',
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Postfach.vue')
+            },
+
             {
                 path: '/profil/:user_internal_uid',
                 name: 'Profil',
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
             },
+
             {
                 path: '/einstellungen',
                 name: 'Einstellungen',
@@ -120,7 +129,9 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+
     let isAuthenticated = Boolean(sessionStorage.getItem("valid_credentials")); // true
+
     if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
     else next()
 })

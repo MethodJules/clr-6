@@ -48,10 +48,13 @@ export default {
       return this.$route.params.project_id;
     },
     getPhaseName() {
+      //return this.$store.state.project_phases.current_phase.label;
       return this.$store.state.project_phases.current_phase.title;
     },
   },
+
   async mounted() {
+    //TODO: remove todo? why is it here?
     this.$store.dispatch("todo/loadToDoFromBackend", this.getProjectID);
   },
 };

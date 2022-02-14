@@ -103,10 +103,6 @@ const getters = {
         }
         state.project_phases_this_project = phases;
         return state.project_phases_this_project;
-    },
-
-    getCurrentPhase(state) {
-        return state.current_phase;
     }
 }
 
