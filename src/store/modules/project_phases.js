@@ -68,7 +68,10 @@ const state = () => ({
         }
     ],
     project_phases_this_project: [],
-    current_phase: {}
+    current_phase: {},
+    // for documentation, input, output, verwendete tools tabs animations.
+
+
 })
 
 const getters = {
@@ -107,7 +110,9 @@ const getters = {
 
     getCurrentPhase(state) {
         return state.current_phase;
-    }
+    },
+
+
 }
 
 const actions = {
@@ -152,7 +157,7 @@ const actions = {
     * projekt has unique uuid and 8 phases with phase numbers ranging from 0-7, together one unique phase can be found by filtering
     */
     async loadSinglePhaseFromBackend({ commit, rootState, dispatch }, { projectId, phase_number }) {
-        commit("loadingStatus", true, { root: true })
+        commit("UPDATE_TAB_ELEMENTS_LOADING", true, { root: true })
         var config = {
             method: 'get',
             url: `jsonapi/node/phase_vorgehensmodell?filter[field_projektid.id]=${projectId}&filter[field_phase_number]=${phase_number}&include=field_assistent`,
@@ -171,7 +176,7 @@ const actions = {
                 //we keep this initial loading of the reflexion in because
                 var IchSicht = "325fd0af-838c-49f5-92d3-2fcc987e6137"
                 dispatch("reflexion/loadReflexionFromBackend", IchSicht, { root: true })
-                commit("loadingStatus", false, { root: true })
+                commit("UPDATE_TAB_ELEMENTS_LOADING", false, { root: true })
             })
             .catch(function (error) {
                 let leeresPhaseArray = []

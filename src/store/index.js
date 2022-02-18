@@ -50,6 +50,7 @@ export default new Vuex.Store({
         // authId: '98St7Q8Zi2N9SPa5ahzssq9kbyp6'
         authId: '7uVPJS9GHoftN58Z2MXCYDqmNAh2',
         loadingStatus: false,
+        tabElementsLoading: false,
 
     },
 
@@ -57,6 +58,9 @@ export default new Vuex.Store({
         authUser(state) {
             return state.users[state.authId]
         },
+        getTabElementsLoading(state) {
+            return state.tabElementsLoading;
+        }
 
     },
 
@@ -100,6 +104,9 @@ export default new Vuex.Store({
 
         loadingStatus(state, newLoadingStatus) {
             state.loadingStatus = newLoadingStatus
+        },
+        UPDATE_TAB_ELEMENTS_LOADING(state, newStatus) {
+            state.tabElementsLoading = newStatus
         },
 
 
