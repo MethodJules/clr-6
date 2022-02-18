@@ -404,13 +404,9 @@ const mutations = {
         state.profileData = profile;
     },
 
-    SET_MEMBER_TO_SHOW(state, mitglied) {
-        //TODO
-    }
-
 }
 
-export default {    
+export default {
     namespaced: true,
     state,
     getters,
