@@ -30,7 +30,7 @@ const actions = {
 * to load the saved tools from backend
 */
     async loadToolsFromBackend({ commit, rootState }) {
-        commit("loadingStatus", true, { root: true })
+        commit("UPDATE_TAB_ELEMENTS_LOADING", true, { root: true })
         var phaseId = rootState.project_phases.current_phase.phase_id
         var config = {
             method: 'get',
@@ -48,7 +48,7 @@ const actions = {
                 //if one of the tools has null in tool.relationships.field_phasenid.data.id -> breaks and no tools displayed
                 const toolsFromBackend = response.data.data;
                 commit('SAVE_TOOLS', toolsFromBackend);
-                commit("loadingStatus", false, { root: true })
+                commit("UPDATE_TAB_ELEMENTS_LOADING", false, { root: true })
             })
             .catch(function (error) {
                 console.log(error)
