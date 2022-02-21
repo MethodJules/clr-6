@@ -4,6 +4,7 @@ const state = () => ({
     inputs: [], // we are using this array to store the file names and sizes only in state
 
 
+
 })
 
 const getters = {
@@ -73,7 +74,7 @@ const actions = {
      */
 
     async loadInputdocumentsFromBackend({ rootState, commit }) {
-        commit("loadingStatus", true, { root: true })
+        commit("UPDATE_TAB_ELEMENTS_LOADING", true, { root: true })
         var phaseId = rootState.project_phases.current_phase.phase_id
         var config = {
             method: 'get',
@@ -112,12 +113,12 @@ const actions = {
                 }
                 //this array 'inputarrayPayload' is passed as a parameter in the mutation method
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', inputarrayPayload);
-                commit("loadingStatus", false, { root: true })
+                commit("UPDATE_TAB_ELEMENTS_LOADING", false, { root: true })
             })
             .catch(function (error) {
                 let leeresInputArray = []
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', leeresInputArray);
-                commit("loadingStatus", false, { root: true })
+                commit("UPDATE_TAB_ELEMENTS_LOADING", false, { root: true })
             })
 
 
@@ -150,7 +151,7 @@ const actions = {
                         file: file,
                         id: response.data.data.id
                     }
-                    dispatch('addInputDocument', payload);
+                    return dispatch('addInputDocument', payload);
                 })
                 .catch(function (error) {
                     if (error.response.status == 422 || error.response.status == 402) {

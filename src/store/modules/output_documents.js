@@ -71,7 +71,7 @@ const actions = {
  * the entity reference to file, in order to get the information about the file size and file url.
  */
     async loadOutputdocumentsFromBackend({ rootState, commit }) {
-        commit("loadingStatus", true, { root: true })
+        commit("UPDATE_TAB_ELEMENTS_LOADING", true, { root: true })
         var phaseId = rootState.project_phases.current_phase.phase_id
         var config = {
             method: 'get',
@@ -106,12 +106,12 @@ const actions = {
                 }
                 //this array 'outputarrayPayload' is passed as a parameter in the mutation method
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', outputarrayPayload);
-                commit("loadingStatus", false, { root: true })
+                commit("UPDATE_TAB_ELEMENTS_LOADING", false, { root: true })
             })
             .catch(function (error) {
                 let leeresOutputArray = []
                 commit('LOAD_FILES_TO_STATE_FROM_BACKEND', leeresOutputArray);
-                commit("loadingStatus", false, { root: true })
+                commit("UPDATE_TAB_ELEMENTS_LOADING", false, { root: true })
             })
     },
     /**

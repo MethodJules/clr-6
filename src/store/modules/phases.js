@@ -3,14 +3,10 @@ import axios from "@/config/custom_axios";
 const state = {
     phases: []
 }
-
-
 const actions = {
     load_phases({ commit }) {
         axios.get('https://clr-backend.x-navi.de/jsonapi/taxonomy_term/phase/')
             .then((response) => {
-                //const data = response.data.data;
-                // commit('getData', response.data.data);
                 const data = response.data.data;
                 // sort the data by weight
                 data.sort((a, b) => (a.attributes.weight > b.attributes.weight) ? 1 : ((b.attributes.weight > a.attributes.weight) ? -1 : 0))
