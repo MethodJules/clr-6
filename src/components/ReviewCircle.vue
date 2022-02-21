@@ -61,7 +61,6 @@ export default {
             });
         },
     },
-  },
   mounted() {
     // const zircle = document.querySelector("#z-container");
     // console.log(zircle);
