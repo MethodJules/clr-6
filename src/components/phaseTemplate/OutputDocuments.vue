@@ -73,9 +73,9 @@
         </div>
       </div>
     </b-row>
-    <b-row class="d-flex justify-content-end">
+    <!-- <b-row class="d-flex justify-content-end">
       <OutputFileUploadButton />
-    </b-row>
+    </b-row> -->
   </div>
 </template>
 

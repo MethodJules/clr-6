@@ -50,11 +50,11 @@
         </div>
       </template>
     </b-overlay>
-    <b-row class="buttons">
+    <!-- <b-row class="buttons">
       <b-button v-b-modal.tools_edit_modal v-if="getUserRole != 'lecturer'"
         >+</b-button
       >
-    </b-row>
+    </b-row> -->
     <b-modal id="tools_edit_modal" title="tools" @ok="ok">
       <label for="neueTools">Benutztes Tool: </label>
       <input v-model="tool" type="text" placeholder="Tool" />
