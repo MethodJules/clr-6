@@ -1,5 +1,43 @@
 <template>
   <div>
+    <div class="file-upload">
+      <b-form-file
+        v-model="inputFiles"
+        ref="files-input"
+        placeholder="Wählen Sie eine Datei oder legen Sie sie hier ab ..."
+        drop-placeholder="Datei hier ablegen..."
+        multiple
+        class="mb-2"
+      ></b-form-file>
+      <b-card-text align="right" class="mt-3">
+        <b-button class="mr-2" variant="secondary" size="sm" @click="onOK"
+          >Ok</b-button
+        >
+        <b-button class="mr-2" variant="secondary" size="sm" @click="clear()"
+          >Leeren</b-button
+        >
+      </b-card-text>
+      <b-overlay :show="busy" no-wrap>
+        <template #overlay>
+          <div
+            v-if="processing"
+            class="text-center p-4 bg-primary text-light rounded"
+          >
+            <b-icon icon="cloud-upload" font-scale="4"></b-icon>
+            <div class="mb-3">In Bearbeitung...</div>
+            <b-progress
+              min="1"
+              max="20"
+              :value="counter"
+              variant="success"
+              height="3px"
+              class="mx-n4 rounded-0"
+            ></b-progress>
+          </div>
+        </template>
+      </b-overlay>
+    </div>
+
     <b-row>
       <div
         v-for="(output, index) in getOutputs"
@@ -47,6 +85,15 @@ import { mapGetters } from "vuex";
 import OutputFileUploadButton from "@/components/buttons/OutputFileUploadButton.vue";
 
 export default {
+  data() {
+    return {
+      busy: false,
+      processing: false,
+      counter: 1,
+      interval: null,
+      inputFiles: [],
+    };
+  },
   components: {
     OutputFileUploadButton,
   },
