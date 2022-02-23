@@ -1,26 +1,20 @@
 import axios from "@/config/custom_axios";
 const state = () => ({
-    memberProfiles: [],
     profileData: {},
     userData: {},
     imageData: '',
-    memberChoosen: {},
 })
 const getters = {
     /**
-    * @param state state as parameter for access and manipulation of state data  
+    * @param state state as parameter for access and manipulation of state data
     * returns user uuid from state
     */
     getCurrentUserUUID(state) {
         return state.userData.uuid;
     },
-    /**
-     * 
-     * @param {object} state 
-     * @returns {object} memberChoosen, it is the group member that we want to see and click at group management page.
-     */
-    getMemberProfile(state) {
-        return state.memberChoosen;
+
+    getProfileData(state) {
+        return state.profileData;
     }
 }
 
@@ -29,7 +23,7 @@ const actions = {
     * @param commit commit is used to call a mutation from this function
     * @param rootState rootState allows access to states of other modules in store
     * @param user_internal_uid user uid used for getting associated user data from backend
-    * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user 
+    * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user
     */
     async loadUserFromBackend({ commit, rootState }, user_internal_uid) {
         var config = {
@@ -44,10 +38,10 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data' 
-                * array with all field values. But here we also need the included data which is found in response.data.included. 
-                *  Therefore our paylod this time is response.data, 
-                * which is an object with both 'data' and 'included' as attributes. 
+                /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data'
+                * array with all field values. But here we also need the included data which is found in response.data.included.
+                *  Therefore our paylod this time is response.data,
+                * which is an object with both 'data' and 'included' as attributes.
                 */
                 const user = response.data;
                 commit('SAVE_USER_IN_STATE', { user });
@@ -55,45 +49,6 @@ const actions = {
             .catch(function (error) {
                 console.log(error)
             })
-    },
-    loadGroupMembersProfiles({ commit, rootState }) {
-        let profiles = []
-        let groupMembers = rootState.project.currentProject.gruppenmitglieder;
-
-        groupMembers.forEach(member => {
-            var config = {
-                method: 'get',
-                url: `jsonapi/node/profil?filter[field_nutzer.drupal_internal__uid]=${member.internal_uid}`,
-                headers: {
-                    'Accept': 'application/vnd.api+json',
-                    'Content-Type': 'application/vnd.api+json',
-                    'Authorization': rootState.drupal_api.authToken,
-                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
-                },
-            };
-            axios(config)
-                .then(function (response) {
-                    console.log(response)
-                    let profile = {
-                        name: response.data.data[0].attributes.title,
-                        abteilung: response.data.data[0].attributes.field_abteilung,
-                        analysetool: response.data.data[0].attributes.field_analysetool,
-                        anzahlLiteraturreviews: response.data.data[0].attributes.field_anzahl_literaturreviews,
-                        datenbanken: response.data.data[0].attributes.field_datenbanken,
-                        referenztool: response.data.data[0].attributes.field_referenztool,
-                        showPhoneNumber: response.data.data[0].attributes.field_show_phone_number,
-                        showEmail: response.data.data[0].attributes.field_showemail,
-                        studiengang: response.data.data[0].attributes.field_studiengang,
-                        user_uid: response.data.data[0].attributes.field_user_uid,
-                        telefonnummer: response.data.data[0].attributes.field_telefonnummer,
-                    }
-                    profiles.push(profile)
-                    commit('SAVE_GROUP_MEMBERS_PROFILES', profiles);
-                })
-                .catch(function (error) {
-                    console.log(error)
-                })
-        });
     },
     /**
     * @param commit commit is used to call a mutation from this function
@@ -116,8 +71,24 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                const profiles = response.data.data;
-                commit('SAVE_PROFILE', { profiles });
+                let profile = {
+                    uuid: response.data.data[0].id,
+                    title: response.data.data[0].attributes.title,
+
+                    // TODO: this is not the user's full name. Only keeping it for now to prevent possible side effects.
+                    name: response.data.data[0].attributes.title,
+                    abteilung: response.data.data[0].attributes.field_abteilung,
+                    analysetool: response.data.data[0].attributes.field_analysetool,
+                    anzahlLiteraturreviews: response.data.data[0].attributes.field_anzahl_literaturreviews,
+                    datenbanken: response.data.data[0].attributes.field_datenbanken,
+                    referenztool: response.data.data[0].attributes.field_referenztool,
+                    showPhoneNumber: response.data.data[0].attributes.field_show_phone_number,
+                    showEmail: response.data.data[0].attributes.field_showemail,
+                    studiengang: response.data.data[0].attributes.field_studiengang,
+                    user_uid: response.data.data[0].attributes.field_user_uid,
+                    telefonnummer: response.data.data[0].attributes.field_telefonnummer,
+                }
+                commit('SAVE_PROFILE', profile);
                 commit("loadingStatus", false, { root: true })
             })
             .catch(function (error) {
@@ -137,7 +108,7 @@ const actions = {
                 "type": "node--profil", 
                 "id": "${profile.uuid}",
                 "attributes": {
-                    "field_showemail": ${profile.show_email} 
+                    "field_showemail": ${profile.showEmail} 
                 }
             }
         }`;
@@ -172,7 +143,7 @@ const actions = {
                 "type": "node--profil", 
                 "id": "${profile.uuid}",
                 "attributes": {
-                    "field_show_phone_number": ${profile.show_phone_number}               
+                    "field_show_phone_number": ${profile.showPhoneNumber}               
                 }
             }
         }`;
@@ -260,7 +231,7 @@ const actions = {
     * @param iamge image to upload
     * @param filename filename of image to upload
     * @object image will be send to the upload method, where the uploaded image will be converted from base64 format to binary format, in
-    * order to send it to backend to media and not as usual to the content type in backend. After converting process, the uploaded 
+    * order to send it to backend to media and not as usual to the content type in backend. After converting process, the uploaded
     * image will be send to the next method below, which will be dispatched to the userdata.
     * @object filename is dynamically, not static.
     */
@@ -284,7 +255,7 @@ const actions = {
             .then(function (response) {
                 /**
                 * the imageID will be need for the method 'updateUserdataWithProfileImage' in order to add the right image to Userdata.
-                * 
+                *
                 * */
                 const imageID = response.data.data.id;
                 dispatch('updateUserdataWithProfileImage', imageID)
@@ -338,7 +309,7 @@ const actions = {
     * @param rootState rootState allows access to states of other modules in store
     * @param profile profile to be uploaded
     makes changes of the existing profile in the backend and overwrites the profile. Herefore we need the profile.uuid
-    that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata 
+    that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata
     rigth user */
 
     updateProfile({ rootState }, profile) {
@@ -356,7 +327,7 @@ const actions = {
                 "attributes": {
                     "title": "${profile.title}", 
                     "field_studiengang": "${profile.studiengang}", 
-                    "field_anzahl_literaturreviews": "${profile.anzahl_literaturreviews}", 
+                    "field_anzahl_literaturreviews": "${profile.anzahlLiteraturreviews}", 
                     "field_datenbanken": "${profile.datenbanken}", 
                     "field_referenztool": "${profile.referenztool}", 
                     "field_analysetool": "${profile.analysetool}",
@@ -389,8 +360,8 @@ const mutations = {
 
     /**
     * @param state state as parameter for access and manipulation of state data
-    * @param user user from backend saved local in state 
-    *takes user object and saves it in state with user picture 
+    * @param user user from backend saved local in state
+    *takes user object and saves it in state with user picture
     */
 
     SAVE_USER_IN_STATE(state, { user }) {
@@ -408,8 +379,8 @@ const mutations = {
         });
         /**
         * consist the object user with included data: the url of the profile image.
-        * from the response included, we get the second part of the url of the profilimage. 
-        * The first part of the url is defined statically above in line 2. 
+        * from the response included, we get the second part of the url of the profilimage.
+        * The first part of the url is defined statically above in line 2.
         * We get the fullurl by uniting the first and second part of the url. The full url will be pushed in to the state imageData.
         */
         if (user.included != undefined) {
@@ -423,50 +394,16 @@ const mutations = {
         }
     },
 
-    /** 
+    /**
     * @param state state as parameter for access and manipulation of state data
     * @param profiles profile of current user
     * takes profile array and puts all relevant data of the profile in state.profileData (actually only one profile)
     *
     */
-    SAVE_PROFILE(state, { profiles }) {
-        profiles.forEach(element => {
-            const field_studiengang = element.attributes.field_studiengang;
-            const field_anzahl_literaturreviews = element.attributes.field_anzahl_literaturreviews;
-            const field_datenbanken = element.attributes.field_datenbanken;
-            const field_analysetool = element.attributes.field_analysetool;
-            const field_referenztool = element.attributes.field_referenztool;
-            const field_id = element.id;
-            const field_title = element.attributes.title;
-            const field_abteilung = element.attributes.field_abteilung
-            const field_telefonnummer = element.attributes.field_telefonnummer
-            const field_show_phone_number = element.attributes.field_show_phone_number
-            const field_showemail = element.attributes.field_showemail
-            state.profileData = {
-                studiengang: field_studiengang, anzahl_literaturreviews: field_anzahl_literaturreviews,
-                datenbanken: field_datenbanken, analysetool: field_analysetool, referenztool: field_referenztool,
-                uuid: field_id, title: field_title, show_email: field_showemail, abteilung: field_abteilung, telefonnummer: field_telefonnummer, show_phone_number: field_show_phone_number
-            }
-        });
+    SAVE_PROFILE(state, profile) {
+        state.profileData = profile;
     },
-    /**
-     * @param {object} state, state as parameter for access and manipulation of state data
-     * @param {object} profiles, profiles of the group members for the chosen project 
-     */
-    SAVE_GROUP_MEMBERS_PROFILES(state, profiles) {
-        state.memberProfiles = profiles;
-    },
-    /**
-    * @param {object} state, state as parameter for access and manipulation of state data
-    * @param {object} mitglied, member that we want to have the profile of it 
-    */
-    SET_MEMBER_TO_SHOW(state, mitglied) {
-        state.memberChoosen = {}
-        console.log(state.memberProfiles)
-        console.log(mitglied)
-        let memberChoosen = state.memberProfiles.find(profile => profile.user_uid == mitglied.internal_uid);
-        state.memberChoosen = memberChoosen;
-    },
+
 }
 
 export default {

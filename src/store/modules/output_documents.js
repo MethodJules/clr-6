@@ -13,8 +13,7 @@ const getters = {
      * we send them reversed in order to see the last uploaded on top.
      */
     getOutputs(state) {
-        let files = state.outputs;
-        return files;
+        return state.outputs;
     },
 }
 
@@ -123,11 +122,7 @@ const actions = {
      *
      */
     async uploadFilesToDatabase({ dispatch, rootState }, files) {
-        // sende state
-        // commit("uploadFilesToState", files);
-
         for (const file of files) {
-
             var config = {
                 method: 'post',
                 url: `jsonapi/media/document/field_media_document`,
@@ -143,8 +138,6 @@ const actions = {
             };
             await axios(config)
                 .then(function (response) {
-
-                    //commit('SAVE_FILES', { file });
                     let payload = {
                         file: file,
                         id: response.data.data.id
