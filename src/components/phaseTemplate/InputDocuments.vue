@@ -11,7 +11,7 @@
       ></b-form-file>
       <b-card-text align="right" class="mt-3">
         <b-button class="mr-2" variant="secondary" size="sm" @click="onOK"
-          >Ok</b-button
+          >Hochladen</b-button
         >
         <b-button class="mr-2" variant="secondary" size="sm" @click="clear()"
           >Leeren</b-button
@@ -124,13 +124,13 @@ export default {
      * triggers loading bar
      * closes the modal
      */
-    async upload(files) {
-      await this.$store.dispatch("inputDocuments/uploadFilesToDatabase", files);
-      await console.log("file upload end");
-      setInterval(() => {
-        this.processing = false;
-        this.busy = false;
-      }, 3);
+    upload(files) {
+      this.$store
+        .dispatch("inputDocuments/uploadFilesToDatabase", files)
+        .then(() => {
+          this.processing = false;
+          this.busy = false;
+        });
 
       this.inputFiles = [];
     },

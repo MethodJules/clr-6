@@ -2,7 +2,7 @@
   <div>
     <div class="file-upload">
       <b-form-file
-        v-model="inputFiles"
+        v-model="outputFiles"
         ref="files-input"
         placeholder="Wählen Sie eine Datei oder legen Sie sie hier ab ..."
         drop-placeholder="Datei hier ablegen..."
@@ -11,7 +11,7 @@
       ></b-form-file>
       <b-card-text align="right" class="mt-3">
         <b-button class="mr-2" variant="secondary" size="sm" @click="onOK"
-          >Ok</b-button
+          >Hochladen</b-button
         >
         <b-button class="mr-2" variant="secondary" size="sm" @click="clear()"
           >Leeren</b-button
@@ -91,7 +91,7 @@ export default {
       processing: false,
       counter: 1,
       interval: null,
-      inputFiles: [],
+      outputFiles: [],
     };
   },
   components: {
@@ -111,6 +111,47 @@ export default {
     deleteFile(output, index) {
       let payload = { output: output, index: index };
       this.$store.dispatch("output_documents/deleteOutputDocuments", payload);
+    },
+    clearInterval() {
+      if (this.interval) {
+        clearInterval(this.interval);
+        this.interval = null;
+      }
+    },
+
+    /**
+     * @param files files that we are going to use
+     * uploads the file
+     * triggers loading bar
+     * closes the modal
+     */
+    upload(files) {
+      this.$store
+        .dispatch("output_documents/uploadFilesToDatabase", files)
+        .then(() => {
+          this.processing = false;
+          this.busy = false;
+        });
+      this.outputFiles = [];
+    },
+
+    onCancel() {
+      this.busy = false;
+    },
+    onOK() {
+      this.busy = true;
+      this.counter = 1;
+      this.processing = true;
+
+      this.clearInterval();
+      this.interval = setInterval(() => {
+        if (this.counter < 20) {
+          this.counter = this.counter + 1;
+        }
+      }, 350);
+      // upload files..
+      this.upload(this.outputFiles);
+      // upload files
     },
   },
 

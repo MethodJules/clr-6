@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div @click="updatingDocumentation = true">
+    <div id="docTextArea" @click="updatingDocumentation = true">
       <b-form-textarea
         :disabled="!updatingDocumentation"
         v-model="getDocumentation"
@@ -23,6 +23,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data() {
@@ -53,6 +54,15 @@ export default {
     this.$store.dispatch("project_phases/loadSinglePhaseFromBackend", {
       phase_number: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
+    });
+
+    // here is not working
+    let docTextArea = document.getElementById("docTextArea");
+    document.addEventListener("click", function (event) {
+      if (!docTextArea.contains(event.target)) {
+        console.log(this.updatingDocumentation);
+        this.updatingDocumentation = false;
+      }
     });
   },
 };
