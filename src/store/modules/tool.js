@@ -92,7 +92,7 @@ const actions = {
             data: data
 
         };
-        axios(config)
+        return axios(config)
             .then((response) => {
                 commit('SAVE_NEW_TOOL_IN_FRONTEND', response.data.data);
             }).catch(function (error) {
