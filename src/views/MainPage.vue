@@ -38,7 +38,7 @@
             </b-col>
           </b-row>
         </b-col>
-        <b-col v-if="inMainPage" class="mainpageRechtseite" md="3">
+        <b-col v-if="inProjectList" class="mainpageRechtseite" md="3">
           <ProjectForm />
         </b-col>
       </b-row>
