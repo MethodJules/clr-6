@@ -313,7 +313,7 @@ const actions = {
     rigth user */
 
     updateProfile({ rootState }, profile) {
-
+        console.log(profile)
         //sometimes if empty fields are saved in backend, the value saved is a string with value null or undefined, instead of an empty string
         for (let attribute in profile) {
             if (profile[attribute] == null) {
