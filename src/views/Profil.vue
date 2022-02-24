@@ -116,6 +116,10 @@ export default {
       "profile/loadUserFromBackend",
       this.$route.params.user_internal_uid
     );
+    this.$store.dispatch(
+      "profile/loadProfileFromBackend",
+      this.$route.params.user_internal_uid
+    );
   },
 };
 </script>
