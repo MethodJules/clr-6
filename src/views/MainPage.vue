@@ -38,6 +38,9 @@
             </b-col>
           </b-row>
         </b-col>
+        <b-col v-if="inMainPage" class="mainpageRechtseite" md="3">
+          <ProjectForm />
+        </b-col>
       </b-row>
       <Footer />
     </b-container>
@@ -45,6 +48,8 @@
 </template>
 <script>
 import SeitenNavigation from "@/components/sidebarRight/SeitenNavigation.vue";
+import ProjectForm from "@/components/ProjectForm";
+
 import TodoList from "@/components/sidebarLeft/TodoList.vue";
 import TodoListForProjekt from "@/components/sidebarLeft/TodoListForProjekt.vue";
 import MenueLeiste from "@/components/shared/MenueLeiste.vue";
@@ -57,6 +62,7 @@ export default {
   },
   components: {
     SeitenNavigation,
+    ProjectForm,
     Footer,
     TodoList,
     MenueLeiste,
@@ -149,6 +155,9 @@ export default {
 }
 
 .rechtseite {
+  min-width: 25rem;
+}
+.mainpageRechtseite {
   min-width: 25rem;
 }
 .mainContent {
