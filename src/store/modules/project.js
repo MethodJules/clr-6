@@ -122,15 +122,20 @@ const actions = {
   */
   async loadProjectsFromBackend({ commit, rootState, dispatch }) {
     let filter_joined = ""
-    var drupalUserUID = rootState.drupal_api.user.uid
+    const authToken = sessionStorage.getItem("auth_token");
+    const csrfToken = localStorage.getItem("csrf_token");
+    const user = JSON.parse(sessionStorage.getItem("current_user"));
+    const drupalUserUID = user.uid;
+    // var drupalUserUID = rootState.drupal_api.user.uid;
+    console.log(user)
     //depending on role of a user (if user is student or lecturer) the filters are different: student -> filter by id in gruppenadministrator and gruppenmitglied; lecturer -> filter by id in betreuender_dozent
     //TODO: maybe make another else part for "superdozent/admin" role.
-    if (rootState.drupal_api.user.role == "student") {
+    if (user.role == "student") {
       const filter_or_group = `?filter[or-group][group][conjunction]=OR`
       const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
       const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
       filter_joined = filter_or_group + filter_gruppenmitglieder + filter_gruppenadministrator
-    } else if (rootState.drupal_api.user.role == "lecturer") {
+    } else if (user.role == "lecturer") {
       filter_joined = `?filter[field_betreuender_dozent][condition][path]=field_betreuender_dozent.drupal_internal__uid&filter[field_betreuender_dozent][condition][operator]=IN&filter[field_betreuender_dozent][condition][value]=${drupalUserUID}`
     }
     //if user has no valid role -> dont load anything
@@ -145,8 +150,8 @@ const actions = {
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        'Authorization': authToken,
+        'X-CSRF-Token': csrfToken
       },
     };
     axios(config)
@@ -169,7 +174,9 @@ const actions = {
 * @param projectId id of project to load
 * loads chosen project from backend, then dispatches 2 other functions which load groupadmins and lecturers of chosen project (done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
-  async loadCurrentProject({ commit, rootState, dispatch }, projectId) {
+  async loadCurrentProject({ commit, rootState, dispatch }) {
+    let projectId = sessionStorage.getItem("projectId");
+
     commit("loadingStatus", true, { root: true })
     var config = {
       method: 'get',
@@ -183,6 +190,7 @@ const actions = {
     };
     axios(config)
       .then(function (response) {
+        console.log(response)
         const projects = response.data;
         dispatch('loadCurrentProjectWithGroupAdmins', projectId)
         dispatch('loadCurrentProjectWithLecturers', projectId)

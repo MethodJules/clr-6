@@ -34,6 +34,8 @@ const actions = {
 
 
     async loadLecturersFromBackend({ commit, rootState }) {
+        const authToken = sessionStorage.getItem("auth_token");
+        const csrfToken = localStorage.getItem("csrf_token");
 
         var config = {
             method: 'get',
@@ -41,8 +43,8 @@ const actions = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                'Authorization': authToken,
+                'X-CSRF-Token': csrfToken
             },
         };
         axios(config)
@@ -58,16 +60,17 @@ const actions = {
 
     },
 
-    async loadStudentsFromBackend({ commit, rootState }) {
-
+    async loadStudentsFromBackend({ commit }) {
+        const authToken = sessionStorage.getItem("auth_token");
+        const csrfToken = localStorage.getItem("csrf_token");
         var config = {
             method: 'get',
             url: `clr/clr_resource/student?_format=json`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                'Authorization': authToken,
+                'X-CSRF-Token': csrfToken
             },
         };
         axios(config)

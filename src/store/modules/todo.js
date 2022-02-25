@@ -68,7 +68,10 @@ const actions = {
     async loadTodosAllProjects({ commit, state, rootState }, projects) {
         //TODO: put state.listOfToDos = [] in a mutation to make state manipulation seperate from actions. -> consistent with all other functions
         state.listOfToDos = []
-        var drupalUserUID = rootState.drupal_api.user.uid;
+        const user = JSON.parse(sessionStorage.getItem("current_user"));
+        const drupalUserUID = user.uid;
+        const authToken = sessionStorage.getItem("auth_token");
+        const csrfToken = localStorage.getItem("csrf_token");
         for (const project of projects) {
             commit("loadingStatus", true, { root: true })
             var config = {
@@ -77,8 +80,8 @@ const actions = {
                 headers: {
                     'Accept': 'application/vnd.api+json',
                     'Content-Type': 'application/vnd.api+json',
-                    'Authorization': rootState.drupal_api.authToken,
-                    'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                    'Authorization': authToken,
+                    'X-CSRF-Token': csrfToken
                 },
             };
 
@@ -116,16 +119,20 @@ const actions = {
 * @param projectId id of current project
 * loads all todos of current project of current user
 */
-    async loadToDoFromBackend({ commit, rootState }, projectId) {
-        var drupalUserUID = rootState.drupal_api.user.uid;
+    async loadToDoFromBackend({ commit, rootState }) {
+        let projectId = sessionStorage.getItem("projectId");
+        const user = JSON.parse(sessionStorage.getItem("current_user"));
+        const drupalUserUID = user.uid;
+        const authToken = sessionStorage.getItem("auth_token");
+        const csrfToken = localStorage.getItem("csrf_token");
         var config = {
             method: 'get',
             url: `jsonapi/node/to_dos?filter[field_projektid.id]=${projectId}&filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                'Authorization': authToken,
+                'X-CSRF-Token': csrfToken
             },
         };
         axios(config)
@@ -194,7 +201,7 @@ const actions = {
             .catch(function (error) {
                 console.log(error)
             })
-        
+
     },
 
     /**

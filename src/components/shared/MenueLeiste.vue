@@ -168,6 +168,16 @@ export default {
       getCurrentProject: "project/getCurrentProject",
       userUID: "drupal_api/getCurrentUserInternalUID",
     }),
+    // userUID() {
+    //   const user = JSON.parse(sessionStorage.getItem("current_user"));
+    //   const drupalUserUID = user.uid;
+    //   return drupalUserUID;
+    // },
+    // getUserRole() {
+    //   const user = JSON.parse(sessionStorage.getItem("current_user"));
+
+    //   return user.role;
+    // },
 
     showProfileSettingsLinks() {
       return (

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <br />
-
+    {{ getGroupMembers }}
     <div>
       <b-card-group deck>
         <b-card
@@ -332,14 +332,8 @@ export default {
   },
   async mounted() {
     this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch(
-      "profile/loadUserFromBackend",
-      this.getCurrentUserInternalUID
-    );
-    this.$store.dispatch(
-      "project/loadCurrentProject",
-      this.$route.params.project_id
-    );
+    this.$store.dispatch("profile/loadUserFromBackend");
+    this.$store.dispatch("project/loadCurrentProject");
   },
 };
 </script>

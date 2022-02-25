@@ -77,11 +77,11 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch("project/loadProjectsFromBackend");
-    this.$store.dispatch("user/loadLecturersFromBackend");
-    this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadProfileFromBackend", this.userUID);
-    this.$store.dispatch("profile/loadUserFromBackend", this.userUID);
+    // this.$store.dispatch("project/loadProjectsFromBackend");
+    // this.$store.dispatch("user/loadLecturersFromBackend");
+    // this.$store.dispatch("user/loadStudentsFromBackend");
+    // this.$store.dispatch("profile/loadProfileFromBackend", this.userUID);
+    // this.$store.dispatch("profile/loadUserFromBackend", this.userUID);
   },
 };
 </script>

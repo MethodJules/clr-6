@@ -65,6 +65,22 @@ export default new Vuex.Store({
     },
 
     actions: {
+
+        // initializatin of project
+        init({ dispatch }) {
+            console.log("init")
+
+            dispatch("project/loadProjectsFromBackend");
+            dispatch("user/loadLecturersFromBackend");
+            dispatch("user/loadStudentsFromBackend");
+            dispatch("profile/loadProfileFromBackend");
+            dispatch("profile/loadUserFromBackend");
+            dispatch("project/loadCurrentProject");
+            dispatch("todo/loadToDoFromBackend");
+
+
+        },
+
         createPost(context, post) {
             const postId = 'greatPost' + Math.random()
             post['.key'] = postId

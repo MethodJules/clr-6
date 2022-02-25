@@ -189,15 +189,16 @@ const actions = {
     },
 
     /**
-* when refreshing the site all data in the state would be lost. But if a user has already logged in (in this session) the variable "valid_credentials" with value "true" is still stored in the sessionStorage.  if this value is true, all necessary tokens are loaded from session- and localstorage and the user is navigated to the main/starting page
+* when refreshing the site all data in the state would be lost. But if a user has already logged in (in this session) the variable "valid_credentials" with value "true" 
+* is still stored in the sessionStorage.  if this value is true, all necessary tokens are loaded from session- and localstorage and the user is navigated to the main/starting page
 *Thus the user can refresh the page without having to log in again. is called in mainpage.vue
 * @param commit commit is used to call a mutation from this function
 */
     async loadTokensfromSessionStorage({ commit }) {
         if (sessionStorage.getItem("valid_credentials") == "true") {
             await commit('LOAD_TOKEN_SESSION_STORAGE');
-            //await dispatch('loadUserFromBackend');
-            await router.push("/")
+            // await dispatch('loadUserFromBackend');
+            // await router.push("/")
         } else {
             router.push("/Login");
             return false
