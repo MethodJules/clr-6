@@ -25,9 +25,10 @@ const actions = {
     * @param user_internal_uid user uid used for getting associated user data from backend
     * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user
     */
-    async loadUserFromBackend({ commit, rootState }) {
-        const user = JSON.parse(sessionStorage.getItem("current_user"));
-        const drupalUserUID = user.uid;
+    async loadUserFromBackend({ commit, rootState }, drupalUserUID) {
+        // const user = JSON.parse(sessionStorage.getItem("current_user"));
+        // const drupalUserUID = user.uid;
+        console.log(drupalUserUID)
         const authToken = sessionStorage.getItem("auth_token");
         const csrfToken = localStorage.getItem("csrf_token");
         var config = {

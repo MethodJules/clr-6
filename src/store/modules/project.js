@@ -27,6 +27,7 @@ const getters = {
   getGroupMembers(state) {
     let unfiltered_members =
       state.currentProject.gruppenmitglieder;
+    console.log(state.currentProject)
     return unfiltered_members.filter(function (member) {
       return member.username != "System";
     });
@@ -177,6 +178,8 @@ const actions = {
   async loadCurrentProject({ commit, rootState, dispatch }) {
     let projectId = sessionStorage.getItem("projectId");
 
+    const authToken = sessionStorage.getItem("auth_token");
+    const csrfToken = localStorage.getItem("csrf_token");
     commit("loadingStatus", true, { root: true })
     var config = {
       method: 'get',
@@ -184,18 +187,19 @@ const actions = {
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        'Authorization': authToken,
+        'X-CSRF-Token': csrfToken
       },
     };
     axios(config)
-      .then(function (response) {
+      .then(async function (response) {
         console.log(response)
         const projects = response.data;
         dispatch('loadCurrentProjectWithGroupAdmins', projectId)
         dispatch('loadCurrentProjectWithLecturers', projectId)
-        commit('LOAD_CURRENT_PROJECT', { projects });
-        commit("loadingStatus", false, { root: true })
+        await commit('LOAD_CURRENT_PROJECT', { projects });
+        await console.log("hello")
+        await commit("loadingStatus", false, { root: true })
       })
       .catch(function (error) {
         console.log(error)
@@ -210,14 +214,16 @@ const actions = {
 * loads chosen project from backend and saves groupadmins of chosen project(done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
   async loadCurrentProjectWithGroupAdmins({ commit, rootState }, projectId) {
+    const authToken = sessionStorage.getItem("auth_token");
+    const csrfToken = localStorage.getItem("csrf_token");
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        'Authorization': authToken,
+        'X-CSRF-Token': csrfToken
       },
     };
     return axios(config)
@@ -238,14 +244,16 @@ const actions = {
 * loads chosen project from backend and saves lecturers of chosen project(done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
   async loadCurrentProjectWithLecturers({ commit, rootState }, projectId) {
+    const authToken = sessionStorage.getItem("auth_token");
+    const csrfToken = localStorage.getItem("csrf_token");
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        'Authorization': authToken,
+        'X-CSRF-Token': csrfToken
       },
     };
     axios(config)
@@ -621,7 +629,7 @@ const mutations = {
 * @param state state as parameter for access and manipulation of state data
 */
   LOAD_CURRENT_PROJECT(state, { projects }) {
-
+    console.log("load pro")
     let included_data = projects.included
     let user_array = []
     if (included_data != undefined) {
