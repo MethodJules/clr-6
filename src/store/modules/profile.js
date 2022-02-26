@@ -25,15 +25,20 @@ const actions = {
     * @param user_internal_uid user uid used for getting associated user data from backend
     * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user
     */
-    async loadUserFromBackend({ commit, rootState }, user_internal_uid) {
+    async loadUserFromBackend({ commit, rootState }, drupalUserUID) {
+        // const user = JSON.parse(sessionStorage.getItem("current_user"));
+        // const drupalUserUID = user.uid;
+        console.log(drupalUserUID)
+        const authToken = sessionStorage.getItem("auth_token");
+        const csrfToken = localStorage.getItem("csrf_token");
         var config = {
             method: 'get',
-            url: `jsonapi/user/user?filter[drupal_internal__uid]=${user_internal_uid}&include=user_picture`,
+            url: `jsonapi/user/user?filter[drupal_internal__uid]=${drupalUserUID}&include=user_picture`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                'Authorization': authToken,
+                'X-CSRF-Token': csrfToken
             },
         };
         axios(config)
@@ -57,16 +62,21 @@ const actions = {
     * We load the Profiledata from backend by filtering the user_internal_uid to get the right profile of the user which belongs to the userdata
     * In the backend we have a field "field_nutzer" in this content type. we filter by the user_internal_uid, given as a paremeter to get the correct profile
     */
-    async loadProfileFromBackend({ commit, rootState }, user_internal_uid) {
+    async loadProfileFromBackend({ commit, rootState }) {
+
+        const user = JSON.parse(sessionStorage.getItem("current_user"));
+        const drupalUserUID = user.uid;
+        const authToken = sessionStorage.getItem("auth_token");
+        const csrfToken = localStorage.getItem("csrf_token");
         commit("loadingStatus", true, { root: true })
         var config = {
             method: 'get',
-            url: `jsonapi/node/profil?filter[field_nutzer.drupal_internal__uid]=${user_internal_uid}`,
+            url: `jsonapi/node/profil?filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                'Authorization': authToken,
+                'X-CSRF-Token': csrfToken
             },
         };
         axios(config)

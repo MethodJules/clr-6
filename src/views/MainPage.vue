@@ -115,6 +115,7 @@ export default {
     },
   },
   beforeMount() {
+    this.$store.dispatch("init");
     this.$store.dispatch("drupal_api/loadTokensfromSessionStorage");
   },
 };

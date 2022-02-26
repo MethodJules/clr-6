@@ -66,7 +66,7 @@ export default {
     }),
 
     getProjectID() {
-      return this.$route.params.project_id;
+      return sessionStorage.getItem("projectId");
     },
   },
 };

@@ -1,7 +1,6 @@
 <template>
-  <div class="home">
+  <div class="home" v-if="!getLoadingStatus">
     <br />
-
     <div>
       <b-card-group deck>
         <b-card
@@ -143,7 +142,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Home",
@@ -308,13 +307,15 @@ export default {
       }
     },
     setMemberToShow(mitglied) {
-      this.$store.commit("profile/SET_MEMBER_TO_SHOW", mitglied);
+      console.log(mitglied.internal_uid);
+      // sessionStorage.setItem("member_uid", mitglied.internal_uid);
+      // this.$store.commit("profile/SET_MEMBER_TO_SHOW", mitglied);
     },
   },
   computed: {
-    ...mapState({
-      members: (state) => state.members,
-    }),
+    // ...mapState({
+    //   members: (state) => state.members,
+    // }),
     ...mapGetters({
       getCurrentProject: "project/getCurrentProject",
       getGroupMembers: "project/getGroupMembers",
@@ -322,6 +323,7 @@ export default {
       getProjectLecturers: "project/getProjectLecturers",
       getCurrentUserUUID: "profile/getCurrentUserUUID",
       getCurrentUserInternalUID: "drupal_api/getCurrentUserInternalUID",
+      getLoadingStatus: "getLoadingStatus",
     }),
 
     currentUserisAdmin() {
@@ -331,15 +333,12 @@ export default {
     },
   },
   async mounted() {
+    const user = JSON.parse(sessionStorage.getItem("current_user"));
+    const drupalUserUID = user.uid;
+    // needs atttention actions variables..
     this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch(
-      "profile/loadUserFromBackend",
-      this.getCurrentUserInternalUID
-    );
-    this.$store.dispatch(
-      "project/loadCurrentProject",
-      this.$route.params.project_id
-    );
+    this.$store.dispatch("profile/loadUserFromBackend", drupalUserUID);
+    this.$store.dispatch("project/loadCurrentProject", drupalUserUID);
   },
 };
 </script>

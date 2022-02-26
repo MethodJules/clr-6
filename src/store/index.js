@@ -60,11 +60,32 @@ export default new Vuex.Store({
         },
         getTabElementsLoading(state) {
             return state.tabElementsLoading;
+        },
+        getLoadingStatus(state) {
+            return state.loadingStatus;
         }
 
     },
 
     actions: {
+
+        // initializatin of project
+        init({ dispatch }) {
+            console.log("init")
+            const user = JSON.parse(sessionStorage.getItem("current_user"));
+            const drupalUserUID = user.uid;
+
+            dispatch("project/loadProjectsFromBackend");
+            dispatch("user/loadLecturersFromBackend");
+            dispatch("user/loadStudentsFromBackend");
+            dispatch("profile/loadProfileFromBackend", drupalUserUID);
+            dispatch("profile/loadUserFromBackend", drupalUserUID);
+            dispatch("project/loadCurrentProject");
+            dispatch("todo/loadToDoFromBackend");
+
+
+        },
+
         createPost(context, post) {
             const postId = 'greatPost' + Math.random()
             post['.key'] = postId
