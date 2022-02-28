@@ -18,6 +18,7 @@ import drupal_api from './modules/drupal_api'
 import user from './modules/user'
 import profile from './modules/profile'
 import phases from './modules/phases'
+import memberProfiles from './modules/memberProfiles'
 
 
 Vue.use(Vuex)
@@ -41,7 +42,8 @@ export default new Vuex.Store({
         drupal_api,
         user,
         profile,
-        phases
+        phases,
+        memberProfiles
     },
 
     //noch in Datei packen

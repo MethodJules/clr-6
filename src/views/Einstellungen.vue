@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <b-row v-if="getUserRole != 'lecturer'">
+  <div class="page-container">
+    <b-row
+      class="table-container table table-striped"
+      v-if="getUserRole != 'lecturer'"
+    >
       <transition name="fade" mode="out-in">
         <div v-if="testButClicked" class="alert" role="alert">
           Erfolgreich gespeichert!
@@ -27,7 +30,7 @@
           </tr>
           <thead>
             <tr>
-              <th>Profildaten:</th>
+              <th class="table-header">Profildaten:</th>
             </tr>
           </thead>
 
@@ -166,7 +169,10 @@
       </b-row>
     </b-row>
 
-    <b-row v-if="getUserRole == 'lecturer'">
+    <b-row
+      class="table-container table table-striped"
+      v-if="getUserRole == 'lecturer'"
+    >
       <transition name="fade" mode="out-in">
         <div v-if="testButClicked" class="alert" role="alert">
           Erfolgreich gespeichert!
@@ -385,9 +391,20 @@ export default {
 };
 </script>
 <style scoped>
+.table-header {
+  background-color: #f5f8fe;
+}
 table thead {
   font-size: 1.5rem;
 }
+.page-container {
+  display: flex;
+  justify-content: center;
+}
+.table-container {
+  width: 80% !important;
+}
+
 .buttons {
   display: flex;
   justify-content: flex-end;

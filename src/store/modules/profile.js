@@ -25,15 +25,14 @@ const actions = {
     * @param user_internal_uid user uid used for getting associated user data from backend
     * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user
     */
-    async loadUserFromBackend({ commit, rootState }, drupalUserUID) {
-        // const user = JSON.parse(sessionStorage.getItem("current_user"));
-        // const drupalUserUID = user.uid;
-        console.log(drupalUserUID)
+    async loadUserFromBackend({ commit, rootState }, user_internal_uid) {
         const authToken = sessionStorage.getItem("auth_token");
         const csrfToken = localStorage.getItem("csrf_token");
+        console.log(authToken, csrfToken)
+        console.log(user_internal_uid)
         var config = {
             method: 'get',
-            url: `jsonapi/user/user?filter[drupal_internal__uid]=${drupalUserUID}&include=user_picture`,
+            url: `jsonapi/user/user?filter[drupal_internal__uid]=${user_internal_uid}&include=user_picture`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -43,6 +42,7 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
+                console.log(response)
                 /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data'
                 * array with all field values. But here we also need the included data which is found in response.data.included.
                 *  Therefore our paylod this time is response.data,
@@ -62,16 +62,13 @@ const actions = {
     * We load the Profiledata from backend by filtering the user_internal_uid to get the right profile of the user which belongs to the userdata
     * In the backend we have a field "field_nutzer" in this content type. we filter by the user_internal_uid, given as a paremeter to get the correct profile
     */
-    async loadProfileFromBackend({ commit, rootState }) {
-
-        const user = JSON.parse(sessionStorage.getItem("current_user"));
-        const drupalUserUID = user.uid;
+    async loadProfileFromBackend({ commit, rootState }, user_internal_uid) {
         const authToken = sessionStorage.getItem("auth_token");
         const csrfToken = localStorage.getItem("csrf_token");
         commit("loadingStatus", true, { root: true })
         var config = {
             method: 'get',
-            url: `jsonapi/node/profil?filter[field_nutzer.drupal_internal__uid]=${drupalUserUID}`,
+            url: `jsonapi/node/profil?filter[field_nutzer.drupal_internal__uid]=${user_internal_uid}`,
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
@@ -81,6 +78,7 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
+                console.log(response)
                 let profile = {
                     uuid: response.data.data[0].id,
                     title: response.data.data[0].attributes.title,
@@ -379,6 +377,7 @@ const mutations = {
         /**
         * consists the data of user only, which will be stored as object 'userObject' in the state userData
         */
+        console.log(user)
         user.data.forEach(element => {
             const field_fullname = element.attributes.field_fullname;
             const field_matrikelnummer = element.attributes.field_matrikelnummer;
