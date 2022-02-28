@@ -11,37 +11,7 @@ const getters = {
 }
 
 const actions = {
-    /**
-* @param commit commit is used to call a mutation from this function
-* @param rootState rootState allows access to states of other modules in store
-* @param user_internal_uid user uid used for getting associated user data from backend
-* * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user
-*/
-    async loadUserFromBackend({ commit, rootState }, user_internal_uid) {
-        var config = {
-            method: 'get',
-            url: `jsonapi/user/user?filter[drupal_internal__uid]=${user_internal_uid}&include=user_picture`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
-            },
-        };
-        axios(config)
-            .then(function (response) {
-                /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data'
-                * array with all field values. But here we also need the included data which is found in response.data.included.
-                *  Therefore our paylod this time is response.data,
-                * which is an object with both 'data' and 'included' as attributes.
-                */
-                const user = response.data;
-                commit('SAVE_USER_IN_STATE', { user });
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-    },
+
     /**
     * @param commit commit is used to call a mutation from this function
     * @param rootState rootState allows access to states of other modules in store
@@ -67,11 +37,7 @@ const actions = {
         };
         axios(config)
             .then((response) => {
-                console.log("Group member")
-                console.log(response)
-                console.log("Group member")
                 let memberProfile = {
-
                     uuid: response.data.data[0].id,
                     title: response.data.data[0].attributes.title,
 

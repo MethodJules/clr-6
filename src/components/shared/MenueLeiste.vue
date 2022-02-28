@@ -26,9 +26,26 @@
       <b-navbar-nav>
         <!-- Es gibt kein Profil in router.. -->
         <b-nav-item
-          v-if="inProjectList || inEinstellungen || inProfil || inProjectSearch"
+          v-if="
+            (inProjectList || inEinstellungen || inProfil || inProjectSearch) &&
+            isUserStudent
+          "
           :to="{
-            name: 'Profil',
+            name: 'StudentProfile',
+            params: {
+              user_internal_uid: userUID,
+            },
+          }"
+          >Profil</b-nav-item
+        >
+
+        <b-nav-item
+          v-if="
+            (inProjectList || inEinstellungen || inProfil || inProjectSearch) &&
+            !isUserStudent
+          "
+          :to="{
+            name: 'LecturerProfile',
             params: {
               user_internal_uid: userUID,
             },
@@ -188,11 +205,16 @@ export default {
       return this.$route.name === "ProjectList";
     },
     inProfil() {
-      return this.$route.name === "GroupMemberProfile";
+      return this.$route.name === "Profile";
     },
 
     inEinstellungen() {
       return this.$route.name === "Einstellungen";
+    },
+    isUserStudent() {
+      const user = JSON.parse(sessionStorage.getItem("current_user"));
+      const userRole = user.role;
+      return userRole == "student";
     },
   },
 };

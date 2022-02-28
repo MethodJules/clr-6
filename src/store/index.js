@@ -80,7 +80,7 @@ export default new Vuex.Store({
             dispatch("project/loadProjectsFromBackend");
             dispatch("user/loadLecturersFromBackend");
             dispatch("user/loadStudentsFromBackend");
-            dispatch("profile/loadProfileFromBackend", drupalUserUID);
+            // dispatch("profile/", drupalUserUID);
             dispatch("profile/loadUserFromBackend", drupalUserUID);
             dispatch("project/loadCurrentProject");
             dispatch("todo/loadToDoFromBackend");
