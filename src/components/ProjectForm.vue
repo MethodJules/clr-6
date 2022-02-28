@@ -1,6 +1,6 @@
 <template>
   <div class="projektAnlegen">
-    <h3>Neu Prejekt Erstellen</h3>
+    <h3>Neues Projekt erstellen</h3>
     <br />
     <table>
       <tr>
@@ -18,16 +18,9 @@
               placeholder="hier eingeben"
               class="form-control"
             />
-            <span
-              v-if="!$v.project.title.required && $v.project.title.$dirty"
-              class="text-danger"
-              >Bitte trage einen Titel ein!</span
-            >
-            <span
-              v-if="!$v.project.title.minLength && $v.project.title.$dirty"
-              class="text-danger"
-              >Der Titel sollte mindestens 4 Zeichen lang sein.</span
-            >
+            <p class="text-danger">
+              {{ projectTitleError }}
+            </p>
           </div>
         </td>
       </tr>
@@ -49,7 +42,7 @@
                   @change="addLecturer(selectedLecturer)"
                 >
                   <option value="" disabled>
-                    Bitte wahlen Sie ein oder mehr Betreuerinnen
+                    Bitte wähle eine*n oder mehr Betreuer*innen aus.
                   </option>
                   <option
                     v-for="lecturer in getLecturers"
@@ -74,14 +67,9 @@
                 </ul>
               </div>
             </div>
-            <span
-              v-if="
-                !$v.project.betreuenderDozent.required &&
-                $v.project.betreuenderDozent.$dirty
-              "
-              class="text-danger"
-              >Bitte füge einen Betreuer oder eine Betreuerin hinzu.</span
-            >
+            <p class="text-danger">
+              {{ lecturerError }}
+            </p>
           </div>
         </td>
       </tr>
@@ -94,7 +82,7 @@
               input-id="tags-basic"
               variant="info"
               v-model="project.externeMitwirkende"
-              placeholder="Externe Partner*innen | Type and press enter"
+              placeholder="Externe Partner*innen | Eingabe und Enter drücken"
             ></b-form-tags>
           </div>
         </td>
@@ -107,7 +95,7 @@
             <b-form-tags
               input-id="tags-basic"
               v-model="project.schlagworter"
-              placeholder="Schlagwörter | Type a new tag and press enter"
+              placeholder="Schlagwörter | Eingabe und Enter drücken"
             ></b-form-tags>
           </div>
         </td>
@@ -127,29 +115,16 @@
               placeholder="hier eingeben"
               class="form-control"
             />
-            <span
-              v-if="
-                !$v.project.kurzbeschreibung.required &&
-                $v.project.kurzbeschreibung.$dirty
-              "
-              class="text-danger"
-              >Bitte gebe deinem Projekt eine kurze Beschreibung.</span
-            >
-            <span
-              v-if="
-                !$v.project.kurzbeschreibung.minLength &&
-                $v.project.kurzbeschreibung.$dirty
-              "
-              class="text-danger"
-              >Die Beschreibung sollte mindestens 4 Zeichen lang sein.</span
-            >
+            <p class="text-danger">
+              {{ projectDescError }}
+            </p>
           </div>
         </td>
       </tr>
     </table>
     <div class="buttons">
       <b-button size="sm" @click="submitForm">Hinzufügen</b-button>
-      <b-button size="sm" @click="clearForm">Absagen</b-button>
+      <b-button size="sm" @click="clearForm">Abbrechen</b-button>
     </div>
   </div>
 </template>
@@ -168,6 +143,9 @@ export default {
         uuid: "",
         title: "",
       },
+      projectTitleError: "",
+      lecturerError: "",
+      projectDescError: "",
     };
   },
 
@@ -194,7 +172,7 @@ export default {
       if (betreuenderDozent != "") {
         this.project.betreuenderDozent.push(betreuenderDozent);
       } else {
-        alert("Bitte wähle einen Dozenten aus");
+        alert("Bitte wähle eine*n Betreuer*in aus");
       }
     },
 
@@ -206,7 +184,22 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.addNewProject();
+        this.projectTitleError = "";
+        this.lecturerError = "";
+        this.projectDescError = "";
       } else {
+        this.$v.project.title.$invalid
+          ? (this.projectTitleError = "Bitte gib einen Titel mit mind. 4 Zeichen ein.")
+          : (this.projectTitleError = "");
+
+        this.$v.project.betreuenderDozent.$invalid
+          ? (this.lecturerError = "Bitte wähle mind. eine*n Dozent*in aus.")
+          : (this.lecturerError = "");
+
+        this.$v.project.kurzbeschreibung.$invalid
+          ? (this.projectDescError = "Bitte gib eine Kurzbeschreibung mit mind. 4 Zeichen ein.")
+          : (this.projectDescError = "");
+
         evt.preventDefault();
       }
     },
@@ -246,6 +239,9 @@ export default {
       this.project.betreuenderDozent = [];
       this.project.externeMitwirkende = "";
       this.project.schlagworter = "";
+      this.projectTitleError = "";
+      this.lecturerError = "";
+      this.projectDescError = "";
     },
   },
 

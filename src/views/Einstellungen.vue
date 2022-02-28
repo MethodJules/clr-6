@@ -363,7 +363,7 @@ export default {
         };
 
         this.testButClicked = true;
-
+        // console.log(this.getProfileData.uuid);
         this.$store.dispatch("profile/updateProfile", ausgabe);
 
         if (this.image != null) {

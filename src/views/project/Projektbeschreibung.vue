@@ -22,12 +22,13 @@
           <div class="add-lecturer">
             <div>
               <select
+                :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
                 v-model="selectedLecturer"
                 class="form-control"
                 @change="addLecturer(selectedLecturer)"
               >
                 <option value="" disabled>
-                  Bitte wahlen Sie ein oder mehr Betreuerinnen
+                  Bitte wähle eine*n oder mehr Betreuer*innen
                 </option>
                 <option
                   v-for="lecturer in getLecturers"
@@ -45,8 +46,8 @@
               >
                 <li>
                   {{ getProjectLecturers[i].name }}
-                  <b-button variant="link" @click="deleteLecturer(i)"
-                    ><b-icon size="xs" icon="x" variant="light"></b-icon
+                  <b-button variant="link" @click="deleteLecturer(i)" :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
+                    ><b-icon v-if="currentUserisAdmin" size="xs" icon="x" variant="light"></b-icon
                   ></b-button>
                 </li>
               </ul>

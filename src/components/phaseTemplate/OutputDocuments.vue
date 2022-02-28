@@ -4,7 +4,7 @@
       <b-form-file
         v-model="outputFiles"
         ref="files-input"
-        placeholder="Wählen Sie eine Datei oder legen Sie sie hier ab ..."
+        placeholder="Wähle eine Datei oder lege sie hier ab..."
         drop-placeholder="Datei hier ablegen..."
         multiple
         class="mb-2"

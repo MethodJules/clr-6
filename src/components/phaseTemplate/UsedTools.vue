@@ -5,7 +5,7 @@
         <b-form-input
           v-model="tool"
           type="text"
-          placeholder="Schreiben Sie Tool"
+          placeholder="Trage ein Tool ein"
         ></b-form-input>
         <b-input-group-append>
           <b-button variant="secondary" @click="ok">Ok</b-button>
