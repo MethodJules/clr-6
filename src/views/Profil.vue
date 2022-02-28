@@ -95,7 +95,7 @@ export default {
   computed: {
     ...mapGetters({
       memberProfile: "profile/getProfileData",
-      userUID: "drupal_api/getCurrentUserInternalUID",
+      // userUID: "drupal_api/getCurrentUserInternalUID",
     }),
     getUser() {
       return this.$store.state.profile.userData;
@@ -112,14 +112,11 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch(
-      "profile/loadUserFromBackend",
-      this.$route.params.user_internal_uid
-    );
-    this.$store.dispatch(
-      "profile/loadProfileFromBackend",
-      this.$route.params.user_internal_uid
-    );
+    const user = JSON.parse(sessionStorage.getItem("current_user"));
+    const drupalUserUID = user.uid;
+    // console.log(this.$route.params.drupalUserUID);
+    this.$store.dispatch("profile/loadUserFromBackend", drupalUserUID);
+    this.$store.dispatch("profile/loadProfileFromBackend", drupalUserUID);
   },
 };
 </script>
@@ -130,5 +127,8 @@ export default {
   justify-content: center;
   padding-top: 2rem;
   width: 100%;
+}
+.container {
+  width: 80%;
 }
 </style>

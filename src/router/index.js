@@ -104,6 +104,20 @@ const routes = [
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
             },
             {
+                path: '/groupMemberProfile/:user_internal_uid',
+                name: 'GroupMemberProfile',
+                props: true,
+                beforeEnter: (to, from, next) => {
+                    const user = JSON.parse(sessionStorage.getItem("current_user"));
+                    const userRole = user.role;
+
+                    console.log(userRole);
+                    (userRole == "student") ? next() : "";
+                    (userRole == "lecturer") ? next({ name: "LecturerProfile" }) : ""
+                },
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/GroupMemberProfile.vue')
+            },
+            {
                 path: '/einstellungen',
                 name: 'Einstellungen',
                 props: true,

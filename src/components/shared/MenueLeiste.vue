@@ -137,7 +137,7 @@ export default {
   data() {
     return {
       keyword: "",
-      projectId: this.$route.params.project_id,
+      // projectId: this.$route.params.project_id,
     };
   },
 
@@ -168,16 +168,6 @@ export default {
       getCurrentProject: "project/getCurrentProject",
       userUID: "drupal_api/getCurrentUserInternalUID",
     }),
-    // userUID() {
-    //   const user = JSON.parse(sessionStorage.getItem("current_user"));
-    //   const drupalUserUID = user.uid;
-    //   return drupalUserUID;
-    // },
-    // getUserRole() {
-    //   const user = JSON.parse(sessionStorage.getItem("current_user"));
-
-    //   return user.role;
-    // },
 
     showProfileSettingsLinks() {
       return (
@@ -190,15 +180,17 @@ export default {
     startpage() {
       return this.$route.name === "ProjectList";
     },
+    inProjectSearch() {
+      return this.$route.name === "ProjectSearch";
+    },
+
     inProjectList() {
       return this.$route.name === "ProjectList";
     },
     inProfil() {
-      return this.$route.name === "Profil";
+      return this.$route.name === "GroupMemberProfile";
     },
-    inProjectSearch() {
-      return this.$route.name === "ProjectSearch";
-    },
+
     inEinstellungen() {
       return this.$route.name === "Einstellungen";
     },

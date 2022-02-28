@@ -1,64 +1,34 @@
 <template>
-  <div>
+  <div class="page-container">
     <transition name="fade" mode="out-in">
       <div v-if="testButClicked" class="alert" role="alert">
         Erfolgreich gespeichert!
       </div>
     </transition>
-    <b-container fluid>
-      <b-row>
-        <b-col sm="5">
-          <label for="input-1">
-            <strong> Projekttitel </strong>
-          </label>
-        </b-col>
 
-        <b-col sm="10">
+    <table>
+      <tbody>
+        <tr>
+          <label class="first-row" for="input-1"> Projekttitel</label>
           <b-form-input
             :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
             v-model="getCurrentProject.title"
             id="input-1"
           >
           </b-form-input>
-          <br />
-        </b-col>
-        <b-col sm="5">
-          <label for="input-1">
-            <strong> Betreuer*in </strong>
-          </label>
-        </b-col>
-
-        <b-col sm="10">
-          <div v-for="(betreuenderDozent, i) in getProjectLecturers" :key="i">
-            <b-form-input
-              disabled
-              v-model="getProjectLecturers[i].name"
-              id="input-2"
-            >
-            </b-form-input>
-          </div>
-          <b-modal
-            ref="add_lecturer"
-            title="Dozent hinzufügen"
-            cancel-title="Abbrechen"
-          >
-            <div
-              class="add-lecturer"
-              v-for="(betreuenderDozent, i) in getProjectLecturers"
-              :key="i"
-            >
-              <b-form-input
-                disabled
-                v-model="getProjectLecturers[i].name"
-                id="input-2"
+        </tr>
+        <tr>
+          <label for="betreuenderDozent">Betreuer*innen</label>
+          <div class="add-lecturer">
+            <div>
+              <select
+                v-model="selectedLecturer"
+                class="form-control"
+                @change="addLecturer(selectedLecturer)"
               >
-              </b-form-input>
-              <b-button variant="link" @click="deleteLecturer(i)"
-                ><b-icon icon="x-circle"></b-icon
-              ></b-button>
-            </div>
-            <div class="add-lecturer">
-              <select v-model="selectedLecturer" class="form-control">
+                <option value="" disabled>
+                  Bitte wahlen Sie ein oder mehr Betreuerinnen
+                </option>
                 <option
                   v-for="lecturer in getLecturers"
                   v-bind:value="lecturer"
@@ -67,88 +37,57 @@
                   {{ lecturer.name }}
                 </option>
               </select>
-              <div style="width: 3rem"></div>
             </div>
-            <br />
-
-            <b-button size="sm" @click="addLecturer(selectedLecturer)"
-              >Weiteren Dozenten hinzufügen</b-button
-            >
-          </b-modal>
-          <b-button
-            variant="link"
-            v-if="currentUserisAdmin"
-            @click="showThisModal()"
-            v-b-tooltip.hover
-            title="Bitte fügen Sie hier weitere Dozenten hinzu!"
-            size="lg"
-            ><b-icon icon="plus-circle"></b-icon>
-          </b-button>
-
-          <br />
-        </b-col>
-
-        <b-col sm="5">
-          <label for="input-1">
-            <strong> Externe Partner*innnen </strong>
-          </label>
-        </b-col>
-
-        <b-col sm="10">
-          <b-form-input
+            <div class="lecturerTags">
+              <ul
+                v-for="(betreuenderDozent, i) in getProjectLecturers"
+                :key="i"
+              >
+                <li>
+                  {{ getProjectLecturers[i].name }}
+                  <b-button variant="link" @click="deleteLecturer(i)"
+                    ><b-icon size="xs" icon="x" variant="light"></b-icon
+                  ></b-button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </tr>
+        <tr>
+          <label for="tags-basic">Externe Partner*innen </label>
+          <b-form-tags
+            input-id="tags-basic"
             :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
+            variant="info"
             v-model="getCurrentProject.externeMitwirkende"
-            id="input-1"
-          >
-          </b-form-input>
-
-          <br />
-        </b-col>
-
-        <b-col sm="10">
-          <label for="input-2">
-            <strong> Schlagwörter </strong>
-          </label>
-          <b-row>
-            <b-form-input
-              :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
-              v-model="getKeywords"
-              id="input-2"
-            >
-            </b-form-input>
-          </b-row>
-        </b-col>
-
-        <b-col sm="10">
-          <br />
-        </b-col>
-
-        <b-col sm="5">
-          <label for="input-1">
-            <strong> Projektbeschreibung </strong>
-          </label>
-        </b-col>
-
-        <b-col sm="10">
+            placeholder="Externe Partner*innen | Type and press enter"
+          ></b-form-tags>
+        </tr>
+        <tr>
+          <label for="tags-basic">Schlagwörter </label>
+          <b-form-tags
+            input-id="tags-basic"
+            v-model="getKeywords"
+            :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
+            placeholder="Schlagwörter | Type a new tag and press enter"
+          ></b-form-tags>
+        </tr>
+        <tr>
+          <label for="input-projektBeschreibung"> Projektbeschreibung </label>
           <b-form-textarea
             :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
             v-model="getCurrentProject.kurzbeschreibung"
-            id="input-1"
+            id="input-projektBeschreibung"
           >
           </b-form-textarea>
-
-          <br />
-        </b-col>
-
-        <b-col sm="10">
-          <label for="input-1">
-            <strong> Gruppenmitglieder </strong>
-          </label>
+        </tr>
+        <tr>
+          <label for="input-gruppenMitglieder"> Gruppenmitglieder </label>
           <b-row v-for="mitglied in getGroupMembers" :key="mitglied.id">
             <b-form-input
               disabled
               v-model="mitglied.username"
-              id="input-1"
+              id="input-gruppenMitglieder"
             ></b-form-input>
           </b-row>
           <!-- gruppenmitglieder und gruppenadmins werden in eine liste ausgegeben - Fehler in filter führt dazu, dass 1 Gruppenmitglied immer vorhanden sein muss -> Gruppenadmin kann auch Gruppenmitglied sein und ist dann hier doppelt -->
@@ -159,43 +98,41 @@
               id="input-2"
             ></b-form-input>
           </b-row>
-        </b-col>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <b-row class="projectBeschreibung-buttons">
+            <b-button :to="{ name: 'Home' }">Zum Dashboard</b-button>
 
-        <b-col sm="10">
-          <br />
-        </b-col>
-      </b-row>
-    </b-container>
-    <div>
-      <b-row class="projectBeschreibung-buttons">
-        <b-button :to="{ name: 'Home' }">Zum Dashboard</b-button>
+            <b-button v-if="currentUserisAdmin" @click="updateProject()"
+              >Änderungen speichern</b-button
+            >
+            <b-button
+              v-if="getUserRole != 'lecturer'"
+              :to="{ name: 'Groupmanagement' }"
+              >Zum Gruppenmanagement</b-button
+            >
 
-        <b-button v-if="currentUserisAdmin" @click="updateProject()"
-          >Änderungen speichern</b-button
-        >
-        <b-button
-          v-if="getUserRole != 'lecturer'"
-          :to="{ name: 'Groupmanagement' }"
-          >Zum Gruppenmanagement</b-button
-        >
+            <b-button
+              v-if="getUserRole == 'lecturer'"
+              @click="$bvModal.show('lecturer-leave-group')"
+              >Gruppe verlassen
+            </b-button>
 
-        <b-button
-          v-if="getUserRole == 'lecturer'"
-          @click="$bvModal.show('lecturer-leave-group')"
-          >Gruppe verlassen
-        </b-button>
-
-        <b-modal
-          @ok="lecturerLeaveGroup"
-          id="lecturer-leave-group"
-          title="Bist du dir sicher?"
-          ><p>
-            Du kannst nicht mehr auf das Projekt zugreifen, wenn du das Projekt
-            verlässt!
-          </p>
-        </b-modal>
-      </b-row>
-    </div>
+            <b-modal
+              @ok="lecturerLeaveGroup"
+              id="lecturer-leave-group"
+              title="Bist du dir sicher?"
+              ><p>
+                Du kannst nicht mehr auf das Projekt zugreifen, wenn du das
+                Projekt verlässt!
+              </p>
+            </b-modal>
+          </b-row>
+        </tr>
+      </tfoot>
+    </table>
   </div>
 </template>
 
@@ -260,12 +197,9 @@ export default {
     },
     updateProject() {
       if (this.currentUserisAdmin) {
-        var schlagworter = this.$store.state.project.keywordsInString;
-        var schlagwortarray = schlagworter.split(",");
-        for (var i = 0; i < schlagwortarray.length; ++i) {
-          schlagwortarray[i] = schlagwortarray[i].trim();
-        }
-        var keywords = Object.assign({}, schlagwortarray);
+        var schlagworter = this.getKeywords;
+
+        var keywords = Object.assign({}, schlagworter);
 
         /*filter duplicate objects out, by using map to get userid from lecturers and then filtering by it, by looking if indexOf this value (userid) is already in the array. 
         If indexof and index are not the same, this means the userid and respectively the object were already found before in the array, are therefore duplicates and will be removed.
@@ -362,19 +296,33 @@ export default {
 </script>
 
 <style scoped>
+.page-container {
+  display: flex;
+  justify-content: center;
+}
+table {
+  width: 90%;
+}
+
+table label {
+  font-weight: bold;
+  margin: 1rem 0 0.5rem 0;
+}
+table .first-row {
+  margin-top: 0 !important;
+}
+
+table tbody tr {
+  padding-top: 10rem !important;
+}
 .projectBeschreibung-buttons {
   display: flex;
   justify-content: center;
+  margin-top: 1rem !important;
+  gap: 1rem;
 }
 .projectBeschreibung-buttons * {
-  margin-right: 1rem;
-  margin-bottom: 1rem;
   max-width: 15rem;
-}
-.add-lecturer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .alert {
@@ -390,5 +338,43 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+.add-lecturer {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: flex-start !important;
+
+  width: 100%;
+  padding: 0.3rem 0.1rem;
+  min-height: 6rem;
+}
+.add-lecturer select {
+  width: 100% !important;
+}
+
+.lecturerTags ul {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+.lecturerTags li {
+  list-style: none;
+  border: 1px solid gray;
+  border-radius: 0.5rem;
+  background-color: gray;
+  color: white;
+  margin: 0.2rem 0.1rem 0.2rem 0 !important;
+  padding: 0.1rem;
+  font-size: 75%;
+  font-weight: 400;
+  line-height: 1;
+}
+.lecturerTags li:hover {
+  cursor: pointer;
+}
+.lecturerTags button {
+  padding: 0;
+  margin: 0;
 }
 </style>

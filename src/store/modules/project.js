@@ -8,6 +8,7 @@ const state = () => ({
   currentProjectLecturers: [],
   keywordsInString: "",
   projectsFilteredbyKeywords: [],
+  isUserAdmin: false
 })
 
 const getters = {
@@ -25,12 +26,7 @@ const getters = {
   * getter for group members of current project. filters the system user out. see function create_project for clarification why this user exists
   */
   getGroupMembers(state) {
-    let unfiltered_members =
-      state.currentProject.gruppenmitglieder;
-    console.log(state.currentProject)
-    return unfiltered_members.filter(function (member) {
-      return member.username != "System";
-    });
+    return state.currentProject.gruppenmitglieder;
   },
 
   /**
@@ -48,6 +44,11 @@ const getters = {
   getProjectLecturers(state) {
     return state.currentProjectLecturers;
   },
+
+
+  getIsUserAdmin(state) {
+    return state.isUserAdmin;
+  }
 }
 
 
@@ -128,7 +129,6 @@ const actions = {
     const user = JSON.parse(sessionStorage.getItem("current_user"));
     const drupalUserUID = user.uid;
     // var drupalUserUID = rootState.drupal_api.user.uid;
-    console.log(user)
     //depending on role of a user (if user is student or lecturer) the filters are different: student -> filter by id in gruppenadministrator and gruppenmitglied; lecturer -> filter by id in betreuender_dozent
     //TODO: maybe make another else part for "superdozent/admin" role.
     if (user.role == "student") {
@@ -193,12 +193,23 @@ const actions = {
     };
     axios(config)
       .then(async function (response) {
-        console.log(response)
+        // decide if user admin 
+        let admins = response.data.data[0].relationships.field_gruppenadministrator.data;
+        // const user = JSON.parse(sessionStorage.getItem("current_user"));
+        // const userID = user.uuid;
+        // console.log(admins)
+        // let isUserAdmin = false;
+        // admins.forEach(admin => {
+        //   (admin.id == userID) ? isUserAdmin = true : "";
+        // });
+        // console.log(isUserAdmin)
+
+        commit('IS_USER_ADMIN', admins);
+
         const projects = response.data;
         dispatch('loadCurrentProjectWithGroupAdmins', projectId)
         dispatch('loadCurrentProjectWithLecturers', projectId)
         await commit('LOAD_CURRENT_PROJECT', { projects });
-        await console.log("hello")
         await commit("loadingStatus", false, { root: true })
       })
       .catch(function (error) {
@@ -528,6 +539,18 @@ const actions = {
 
 const mutations = {
 
+  IS_USER_ADMIN(state, admins) {
+    // decide if user admin 
+    const user = JSON.parse(sessionStorage.getItem("current_user"));
+    const userID = user.uuid;
+    let isUserAdmin = false;
+    admins.forEach(admin => {
+      (admin.id == userID) ? isUserAdmin = true : "";
+    });
+    state.isUserAdmin = isUserAdmin;
+  },
+
+
   /**
 * @param new_project project which will be added to the backend
 * @param state state as parameter for access and manipulation of state data
@@ -629,18 +652,16 @@ const mutations = {
 * @param state state as parameter for access and manipulation of state data
 */
   LOAD_CURRENT_PROJECT(state, { projects }) {
-    console.log("load pro")
     let included_data = projects.included
     let user_array = []
     if (included_data != undefined) {
       included_data.forEach(element => {
-        const internal_uid = element.attributes.drupal_internal__uid
+        const internal_uid = element.attributes.drupal_internal__uid;
         const username = element.attributes.field_fullname;
-        const userid = element.id
-        user_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+        const userid = element.id;
+        (username != "System") ? user_array.push({ username, userid, internal_uid }) : "";
       })
     }
-
     projects.data.forEach(element => {
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
@@ -649,13 +670,20 @@ const mutations = {
       const field_id = element.id;
       const field_title = element.attributes.title;
       let field_gruppenmitglieder = user_array
-      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
-
+      let projectObject = {
+        betreuenderDozent: field_betreuender_dozent,
+        externeMitwirkende: field_externe_mitwirkende,
+        schlagworter: field_schlagworter,
+        kurzbeschreibung: field_kurzbeschreibung,
+        uuid: field_id, title: field_title,
+        gruppenmitglieder: field_gruppenmitglieder
+      }
       state.currentProject = projectObject
     });
     let keywords = state.currentProject.schlagworter;
-    let keywordsInString = keywords.join();
-    state.keywordsInString = keywordsInString
+
+    // let keywordsInString = keywords.join();
+    state.keywordsInString = keywords
   },
 
   /**
@@ -671,9 +699,10 @@ const mutations = {
         const username = element.attributes.field_fullname;
         const userid = element.id
         const internal_uid = element.attributes.drupal_internal__uid
-        groupadmins_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+        groupadmins_array.push({ username, userid, internal_uid })
       })
     }
+
     state.currentProjectGroupAdmins = groupadmins_array
   },
 
