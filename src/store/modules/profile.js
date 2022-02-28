@@ -13,6 +13,10 @@ const getters = {
         return state.userData.uuid;
     },
 
+    getUser(state) {
+        return state.userData
+    },
+
     getProfileData(state) {
         return state.profileData;
     }
@@ -65,6 +69,7 @@ const actions = {
     async loadProfileFromBackend({ commit, rootState }, user_internal_uid) {
         const authToken = sessionStorage.getItem("auth_token");
         const csrfToken = localStorage.getItem("csrf_token");
+
         commit("loadingStatus", true, { root: true })
         var config = {
             method: 'get',
@@ -77,9 +82,8 @@ const actions = {
             },
         };
         axios(config)
-            .then(function (response) {
-                console.log(response)
-                let profile = {
+            .then((response) => {
+                let profileData = {
                     uuid: response.data.data[0].id,
                     title: response.data.data[0].attributes.title,
 
@@ -90,13 +94,13 @@ const actions = {
                     anzahlLiteraturreviews: response.data.data[0].attributes.field_anzahl_literaturreviews,
                     datenbanken: response.data.data[0].attributes.field_datenbanken,
                     referenztool: response.data.data[0].attributes.field_referenztool,
-                    showPhoneNumber: response.data.data[0].attributes.field_show_phone_number,
                     showEmail: response.data.data[0].attributes.field_showemail,
                     studiengang: response.data.data[0].attributes.field_studiengang,
                     user_uid: response.data.data[0].attributes.field_user_uid,
+                    showPhoneNumber: response.data.data[0].attributes.field_show_phone_number,
                     telefonnummer: response.data.data[0].attributes.field_telefonnummer,
                 }
-                commit('SAVE_PROFILE', profile);
+                commit('SAVE_PROFILE', profileData);
                 commit("loadingStatus", false, { root: true })
             })
             .catch(function (error) {
@@ -410,8 +414,11 @@ const mutations = {
     *
     */
     SAVE_PROFILE(state, profile) {
+        console.log(profile)
         state.profileData = profile;
     },
+
+
 
 }
 

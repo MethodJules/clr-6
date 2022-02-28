@@ -15,7 +15,7 @@
             <b-col>
               <b-nav-item
                 :to="{
-                  name: 'GroupMemberProfile',
+                  name: 'StudentProfile',
                   params: {
                     user_internal_uid: mitglied.internal_uid,
                   },
@@ -53,7 +53,7 @@
             <b-col>
               <b-nav-item
                 :to="{
-                  name: 'GroupMemberProfile',
+                  name: 'StudentProfile',
                   params: {
                     user_internal_uid: admin.internal_uid,
                   },
@@ -303,6 +303,12 @@ export default {
       getLoadingStatus: "getLoadingStatus",
       isUserAdmin: "project/getIsUserAdmin",
     }),
+
+    userRole() {
+      const user = JSON.parse(sessionStorage.getItem("current_user"));
+      const userRole = user.role;
+      return userRole;
+    },
   },
   async mounted() {
     const user = JSON.parse(sessionStorage.getItem("current_user"));

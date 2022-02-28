@@ -1,9 +1,11 @@
 <template>
   <div>
-    <div id="docTextArea" @click="updatingDocumentation = true">
+    <div id="docTextArea">
       <b-form-textarea
-        :disabled="!updatingDocumentation"
+        @blur="handleBlur"
+        @focus="handleFocus"
         v-model="getDocumentation"
+        @click="updatingDocumentation = true"
       >
       </b-form-textarea>
     </div>
@@ -40,14 +42,29 @@ export default {
         this.$store.commit("project_phases/UPDATE_DOCUMENTATION", value);
       },
     },
+    updatingDocumentation2() {
+      return (value) => {
+        this.updatingDocumentation = value;
+      };
+    },
   },
   methods: {
     updateDocu(inDoku) {
       this.$store.dispatch("project_phases/updateDocumentation", inDoku);
     },
-    update() {
-      console.log("update docu");
-      this.updatingDocumentation = true;
+    // update() {
+    //   console.log("update docu");
+    //   this.updatingDocumentation = true;
+    // },
+    // updatingDocumentation2(val) {
+    //   this.updatingDocumentation = val;
+    // },
+    handleBlur(val) {
+      console.log(val);
+      val ? (this.updatingDocumentation = false) : "";
+    },
+    handleFocus(val) {
+      val ? (this.updatingDocumentation = true) : "";
     },
   },
   async mounted() {
@@ -55,17 +72,17 @@ export default {
       phase_number: this.$route.params.phase_number,
       projectId: this.$route.params.project_id,
     });
-
-    // here is not working
-    let docTextArea = document.getElementById("docTextArea");
-    document.addEventListener("click", function (event) {
-      if (!docTextArea.contains(event.target)) {
-        console.log(this.updatingDocumentation);
-        this.updatingDocumentation = false;
-      }
-    });
   },
 };
+// here is not working
+// let docTextArea = document.getElementById("docTextArea");
+// console.log(docTextArea);
+// document.addEventListener("click", function (event) {
+//   if (!docTextArea.contains(event.target)) {
+//     console.log(this.updatingDocumentation);
+//     this.updatingDocumentation2(false);
+//   }
+// });
 </script>
 <style scoped>
 .buttons {

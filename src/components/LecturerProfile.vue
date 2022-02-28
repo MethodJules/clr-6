@@ -8,20 +8,20 @@
         <tr>
           <th scope="row">Name</th>
           <td>
-            {{ memberProfile.title }}
+            {{ profile.title }}
           </td>
         </tr>
         <tr>
           <th scope="row">Abteilung</th>
-          <td>{{ memberProfile.abteilung }}</td>
+          <td>{{ profile.abteilung }}</td>
         </tr>
-        <tr v-if="memberProfile.showEmail">
+        <tr v-if="profile.showEmail">
           <th scope="row">Email</th>
           <td>{{ getUser.mail }}</td>
         </tr>
-        <tr v-if="memberProfile.showPhoneNumber">
+        <tr v-if="profile.showPhoneNumber">
           <th scope="row">Telefonnummer</th>
-          <td>{{ memberProfile.telefonnummer }}</td>
+          <td>{{ profile.telefonnummer }}</td>
         </tr>
         <tr>
           <th scope="row">Betreute Projekte</th>
@@ -36,10 +36,12 @@
   </b-container>
 </template>
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   computed: {
     ...mapGetters({
-      memberProfile: "memberProfiles/getMemberProfile",
+      profile: "memberProfiles/getMemberProfile",
     }),
     getUser() {
       return this.$store.state.profile.userData;
