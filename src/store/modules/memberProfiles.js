@@ -37,6 +37,7 @@ const actions = {
         };
         axios(config)
             .then((response) => {
+                console.log(response)
                 let memberProfile = {
                     uuid: response.data.data[0].id,
                     title: response.data.data[0].attributes.title,

@@ -185,7 +185,7 @@ const actions = {
     createProfile({ rootState }, authorization_token) {
         var drupalUserUUID = rootState.drupal_api.user.uuid
         let username = rootState.drupal_api.user.username
-        var title = `Profil ${username}`
+        var title = username
         var data = `{
             "data": {
                 "type": "user--profil", 
@@ -324,8 +324,11 @@ const actions = {
     that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata
     rigth user */
 
-    updateProfile({ rootState }, profile) {
+    updateProfile({ }, profile) {
         console.log(profile)
+        // const authToken = sessionStorage.getItem("auth_token");
+        // const csrfToken = localStorage.getItem("csrf_token");
+
         //sometimes if empty fields are saved in backend, the value saved is a string with value null or undefined, instead of an empty string
         for (let attribute in profile) {
             if (profile[attribute] == null) {
@@ -351,16 +354,17 @@ const actions = {
         var config = {
             method: 'patch',
             url: `jsonapi/node/profil/${profile.uuid}`,
-            headers: {
-                'Accept': 'application/vnd.api+json',
-                'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
-            },
+            // headers: {
+            //     'Accept': 'application/vnd.api+json',
+            //     'Content-Type': 'application/vnd.api+json',
+            //     'Authorization': authToken,
+            //     'X-CSRF-Token': csrfToken
+            // },
             data: data
         };
         axios(config)
             .then(function (response) {
+                console.log(response)
             })
             .catch(function (error) {
                 console.log(error)
