@@ -205,7 +205,10 @@ export default {
       return this.$route.name === "ProjectList";
     },
     inProfil() {
-      return this.$route.name === "Profile";
+      return (
+        this.$route.name === "StudentProfile" ||
+        this.$route.name === "LecturerProfile"
+      );
     },
 
     inEinstellungen() {
