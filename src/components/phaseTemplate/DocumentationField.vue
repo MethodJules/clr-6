@@ -6,22 +6,15 @@
         @focus="handleFocus"
         v-model="getDocumentation"
         @click="updatingDocumentation = true"
+        ref="textArea"
       >
       </b-form-textarea>
     </div>
-    <div class="buttons">
-      <b-button
-        v-if="updatingDocumentation"
-        @click="updateDocu(getDocumentation)"
-        size="sm"
+    <div class="buttons" v-if="updatingDocumentation">
+      <b-button @click="updateDocu(getDocumentation)" size="sm"
         >Speichern</b-button
       >
-      <b-button
-        v-if="updatingDocumentation"
-        @click="updatingDocumentation = false"
-        size="sm"
-        >Abbrechen</b-button
-      >
+      <b-button @click="cancel()" size="sm">Abbrechen</b-button>
     </div>
   </div>
 </template>
@@ -42,29 +35,22 @@ export default {
         this.$store.commit("project_phases/UPDATE_DOCUMENTATION", value);
       },
     },
-    updatingDocumentation2() {
-      return (value) => {
-        this.updatingDocumentation = value;
-      };
-    },
   },
   methods: {
     updateDocu(inDoku) {
       this.$store.dispatch("project_phases/updateDocumentation", inDoku);
+      this.updatingDocumentation = false;
     },
-    // update() {
-    //   console.log("update docu");
-    //   this.updatingDocumentation = true;
-    // },
-    // updatingDocumentation2(val) {
-    //   this.updatingDocumentation = val;
-    // },
     handleBlur(val) {
-      console.log(val);
-      val ? (this.updatingDocumentation = false) : "";
+      if (!val.relatedTarget) {
+        val ? (this.updatingDocumentation = false) : "";
+      }
     },
     handleFocus(val) {
       val ? (this.updatingDocumentation = true) : "";
+    },
+    cancel() {
+      this.updatingDocumentation = false;
     },
   },
   async mounted() {
@@ -74,15 +60,6 @@ export default {
     });
   },
 };
-// here is not working
-// let docTextArea = document.getElementById("docTextArea");
-// console.log(docTextArea);
-// document.addEventListener("click", function (event) {
-//   if (!docTextArea.contains(event.target)) {
-//     console.log(this.updatingDocumentation);
-//     this.updatingDocumentation2(false);
-//   }
-// });
 </script>
 <style scoped>
 .buttons {
