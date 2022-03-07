@@ -69,7 +69,7 @@
             :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
             variant="info"
             v-model="getCurrentProject.externeMitwirkende"
-            placeholder="Externe Partner*innen | Type and press enter"
+            placeholder="Externe Partner*innen | Eingabe und Enter drücken"
           ></b-form-tags>
         </tr>
         <tr>
@@ -78,7 +78,7 @@
             input-id="tags-basic"
             v-model="getCurrentProject.schlagworter"
             :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
-            placeholder="Schlagwörter | Type a new tag and press enter"
+            placeholder="Schlagwörter | Eingabe und Enter drücken"
           ></b-form-tags>
         </tr>
         <tr>
