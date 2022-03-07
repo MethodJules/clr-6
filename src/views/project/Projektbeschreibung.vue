@@ -46,8 +46,16 @@
               >
                 <li>
                   {{ getProjectLecturers[i].name }}
-                  <b-button variant="link" @click="deleteLecturer(i)" :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
-                    ><b-icon v-if="currentUserisAdmin" size="xs" icon="x" variant="light"></b-icon
+                  <b-button
+                    variant="link"
+                    @click="deleteLecturer(i)"
+                    :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
+                    ><b-icon
+                      v-if="currentUserisAdmin"
+                      size="xs"
+                      icon="x"
+                      variant="light"
+                    ></b-icon
                   ></b-button>
                 </li>
               </ul>
@@ -68,7 +76,7 @@
           <label for="tags-basic">Schlagwörter </label>
           <b-form-tags
             input-id="tags-basic"
-            v-model="getKeywords"
+            v-model="getCurrentProject.schlagworter"
             :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
             placeholder="Schlagwörter | Type a new tag and press enter"
           ></b-form-tags>
@@ -198,10 +206,11 @@ export default {
     },
     updateProject() {
       if (this.currentUserisAdmin) {
-        var schlagworter = this.getKeywords;
-
-        var keywords = Object.assign({}, schlagworter);
-
+        var keywords = Object.assign({}, this.getCurrentProject.schlagworter);
+        let externeMitwirkende = Object.assign(
+          {},
+          this.getCurrentProject.externeMitwirkende
+        );
         /*filter duplicate objects out, by using map to get userid from lecturers and then filtering by it, by looking if indexOf this value (userid) is already in the array. 
         If indexof and index are not the same, this means the userid and respectively the object were already found before in the array, are therefore duplicates and will be removed.
         the end result is an array of the ID attribute only
@@ -227,7 +236,7 @@ export default {
           title: this.getCurrentProject.title,
           kurzbeschreibung: this.getCurrentProject.kurzbeschreibung,
           betreuenderDozent: dozenten,
-          externeMitwirkende: this.getCurrentProject.externeMitwirkende,
+          externeMitwirkende: externeMitwirkende,
           schlagworter: keywords,
           projectuuid: this.getCurrentProject.uuid,
         };
@@ -267,15 +276,6 @@ export default {
       return this.getGroupAdmins.some(
         (e) => e.userid === this.getCurrentUserUUID
       );
-    },
-
-    getKeywords: {
-      get() {
-        return this.$store.state.project.keywordsInString;
-      },
-      set(value) {
-        this.$store.commit("project/UPDATE_KEYWORDS", value);
-      },
     },
   },
 
