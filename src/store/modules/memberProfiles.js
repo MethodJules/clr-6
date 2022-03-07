@@ -1,13 +1,18 @@
 import axios from "@/config/custom_axios";
 const state = () => ({
 
-    memberProfile: {}
+    memberProfile: {},
+    userData: {}
 })
 
 const getters = {
     getMemberProfile(state) {
         return state.memberProfile;
+    },
+    getUserData(state) {
+        return state.userData;
     }
+
 }
 
 const actions = {
@@ -37,12 +42,9 @@ const actions = {
         };
         axios(config)
             .then((response) => {
-                console.log(response)
                 let memberProfile = {
                     uuid: response.data.data[0].id,
                     title: response.data.data[0].attributes.title,
-
-                    // TODO: this is not the user's full name. Only keeping it for now to prevent possible side effects.
                     name: response.data.data[0].attributes.title,
                     abteilung: response.data.data[0].attributes.field_abteilung,
                     analysetool: response.data.data[0].attributes.field_analysetool,
@@ -64,9 +66,6 @@ const actions = {
             })
     },
 
-    loadEmailOfMember({ commit }, id) {
-
-    },
 
     /**
 * @param commit commit is used to call a mutation from this function
@@ -90,15 +89,7 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data'
-                * array with all field values. But here we also need the included data which is found in response.data.included.
-                *  Therefore our paylod this time is response.data,
-                * which is an object with both 'data' and 'included' as attributes.
-                */
-                const user = response.data;
-                // It should consist email but it is not..
-                console.log(user)
-                // commit('SAVE_USER_IN_STATE', { user });
+                commit('SAVE_USER_DATA', response.data);
             })
             .catch(function (error) {
                 console.log(error)
@@ -110,6 +101,15 @@ const actions = {
 const mutations = {
     SAVE_MEMBER_PROFILE(state, memberProfile) {
         state.memberProfile = memberProfile;
+    },
+    SAVE_USER_DATA(state, payload) {
+        let fullname = payload.data[0].attributes.field_fullname;
+        let userName = payload.data[0].attributes.name;
+        let mail = payload.data[0].attributes.mail;
+        let matrikelNummer = payload.data[0].attributes.field_matrikelnummer;
+        let profilePictureLink = payload.data[0].relationships.user_picture.links.related.href;
+
+        state.userData = { fullname, userName, mail, matrikelNummer, profilePictureLink }
     }
 }
 export default {

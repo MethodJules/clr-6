@@ -325,10 +325,6 @@ export default {
     getUser() {
       return this.$store.state.profile.userData;
     },
-
-    // profile() {
-    //   return this.$store.state.profile.profileData;
-    // },
   },
 
   methods: {

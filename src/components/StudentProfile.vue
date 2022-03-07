@@ -8,15 +8,8 @@
         </tr>
         <tr>
           <th scope="row">Email</th>
-          <td v-if="profile.showEmail">{{}}</td>
+          <td v-if="profile.showEmail">{{ userData.mail }}</td>
           <td v-if="!profile.showEmail">****</td>
-        </tr>
-        <tr>
-          <th scope="row">Telefonnummer</th>
-          <td v-if="profile.showPhoneNumber">
-            {{ profile.telefonnummer }}
-          </td>
-          <td v-if="!profile.showPhoneNumber">****</td>
         </tr>
         <tr>
           <th scope="row">Studiengang</th>
@@ -52,11 +45,16 @@ export default {
   computed: {
     ...mapGetters({
       profile: "memberProfiles/getMemberProfile",
+      userData: "memberProfiles/getUserData",
     }),
   },
   mounted() {
     this.$store.dispatch(
       "memberProfiles/loadMemberProfile",
+      this.$route.params.user_internal_uid
+    );
+    this.$store.dispatch(
+      "memberProfiles/loadUserFromBackend",
       this.$route.params.user_internal_uid
     );
   },

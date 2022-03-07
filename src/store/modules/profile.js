@@ -138,7 +138,6 @@ const actions = {
         axios(config)
             .then((response) => {
             }).catch(function (error) {
-                console.log("Gleiche Problem hier Forbidden")
                 console.log(error);
             });
     },
@@ -325,9 +324,8 @@ const actions = {
     rigth user */
 
     updateProfile({ }, profile) {
-        console.log(profile)
-        // const authToken = sessionStorage.getItem("auth_token");
-        // const csrfToken = localStorage.getItem("csrf_token");
+        const authToken = sessionStorage.getItem("auth_token");
+        const csrfToken = localStorage.getItem("csrf_token");
 
         //sometimes if empty fields are saved in backend, the value saved is a string with value null or undefined, instead of an empty string
         for (let attribute in profile) {
@@ -354,12 +352,12 @@ const actions = {
         var config = {
             method: 'patch',
             url: `jsonapi/node/profil/${profile.uuid}`,
-            // headers: {
-            //     'Accept': 'application/vnd.api+json',
-            //     'Content-Type': 'application/vnd.api+json',
-            //     'Authorization': authToken,
-            //     'X-CSRF-Token': csrfToken
-            // },
+            headers: {
+                'Accept': 'application/vnd.api+json',
+                'Content-Type': 'application/vnd.api+json',
+                'Authorization': authToken,
+                'X-CSRF-Token': csrfToken
+            },
             data: data
         };
         axios(config)
