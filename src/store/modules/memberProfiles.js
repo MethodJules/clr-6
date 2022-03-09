@@ -103,11 +103,13 @@ const mutations = {
         state.memberProfile = memberProfile;
     },
     SAVE_USER_DATA(state, payload) {
+        console.log(payload)
         let fullname = payload.data[0].attributes.field_fullname;
         let userName = payload.data[0].attributes.name;
         let mail = payload.data[0].attributes.mail;
         let matrikelNummer = payload.data[0].attributes.field_matrikelnummer;
-        let profilePictureLink = payload.data[0].relationships.user_picture.links.related.href;
+        let profilePictureLink = "https://clr-backend.x-navi.de/sites/default/files/pictures/2021-08/Testacc%20Profile%20Picture.jpg";
+        (payload.included) ? profilePictureLink = "https://clr-backend.x-navi.de" + payload.included[0].attributes.uri.url : "";
 
         state.userData = { fullname, userName, mail, matrikelNummer, profilePictureLink }
     }

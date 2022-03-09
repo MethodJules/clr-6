@@ -1,39 +1,51 @@
 <template>
-  <b-container>
-    <b-row>
-      <!-- <b-col><b-img v-bind="user" :src="getImage"> </b-img></b-col> -->
-    </b-row>
-    <table class="table table-striped table-hover">
-      <tbody>
-        <tr>
-          <th scope="row">Name</th>
-          <td>
-            {{ profile.title }}
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">Abteilung</th>
-          <td>{{ profile.abteilung }}</td>
-        </tr>
-        <tr v-if="profile.showEmail">
-          <th scope="row">Email</th>
-          <td>{{ getUser.mail }}</td>
-        </tr>
-        <tr v-if="profile.showPhoneNumber">
-          <th scope="row">Telefonnummer</th>
-          <td>{{ profile.telefonnummer }}</td>
-        </tr>
-        <tr>
-          <th scope="row">Betreute Projekte</th>
-          <td>
-            <li v-for="(project, i) in getMyProjectlist" :key="i" class="mb-1">
-              {{ project.title }}
-            </li>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </b-container>
+  <div class="profil-container">
+    <div class="profil-data">
+      <table class="table table-striped table-hover">
+        <tbody>
+          <tr>
+            <th scope="row">Name</th>
+            <td>
+              {{ profile.title }}
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Abteilung</th>
+            <td>{{ profile.abteilung }}</td>
+          </tr>
+          <tr v-if="profile.showEmail">
+            <th scope="row">Email</th>
+            <td>{{ userData.mail }}</td>
+          </tr>
+          <tr v-if="profile.showPhoneNumber">
+            <th scope="row">Telefonnummer</th>
+            <td>{{ profile.telefonnummer }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Betreute Projekte</th>
+            <td>
+              <li
+                v-for="(project, i) in getMyProjectlist"
+                :key="i"
+                class="mb-1"
+              >
+                {{ project.title }}
+              </li>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="profil-pictureContainer bg-dark">
+      <b-img
+        class="profil-picture"
+        thumbnail
+        fluid
+        :src="userData.profilePictureLink"
+        alt="User Picture"
+      ></b-img>
+    </div>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -42,19 +54,11 @@ export default {
   computed: {
     ...mapGetters({
       profile: "memberProfiles/getMemberProfile",
+      userData: "memberProfiles/getUserData",
     }),
-    getUser() {
-      return this.$store.state.profile.userData;
-    },
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
+
     getMyProjectlist() {
       return this.$store.state.project.myProjects;
-    },
-
-    getImage() {
-      return this.$store.state.profile.imageData;
     },
   },
   mounted() {
@@ -62,6 +66,32 @@ export default {
       "memberProfiles/loadMemberProfile",
       this.$route.params.user_internal_uid
     );
+    this.$store.dispatch(
+      "memberProfiles/loadUserFromBackend",
+      this.$route.params.user_internal_uid
+    );
   },
 };
 </script>
+<style scoped>
+.profil-container {
+  display: flex;
+}
+.profil-container .profil-data {
+  flex-grow: 4;
+}
+
+.profil-pictureContainer {
+  /* align-self: center; */
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  width: 25%;
+  height: 25%;
+  /* height: 80%; */
+}
+.profil-picture {
+  width: 100%;
+  height: 100%;
+}
+</style>
