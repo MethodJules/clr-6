@@ -82,8 +82,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import OutputFileUploadButton from "@/components/buttons/OutputFileUploadButton.vue";
-
 export default {
   data() {
     return {
@@ -93,9 +91,6 @@ export default {
       interval: null,
       outputFiles: [],
     };
-  },
-  components: {
-    OutputFileUploadButton,
   },
   computed: {
     getUserRole() {

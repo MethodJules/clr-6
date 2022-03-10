@@ -56,8 +56,8 @@ export default {
     },
   },
   mounted() {
-    // const zircle = document.querySelector("#z-container");
-    // console.log(zircle);
+    const zoomable = document.querySelector("#z-zoomable-layer");
+    console.log(zoomable);
   },
 };
 </script>
