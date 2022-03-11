@@ -1,4 +1,3 @@
-import { BIconHandThumbsDown } from 'bootstrap-vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -93,36 +92,19 @@ const routes = [
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/project/ProjectSearch.vue')
             },
-            // {
-            //     path: '/postfach',
-            //     name: 'Postfach',
-            //     component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/buttons/PostfachButton.vue')
-            // },
-            // {
-            //     path: '/profil/:user_internal_uid',
-            //     name: 'Profile',
-            //     props: true,
-            //     beforeEnter: (to, from, next) => {
-            //         console.log("profil route")
-            //         const user = JSON.parse(sessionStorage.getItem("current_user"));
 
-            //         (userRole == "student") ? next({ name: "Profile" }) : "";
-            //         (userRole == "lecturer") ? next({ name: "LecturerProfile" }) : ""
-            //     },
-            //     component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
-            // },
             {
                 path: '/profile/:user_internal_uid',
                 name: 'StudentProfile',
                 props: true,
 
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/StudentProfile.vue')
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/profil/StudentProfile.vue')
             },
             {
                 path: '/profile/:user_internal_uid',
                 name: 'LecturerProfile',
                 props: true,
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/LecturerProfile.vue')
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/profil/LecturerProfile.vue')
             },
 
             {

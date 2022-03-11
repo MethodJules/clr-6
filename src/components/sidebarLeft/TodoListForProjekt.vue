@@ -1,7 +1,7 @@
 <template>
   <div id="todoList">
     <div class="todoList-header"></div>
-    <AddTodoButton />
+    <AddTodoCard />
     <div class="card" v-for="(todo, index) in todosOfProject" :key="index">
       <div class="card-header">
         <strong>
@@ -30,14 +30,14 @@
 <script>
 import { required, maxLength } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
-import AddTodoButton from "@/components/buttons/AddTodoButton.vue";
+import AddTodoCard from "@/components/sidebarLeft/AddTodoCard.vue";
 export default {
   props: {
     date: String,
   },
 
   components: {
-    AddTodoButton,
+    AddTodoCard,
   },
 
   validations: {

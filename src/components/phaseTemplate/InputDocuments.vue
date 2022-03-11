@@ -73,16 +73,12 @@
         </div>
       </div>
     </b-row>
-    <!-- <b-row class="addFileButton">
-      <InputFileUploadButton />
-    </b-row> -->
   </div>
 </template>
 
 
 <script>
 import { mapGetters } from "vuex";
-import InputFileUploadButton from "@/components/buttons/InputFileUploadButton.vue";
 export default {
   data() {
     return {
@@ -92,9 +88,6 @@ export default {
       interval: null,
       inputFiles: [],
     };
-  },
-  components: {
-    InputFileUploadButton,
   },
   computed: {
     getUserRole() {
@@ -149,9 +142,7 @@ export default {
           this.counter = this.counter + 1;
         }
       }, 350);
-      // upload files..
       this.upload(this.inputFiles);
-      // upload files
     },
   },
   mounted() {

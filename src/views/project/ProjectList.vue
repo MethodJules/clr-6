@@ -17,7 +17,7 @@
               {{ project.title }}
             </b-link>
           </template>
-          <b-row>
+          <b-row class="reflexion-button">
             <ReflexionAuswahl :projectId="project.uuid" />
           </b-row>
         </b-card>
@@ -75,14 +75,6 @@ export default {
       return this.$store.state.project.myProjects;
     },
   },
-
-  mounted() {
-    // this.$store.dispatch("project/loadProjectsFromBackend");
-    // this.$store.dispatch("user/loadLecturersFromBackend");
-    // this.$store.dispatch("user/loadStudentsFromBackend");
-    // this.$store.dispatch("profile/loadProfileFromBackend", this.userUID);
-    // this.$store.dispatch("profile/loadUserFromBackend", this.userUID);
-  },
 };
 </script>
 <style scoped>
@@ -110,5 +102,9 @@ h1 {
 .card-title:hover {
   color: black;
   text-decoration: none;
+}
+.reflexion-button {
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -29,11 +29,10 @@ const actions = {
     * @param user_internal_uid user uid used for getting associated user data from backend
     * * We load the Userdata from backend by filtering the user_internal_uid to get the userdata of the right user
     */
-    async loadUserFromBackend({ commit, rootState }, user_internal_uid) {
+    async loadUserFromBackend({ commit }, user_internal_uid) {
         const authToken = sessionStorage.getItem("auth_token");
         const csrfToken = localStorage.getItem("csrf_token");
-        console.log(authToken, csrfToken)
-        console.log(user_internal_uid)
+
         var config = {
             method: 'get',
             url: `jsonapi/user/user?filter[drupal_internal__uid]=${user_internal_uid}&include=user_picture`,
@@ -46,7 +45,6 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                console.log(response)
                 /* Normally we give response.data.data as payload for the mutation, as it contains only the needed 'data'
                 * array with all field values. But here we also need the included data which is found in response.data.included.
                 *  Therefore our paylod this time is response.data,
@@ -114,6 +112,7 @@ const actions = {
     * We upload the state of the show email checkbox to backend
     */
     updateEmailCheckbox({ rootState }, profile) {
+
         var data = `
         {
             "data": {
@@ -185,7 +184,7 @@ const actions = {
     createProfile({ rootState }, authorization_token) {
         var drupalUserUUID = rootState.drupal_api.user.uuid
         let username = rootState.drupal_api.user.username
-        var title = `Profil ${username}`
+        var title = username
         var data = `{
             "data": {
                 "type": "user--profil", 
@@ -324,8 +323,10 @@ const actions = {
     that the backend knows which profile should be exactly updated/overwritten and we need the user UID for referencing the profiledata
     rigth user */
 
-    updateProfile({ rootState }, profile) {
-        console.log(profile)
+    updateProfile({ }, profile) {
+        const authToken = sessionStorage.getItem("auth_token");
+        const csrfToken = localStorage.getItem("csrf_token");
+
         //sometimes if empty fields are saved in backend, the value saved is a string with value null or undefined, instead of an empty string
         for (let attribute in profile) {
             if (profile[attribute] == null) {
@@ -354,13 +355,14 @@ const actions = {
             headers: {
                 'Accept': 'application/vnd.api+json',
                 'Content-Type': 'application/vnd.api+json',
-                'Authorization': rootState.drupal_api.authToken,
-                'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+                'Authorization': authToken,
+                'X-CSRF-Token': csrfToken
             },
             data: data
         };
         axios(config)
             .then(function (response) {
+                console.log(response)
             })
             .catch(function (error) {
                 console.log(error)
@@ -381,7 +383,6 @@ const mutations = {
         /**
         * consists the data of user only, which will be stored as object 'userObject' in the state userData
         */
-        console.log(user)
         user.data.forEach(element => {
             const field_fullname = element.attributes.field_fullname;
             const field_matrikelnummer = element.attributes.field_matrikelnummer;
@@ -414,7 +415,6 @@ const mutations = {
     *
     */
     SAVE_PROFILE(state, profile) {
-        console.log(profile)
         state.profileData = profile;
     },
 

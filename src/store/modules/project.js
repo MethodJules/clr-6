@@ -6,7 +6,6 @@ const state = () => ({
   currentProject: {},
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
-  keywordsInString: "",
   projectsFilteredbyKeywords: [],
   isUserAdmin: false
 })
@@ -193,17 +192,7 @@ const actions = {
     };
     axios(config)
       .then(async function (response) {
-        // decide if user admin 
         let admins = response.data.data[0].relationships.field_gruppenadministrator.data;
-        // const user = JSON.parse(sessionStorage.getItem("current_user"));
-        // const userID = user.uuid;
-        // console.log(admins)
-        // let isUserAdmin = false;
-        // admins.forEach(admin => {
-        //   (admin.id == userID) ? isUserAdmin = true : "";
-        // });
-        // console.log(isUserAdmin)
-
         commit('IS_USER_ADMIN', admins);
 
         const projects = response.data;
@@ -360,6 +349,7 @@ const actions = {
   updateProject({ rootState }, projEntry) {
     const dozenten = JSON.stringify(projEntry.betreuenderDozent)
     const keywords = JSON.stringify(projEntry.schlagworter)
+    const externeMitwirkende = JSON.stringify(projEntry.externeMitwirkende)
     var data = `{
         "data": {
           "type": "node--projekt",
@@ -368,7 +358,7 @@ const actions = {
             "title": "${projEntry.title}",
             "field_schlagworter": ${keywords},
             "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
-            "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
+            "field_externe_mitwirkende": ${externeMitwirkende}
           },
           "relationships": {
             "field_betreuender_dozent": {
@@ -680,10 +670,6 @@ const mutations = {
       }
       state.currentProject = projectObject
     });
-    let keywords = state.currentProject.schlagworter;
-
-    // let keywordsInString = keywords.join();
-    state.keywordsInString = keywords
   },
 
   /**

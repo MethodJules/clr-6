@@ -92,7 +92,8 @@ export default {
       let result = false;
       if (
         (this.$route.name === "ProjectList") |
-        (this.$route.name === "Profil") |
+        (this.$route.name === "StudentProfile" ||
+          this.$route.name === "LecturerProfile") |
         (this.$route.name === "Einstellungen")
       ) {
         result = true;
@@ -106,9 +107,10 @@ export default {
       return result;
     },
     inProfil() {
-      let result = false;
-      this.$route.name === "Profil" ? (result = true) : (result = false);
-      return result;
+      return (
+        this.$route.name === "StudentProfile" ||
+        this.$route.name === "LecturerProfile"
+      );
     },
     getUserRole() {
       return this.$store.state.drupal_api.user.role;

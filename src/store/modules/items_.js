@@ -4,7 +4,7 @@ const state = () => ({
 
 
 const actions = {
-    addItem({ commit }, item) {   
+    addItem({ commit }, item) {
         commit('addItem', item)
     }
 }
