@@ -55,7 +55,7 @@
       </b-navbar-nav>
 
       <template
-        v-if="!startpage & !(this.$route.params.project_id == undefined)"
+        v-if="!inProjectList & !(this.$route.params.project_id == undefined)"
       >
         <b-navbar-nav>
           <b-nav-item
@@ -194,9 +194,9 @@ export default {
       );
     },
 
-    startpage() {
-      return this.$route.name === "ProjectList";
-    },
+    // startpage() {
+    //   return this.$route.name === "ProjectList";
+    // },
     inProjectSearch() {
       return this.$route.name === "ProjectSearch";
     },
