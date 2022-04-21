@@ -38,7 +38,13 @@ export default {
   },
   methods: {
     updateDocu(inDoku) {
-      this.$store.dispatch("project_phases/updateDocumentation", inDoku);
+      const documentationText = inDoku
+        .replace(/(\r\n|\r|\n)/g, "<br>")
+        .replace(/(")/g, '\\"');
+      this.$store.dispatch(
+        "project_phases/updateDocumentation",
+        documentationText
+      );
       this.updatingDocumentation = false;
     },
     handleBlur(val) {

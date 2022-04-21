@@ -230,11 +230,13 @@ export default {
         }
 
         const dozenten = Object.assign({}, dataArray);
-
         //gruppenadmin and gruppenmitglied should not/cant be changed here, but in gruppenmanagement
+        const kurzbeschreibung = this.getCurrentProject.kurzbeschreibung
+          .replace(/(\r\n|\r|\n)/g, "<br>")
+          .replace(/(")/g, '\\"');
         var updatedProj = {
           title: this.getCurrentProject.title,
-          kurzbeschreibung: this.getCurrentProject.kurzbeschreibung,
+          kurzbeschreibung: kurzbeschreibung,
           betreuenderDozent: dozenten,
           externeMitwirkende: externeMitwirkende,
           schlagworter: keywords,

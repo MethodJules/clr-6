@@ -450,16 +450,13 @@ const actions = {
 * updates the documentation of a phase
 */
     updateDocumentation({ rootState }, documentationText) {
-        console.log(documentationText)
-        const text = documentationText.replace(/(\r\n|\r|\n)/g, '<br>')
-        console.log(text)
         var phaseId = rootState.project_phases.current_phase.phase_id
         var data = `{
                 "data": {
                     "type": "node--phase_vorgehensmodell", 
                     "id": "${phaseId}",
                     "attributes": { 
-                        "field_documentationtext": "${text}" 
+                        "field_documentationtext": "${documentationText}" 
                     }                 
                 }
             }`;

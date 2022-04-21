@@ -35,6 +35,9 @@ export default {
   data() {
     return {};
   },
+  components: {
+    phase: () => import("@/components/phaseTemplate/PhaseTemplate.vue"),
+  },
   computed: {
     ...mapGetters({
       phases: "project_phases/getPhasesOfProject",
@@ -54,11 +57,14 @@ export default {
         },
       });
     },
+    renderMe(ref) {
+      this.$zircle.toView({
+        to: ref,
+        fromSpot: this.$refs[ref],
+      });
+    },
   },
-  mounted() {
-    const zoomable = document.querySelector("#z-zoomable-layer");
-    console.log(zoomable);
-  },
+  mounted() {},
 };
 </script>
 <style scoped>
