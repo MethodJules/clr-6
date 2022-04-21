@@ -32,12 +32,6 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  data() {
-    return {};
-  },
-  components: {
-    phase: () => import("@/components/phaseTemplate/PhaseTemplate.vue"),
-  },
   computed: {
     ...mapGetters({
       phases: "project_phases/getPhasesOfProject",
