@@ -32,9 +32,6 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  data() {
-    return {};
-  },
   computed: {
     ...mapGetters({
       phases: "project_phases/getPhasesOfProject",
@@ -54,11 +51,14 @@ export default {
         },
       });
     },
+    renderMe(ref) {
+      this.$zircle.toView({
+        to: ref,
+        fromSpot: this.$refs[ref],
+      });
+    },
   },
-  mounted() {
-    // const zircle = document.querySelector("#z-container");
-    // console.log(zircle);
-  },
+  mounted() {},
 };
 </script>
 <style scoped>

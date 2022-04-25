@@ -4,14 +4,14 @@
       <b-form-file
         v-model="inputFiles"
         ref="files-input"
-        placeholder="Wählen Sie eine Datei oder legen Sie sie hier ab ..."
+        placeholder="Wähle eine Datei oder lege sie hier ab..."
         drop-placeholder="Datei hier ablegen..."
         multiple
         class="mb-2"
       ></b-form-file>
       <b-card-text align="right" class="mt-3">
         <b-button class="mr-2" variant="secondary" size="sm" @click="onOK"
-          >Ok</b-button
+          >Hochladen</b-button
         >
         <b-button class="mr-2" variant="secondary" size="sm" @click="clear()"
           >Leeren</b-button
@@ -73,16 +73,12 @@
         </div>
       </div>
     </b-row>
-    <!-- <b-row class="addFileButton">
-      <InputFileUploadButton />
-    </b-row> -->
   </div>
 </template>
 
 
 <script>
 import { mapGetters } from "vuex";
-import InputFileUploadButton from "@/components/buttons/InputFileUploadButton.vue";
 export default {
   data() {
     return {
@@ -92,9 +88,6 @@ export default {
       interval: null,
       inputFiles: [],
     };
-  },
-  components: {
-    InputFileUploadButton,
   },
   computed: {
     getUserRole() {
@@ -124,13 +117,13 @@ export default {
      * triggers loading bar
      * closes the modal
      */
-    async upload(files) {
-      await this.$store.dispatch("inputDocuments/uploadFilesToDatabase", files);
-      await console.log("file upload end");
-      setInterval(() => {
-        this.processing = false;
-        this.busy = false;
-      }, 3);
+    upload(files) {
+      this.$store
+        .dispatch("inputDocuments/uploadFilesToDatabase", files)
+        .then(() => {
+          this.processing = false;
+          this.busy = false;
+        });
 
       this.inputFiles = [];
     },
@@ -149,9 +142,7 @@ export default {
           this.counter = this.counter + 1;
         }
       }, 350);
-      // upload files..
       this.upload(this.inputFiles);
-      // upload files
     },
   },
   mounted() {

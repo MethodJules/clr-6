@@ -1,23 +1,24 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import items from './modules/items'
+// import items from './modules/items'
 import sourceData from '@/data.json'
-import members from './modules/members'
+// import members from './modules/members'
 import reflexion from './modules/reflexion'
-import documentation from './modules/documentation'
+// import documentation from './modules/documentation'
 import tool from './modules/tool'
 import todo from './modules/todo'
 import assistent from './modules/assistent'
-import inputDocuments from './modules/inputDocuments'
-import project_phases from './modules/project_phases'
+import inputDocuments from './modules/phaseTemplate/inputDocuments'
+import project_phases from './modules/phaseTemplate/project_phases'
 import project from './modules/project'
-import output_documents from './modules/output_documents'
+import output_documents from './modules/phaseTemplate/output_documents'
 import postfach from './modules/postfach'
 import sparky_api from './modules/sparky_api'
 import drupal_api from './modules/drupal_api'
-import user from './modules/user'
-import profile from './modules/profile'
-import phases from './modules/phases'
+import user from './modules/user/user'
+import profile from './modules/user/profile'
+import phases from './modules/phaseTemplate/phases'
+import memberProfiles from './modules/user/memberProfiles'
 
 
 Vue.use(Vuex)
@@ -25,11 +26,11 @@ Vue.config.devtools = true
 
 export default new Vuex.Store({
     modules: {
-        items,
+        // items,
         project,
-        members,
+        // members,
         reflexion,
-        documentation,
+        // documentation,
         tool,
         todo,
         assistent,
@@ -41,7 +42,8 @@ export default new Vuex.Store({
         drupal_api,
         user,
         profile,
-        phases
+        phases,
+        memberProfiles
     },
 
     //noch in Datei packen
@@ -60,11 +62,30 @@ export default new Vuex.Store({
         },
         getTabElementsLoading(state) {
             return state.tabElementsLoading;
+        },
+        getLoadingStatus(state) {
+            return state.loadingStatus;
         }
 
     },
 
     actions: {
+
+        // initializatin of project
+        init({ dispatch }) {
+            const user = JSON.parse(sessionStorage.getItem("current_user"));
+            const drupalUserUID = user.uid;
+
+            dispatch("project/loadProjectsFromBackend");
+            dispatch("user/loadLecturersFromBackend");
+            dispatch("user/loadStudentsFromBackend");
+            dispatch("profile/loadUserFromBackend", drupalUserUID);
+            dispatch("project/loadCurrentProject");
+            dispatch("todo/loadToDoFromBackend");
+
+
+        },
+
         createPost(context, post) {
             const postId = 'greatPost' + Math.random()
             post['.key'] = postId

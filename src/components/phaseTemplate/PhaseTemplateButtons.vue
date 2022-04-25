@@ -17,11 +17,6 @@
       <b-button @click="updateDocu(getDocumentation)">Speichern</b-button>
     </b-modal>
     <b-button
-      v-if="getUserRole != 'lecturer'"
-      v-b-modal.documentation_edit_modal
-      >Dokumentation bearbeiten</b-button
-    >
-    <b-button
       v-if="!isPhaseDone && getUserRole != 'lecturer'"
       @click="filterByPhase(phases[phase_number])"
       v-b-modal.modal-phase

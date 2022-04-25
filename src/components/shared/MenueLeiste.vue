@@ -26,9 +26,26 @@
       <b-navbar-nav>
         <!-- Es gibt kein Profil in router.. -->
         <b-nav-item
-          v-if="inProjectList || inEinstellungen || inProfil || inProjectSearch"
+          v-if="
+            (inProjectList || inEinstellungen || inProfil || inProjectSearch) &&
+            isUserStudent
+          "
           :to="{
-            name: 'Profil',
+            name: 'StudentProfile',
+            params: {
+              user_internal_uid: userUID,
+            },
+          }"
+          >Profil</b-nav-item
+        >
+
+        <b-nav-item
+          v-if="
+            (inProjectList || inEinstellungen || inProfil || inProjectSearch) &&
+            !isUserStudent
+          "
+          :to="{
+            name: 'LecturerProfile',
             params: {
               user_internal_uid: userUID,
             },
@@ -38,7 +55,7 @@
       </b-navbar-nav>
 
       <template
-        v-if="!startpage & !(this.$route.params.project_id == undefined)"
+        v-if="!inProjectList & !(this.$route.params.project_id == undefined)"
       >
         <b-navbar-nav>
           <b-nav-item
@@ -137,7 +154,7 @@ export default {
   data() {
     return {
       keyword: "",
-      projectId: this.$route.params.project_id,
+      // projectId: this.$route.params.project_id,
     };
   },
 
@@ -177,20 +194,30 @@ export default {
       );
     },
 
-    startpage() {
-      return this.$route.name === "ProjectList";
+    // startpage() {
+    //   return this.$route.name === "ProjectList";
+    // },
+    inProjectSearch() {
+      return this.$route.name === "ProjectSearch";
     },
+
     inProjectList() {
       return this.$route.name === "ProjectList";
     },
     inProfil() {
-      return this.$route.name === "Profil";
+      return (
+        this.$route.name === "StudentProfile" ||
+        this.$route.name === "LecturerProfile"
+      );
     },
-    inProjectSearch() {
-      return this.$route.name === "ProjectSearch";
-    },
+
     inEinstellungen() {
       return this.$route.name === "Einstellungen";
+    },
+    isUserStudent() {
+      const user = JSON.parse(sessionStorage.getItem("current_user"));
+      const userRole = user.role;
+      return userRole == "student";
     },
   },
 };

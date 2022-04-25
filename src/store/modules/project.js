@@ -6,8 +6,8 @@ const state = () => ({
   currentProject: {},
   currentProjectGroupAdmins: [],
   currentProjectLecturers: [],
-  keywordsInString: "",
   projectsFilteredbyKeywords: [],
+  isUserAdmin: false
 })
 
 const getters = {
@@ -25,11 +25,7 @@ const getters = {
   * getter for group members of current project. filters the system user out. see function create_project for clarification why this user exists
   */
   getGroupMembers(state) {
-    let unfiltered_members =
-      state.currentProject.gruppenmitglieder;
-    return unfiltered_members.filter(function (member) {
-      return member.username != "System";
-    });
+    return state.currentProject.gruppenmitglieder;
   },
 
   /**
@@ -47,6 +43,11 @@ const getters = {
   getProjectLecturers(state) {
     return state.currentProjectLecturers;
   },
+
+
+  getIsUserAdmin(state) {
+    return state.isUserAdmin;
+  }
 }
 
 
@@ -122,15 +123,19 @@ const actions = {
   */
   async loadProjectsFromBackend({ commit, rootState, dispatch }) {
     let filter_joined = ""
-    var drupalUserUID = rootState.drupal_api.user.uid
+    const authToken = sessionStorage.getItem("auth_token");
+    const csrfToken = localStorage.getItem("csrf_token");
+    const user = JSON.parse(sessionStorage.getItem("current_user"));
+    const drupalUserUID = user.uid;
+    // var drupalUserUID = rootState.drupal_api.user.uid;
     //depending on role of a user (if user is student or lecturer) the filters are different: student -> filter by id in gruppenadministrator and gruppenmitglied; lecturer -> filter by id in betreuender_dozent
     //TODO: maybe make another else part for "superdozent/admin" role.
-    if (rootState.drupal_api.user.role == "student") {
+    if (user.role == "student") {
       const filter_or_group = `?filter[or-group][group][conjunction]=OR`
       const filter_gruppenmitglieder = `&filter[gruppenmitglieder][condition][path]=field_gruppenmitglieder.drupal_internal__uid&filter[gruppenmitglieder][condition][operator]=IN&filter[gruppenmitglieder][condition][value]=${drupalUserUID}&filter[gruppenmitglieder][condition][memberOf]=or-group`
       const filter_gruppenadministrator = `&filter[gruppenadministrator][condition][path]=field_gruppenadministrator.drupal_internal__uid&filter[gruppenadministrator][condition][operator]=IN&filter[gruppenadministrator][condition][value]=${drupalUserUID}&filter[gruppenadministrator][condition][memberOf]=or-group`
       filter_joined = filter_or_group + filter_gruppenmitglieder + filter_gruppenadministrator
-    } else if (rootState.drupal_api.user.role == "lecturer") {
+    } else if (user.role == "lecturer") {
       filter_joined = `?filter[field_betreuender_dozent][condition][path]=field_betreuender_dozent.drupal_internal__uid&filter[field_betreuender_dozent][condition][operator]=IN&filter[field_betreuender_dozent][condition][value]=${drupalUserUID}`
     }
     //if user has no valid role -> dont load anything
@@ -145,8 +150,8 @@ const actions = {
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        'Authorization': authToken,
+        'X-CSRF-Token': csrfToken
       },
     };
     axios(config)
@@ -169,7 +174,11 @@ const actions = {
 * @param projectId id of project to load
 * loads chosen project from backend, then dispatches 2 other functions which load groupadmins and lecturers of chosen project (done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
-  async loadCurrentProject({ commit, rootState, dispatch }, projectId) {
+  async loadCurrentProject({ commit, rootState, dispatch }) {
+    let projectId = sessionStorage.getItem("projectId");
+
+    const authToken = sessionStorage.getItem("auth_token");
+    const csrfToken = localStorage.getItem("csrf_token");
     commit("loadingStatus", true, { root: true })
     var config = {
       method: 'get',
@@ -177,17 +186,20 @@ const actions = {
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        'Authorization': authToken,
+        'X-CSRF-Token': csrfToken
       },
     };
     axios(config)
-      .then(function (response) {
+      .then(async function (response) {
+        let admins = response.data.data[0].relationships.field_gruppenadministrator.data;
+        commit('IS_USER_ADMIN', admins);
+
         const projects = response.data;
         dispatch('loadCurrentProjectWithGroupAdmins', projectId)
         dispatch('loadCurrentProjectWithLecturers', projectId)
-        commit('LOAD_CURRENT_PROJECT', { projects });
-        commit("loadingStatus", false, { root: true })
+        await commit('LOAD_CURRENT_PROJECT', { projects });
+        await commit("loadingStatus", false, { root: true })
       })
       .catch(function (error) {
         console.log(error)
@@ -202,14 +214,16 @@ const actions = {
 * loads chosen project from backend and saves groupadmins of chosen project(done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
   async loadCurrentProjectWithGroupAdmins({ commit, rootState }, projectId) {
+    const authToken = sessionStorage.getItem("auth_token");
+    const csrfToken = localStorage.getItem("csrf_token");
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt?include=field_gruppenadministrator&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        'Authorization': authToken,
+        'X-CSRF-Token': csrfToken
       },
     };
     return axios(config)
@@ -230,14 +244,16 @@ const actions = {
 * loads chosen project from backend and saves lecturers of chosen project(done in 3 seperate fnctions because response.data.include does not differntiate between different content and only returns a single list)
 */
   async loadCurrentProjectWithLecturers({ commit, rootState }, projectId) {
+    const authToken = sessionStorage.getItem("auth_token");
+    const csrfToken = localStorage.getItem("csrf_token");
     var config = {
       method: 'get',
       url: `jsonapi/node/projekt?include=field_betreuender_dozent&filter[id]=${projectId}`,
       headers: {
         'Accept': 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json',
-        'Authorization': rootState.drupal_api.authToken,
-        'X-CSRF-Token': `${rootState.drupal_api.csrf_token}`
+        'Authorization': authToken,
+        'X-CSRF-Token': csrfToken
       },
     };
     axios(config)
@@ -333,6 +349,7 @@ const actions = {
   updateProject({ rootState }, projEntry) {
     const dozenten = JSON.stringify(projEntry.betreuenderDozent)
     const keywords = JSON.stringify(projEntry.schlagworter)
+    const externeMitwirkende = JSON.stringify(projEntry.externeMitwirkende)
     var data = `{
         "data": {
           "type": "node--projekt",
@@ -341,7 +358,7 @@ const actions = {
             "title": "${projEntry.title}",
             "field_schlagworter": ${keywords},
             "field_kurzbeschreibung": "${projEntry.kurzbeschreibung}",
-            "field_externe_mitwirkende": "${projEntry.externeMitwirkende}"
+            "field_externe_mitwirkende": ${externeMitwirkende}
           },
           "relationships": {
             "field_betreuender_dozent": {
@@ -512,6 +529,18 @@ const actions = {
 
 const mutations = {
 
+  IS_USER_ADMIN(state, admins) {
+    // decide if user admin 
+    const user = JSON.parse(sessionStorage.getItem("current_user"));
+    const userID = user.uuid;
+    let isUserAdmin = false;
+    admins.forEach(admin => {
+      (admin.id == userID) ? isUserAdmin = true : "";
+    });
+    state.isUserAdmin = isUserAdmin;
+  },
+
+
   /**
 * @param new_project project which will be added to the backend
 * @param state state as parameter for access and manipulation of state data
@@ -613,18 +642,16 @@ const mutations = {
 * @param state state as parameter for access and manipulation of state data
 */
   LOAD_CURRENT_PROJECT(state, { projects }) {
-
     let included_data = projects.included
     let user_array = []
     if (included_data != undefined) {
       included_data.forEach(element => {
-        const internal_uid = element.attributes.drupal_internal__uid
+        const internal_uid = element.attributes.drupal_internal__uid;
         const username = element.attributes.field_fullname;
-        const userid = element.id
-        user_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+        const userid = element.id;
+        (username != "System") ? user_array.push({ username, userid, internal_uid }) : "";
       })
     }
-
     projects.data.forEach(element => {
       const field_betreuender_dozent = element.relationships.field_betreuender_dozent.data.id;
       const field_externe_mitwirkende = element.attributes.field_externe_mitwirkende;
@@ -633,13 +660,16 @@ const mutations = {
       const field_id = element.id;
       const field_title = element.attributes.title;
       let field_gruppenmitglieder = user_array
-      let projectObject = { betreuenderDozent: field_betreuender_dozent, externeMitwirkende: field_externe_mitwirkende, schlagworter: field_schlagworter, kurzbeschreibung: field_kurzbeschreibung, uuid: field_id, title: field_title, gruppenmitglieder: field_gruppenmitglieder }
-
+      let projectObject = {
+        betreuenderDozent: field_betreuender_dozent,
+        externeMitwirkende: field_externe_mitwirkende,
+        schlagworter: field_schlagworter,
+        kurzbeschreibung: field_kurzbeschreibung,
+        uuid: field_id, title: field_title,
+        gruppenmitglieder: field_gruppenmitglieder
+      }
       state.currentProject = projectObject
     });
-    let keywords = state.currentProject.schlagworter;
-    let keywordsInString = keywords.join();
-    state.keywordsInString = keywordsInString
   },
 
   /**
@@ -655,9 +685,10 @@ const mutations = {
         const username = element.attributes.field_fullname;
         const userid = element.id
         const internal_uid = element.attributes.drupal_internal__uid
-        groupadmins_array.push({ username: username, userid: userid, internal_uid: internal_uid })
+        groupadmins_array.push({ username, userid, internal_uid })
       })
     }
+
     state.currentProjectGroupAdmins = groupadmins_array
   },
 

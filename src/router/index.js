@@ -92,17 +92,21 @@ const routes = [
                 props: true,
                 component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/project/ProjectSearch.vue')
             },
-            // {
-            //     path: '/postfach',
-            //     name: 'Postfach',
-            //     component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/buttons/PostfachButton.vue')
-            // },
+
             {
-                path: '/profil/:user_internal_uid',
-                name: 'Profil',
+                path: '/profile/:user_internal_uid',
+                name: 'StudentProfile',
                 props: true,
-                component: () => import(/*webpackChunkName: "begruessung_home" */ '../views/Profil.vue')
+
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/profil/StudentProfile.vue')
             },
+            {
+                path: '/profile/:user_internal_uid',
+                name: 'LecturerProfile',
+                props: true,
+                component: () => import(/*webpackChunkName: "begruessung_home" */ '../components/profil/LecturerProfile.vue')
+            },
+
             {
                 path: '/einstellungen',
                 name: 'Einstellungen',

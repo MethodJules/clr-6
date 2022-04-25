@@ -1,149 +1,125 @@
 <template>
-  <div class="home">
-    <br />
-
-    <div>
-      <b-card-group deck>
-        <b-card
-          header-tag="header"
-          footer-tag="footer"
-          border-variant="primary"
-        >
-          <template #header>
-            <h6 class="mb-0">
-              <b> {{ getCurrentProject.title }} </b>
-            </h6>
-          </template>
-          <b-card-text>
-            <div v-for="mitglied in getGroupMembers" :key="mitglied.userid">
-              <b-row>
-                <b-col>
-                  <p>Gruppenmitglied</p>
-                </b-col>
-                <b-col>
-                  <b-nav-item
-                    :to="{
-                      name: 'Profil',
-                      params: {
-                        user_internal_uid: mitglied.internal_uid,
-                      },
-                    }"
-                    @click="setMemberToShow(mitglied)"
-                  >
-                    <p class="mitglied">
-                      <b> {{ mitglied.username }} </b>
-                    </p>
-                  </b-nav-item>
-                </b-col>
-                <b-col>
-                  <b-button
-                    v-if="
-                      (getCurrentUserUUID != mitglied.userid) &
-                      currentUserisAdmin
-                    "
-                    variant="link"
-                    @click="deleteMember(mitglied)"
-                  >
-                    <b-icon icon="x"></b-icon>
-                  </b-button>
-                  <b-button
-                    v-if="
-                      (getCurrentUserUUID != mitglied.userid) &
-                      currentUserisAdmin
-                    "
-                    variant="link"
-                    @click="giveAdminRights(mitglied)"
-                    ><b-icon icon="person-check-fill"></b-icon
-                  ></b-button>
-                  <br />
-                </b-col>
-              </b-row>
-            </div>
-
-            <div v-for="admin in getGroupAdmins" :key="admin.userid">
-              <b-row>
-                <b-col>
-                  <p>Gruppenadministrator</p>
-                </b-col>
-                <b-col>
-                  <b-nav-item
-                    :to="{
-                      name: 'Profil',
-                      params: {
-                        user_internal_uid: admin.internal_uid,
-                      },
-                    }"
-                    @click="setMemberToShow(admin)"
-                    ><p class="admin">
-                      <b>{{ admin.username }}</b>
-                    </p>
-                  </b-nav-item>
-                </b-col>
-                <b-col>
-                  <b-button
-                    variant="link"
-                    v-if="
-                      (getCurrentUserUUID != admin.userid) & currentUserisAdmin
-                    "
-                    @click="deleteAdmin(admin)"
-                  >
-                    <b-icon icon="x"></b-icon>
-                  </b-button>
-                  <br />
-                </b-col>
-              </b-row>
-            </div>
-            <br />
-
-            <b-row class="groupmanagement-buttons">
-              <b-button
-                v-if="currentUserisAdmin"
-                :to="{ name: 'NewMember' }"
-                tag="div"
+  <div v-if="!getLoadingStatus">
+    <b-card header-tag="header" footer-tag="footer">
+      <template #header>
+        <h6 class="mb-0">
+          <b> {{ getCurrentProject.title }} </b>
+        </h6>
+      </template>
+      <b-card-text>
+        <div v-for="mitglied in getGroupMembers" :key="mitglied.userid">
+          <b-row>
+            <b-col>
+              <p>Gruppenmitglied</p>
+            </b-col>
+            <b-col>
+              <b-nav-item
+                :to="{
+                  name: 'StudentProfile',
+                  params: {
+                    user_internal_uid: mitglied.internal_uid,
+                  },
+                }"
               >
-                Neues Mitglied hinzufügen
-              </b-button>
-
-              <b-button
-                v-if="currentUserisAdmin"
-                @click="$bvModal.show('admin-removes-rights')"
-                >Admin-Rechte abgeben
-              </b-button>
-              <b-modal
-                @ok="removeOwnAdminRights"
-                id="admin-removes-rights"
-                title="Bist du dir sicher?"
-                cancel-title="Abbrechen"
-                ><p>
-                  Du kannst dieses Projekt nicht mehr verwalten, wenn du deine
-                  Administrationsrechte aufgibst!
+                <p class="mitglied">
+                  <b> {{ mitglied.username }} </b>
                 </p>
-              </b-modal>
-
-              <b-button @click="$bvModal.show('student-leave-group')"
-                >Gruppe verlassen
+              </b-nav-item>
+            </b-col>
+            <b-col>
+              <b-button
+                v-if="(getCurrentUserUUID != mitglied.userid) & isUserAdmin"
+                variant="link"
+                @click="deleteMember(mitglied)"
+              >
+                <b-icon icon="x"></b-icon>
               </b-button>
-            </b-row>
+              <b-button
+                v-if="(getCurrentUserUUID != mitglied.userid) & isUserAdmin"
+                variant="link"
+                @click="giveAdminRights(mitglied)"
+                ><b-icon icon="person-check-fill"></b-icon
+              ></b-button>
+              <br />
+            </b-col>
+          </b-row>
+        </div>
 
-            <b-modal
-              @ok="leaveGroup"
-              id="student-leave-group"
-              title="Bist du dir sicher?"
-              cancel-title="Abbrechen"
-              ><p>
-                Du kannst nicht mehr auf das Projekt zugreifen, wenn du das
-                Projekt verlässt!
-              </p>
-            </b-modal>
-          </b-card-text>
-        </b-card>
-      </b-card-group>
-    </div>
+        <div v-for="admin in getGroupAdmins" :key="admin.userid">
+          <b-row>
+            <b-col>
+              <p>Gruppenadministrator</p>
+            </b-col>
+            <b-col>
+              <b-nav-item
+                :to="{
+                  name: 'StudentProfile',
+                  params: {
+                    user_internal_uid: admin.internal_uid,
+                  },
+                }"
+                ><p class="admin">
+                  <b>{{ admin.username }}</b>
+                </p>
+              </b-nav-item>
+            </b-col>
+            <b-col>
+              <b-button
+                variant="link"
+                v-if="(getCurrentUserUUID != admin.userid) & isUserAdmin"
+                @click="deleteAdmin(admin)"
+              >
+                <b-icon icon="x"></b-icon>
+              </b-button>
+              <br />
+            </b-col>
+          </b-row>
+        </div>
+        <br />
+
+        <b-row class="groupmanagement-buttons">
+          <b-button v-if="isUserAdmin" :to="{ name: 'NewMember' }" tag="div">
+            Neues Mitglied hinzufügen
+          </b-button>
+
+          <b-button
+            v-if="isUserAdmin"
+            @click="$bvModal.show('admin-removes-rights')"
+            >Admin-Rechte abgeben
+          </b-button>
+          <b-modal
+            @ok="removeOwnAdminRights"
+            id="admin-removes-rights"
+            title="Bist du dir sicher?"
+            cancel-title="Abbrechen"
+            ><p>
+              Du kannst dieses Projekt nicht mehr verwalten, wenn du deine
+              Administrationsrechte aufgibst!
+            </p>
+          </b-modal>
+
+          <b-button @click="$bvModal.show('student-leave-group')"
+            >Gruppe verlassen
+          </b-button>
+        </b-row>
+
+        <b-modal
+          @ok="leaveGroup"
+          id="student-leave-group"
+          title="Bist du dir sicher?"
+          cancel-title="Abbrechen"
+          ><p>
+            Du kannst nicht mehr auf das Projekt zugreifen, wenn du das Projekt
+            verlässt!
+          </p>
+        </b-modal>
+      </b-card-text>
+    </b-card>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Home",
@@ -155,7 +131,7 @@ export default {
     /* checks if current user is in group admin array, because he needs the rights to remove another member.
         then sends dispatch to delete member*/
     deleteMember: function (mitglied) {
-      if (this.currentUserisAdmin) {
+      if (this.isUserAdmin) {
         alert("Das Gruppenmitglied wurde gelöscht");
         this.$store.dispatch("project/deleteMembers", mitglied);
       } else {
@@ -168,7 +144,7 @@ export default {
     /* checks if current user is in group admin array, because he needs the rights to remove another member.
         then sends dispatch to delete admin*/
     deleteAdmin: function (mitglied) {
-      if (this.currentUserisAdmin) {
+      if (this.isUserAdmin) {
         this.$store.dispatch("project/deleteAdmin", mitglied);
       } else {
         alert(
@@ -213,7 +189,7 @@ export default {
         this.$router.push("/");
       }
 
-      if (this.currentUserisAdmin) {
+      if (this.isUserAdmin) {
         /*get the newest data from backend to ensure, that the person leaving the group does not have old group data in the state. otherwise this could lead to this situations:
        there are 2 group admins in the local state of group admin 1. Group admin 2 leaves the group, after group admin got the group data. group admin 2 now tries to leave the group as well. 
         He should not be allowed to leave the group now, because there would be now group admin left, but he can because the latest state is not present locally.*/
@@ -249,7 +225,7 @@ export default {
     },
 
     giveAdminRights: function (new_admin) {
-      if (this.currentUserisAdmin) {
+      if (this.isUserAdmin) {
         this.$store
           .dispatch("project/addMember", {
             mitglied: new_admin,
@@ -268,7 +244,7 @@ export default {
     removeOwnAdminRights: function () {
       let member = this.filter(this.getCurrentUserUUID, this.getGroupAdmins);
       //evtl redundant?
-      if (this.currentUserisAdmin) {
+      if (this.isUserAdmin) {
         this.$store
           .dispatch(
             "project/loadCurrentProjectWithGroupAdmins",
@@ -308,38 +284,39 @@ export default {
       }
     },
     setMemberToShow(mitglied) {
-      this.$store.commit("profile/SET_MEMBER_TO_SHOW", mitglied);
+      console.log(mitglied.internal_uid);
+      // sessionStorage.setItem("member_uid", mitglied.internal_uid);
+      // this.$store.commit("profile/SET_MEMBER_TO_SHOW", mitglied);
     },
   },
   computed: {
-    ...mapState({
-      members: (state) => state.members,
-    }),
+    // ...mapState({
+    //   members: (state) => state.members,
+    // }),
     ...mapGetters({
       getCurrentProject: "project/getCurrentProject",
       getGroupMembers: "project/getGroupMembers",
       getGroupAdmins: "project/getGroupAdmins",
-      getProjectLecturers: "project/getProjectLecturers",
+      // getProjectLecturers: "project/getProjectLecturers",
       getCurrentUserUUID: "profile/getCurrentUserUUID",
-      getCurrentUserInternalUID: "drupal_api/getCurrentUserInternalUID",
+      // getCurrentUserInternalUID: "drupal_api/getCurrentUserInternalUID",
+      getLoadingStatus: "getLoadingStatus",
+      isUserAdmin: "project/getIsUserAdmin",
     }),
 
-    currentUserisAdmin() {
-      return this.getGroupAdmins.some(
-        (e) => e.userid === this.getCurrentUserUUID
-      );
+    userRole() {
+      const user = JSON.parse(sessionStorage.getItem("current_user"));
+      const userRole = user.role;
+      return userRole;
     },
   },
   async mounted() {
+    const user = JSON.parse(sessionStorage.getItem("current_user"));
+    const drupalUserUID = user.uid;
+    // needs atttention actions variables..
     this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch(
-      "profile/loadUserFromBackend",
-      this.getCurrentUserInternalUID
-    );
-    this.$store.dispatch(
-      "project/loadCurrentProject",
-      this.$route.params.project_id
-    );
+    this.$store.dispatch("profile/loadUserFromBackend", drupalUserUID);
+    this.$store.dispatch("project/loadCurrentProject");
   },
 };
 </script>
@@ -367,16 +344,8 @@ export default {
   margin-bottom: 1rem;
   max-width: 15rem;
 }
-h1 {
-  text-align: right;
-}
-h5 {
-  text-align: right;
-  margin: 3px;
-  margin-left: 10%;
-  display: inline-block;
-}
-button {
-  float: right;
+
+.card {
+  margin: 0 !important;
 }
 </style>

@@ -1,28 +1,24 @@
 <template>
   <div>
-    <div @click="updatingDocumentation = true">
+    <div id="docTextArea">
       <b-form-textarea
-        :disabled="!updatingDocumentation"
+        @blur="handleBlur"
+        @focus="handleFocus"
         v-model="getDocumentation"
+        @click="updatingDocumentation = true"
+        ref="textArea"
       >
       </b-form-textarea>
     </div>
-    <div class="buttons">
-      <b-button
-        v-if="updatingDocumentation"
-        @click="updateDocu(getDocumentation)"
-        size="sm"
+    <div class="buttons" v-if="updatingDocumentation">
+      <b-button @click="updateDocu(getDocumentation)" size="sm"
         >Speichern</b-button
       >
-      <b-button
-        v-if="updatingDocumentation"
-        @click="updatingDocumentation = false"
-        size="sm"
-        >Abbrechen</b-button
-      >
+      <b-button @click="cancel()" size="sm">Abbrechen</b-button>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data() {
@@ -42,11 +38,25 @@ export default {
   },
   methods: {
     updateDocu(inDoku) {
-      this.$store.dispatch("project_phases/updateDocumentation", inDoku);
+      const documentationText = inDoku
+        .replace(/(\r\n|\r|\n)/g, "<br>")
+        .replace(/(")/g, '\\"');
+      this.$store.dispatch(
+        "project_phases/updateDocumentation",
+        documentationText
+      );
+      this.updatingDocumentation = false;
     },
-    update() {
-      console.log("update docu");
-      this.updatingDocumentation = true;
+    handleBlur(val) {
+      if (!val.relatedTarget) {
+        val ? (this.updatingDocumentation = false) : "";
+      }
+    },
+    handleFocus(val) {
+      val ? (this.updatingDocumentation = true) : "";
+    },
+    cancel() {
+      this.updatingDocumentation = false;
     },
   },
   async mounted() {

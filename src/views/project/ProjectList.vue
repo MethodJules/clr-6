@@ -1,29 +1,25 @@
 <template>
   <div>
     <h1>Meine Projekte</h1>
-    <br />
     <b-row class="projectlist-container">
-      <b-card title="Neues Projekt" v-if="getUserRole != 'lecturer'">
-        <ProjectForm :project="project"></ProjectForm>
-      </b-card>
-
       <div v-for="project in getMyProjectlist" :key="project.uuid">
         <b-card class="projects">
-          <h3>
-            {{ project.title }}
-          </h3>
-
-          <b-link
-            :to="{
-              name: 'Home',
-              params: {
-                project_id: project.uuid,
-              },
-            }"
-            class="btn btn-outline-dark btn-block mb-2"
-            >Dashboard</b-link
-          >
-          <ReflexionAuswahl :projectId="project.uuid" />
+          <template #header>
+            <b-link
+              :to="{
+                name: 'Home',
+                params: {
+                  project_id: project.uuid,
+                },
+              }"
+              class="card-title"
+            >
+              {{ project.title }}
+            </b-link>
+          </template>
+          <b-row class="reflexion-button">
+            <ReflexionAuswahl :projectId="project.uuid" />
+          </b-row>
         </b-card>
       </div>
     </b-row>
@@ -79,25 +75,36 @@ export default {
       return this.$store.state.project.myProjects;
     },
   },
-
-  mounted() {
-    this.$store.dispatch("project/loadProjectsFromBackend");
-    this.$store.dispatch("user/loadLecturersFromBackend");
-    this.$store.dispatch("user/loadStudentsFromBackend");
-    this.$store.dispatch("profile/loadProfileFromBackend", this.userUID);
-    this.$store.dispatch("profile/loadUserFromBackend", this.userUID);
-  },
 };
 </script>
 <style scoped>
+h1 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .projectlist-container {
   display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 .projectlist-container * {
-  margin-right: 1rem;
   max-width: 15rem;
 }
-.projects * {
-  width: 100%;
+.card-title {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+
+  text-transform: uppercase;
+}
+
+.card-title:hover {
+  color: black;
+  text-decoration: none;
+}
+.reflexion-button {
+  display: flex;
+  justify-content: center;
 }
 </style>

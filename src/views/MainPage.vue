@@ -38,6 +38,9 @@
             </b-col>
           </b-row>
         </b-col>
+        <b-col v-if="inProjectList" class="mainpageRechtseite" md="3">
+          <ProjectForm />
+        </b-col>
       </b-row>
       <Footer />
     </b-container>
@@ -45,6 +48,8 @@
 </template>
 <script>
 import SeitenNavigation from "@/components/sidebarRight/SeitenNavigation.vue";
+import ProjectForm from "@/components/ProjectForm";
+
 import TodoList from "@/components/sidebarLeft/TodoList.vue";
 import TodoListForProjekt from "@/components/sidebarLeft/TodoListForProjekt.vue";
 import MenueLeiste from "@/components/shared/MenueLeiste.vue";
@@ -57,6 +62,7 @@ export default {
   },
   components: {
     SeitenNavigation,
+    ProjectForm,
     Footer,
     TodoList,
     MenueLeiste,
@@ -86,7 +92,8 @@ export default {
       let result = false;
       if (
         (this.$route.name === "ProjectList") |
-        (this.$route.name === "Profil") |
+        (this.$route.name === "StudentProfile" ||
+          this.$route.name === "LecturerProfile") |
         (this.$route.name === "Einstellungen")
       ) {
         result = true;
@@ -100,15 +107,17 @@ export default {
       return result;
     },
     inProfil() {
-      let result = false;
-      this.$route.name === "Profil" ? (result = true) : (result = false);
-      return result;
+      return (
+        this.$route.name === "StudentProfile" ||
+        this.$route.name === "LecturerProfile"
+      );
     },
     getUserRole() {
       return this.$store.state.drupal_api.user.role;
     },
   },
   beforeMount() {
+    this.$store.dispatch("init");
     this.$store.dispatch("drupal_api/loadTokensfromSessionStorage");
   },
 };
@@ -149,6 +158,9 @@ export default {
 }
 
 .rechtseite {
+  min-width: 25rem;
+}
+.mainpageRechtseite {
   min-width: 25rem;
 }
 .mainContent {
