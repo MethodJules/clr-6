@@ -74,9 +74,6 @@ export default {
     },
   },
   computed: {
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
     getKeyWords() {
       return this.$store.state.project.allKeywordsList;
     },

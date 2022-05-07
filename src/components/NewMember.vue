@@ -52,9 +52,10 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Home",
-  components: {},
+
   data() {
     return {
       member: null,
@@ -65,6 +66,16 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState("project", ["gruppenmitglieder", "currentProjectGroupAdmins"]),
+    getStudents() {
+      return this.$store.getters["user/getStudents"];
+    },
+
+    getCurrentUserUUID() {
+      return this.$store.state.profile.userData.uuid;
+    },
+  },
   methods: {
     save() {
       const new_member = {
@@ -72,7 +83,7 @@ export default {
         userid: this.member.uuid,
       };
       if (
-        this.getGroupMembers.some(
+        this.gruppenmitglieder.some(
           (member) => member.userid === this.getCurrentUserUUID
         )
       ) {
@@ -80,13 +91,15 @@ export default {
           "Du musst Gruppenadministrator sein, um neue Gruppenmitglieder hinzufügen zu können"
         );
       } else if (
-        this.getGroupAdmins.some(
+        this.currentProjectGroupAdmins.some(
           (member) => member.userid === this.getCurrentUserUUID
         )
       ) {
         if (
-          this.getGroupAdmins.some((e) => e.userid === new_member.userid) ||
-          this.getGroupMembers.some((e) => e.userid === new_member.userid)
+          this.currentProjectGroupAdmins.some(
+            (e) => e.userid === new_member.userid
+          ) ||
+          this.gruppenmitglieder.some((e) => e.userid === new_member.userid)
         ) {
           alert("Dieser Nutzer ist bereits Teil deiner Gruppe.");
         } else {
@@ -98,20 +111,6 @@ export default {
           this.$router.push({ name: "Groupmanagement" });
         }
       }
-    },
-  },
-  computed: {
-    getStudents() {
-      return this.$store.getters["user/getStudents"];
-    },
-    getGroupMembers() {
-      return this.$store.state.project.currentProject.gruppenmitglieder;
-    },
-    getGroupAdmins() {
-      return this.$store.state.project.currentProjectGroupAdmins;
-    },
-    getCurrentUserUUID() {
-      return this.$store.state.profile.userData.uuid;
     },
   },
 };

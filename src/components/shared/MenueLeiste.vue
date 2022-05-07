@@ -14,7 +14,7 @@
     >
 
     <b-navbar-brand v-else>{{
-      getCurrentProject.title | truncate(19)
+      currentProject.title | truncate(19)
     }}</b-navbar-brand>
     <b-navbar-nav>
       <b-nav-item to="/">
@@ -33,7 +33,7 @@
           :to="{
             name: 'StudentProfile',
             params: {
-              user_internal_uid: userUID,
+              user_internal_uid: user.uid,
             },
           }"
           >Profil</b-nav-item
@@ -47,7 +47,7 @@
           :to="{
             name: 'LecturerProfile',
             params: {
-              user_internal_uid: userUID,
+              user_internal_uid: user.uid,
             },
           }"
           >Profil</b-nav-item
@@ -90,7 +90,7 @@
             >Projektforum</b-nav-item
           >
         </b-navbar-nav>
-        <b-navbar-nav v-if="getUserRole != 'lecturer'">
+        <b-navbar-nav v-if="user.role != 'lecturer'">
           <b-nav-item
             :to="{
               name: 'Groupmanagement',
@@ -147,44 +147,22 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 import Postfach from "@/components/buttons/PostfachButton.vue";
 
 export default {
   data() {
     return {
       keyword: "",
-      // projectId: this.$route.params.project_id,
     };
   },
 
   components: {
     Postfach,
   },
-
-  methods: {
-    logout() {
-      this.$store.dispatch("drupal_api/logoutDrupal").then(() => {
-        this.makeToast();
-      });
-    },
-    makeToast() {
-      this.$root.$bvToast.toast(
-        `Auf Wiedersehen ${this.$store.state.drupal_api.user.fullname}`,
-        {
-          title: "Bis zum nächsten Mal",
-          variant: "info",
-        }
-      );
-    },
-  },
-
   computed: {
-    ...mapGetters({
-      getUserRole: "drupal_api/getUserRole",
-      getCurrentProject: "project/getCurrentProject",
-      userUID: "drupal_api/getCurrentUserInternalUID",
-    }),
+    ...mapState("drupal_api", ["user"]),
+    ...mapState("project", ["currentProject"]),
 
     showProfileSettingsLinks() {
       return (
@@ -194,9 +172,6 @@ export default {
       );
     },
 
-    // startpage() {
-    //   return this.$route.name === "ProjectList";
-    // },
     inProjectSearch() {
       return this.$route.name === "ProjectSearch";
     },
@@ -218,6 +193,22 @@ export default {
       const user = JSON.parse(sessionStorage.getItem("current_user"));
       const userRole = user.role;
       return userRole == "student";
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("drupal_api/logoutDrupal").then(() => {
+        this.makeToast();
+      });
+    },
+    makeToast() {
+      this.$root.$bvToast.toast(
+        `Auf Wiedersehen ${this.$store.state.drupal_api.user.fullname}`,
+        {
+          title: "Bis zum nächsten Mal",
+          variant: "info",
+        }
+      );
     },
   },
 };

@@ -7,11 +7,7 @@ const state = {
     assistentData: [],
 }
 
-const getters = {
-    getAssistentText(state) {
-        return state.assistentsArray;
-    }
-}
+
 
 const actions = {
     async loadAssistentArrayFromBackend({ commit }) {
@@ -86,5 +82,4 @@ export default {
     state,
     mutations,
     actions,
-    getters
 }

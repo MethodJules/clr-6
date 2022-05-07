@@ -25,7 +25,7 @@
             name="checkbox-1"
             @input="checkboxUpdate(index, tool)"
             v-model="tool.benutzt"
-            :disabled="getUserRole == 'lecturer'"
+            :disabled="user.role == 'lecturer'"
             >{{ tool.title }}
           </b-form-checkbox>
         </div>
@@ -50,11 +50,6 @@
         </div>
       </template>
     </b-overlay>
-    <!-- <b-row class="buttons">
-      <b-button v-b-modal.tools_edit_modal v-if="getUserRole != 'lecturer'"
-        >+</b-button
-      >
-    </b-row> -->
     <b-modal id="tools_edit_modal" title="tools" @ok="ok">
       <label for="neueTools">Benutztes Tool: </label>
       <input v-model="tool" type="text" placeholder="Tool" />
@@ -62,7 +57,7 @@
   </div>
 </template> 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -73,6 +68,11 @@ export default {
       interval: null,
     };
   },
+  computed: {
+    ...mapGetters({ listOfTools: "tool/getTools" }),
+    ...mapState("drupal_api", ["user"]),
+  },
+
   methods: {
     clearInterval() {
       if (this.interval) {
@@ -119,12 +119,6 @@ export default {
 
   mounted() {
     this.$store.dispatch("tool/loadToolsFromBackend");
-  },
-  computed: {
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
-    ...mapGetters({ listOfTools: "tool/getTools" }),
   },
 };
 </script> 

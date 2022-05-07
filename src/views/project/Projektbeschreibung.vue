@@ -11,8 +11,8 @@
         <tr>
           <label class="first-row" for="input-1"> Projekttitel</label>
           <b-form-input
-            :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
-            v-model="getCurrentProject.title"
+            :disabled="user.role == 'lecturer' || !currentUserisAdmin"
+            v-model="currentProject.title"
             id="input-1"
           >
           </b-form-input>
@@ -22,7 +22,7 @@
           <div class="add-lecturer">
             <div>
               <select
-                :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
+                :disabled="user.role == 'lecturer' || !currentUserisAdmin"
                 v-model="selectedLecturer"
                 class="form-control"
                 @change="addLecturer(selectedLecturer)"
@@ -41,15 +41,15 @@
             </div>
             <div class="lecturerTags">
               <ul
-                v-for="(betreuenderDozent, i) in getProjectLecturers"
+                v-for="(betreuenderDozent, i) in currentProjectLecturers"
                 :key="i"
               >
                 <li>
-                  {{ getProjectLecturers[i].name }}
+                  {{ currentProjectLecturers[i].name }}
                   <b-button
                     variant="link"
                     @click="deleteLecturer(i)"
-                    :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
+                    :disabled="user.role == 'lecturer' || !currentUserisAdmin"
                     ><b-icon
                       v-if="currentUserisAdmin"
                       size="xs"
@@ -66,9 +66,9 @@
           <label for="tags-basic">Externe Partner*innen </label>
           <b-form-tags
             input-id="tags-basic"
-            :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
+            :disabled="user.role == 'lecturer' || !currentUserisAdmin"
             variant="info"
-            v-model="getCurrentProject.externeMitwirkende"
+            v-model="currentProject.externeMitwirkende"
             placeholder="Externe Partner*innen | Eingabe und Enter drücken"
           ></b-form-tags>
         </tr>
@@ -76,23 +76,23 @@
           <label for="tags-basic">Schlagwörter </label>
           <b-form-tags
             input-id="tags-basic"
-            v-model="getCurrentProject.schlagworter"
-            :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
+            v-model="currentProject.schlagworter"
+            :disabled="user.role == 'lecturer' || !currentUserisAdmin"
             placeholder="Schlagwörter | Eingabe und Enter drücken"
           ></b-form-tags>
         </tr>
         <tr>
           <label for="input-projektBeschreibung"> Projektbeschreibung </label>
           <b-form-textarea
-            :disabled="getUserRole == 'lecturer' || !currentUserisAdmin"
-            v-model="getCurrentProject.kurzbeschreibung"
+            :disabled="user.role == 'lecturer' || !currentUserisAdmin"
+            v-model="currentProject.kurzbeschreibung"
             id="input-projektBeschreibung"
           >
           </b-form-textarea>
         </tr>
         <tr>
           <label for="input-gruppenMitglieder"> Gruppenmitglieder </label>
-          <b-row v-for="mitglied in getGroupMembers" :key="mitglied.id">
+          <b-row v-for="mitglied in gruppenmitglieder" :key="mitglied.id">
             <b-form-input
               disabled
               v-model="mitglied.username"
@@ -100,7 +100,10 @@
             ></b-form-input>
           </b-row>
           <!-- gruppenmitglieder und gruppenadmins werden in eine liste ausgegeben - Fehler in filter führt dazu, dass 1 Gruppenmitglied immer vorhanden sein muss -> Gruppenadmin kann auch Gruppenmitglied sein und ist dann hier doppelt -->
-          <b-row v-for="mitglied in getGroupAdmins" :key="mitglied.id">
+          <b-row
+            v-for="mitglied in currentProjectGroupAdmins"
+            :key="mitglied.id"
+          >
             <b-form-input
               disabled
               v-model="mitglied.username"
@@ -118,13 +121,13 @@
               >Änderungen speichern</b-button
             >
             <b-button
-              v-if="getUserRole != 'lecturer'"
+              v-if="user.role != 'lecturer'"
               :to="{ name: 'Groupmanagement' }"
               >Zum Gruppenmanagement</b-button
             >
 
             <b-button
-              v-if="getUserRole == 'lecturer'"
+              v-if="user.role == 'lecturer'"
               @click="$bvModal.show('lecturer-leave-group')"
               >Gruppe verlassen
             </b-button>
@@ -146,7 +149,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 import ProjectForm from "@/components/ProjectForm.vue";
 export default {
@@ -164,6 +167,27 @@ export default {
       testButClicked: false,
     };
   },
+  computed: {
+    ...mapGetters({
+      getCurrentUserUUID: "profile/getCurrentUserUUID",
+      getLecturers: "user/getLecturers",
+    }),
+    ...mapState("drupal_api", ["user"]),
+    ...mapState("project", [
+      "currentProject",
+      "gruppenmitglieder",
+      "currentProjectGroupAdmins",
+      "currentProjectLecturers",
+    ]),
+
+    // checks if current user is a group administrator by looking for the currentuserid in group admin array
+    //needed for some actions like adding and removing members
+    currentUserisAdmin() {
+      return this.currentProjectGroupAdmins.some(
+        (e) => e.userid === this.getCurrentUserUUID
+      );
+    },
+  },
   methods: {
     showThisModal() {
       this.$refs["add_lecturer"].show();
@@ -171,13 +195,13 @@ export default {
 
     addLecturer(betreuenderDozent) {
       if (betreuenderDozent != "") {
-        this.getProjectLecturers.push(betreuenderDozent);
+        this.currentProjectLecturers.push(betreuenderDozent);
       } else {
         alert("Bitte wähle einen Dozenten aus");
       }
     },
     deleteLecturer(index) {
-      this.getProjectLecturers.splice(index, 1);
+      this.currentProjectLecturers.splice(index, 1);
     },
     lecturerLeaveGroup() {
       this.$store
@@ -206,17 +230,17 @@ export default {
     },
     updateProject() {
       if (this.currentUserisAdmin) {
-        var keywords = Object.assign({}, this.getCurrentProject.schlagworter);
+        var keywords = Object.assign({}, this.currentProject.schlagworter);
         let externeMitwirkende = Object.assign(
           {},
-          this.getCurrentProject.externeMitwirkende
+          this.currentProject.externeMitwirkende
         );
         /*filter duplicate objects out, by using map to get userid from lecturers and then filtering by it, by looking if indexOf this value (userid) is already in the array. 
         If indexof and index are not the same, this means the userid and respectively the object were already found before in the array, are therefore duplicates and will be removed.
         the end result is an array of the ID attribute only
         Solution from: https://stackoverflow.com/questions/15125920/how-to-get-distinct-values-from-an-array-of-objects-in-javascript*/
 
-        let dozent_filtered = this.getProjectLecturers
+        let dozent_filtered = this.currentProjectLecturers
           .map((item) => item.uuid)
           .filter(
             (value, index, self) =>
@@ -231,16 +255,16 @@ export default {
 
         const dozenten = Object.assign({}, dataArray);
         //gruppenadmin and gruppenmitglied should not/cant be changed here, but in gruppenmanagement
-        const kurzbeschreibung = this.getCurrentProject.kurzbeschreibung
+        const kurzbeschreibung = this.currentProject.kurzbeschreibung
           .replace(/(\r\n|\r|\n)/g, "<br>")
           .replace(/(")/g, '\\"');
         var updatedProj = {
-          title: this.getCurrentProject.title,
+          title: this.currentProject.title,
           kurzbeschreibung: kurzbeschreibung,
           betreuenderDozent: dozenten,
           externeMitwirkende: externeMitwirkende,
           schlagworter: keywords,
-          projectuuid: this.getCurrentProject.uuid,
+          projectuuid: this.currentProject.uuid,
         };
 
         this.$store.dispatch("project/updateProject", updatedProj).then(() => {
@@ -254,32 +278,6 @@ export default {
       }
     },
   },
-  async created() {
-    await this.$store.dispatch(
-      "project/loadCurrentProject",
-      this.$route.params.project_id
-    );
-  },
-  computed: {
-    ...mapGetters({
-      getCurrentProject: "project/getCurrentProject",
-      getGroupMembers: "project/getGroupMembers",
-      getGroupAdmins: "project/getGroupAdmins",
-      getCurrentUserUUID: "profile/getCurrentUserUUID",
-      getProjectLecturers: "project/getProjectLecturers",
-      getCurrentUserInternalUID: "drupal_api/getCurrentUserInternalUID",
-      getLecturers: "user/getLecturers",
-      getUserRole: "drupal_api/getUserRole",
-    }),
-
-    // checks if current user is a group administrator by looking for the currentuserid in group admin array
-    //needed for some actions like adding and removing members
-    currentUserisAdmin() {
-      return this.getGroupAdmins.some(
-        (e) => e.userid === this.getCurrentUserUUID
-      );
-    },
-  },
 
   watch: {
     testButClicked(val) {
@@ -288,12 +286,15 @@ export default {
       }
     },
   },
+  async created() {
+    await this.$store.dispatch(
+      "project/loadCurrentProject",
+      this.$route.params.project_id
+    );
+  },
   mounted() {
     this.$store.dispatch("user/loadLecturersFromBackend");
-    this.$store.dispatch(
-      "profile/loadUserFromBackend",
-      this.getCurrentUserInternalUID
-    );
+    this.$store.dispatch("profile/loadUserFromBackend", this.user.uid);
   },
 };
 </script>

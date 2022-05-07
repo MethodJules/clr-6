@@ -10,48 +10,6 @@ const state = () => ({
   isUserAdmin: false
 })
 
-const getters = {
-
-  /**
-* @param state state as parameter for access and manipulation of state data
-* getter for current project
-*/
-  getCurrentProject(state) {
-    return state.currentProject;
-  },
-
-  /**
-  * @param state state as parameter for access and manipulation of state data
-  * getter for group members of current project. filters the system user out. see function create_project for clarification why this user exists
-  */
-  getGroupMembers(state) {
-    return state.currentProject.gruppenmitglieder;
-  },
-
-  /**
-* @param state state as parameter for access and manipulation of state data
-* getter for group admins of current project
-*/
-  getGroupAdmins(state) {
-    return state.currentProjectGroupAdmins;
-  },
-
-  /**
-* @param state state as parameter for access and manipulation of state data
-* getter for lecturers of current project
-*/
-  getProjectLecturers(state) {
-    return state.currentProjectLecturers;
-  },
-
-
-  getIsUserAdmin(state) {
-    return state.isUserAdmin;
-  }
-}
-
-
-
 const actions = {
   /**
 * @param commit commit us used to call a mutation from this function
@@ -734,5 +692,4 @@ export default {
   state,
   mutations,
   actions,
-  getters,
 }

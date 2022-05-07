@@ -3,11 +3,7 @@
     <b-container fluid class="p-0 m-0 appContainer">
       <MenueLeiste />
       <b-row class="page-container">
-        <b-col
-          v-if="getUserRole != 'lecturer'"
-          class="linkeSeite m-0 p-0"
-          md="2"
-        >
+        <b-col v-if="user.role != 'lecturer'" class="linkeSeite m-0 p-0" md="2">
           <b-row class="m-0 p-0">
             <b-col class="m-0">
               <TodoList v-if="inMainPage" />
@@ -55,6 +51,7 @@ import TodoListForProjekt from "@/components/sidebarLeft/TodoListForProjekt.vue"
 import MenueLeiste from "@/components/shared/MenueLeiste.vue";
 import Kalender from "@/components/sidebarLeft/Kalender.vue";
 import Footer from "@/components/shared/Footer.vue";
+import { mapState } from "vuex";
 
 export default {
   props: {
@@ -78,6 +75,8 @@ export default {
     },
   },
   computed: {
+    ...mapState("drupal_api", ["user"]),
+
     account() {
       return this.$store.state.sparky_api.account;
     },
@@ -111,9 +110,6 @@ export default {
         this.$route.name === "StudentProfile" ||
         this.$route.name === "LecturerProfile"
       );
-    },
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
     },
   },
   beforeMount() {

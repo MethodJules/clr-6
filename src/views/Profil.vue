@@ -1,6 +1,6 @@
 <template>
   <div class="profil-container">
-    <b-container v-if="getUserRole != 'lecturer'">
+    <b-container v-if="user.role != 'lecturer'">
       <table class="table table-striped table-hover">
         <tbody>
           <tr>
@@ -41,7 +41,7 @@
       </table>
     </b-container>
 
-    <b-container v-if="getUserRole == 'lecturer'">
+    <b-container v-if="user.role == 'lecturer'">
       <b-row>
         <b-col><b-img v-bind="user" :src="getImage"> </b-img></b-col>
       </b-row>
@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   data() {
@@ -95,13 +95,10 @@ export default {
   computed: {
     ...mapGetters({
       memberProfile: "profile/getProfileData",
-      // userUID: "drupal_api/getCurrentUserInternalUID",
     }),
+    ...mapState("drupal_api", ["user"]),
     getUser() {
       return this.$store.state.profile.userData;
-    },
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
     },
     getMyProjectlist() {
       return this.$store.state.project.myProjects;
@@ -114,7 +111,6 @@ export default {
   mounted() {
     const user = JSON.parse(sessionStorage.getItem("current_user"));
     const drupalUserUID = user.uid;
-    // console.log(this.$route.params.drupalUserUID);
     this.$store.dispatch("profile/loadUserFromBackend", drupalUserUID);
     this.$store.dispatch("profile/loadProfileFromBackend", drupalUserUID);
   },

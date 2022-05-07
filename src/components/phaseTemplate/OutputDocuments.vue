@@ -73,9 +73,6 @@
         </div>
       </div>
     </b-row>
-    <!-- <b-row class="d-flex justify-content-end">
-      <OutputFileUploadButton />
-    </b-row> -->
   </div>
 </template>
 
@@ -93,9 +90,6 @@ export default {
     };
   },
   computed: {
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
     ...mapGetters({ getOutputs: "output_documents/getOutputs" }),
   },
   methods: {

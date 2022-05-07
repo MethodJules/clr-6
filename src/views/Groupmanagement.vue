@@ -3,11 +3,11 @@
     <b-card header-tag="header" footer-tag="footer">
       <template #header>
         <h6 class="mb-0">
-          <b> {{ getCurrentProject.title }} </b>
+          <b> {{ currentProject.title }} </b>
         </h6>
       </template>
       <b-card-text>
-        <div v-for="mitglied in getGroupMembers" :key="mitglied.userid">
+        <div v-for="mitglied in gruppenmitglieder" :key="mitglied.userid">
           <b-row>
             <b-col>
               <p>Gruppenmitglied</p>
@@ -45,7 +45,7 @@
           </b-row>
         </div>
 
-        <div v-for="admin in getGroupAdmins" :key="admin.userid">
+        <div v-for="admin in currentProjectGroupAdmins" :key="admin.userid">
           <b-row>
             <b-col>
               <p>Gruppenadministrator</p>
@@ -119,13 +119,28 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "Home",
-  components: {},
-  data() {
-    return {};
+
+  computed: {
+    ...mapGetters({
+      getCurrentUserUUID: "profile/getCurrentUserUUID",
+      getLoadingStatus: "getLoadingStatus",
+    }),
+    ...mapState("project", [
+      "currentProject",
+      "gruppenmitglieder",
+      "currentProjectGroupAdmins",
+      "isUserAdmin",
+    ]),
+
+    userRole() {
+      const user = JSON.parse(sessionStorage.getItem("current_user"));
+      const userRole = user.role;
+      return userRole;
+    },
   },
   methods: {
     /* checks if current user is in group admin array, because he needs the rights to remove another member.
@@ -171,11 +186,11 @@ export default {
       let member;
 
       if (
-        this.getGroupMembers.some(
+        this.gruppenmitglieder.some(
           (member) => member.userid === this.getCurrentUserUUID
         )
       ) {
-        member = this.filter(this.getCurrentUserUUID, this.getGroupMembers);
+        member = this.filter(this.getCurrentUserUUID, this.gruppenmitglieder);
         this.$store.dispatch("project/deleteMembers", member).then(() => {
           this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
             title: "Du hast die Gruppe verlassen",
@@ -200,14 +215,14 @@ export default {
             this.$route.params.project_id
           )
           .then(() => {
-            if (this.getGroupAdmins.length < 2) {
+            if (this.currentProjectGroupAdmins.length < 2) {
               alert(
                 "Mache erst ein anderes Gruppenmitglied zu einem Gruppenadministrator, bevor du die Gruppe verlässt. Falls du die letzte Person in der Gruppe bist, entferne deine Gruppenadministrator-Rechte bevor du die Gruppe verlässt "
               );
             } else {
               member = this.filter(
                 this.getCurrentUserUUID,
-                this.getGroupAdmins
+                this.currentProjectGroupAdmins
               );
               this.$store.dispatch("project/deleteAdmin", member).then(() => {
                 this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
@@ -242,7 +257,10 @@ export default {
     },
 
     removeOwnAdminRights: function () {
-      let member = this.filter(this.getCurrentUserUUID, this.getGroupAdmins);
+      let member = this.filter(
+        this.getCurrentUserUUID,
+        this.currentProjectGroupAdmins
+      );
       //evtl redundant?
       if (this.isUserAdmin) {
         this.$store
@@ -252,8 +270,8 @@ export default {
           )
           .then(() => {
             if (
-              this.getGroupMembers.length > 0 &&
-              this.getGroupAdmins.length < 2
+              this.gruppenmitglieder.length > 0 &&
+              this.currentProjectGroupAdmins.length < 2
             ) {
               alert(
                 "Du musst erst ein anderes Gruppenmitglied zum Gruppenadministrator machen, um deine Administratorrechte aufzugeben"
@@ -261,7 +279,7 @@ export default {
             } else {
               member = this.filter(
                 this.getCurrentUserUUID,
-                this.getGroupAdmins
+                this.currentProjectGroupAdmins
               );
               //first delete user in groupadmin array
               this.$store.dispatch("project/deleteAdmin", member).then(() => {
@@ -289,27 +307,7 @@ export default {
       // this.$store.commit("profile/SET_MEMBER_TO_SHOW", mitglied);
     },
   },
-  computed: {
-    // ...mapState({
-    //   members: (state) => state.members,
-    // }),
-    ...mapGetters({
-      getCurrentProject: "project/getCurrentProject",
-      getGroupMembers: "project/getGroupMembers",
-      getGroupAdmins: "project/getGroupAdmins",
-      // getProjectLecturers: "project/getProjectLecturers",
-      getCurrentUserUUID: "profile/getCurrentUserUUID",
-      // getCurrentUserInternalUID: "drupal_api/getCurrentUserInternalUID",
-      getLoadingStatus: "getLoadingStatus",
-      isUserAdmin: "project/getIsUserAdmin",
-    }),
 
-    userRole() {
-      const user = JSON.parse(sessionStorage.getItem("current_user"));
-      const userRole = user.role;
-      return userRole;
-    },
-  },
   async mounted() {
     const user = JSON.parse(sessionStorage.getItem("current_user"));
     const drupalUserUID = user.uid;

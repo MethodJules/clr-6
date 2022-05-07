@@ -2,7 +2,7 @@
   <div>
     <h1>Meine Projekte</h1>
     <b-row class="projectlist-container">
-      <div v-for="project in getMyProjectlist" :key="project.uuid">
+      <div v-for="project in myProjects" :key="project.uuid">
         <b-card class="projects">
           <template #header>
             <b-link
@@ -29,8 +29,7 @@
 <script>
 import ReflexionAuswahl from "@/components/ReflexionAuswahl.vue";
 import ProjectForm from "@/components/ProjectForm";
-import { mapGetters } from "vuex";
-
+import { mapState } from "vuex";
 export default {
   name: "ProjectList",
 
@@ -51,29 +50,8 @@ export default {
     };
   },
 
-  methods: {
-    fetchData(proj) {
-      this.project.title = proj.title;
-    },
-  },
-
   computed: {
-    ...mapGetters({
-      getUserRole: "drupal_api/getUserRole",
-      getCurrentProject: "project/getCurrentProject",
-      userUID: "drupal_api/getCurrentUserInternalUID",
-    }),
-
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
-    getCurrentUserInternalUID() {
-      return this.$store.state.drupal_api.user.uid;
-    },
-
-    getMyProjectlist() {
-      return this.$store.state.project.myProjects;
-    },
+    ...mapState("project", ["myProjects"]),
   },
 };
 </script>

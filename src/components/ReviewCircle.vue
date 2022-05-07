@@ -22,6 +22,7 @@
         :class="{ isDone: el.done === true, red: el.done !== true }"
         :label-pos="el.labelPosition"
         v-b-popover.hover.top="el.label"
+        zoom: false
       >
         <b-icon :icon="el.iconType" color="white" font-scale="2"></b-icon>
       </z-spot>

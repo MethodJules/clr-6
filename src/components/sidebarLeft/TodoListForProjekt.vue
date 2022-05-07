@@ -5,7 +5,7 @@
     <div class="card" v-for="(todo, index) in todosOfProject" :key="index">
       <div class="card-header">
         <strong>
-          {{ getCurrentProject.title }}
+          {{ currentProject.title }}
         </strong>
         <b> {{ todo.date }}</b>
         <b-button @click="deleteTodo(todo)" size="sm">
@@ -29,7 +29,7 @@
 </template>
 <script>
 import { required, maxLength } from "vuelidate/lib/validators";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import AddTodoCard from "@/components/sidebarLeft/AddTodoCard.vue";
 export default {
   props: {
@@ -62,9 +62,8 @@ export default {
   computed: {
     ...mapGetters({
       todosOfProject: "todo/getTodosOfProject",
-      getCurrentProject: "project/getCurrentProject",
     }),
-
+    ...mapState("project", ["currentProject"]),
     getProjectID() {
       return sessionStorage.getItem("projectId");
     },

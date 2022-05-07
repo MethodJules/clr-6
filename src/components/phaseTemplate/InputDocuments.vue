@@ -90,9 +90,6 @@ export default {
     };
   },
   computed: {
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
     ...mapGetters({ getInputs: "inputDocuments/getInputs" }),
   },
   methods: {

@@ -92,7 +92,6 @@
 
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
-import { mapGetters } from "vuex";
 export default {
   props: {
     reflexionsPhase: String,

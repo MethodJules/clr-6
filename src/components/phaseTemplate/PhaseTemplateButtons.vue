@@ -17,7 +17,7 @@
       <b-button @click="updateDocu(getDocumentation)">Speichern</b-button>
     </b-modal>
     <b-button
-      v-if="!isPhaseDone && getUserRole != 'lecturer'"
+      v-if="!isPhaseDone && user.role != 'lecturer'"
       @click="filterByPhase(phases[phase_number])"
       v-b-modal.modal-phase
       class="mb-phase"
@@ -25,7 +25,7 @@
       Phase abschließen
     </b-button>
     <b-button
-      v-if="isPhaseDone && getUserRole != 'lecturer'"
+      v-if="isPhaseDone && user.role != 'lecturer'"
       v-b-modal.modal-phase
       class="mb-phase"
     >
@@ -53,6 +53,7 @@
   </b-row>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   components: {},
   data() {
@@ -87,9 +88,8 @@ export default {
   async mounted() {},
 
   computed: {
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
+    ...mapState("drupal_api", ["user"]),
+
     isPhaseDone() {
       return this.$store.state.project_phases.current_phase.abschluss;
     },

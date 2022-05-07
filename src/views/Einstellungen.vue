@@ -2,7 +2,7 @@
   <div class="page-container">
     <b-row
       class="table-container table table-striped"
-      v-if="getUserRole != 'lecturer'"
+      v-if="user.role != 'lecturer'"
     >
       <transition name="fade" mode="out-in">
         <div v-if="testButClicked" class="alert" role="alert">
@@ -171,7 +171,7 @@
 
     <b-row
       class="table-container table table-striped"
-      v-if="getUserRole == 'lecturer'"
+      v-if="user.role == 'lecturer'"
     >
       <transition name="fade" mode="out-in">
         <div v-if="testButClicked" class="alert" role="alert">
@@ -291,7 +291,7 @@
 <script>
 import PictureInput from "vue-picture-input";
 import { required, minLength, integer } from "vuelidate/lib/validators";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -318,10 +318,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getUserRole: "drupal_api/getUserRole",
-      userUID: "drupal_api/getCurrentUserInternalUID",
       profile: "memberProfiles/getMemberProfile",
     }),
+    ...mapState("drupal_api", ["user"]),
     getUser() {
       return this.$store.state.profile.userData;
     },
@@ -375,7 +374,7 @@ export default {
     },
 
     cancelUpdate() {
-      this.$store.dispatch("profile/loadProfileFromBackend", this.userUID);
+      this.$store.dispatch("profile/loadProfileFromBackend", this.user.uid);
     },
   },
   watch: {

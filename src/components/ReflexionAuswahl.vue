@@ -1,5 +1,5 @@
 <template>
-  <div v-if="getUserRole != 'lecturer'">
+  <div v-if="user.role != 'lecturer'">
     <b-dropdown text="Zur Reflexion" class="">
       <b-dropdown-item @click="loadCurrentPhase(0)"
         >Gruppe bilden</b-dropdown-item
@@ -29,15 +29,15 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: {
     projectId: String,
   },
 
   computed: {
-    getUserRole() {
-      return this.$store.state.drupal_api.user.role;
-    },
+    ...mapState("drupal_api", ["user"]),
   },
 
   methods: {
