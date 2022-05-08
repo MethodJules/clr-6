@@ -67,13 +67,10 @@ export default {
     };
   },
   computed: {
-    ...mapState("project", ["gruppenmitglieder", "currentProjectGroupAdmins"]),
+    ...mapState("project", ["currentProject", "currentProjectGroupAdmins"]),
+    ...mapState("profile", ["userData"]),
     getStudents() {
       return this.$store.getters["user/getStudents"];
-    },
-
-    getCurrentUserUUID() {
-      return this.$store.state.profile.userData.uuid;
     },
   },
   methods: {
@@ -83,8 +80,8 @@ export default {
         userid: this.member.uuid,
       };
       if (
-        this.gruppenmitglieder.some(
-          (member) => member.userid === this.getCurrentUserUUID
+        this.currentProject.gruppenmitglieder.some(
+          (member) => member.userid === this.userData.uuid
         )
       ) {
         alert(
@@ -92,14 +89,16 @@ export default {
         );
       } else if (
         this.currentProjectGroupAdmins.some(
-          (member) => member.userid === this.getCurrentUserUUID
+          (member) => member.userid === this.userData.uuid
         )
       ) {
         if (
           this.currentProjectGroupAdmins.some(
             (e) => e.userid === new_member.userid
           ) ||
-          this.gruppenmitglieder.some((e) => e.userid === new_member.userid)
+          this.currentProject.gruppenmitglieder.some(
+            (e) => e.userid === new_member.userid
+          )
         ) {
           alert("Dieser Nutzer ist bereits Teil deiner Gruppe.");
         } else {

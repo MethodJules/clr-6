@@ -1,6 +1,6 @@
 <template>
   <div id="todoList">
-    <div v-for="(todos, index) in listOfTodos" :key="index">
+    <div v-for="(todos, index) in listOfToDos" :key="index">
       <h3 v-if="todos.length > 0"></h3>
       <div class="card" v-for="(todo, index2) in todos" :key="index2">
         <div class="card-header" :class="getHeaderClass(index)">
@@ -30,7 +30,7 @@
 </template>
 <script>
 import { required, maxLength } from "vuelidate/lib/validators";
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   props: {
@@ -45,9 +45,7 @@ export default {
     todoNeu: { required, maxLength: maxLength(250) },
   },
   computed: {
-    ...mapGetters({
-      listOfTodos: "todo/getListOfTodos",
-    }),
+    ...mapState("todo", ["listOfToDos"]),
   },
   methods: {
     deleteTodo(todo) {

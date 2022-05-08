@@ -5,20 +5,20 @@
         <tbody>
           <tr>
             <th scope="row">Name</th>
-            <td>{{ profile.title }}</td>
+            <td>{{ memberProfile.title }}</td>
           </tr>
           <tr>
             <th scope="row">Email</th>
-            <td v-if="profile.showEmail">{{ userData.mail }}</td>
-            <td v-if="!profile.showEmail">****</td>
+            <td v-if="memberProfile.showEmail">{{ userData.mail }}</td>
+            <td v-if="!memberProfile.showEmail">****</td>
           </tr>
           <tr>
             <th scope="row">Studiengang</th>
-            <td>{{ profile.studiengang }}</td>
+            <td>{{ memberProfile.studiengang }}</td>
           </tr>
           <tr>
             <th scope="row">Durchgeführte Literaturreviews</th>
-            <td>{{ profile.anzahlLiteraturreviews }}</td>
+            <td>{{ memberProfile.anzahlLiteraturreviews }}</td>
           </tr>
           <tr>
             <th scope="row">Ich kenne mich mit den folgenden... aus:</th>
@@ -26,15 +26,15 @@
           </tr>
           <tr>
             <th scope="row">Datenbanken</th>
-            <td>{{ profile.datenbanken }}</td>
+            <td>{{ memberProfile.datenbanken }}</td>
           </tr>
           <tr>
             <th scope="row">Referenzmanagement-Tools</th>
-            <td>{{ profile.referenztool }}</td>
+            <td>{{ memberProfile.referenztool }}</td>
           </tr>
           <tr>
             <th scope="row">Analysetools</th>
-            <td>{{ profile.analysetool }}</td>
+            <td>{{ memberProfile.analysetool }}</td>
           </tr>
         </tbody>
       </table>
@@ -51,13 +51,10 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapGetters({
-      profile: "memberProfiles/getMemberProfile",
-      userData: "memberProfiles/getUserData",
-    }),
+    ...mapState("memberProfiles", ["memberProfile", "userData"]),
   },
   mounted() {
     this.$store.dispatch(

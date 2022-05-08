@@ -5,17 +5,6 @@ const state = () => ({
     outputs: [], // we are using this array to store the file names and sizes only
 })
 
-const getters = {
-    /**
-     * Getter to bringuploaded files in outputs array.
-     * @param state our state
-     * @returns files, uploaded files in state
-     * we send them reversed in order to see the last uploaded on top.
-     */
-    getOutputs(state) {
-        return state.outputs;
-    },
-}
 
 const mutations = {
 
@@ -252,7 +241,6 @@ const actions = {
 export default {
     namespaced: true,
     state,
-    getters,
     mutations,
     actions
 

@@ -1,7 +1,7 @@
 <template>
   <b-container fluid id="phase">
     <b-row class="phase-header">
-      <h2>Phase: {{ currentPhase.title }}</h2>
+      <h2>Phase: {{ current_phase.title }}</h2>
       <AssistentButton />
     </b-row>
     <b-overlay :show="tabElementsLoading" rounded="sm" opacity="0.8">
@@ -41,7 +41,7 @@ import UsedTools from "@/components/phaseTemplate/UsedTools.vue";
 import OutputDocuments from "@/components/phaseTemplate/OutputDocuments.vue";
 import AssistentButton from "@/components/buttons/AssistentButton.vue";
 import PhaseTemplateButtons from "@/components/phaseTemplate/PhaseTemplateButtons.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   data() {
@@ -59,9 +59,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      currentPhase: "project_phases/getCurrentPhase",
       tabElementsLoading: "getTabElementsLoading",
     }),
+    ...mapState("project_phases", ["current_phase"]),
 
     getDocumentation: {
       get() {

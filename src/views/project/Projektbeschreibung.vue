@@ -169,7 +169,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getCurrentUserUUID: "profile/getCurrentUserUUID",
       getLecturers: "user/getLecturers",
     }),
     ...mapState("drupal_api", ["user"]),
@@ -179,12 +178,13 @@ export default {
       "currentProjectGroupAdmins",
       "currentProjectLecturers",
     ]),
+    ...mapState("profile", ["userData"]),
 
     // checks if current user is a group administrator by looking for the currentuserid in group admin array
     //needed for some actions like adding and removing members
     currentUserisAdmin() {
       return this.currentProjectGroupAdmins.some(
-        (e) => e.userid === this.getCurrentUserUUID
+        (e) => e.userid === this.userData.uuid
       );
     },
   },

@@ -29,7 +29,7 @@
 </template>
 <script>
 import { required, maxLength } from "vuelidate/lib/validators";
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 import AddTodoCard from "@/components/sidebarLeft/AddTodoCard.vue";
 export default {
   props: {
@@ -60,10 +60,8 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      todosOfProject: "todo/getTodosOfProject",
-    }),
     ...mapState("project", ["currentProject"]),
+    ...mapState("todo", ["todosOfProject"]),
     getProjectID() {
       return sessionStorage.getItem("projectId");
     },

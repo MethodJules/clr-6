@@ -2,23 +2,9 @@ import axios from "@/config/custom_axios";
 
 
 const state = () => ({
-    listOfTools: [
-    ]//we are using this array to store the used tools and upload the titles of the tools to database 
+    listOfTools: []//we are using this array to store the used tools and upload the titles of the tools to database 
 })
 
-const getters = {
-    /**
-     * Getter to bring uploaded tools in listofTools array. 
-     * @param state our state
-     * @returns tools, uploaded tools in state
-     */
-    getTools(state) {
-
-        let tools = state.listOfTools;
-        return tools;
-    },
-
-}
 
 
 
@@ -164,7 +150,6 @@ const mutations = {
 }
 export default {
     namespaced: true,
-    getters,
     state,
     mutations,
     actions

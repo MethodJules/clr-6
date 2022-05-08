@@ -40,7 +40,7 @@
 
     <b-row>
       <div
-        v-for="(output, index) in getOutputs"
+        v-for="(output, index) in outputs"
         :key="index"
         class="card card-body p-2"
       >
@@ -78,7 +78,7 @@
 
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -90,7 +90,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ getOutputs: "output_documents/getOutputs" }),
+    ...mapState("output_documents", ["outputs"]),
   },
   methods: {
     /**

@@ -4,23 +4,6 @@ const state = () => ({
     userData: {},
     imageData: '',
 })
-const getters = {
-    /**
-    * @param state state as parameter for access and manipulation of state data
-    * returns user uuid from state
-    */
-    getCurrentUserUUID(state) {
-        return state.userData.uuid;
-    },
-
-    getUser(state) {
-        return state.userData
-    },
-
-    getProfileData(state) {
-        return state.profileData;
-    }
-}
 
 const actions = {
     /**
@@ -425,7 +408,6 @@ const mutations = {
 export default {
     namespaced: true,
     state,
-    getters,
     mutations,
     actions,
 }

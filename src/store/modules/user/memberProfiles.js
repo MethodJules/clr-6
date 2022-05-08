@@ -5,16 +5,6 @@ const state = () => ({
     userData: {}
 })
 
-const getters = {
-    getMemberProfile(state) {
-        return state.memberProfile;
-    },
-    getUserData(state) {
-        return state.userData;
-    }
-
-}
-
 const actions = {
 
     /**
@@ -117,7 +107,6 @@ const mutations = {
 export default {
     namespaced: true,
     state,
-    getters,
     actions,
     mutations
 }

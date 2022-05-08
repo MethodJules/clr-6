@@ -39,21 +39,6 @@ const getters = {
         });
         return state.attributes;
     },
-    /**
-  * @param state state as parameter for access and manipulation of state data
-  * getter for all todos of user
-  */
-    getListOfTodos(state) {
-        return state.listOfToDos
-    },
-
-    /**
-  * @param state state as parameter for access and manipulation of state data
-  * getter for todos of current project
-  */
-    getTodosOfProject(state) {
-        return state.todosOfProject;
-    }
 }
 
 const actions = {

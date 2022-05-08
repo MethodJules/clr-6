@@ -6,64 +6,6 @@ const state = () => ({
 
 
 })
-
-const getters = {
-    /**
-     * Getter to bring uploaded files in inputs array to state. 
-     * @param state our state
-     * @returns files, uploaded files in state
-     */
-    getInputs(state) {
-        let files = state.inputs;
-        return files;
-    },
-
-}
-
-const mutations = {
-
-    /**
-     * 
-     * @param state we send our state to the method, in order to load the uploaded files to state from backend
-     * @param {array} inputarrayPayload array with the fileobjects(payload) that we are going to use 
-     * 
-     * uploads the name, size and url of the fileobject (payload) in the array 'inputarrayPayload' to the state. 
-     * 'inputs' array from the state will be exchanged with the 'inputarrayPayload' array from the action method 'loadInputdocumentsFromBackend' 
-     * 
-     */
-
-    LOAD_FILES_TO_STATE_FROM_BACKEND(state, inputarrayPayload) {
-        state.inputs = inputarrayPayload;
-    },
-
-    /**
-     * 
-     * @param state our state which we used to add a new inputdocument.
-     * @param file uploaded file will be pushed to the state
-     */
-
-    UPDATE_INPUTS(state, file) {
-        state.inputs.push(file);
-    },
-
-    /**
-     * 
-     * @param state we send our state to the method, where uploaded files exist.
-     * @param payload file that we are going to delete
-     * 
-     * Deletes the file from state
-     */
-    deleteInput(state, payload) {
-        state.inputs.splice(payload.index, 1);
-    },
-
-    // TODO: Comment for this ? 
-
-    setOkButtonClicked(state, isClicked) {
-        state.okButtonClicked = isClicked;
-    }
-}
-
 const actions = {
 
     /**
@@ -255,11 +197,56 @@ const actions = {
     },
 }
 
+const mutations = {
+
+    /**
+     * 
+     * @param state we send our state to the method, in order to load the uploaded files to state from backend
+     * @param {array} inputarrayPayload array with the fileobjects(payload) that we are going to use 
+     * 
+     * uploads the name, size and url of the fileobject (payload) in the array 'inputarrayPayload' to the state. 
+     * 'inputs' array from the state will be exchanged with the 'inputarrayPayload' array from the action method 'loadInputdocumentsFromBackend' 
+     * 
+     */
+
+    LOAD_FILES_TO_STATE_FROM_BACKEND(state, inputarrayPayload) {
+        state.inputs = inputarrayPayload;
+    },
+
+    /**
+     * 
+     * @param state our state which we used to add a new inputdocument.
+     * @param file uploaded file will be pushed to the state
+     */
+
+    UPDATE_INPUTS(state, file) {
+        state.inputs.push(file);
+    },
+
+    /**
+     * 
+     * @param state we send our state to the method, where uploaded files exist.
+     * @param payload file that we are going to delete
+     * 
+     * Deletes the file from state
+     */
+    deleteInput(state, payload) {
+        state.inputs.splice(payload.index, 1);
+    },
+
+    // TODO: Comment for this ? 
+
+    setOkButtonClicked(state, isClicked) {
+        state.okButtonClicked = isClicked;
+    }
+}
+
+
+
 
 export default {
     namespaced: true,
     state,
-    getters,
     mutations,
     actions
 

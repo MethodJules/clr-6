@@ -6,20 +6,20 @@
           <tr>
             <th scope="row">Name</th>
             <td>
-              {{ profile.title }}
+              {{ memberProfile.title }}
             </td>
           </tr>
           <tr>
             <th scope="row">Abteilung</th>
-            <td>{{ profile.abteilung }}</td>
+            <td>{{ memberProfile.abteilung }}</td>
           </tr>
-          <tr v-if="profile.showEmail">
+          <tr v-if="memberProfile.showEmail">
             <th scope="row">Email</th>
             <td>{{ userData.mail }}</td>
           </tr>
-          <tr v-if="profile.showPhoneNumber">
+          <tr v-if="memberProfile.showPhoneNumber">
             <th scope="row">Telefonnummer</th>
-            <td>{{ profile.telefonnummer }}</td>
+            <td>{{ memberProfile.telefonnummer }}</td>
           </tr>
           <tr>
             <th scope="row">Betreute Projekte</th>
@@ -48,14 +48,11 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters({
-      profile: "memberProfiles/getMemberProfile",
-      userData: "memberProfiles/getUserData",
-    }),
+    ...mapState("memberProfiles", ["memberProfile", "userData"]),
 
     getMyProjectlist() {
       return this.$store.state.project.myProjects;
@@ -82,13 +79,11 @@ export default {
 }
 
 .profil-pictureContainer {
-  /* align-self: center; */
   padding: 0.5rem;
   display: flex;
   align-items: center;
   width: 25%;
   height: 25%;
-  /* height: 80%; */
 }
 .profil-picture {
   width: 100%;

@@ -6,20 +6,20 @@
           <tr>
             <th scope="row">Name</th>
             <td>
-              {{ getUser.fullname }}
+              {{ userDate.fullname }}
             </td>
           </tr>
-          <tr v-if="memberProfile.showEmail">
+          <tr v-if="profileData.showEmail">
             <th scope="row">Email</th>
-            <td>{{ getUser.mail }}</td>
+            <td>{{ userDate.mail }}</td>
           </tr>
           <tr>
             <th scope="row">Studiengang</th>
-            <td>{{ memberProfile.studiengang }}</td>
+            <td>{{ profileData.studiengang }}</td>
           </tr>
           <tr>
             <th scope="row">Durchgeführte Literaturreviews</th>
-            <td>{{ memberProfile.anzahlLiteraturreviews }}</td>
+            <td>{{ profileData.anzahlLiteraturreviews }}</td>
           </tr>
           <tr>
             <th scope="row">Ich kenne mich mit den folgenden... aus:</th>
@@ -27,15 +27,15 @@
           </tr>
           <tr>
             <th scope="row">Datenbanken</th>
-            <td>{{ memberProfile.datenbanken }}</td>
+            <td>{{ profileData.datenbanken }}</td>
           </tr>
           <tr>
             <th scope="row">Referenzmanagement-Tools</th>
-            <td>{{ memberProfile.referenztool }}</td>
+            <td>{{ profileData.referenztool }}</td>
           </tr>
           <tr>
             <th scope="row">Analysetools</th>
-            <td>{{ memberProfile.analysetool }}</td>
+            <td>{{ profileData.analysetool }}</td>
           </tr>
         </tbody>
       </table>
@@ -43,36 +43,32 @@
 
     <b-container v-if="user.role == 'lecturer'">
       <b-row>
-        <b-col><b-img v-bind="user" :src="getImage"> </b-img></b-col>
+        <b-col><b-img v-bind="user" :src="imageData"> </b-img></b-col>
       </b-row>
       <table class="table table-striped table-hover">
         <tbody>
           <tr>
             <th scope="row">Name</th>
             <td>
-              {{ getUser.fullname }}
+              {{ userDate.fullname }}
             </td>
           </tr>
           <tr>
             <th scope="row">Abteilung</th>
-            <td>{{ memberProfile.abteilung }}</td>
+            <td>{{ profileData.abteilung }}</td>
           </tr>
-          <tr v-if="memberProfile.showEmail">
+          <tr v-if="profileData.showEmail">
             <th scope="row">Email</th>
-            <td>{{ getUser.mail }}</td>
+            <td>{{ userDate.mail }}</td>
           </tr>
-          <tr v-if="memberProfile.showPhoneNumber">
+          <tr v-if="profileData.showPhoneNumber">
             <th scope="row">Telefonnummer</th>
-            <td>{{ memberProfile.telefonnummer }}</td>
+            <td>{{ profileData.telefonnummer }}</td>
           </tr>
           <tr>
             <th scope="row">Betreute Projekte</th>
             <td>
-              <li
-                v-for="(project, i) in getMyProjectlist"
-                :key="i"
-                class="mb-1"
-              >
+              <li v-for="(project, i) in myProjects" :key="i" class="mb-1">
                 {{ project.title }}
               </li>
             </td>
@@ -84,7 +80,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -93,20 +89,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      memberProfile: "profile/getProfileData",
-    }),
     ...mapState("drupal_api", ["user"]),
-    getUser() {
-      return this.$store.state.profile.userData;
-    },
-    getMyProjectlist() {
-      return this.$store.state.project.myProjects;
-    },
-
-    getImage() {
-      return this.$store.state.profile.imageData;
-    },
+    ...mapState("project", ["myProjects"]),
+    ...mapState("profile", ["userData", "profileData", "imageData"]),
   },
   mounted() {
     const user = JSON.parse(sessionStorage.getItem("current_user"));

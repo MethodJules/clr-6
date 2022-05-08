@@ -18,15 +18,15 @@
         <tbody>
           <tr>
             <th scope="row">Name</th>
-            <td>{{ getUser.fullname }}</td>
+            <td>{{ userData.fullname }}</td>
           </tr>
           <tr>
             <th scope="row">Matrikelnummer</th>
-            <td>{{ getUser.matrikelnummer }}</td>
+            <td>{{ userData.matrikelnummer }}</td>
           </tr>
           <tr>
             <th scope="row">E-Mail</th>
-            <td>{{ getUser.mail }}</td>
+            <td>{{ userData.mail }}</td>
           </tr>
           <thead>
             <tr>
@@ -38,7 +38,7 @@
             <th scope="row">Studiengang</th>
             <td>
               <b-form-input
-                v-model="profile.studiengang"
+                v-model="memberProfile.studiengang"
                 v-on:input="$v.profile.studiengang.$touch"
                 v-bind:class="{
                   error: $v.profile.studiengang.$error,
@@ -55,7 +55,7 @@
             <th scope="row">Durchgeführte Literaturreviews</th>
             <td>
               <b-form-input
-                v-model="profile.anzahlLiteraturreviews"
+                v-model="memberProfile.anzahlLiteraturreviews"
                 v-on:input="$v.profile.anzahlLiteraturreviews.$touch"
                 v-bind:class="{
                   error: $v.profile.anzahlLiteraturreviews.$error,
@@ -74,7 +74,7 @@
               <b-form-checkbox
                 name="checkbox-email"
                 @input="updateEmailCheckbox()"
-                v-model="profile.showEmail"
+                v-model="memberProfile.showEmail"
               >
               </b-form-checkbox>
             </td>
@@ -88,7 +88,7 @@
             <td>
               <span>z.B. AISeL, IEEE, Google Scholar, Web of Science, ...</span>
               <b-form-input
-                v-model="profile.datenbanken"
+                v-model="memberProfile.datenbanken"
                 v-on:input="$v.profile.datenbanken.$touch"
                 v-bind:class="{
                   error: $v.profile.datenbanken.$error,
@@ -106,7 +106,7 @@
             <td>
               <span> z.B. Citavi, Mendeley, Endnote, ... </span>
               <b-form-input
-                v-model="profile.referenztool"
+                v-model="memberProfile.referenztool"
                 v-on:input="$v.profile.referenztool.$touch"
                 v-bind:class="{
                   error: $v.profile.referenztool.$error,
@@ -124,7 +124,7 @@
             <td>
               <span> z.B. Excel, MAXQDA, NVivo, R, ... </span>
               <b-form-input
-                v-model="profile.analysetool"
+                v-model="memberProfile.analysetool"
                 v-on:input="$v.profile.analysetool.$touch"
                 v-bind:class="{
                   error: $v.profile.analysetool.$error,
@@ -187,11 +187,11 @@
         <tbody>
           <tr>
             <th scope="row">Name</th>
-            <td>{{ getUser.fullname }}</td>
+            <td>{{ userData.fullname }}</td>
           </tr>
           <tr>
             <th scope="row">E-Mail</th>
-            <td>{{ getUser.mail }}</td>
+            <td>{{ userData.mail }}</td>
           </tr>
           <thead>
             <tr>
@@ -203,7 +203,7 @@
             <th scope="row">Abteilung</th>
             <td>
               <b-form-input
-                v-model="profile.abteilung"
+                v-model="memberProfile.abteilung"
                 v-on:input="$v.profile.abteilung.$touch"
                 v-bind:class="{
                   error: $v.profile.abteilung.$error,
@@ -220,7 +220,7 @@
             <th scope="row">Telefonnummer</th>
             <td>
               <b-form-input
-                v-model="profile.telefonnummer"
+                v-model="memberProfile.telefonnummer"
                 v-on:input="$v.profile.telefonnummer.$touch"
                 v-bind:class="{
                   error: $v.profile.telefonnummer.$error,
@@ -239,7 +239,7 @@
               <b-form-checkbox
                 name="checkbox-email"
                 @input="updateEmailCheckbox()"
-                v-model="profile.showEmail"
+                v-model="memberProfile.showEmail"
               >
               </b-form-checkbox>
             </td>
@@ -250,7 +250,7 @@
               <b-form-checkbox
                 name="checkbox-phone"
                 @input="updatePhoneNumberCheckbox()"
-                v-model="profile.showPhoneNumber"
+                v-model="memberProfile.showPhoneNumber"
               >
               </b-form-checkbox>
             </td>
@@ -291,7 +291,7 @@
 <script>
 import PictureInput from "vue-picture-input";
 import { required, minLength, integer } from "vuelidate/lib/validators";
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -317,13 +317,9 @@ export default {
     PictureInput,
   },
   computed: {
-    ...mapGetters({
-      profile: "memberProfiles/getMemberProfile",
-    }),
     ...mapState("drupal_api", ["user"]),
-    getUser() {
-      return this.$store.state.profile.userData;
-    },
+    ...mapState("memberProfiles", ["memberProfile"]),
+    ...mapState("profile", ["userData"]),
   },
 
   methods: {
@@ -334,11 +330,11 @@ export default {
     },
 
     updateEmailCheckbox() {
-      this.$store.dispatch("profile/updateEmailCheckbox", this.profile);
+      this.$store.dispatch("profile/updateEmailCheckbox", this.memberProfile);
     },
 
     updatePhoneNumberCheckbox() {
-      this.$store.dispatch("profile/updatePhoneCheckbox", this.profile);
+      this.$store.dispatch("profile/updatePhoneCheckbox", this.memberProfile);
     },
     /** In this method, we update the existing profile to the backend */
 
@@ -347,19 +343,18 @@ export default {
 
       if (!this.$v.$invalid) {
         var ausgabe = {
-          title: this.profile.title,
-          studiengang: this.profile.studiengang,
-          anzahlLiteraturreviews: this.profile.anzahlLiteraturreviews,
-          datenbanken: this.profile.datenbanken,
-          referenztool: this.profile.referenztool,
-          analysetool: this.profile.analysetool,
-          abteilung: this.profile.abteilung,
-          telefonnummer: this.profile.telefonnummer,
-          uuid: this.profile.uuid,
+          title: this.memberProfile.title,
+          studiengang: this.memberProfile.studiengang,
+          anzahlLiteraturreviews: this.memberProfile.anzahlLiteraturreviews,
+          datenbanken: this.memberProfile.datenbanken,
+          referenztool: this.memberProfile.referenztool,
+          analysetool: this.memberProfile.analysetool,
+          abteilung: this.memberProfile.abteilung,
+          telefonnummer: this.memberProfile.telefonnummer,
+          uuid: this.memberProfile.uuid,
         };
 
         this.testButClicked = true;
-        // console.log(this.profile.uuid);
         this.$store.dispatch("profile/updateProfile", ausgabe);
 
         if (this.image != null) {

@@ -7,7 +7,10 @@
         </h6>
       </template>
       <b-card-text>
-        <div v-for="mitglied in gruppenmitglieder" :key="mitglied.userid">
+        <div
+          v-for="mitglied in currentProject.gruppenmitglieder"
+          :key="mitglied.userid"
+        >
           <b-row>
             <b-col>
               <p>Gruppenmitglied</p>
@@ -28,14 +31,14 @@
             </b-col>
             <b-col>
               <b-button
-                v-if="(getCurrentUserUUID != mitglied.userid) & isUserAdmin"
+                v-if="(userData.uuid != mitglied.userid) & isUserAdmin"
                 variant="link"
                 @click="deleteMember(mitglied)"
               >
                 <b-icon icon="x"></b-icon>
               </b-button>
               <b-button
-                v-if="(getCurrentUserUUID != mitglied.userid) & isUserAdmin"
+                v-if="(userData.uuid != mitglied.userid) & isUserAdmin"
                 variant="link"
                 @click="giveAdminRights(mitglied)"
                 ><b-icon icon="person-check-fill"></b-icon
@@ -66,7 +69,7 @@
             <b-col>
               <b-button
                 variant="link"
-                v-if="(getCurrentUserUUID != admin.userid) & isUserAdmin"
+                v-if="(userData.uuid != admin.userid) & isUserAdmin"
                 @click="deleteAdmin(admin)"
               >
                 <b-icon icon="x"></b-icon>
@@ -126,15 +129,14 @@ export default {
 
   computed: {
     ...mapGetters({
-      getCurrentUserUUID: "profile/getCurrentUserUUID",
       getLoadingStatus: "getLoadingStatus",
     }),
     ...mapState("project", [
       "currentProject",
-      "gruppenmitglieder",
       "currentProjectGroupAdmins",
       "isUserAdmin",
     ]),
+    ...mapState("profile", ["userData"]),
 
     userRole() {
       const user = JSON.parse(sessionStorage.getItem("current_user"));
@@ -186,11 +188,14 @@ export default {
       let member;
 
       if (
-        this.gruppenmitglieder.some(
-          (member) => member.userid === this.getCurrentUserUUID
+        this.currentProject.gruppenmitglieder.some(
+          (member) => member.userid === this.userData.uuid
         )
       ) {
-        member = this.filter(this.getCurrentUserUUID, this.gruppenmitglieder);
+        member = this.filter(
+          this.userData.uuid,
+          this.currentProject.gruppenmitglieder
+        );
         this.$store.dispatch("project/deleteMembers", member).then(() => {
           this.$bvToast.toast(`Du hast die Gruppe verlassen`, {
             title: "Du hast die Gruppe verlassen",
@@ -221,7 +226,7 @@ export default {
               );
             } else {
               member = this.filter(
-                this.getCurrentUserUUID,
+                this.userData.uuid,
                 this.currentProjectGroupAdmins
               );
               this.$store.dispatch("project/deleteAdmin", member).then(() => {
@@ -258,7 +263,7 @@ export default {
 
     removeOwnAdminRights: function () {
       let member = this.filter(
-        this.getCurrentUserUUID,
+        this.userData.uuid,
         this.currentProjectGroupAdmins
       );
       //evtl redundant?
@@ -270,7 +275,7 @@ export default {
           )
           .then(() => {
             if (
-              this.gruppenmitglieder.length > 0 &&
+              this.currentProject.gruppenmitglieder.length > 0 &&
               this.currentProjectGroupAdmins.length < 2
             ) {
               alert(
@@ -278,7 +283,7 @@ export default {
               );
             } else {
               member = this.filter(
-                this.getCurrentUserUUID,
+                this.userData.uuid,
                 this.currentProjectGroupAdmins
               );
               //first delete user in groupadmin array
